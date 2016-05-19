@@ -8,4 +8,8 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
     //];
     $scope.users = User.query();
 
+}).controller('UserViewController',function($scope,$stateParams,User){
+
+    $scope.movie=User.get({id:$stateParams.id});
+
 });

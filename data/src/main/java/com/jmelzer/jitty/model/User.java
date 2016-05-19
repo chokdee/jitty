@@ -168,7 +168,7 @@ public class User extends ModelBase implements Serializable {
         return sb.toString();
     }
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "USER_TO_ROLES", joinColumns = @JoinColumn(name = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
     public Set<UserRole> getRoles() {
