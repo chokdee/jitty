@@ -1,4 +1,5 @@
-angular.module('hello', ['ngRoute']).config(function ($routeProvider, $httpProvider) {
+angular.module('jitty', ['ngRoute', 'ngResource', 'jitty.controllers', 'jitty.services']).config(function ($routeProvider, $httpProvider) {
+//angular.module('hello', ['ngRoute']).config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.when('/', {
         templateUrl: 'home.html',
@@ -6,7 +7,11 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider, $httpProvi
     }).when('/login', {
         templateUrl: 'login.html',
         controller: 'navigation'
-    }).otherwise('/');
+    }).when('/users', {
+        templateUrl: 'users.html',
+        controller: 'UserListController'
+    })
+    .otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 

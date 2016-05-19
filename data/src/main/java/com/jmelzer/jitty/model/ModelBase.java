@@ -33,7 +33,7 @@ public abstract class ModelBase implements Serializable {
     }
 
     @Version
-    @Column(name = "optlock")
+    @Column(name = "optlock", nullable = false)
     public long getVersion() {
         return version;
     }

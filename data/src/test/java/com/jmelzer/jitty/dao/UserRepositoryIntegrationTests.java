@@ -27,6 +27,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -41,9 +43,16 @@ public class UserRepositoryIntegrationTests {
     UserRepository repository;
 
     @Test
-    public void findsFirstPageOfCities() {
+    public void findsFirstPageOfUser() {
 
-        Page<User> users = this.repository.findAll(new PageRequest(0, 10));
-//        assertThat(users.getTotalElements(), is(greaterThan(20L)));
+        Page<User> users = repository.findAll(new PageRequest(1,100));
+        assertThat(users.getTotalElements(), is(greaterThan(2L)));
+    }
+
+    @Test
+    public void findByName() {
+
+        assertNull(repository.findByName("xxx"));
+        assertEquals("admin", repository.findByName("admin").getName());
     }
 }

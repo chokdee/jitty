@@ -19,6 +19,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.jmelzer</groupId>
+			<artifactId>jitty.data</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
@@ -109,7 +114,12 @@
 					<dependency>
 						<groupId>org.webjars</groupId>
 						<artifactId>angularjs</artifactId>
-						<version>1.3.8</version>
+						<version>1.5.5</version>
+					</dependency>
+					<dependency>
+						<groupId>org.webjars.bower</groupId>
+						<artifactId>angular-resource</artifactId>
+						<version>1.5.5</version>
 					</dependency>
 					<dependency>
 						<groupId>org.webjars</groupId>
