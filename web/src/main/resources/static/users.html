@@ -5,10 +5,10 @@
         <td><h3>All User</h3></td>
         <td></td>
     </tr>
-    <tr ng-controller="UserListController" ng-repeat="user in users">
-        <td>{{user.loginName}}</td>
+    <tr ng-repeat="user in users">
+        <td>{{user.name}}</td>
         <td>
-            <a class="btn btn-primary" ui-sref="viewUser({id:user._id})">View</a>
+            <a class="btn btn-primary" href="#/users/{{user.id}}">View</a>
             <a class="btn btn-danger"  ng-click="deleteUser(user)">Delete</a>
         </td>
     </tr>

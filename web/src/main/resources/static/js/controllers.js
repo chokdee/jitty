@@ -1,5 +1,5 @@
 
-angular.module('jitty.controllers', []).controller('UserListController', function($scope, User) {
+angular.module('jitty.controllers', []).controller('UserListController', function($scope, popupService, $window, User) {
 
     //first one is working without User parameter
     //$scope.users = [
@@ -8,8 +8,27 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
     //];
     $scope.users = User.query();
 
-}).controller('UserViewController',function($scope,$stateParams,User){
+    $scope.deleteUser=function(user){
+        console.log($user.loginName);
+        if(popupService.showPopup('Really delete this?')){
+            user.$delete(function(){
+                $window.location.href='';
+            });
+        }
+    }
 
-    $scope.movie=User.get({id:$stateParams.id});
+}).controller('UserViewController',function($scope,$routeParams,User){
+
+    $scope.user=User.get({id:$routeParams.id});
+
+}).controller('UserCreateController',function($scope,$state,$stateParams,User){
+
+    $scope.user=new User();
+
+    $scope.addUser()=function(){
+        $scope.user.$save(function(){
+            $state.go('users');
+        });
+    }
 
 });

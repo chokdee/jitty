@@ -1,0 +1,7 @@
+.usertable tr td:nth-child(2){
+    width: 150px;
+}
+
+.usertable tr:nth-child(1) td{
+    border-top: none;
+}

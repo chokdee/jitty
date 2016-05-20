@@ -10,7 +10,10 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'jitty.controllers', 'jitty.se
     }).when('/users', {
         templateUrl: 'users.html',
         controller: 'UserListController'
-    })
+    }).when('/users/:id', {
+            templateUrl: 'user-view.html',
+            controller: 'UserViewController'
+        })
     .otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
