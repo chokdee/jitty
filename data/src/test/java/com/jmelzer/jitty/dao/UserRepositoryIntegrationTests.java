@@ -27,9 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Integration tests for {@link UserRepository}.
@@ -54,5 +52,17 @@ public class UserRepositoryIntegrationTests {
 
         assertNull(repository.findByName("xxx"));
         assertEquals("admin", repository.findByName("admin").getName());
+    }
+
+    @Test
+    public void save() {
+
+        User user = new User();
+        user.setLoginName("lll");
+        user.setName("nnn");
+        user.setPassword("ppp");
+        user.setEmail("eee");
+        repository.save(user);
+        assertNotNull(user.getId());
     }
 }

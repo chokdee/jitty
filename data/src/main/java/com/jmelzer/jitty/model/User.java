@@ -30,21 +30,30 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "user")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class User extends ModelBase implements Serializable {
+public class User implements Serializable {
 
     private static final long serialVersionUID = -2388299912396255263L;
+    @Id
+    @GeneratedValue
+    private Long id;
 
     private Integer type;
+    @Column(nullable = false)
     private String loginName;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String email;
+    @Column(nullable = true)
     private String locale;
+    @Column(nullable = false)
     private boolean locked = true;
+    @Column(nullable = true)
     byte[] avatar;
 
-    private Set<UserRole> roles = new LinkedHashSet<UserRole>();
+//    private Set<UserRole> roles = new LinkedHashSet<UserRole>();
 
     public User() {
     }
@@ -56,7 +65,7 @@ public class User extends ModelBase implements Serializable {
     }
 
 
-    @Column(nullable = false)
+
     public String getPassword() {
         return password;
     }
@@ -74,7 +83,6 @@ public class User extends ModelBase implements Serializable {
         this.password = password;
     }
 
-    @Column(nullable = false)
     public String getEmail() {
         return email;
     }
@@ -107,7 +115,6 @@ public class User extends ModelBase implements Serializable {
         this.type = type;
     }
 
-    @Column(nullable = false)
     public String getLoginName() {
         return loginName;
     }
@@ -116,6 +123,13 @@ public class User extends ModelBase implements Serializable {
         this.loginName = loginName;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public int compareTo(User u) {
         if (u == null) {
@@ -168,29 +182,29 @@ public class User extends ModelBase implements Serializable {
         return sb.toString();
     }
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "USER_TO_ROLES", joinColumns = @JoinColumn(name = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
-    public Set<UserRole> getRoles() {
-        return roles;
-    }
+//    @OneToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "USER_TO_ROLES", joinColumns = @JoinColumn(name = "USER_ID"),
+//            inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
+//    public Set<UserRole> getRoles() {
+//        return roles;
+//    }
+//
+//    public void setRoles(Set<UserRole> roles) {
+//        this.roles = roles;
+//    }
+//
+//    public void addRole(UserRole userRole) {
+//        roles.add(userRole);
+//    }
 
-    public void setRoles(Set<UserRole> roles) {
-        this.roles = roles;
-    }
-
-    public void addRole(UserRole userRole) {
-        roles.add(userRole);
-    }
-
-    @Transient
-    public boolean isAdmin() {
-        for (UserRole role : roles) {
-            if (role.getName().equals(UserRole.Roles.ROLE_ADMIN.name())) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    @Transient
+//    public boolean isAdmin() {
+//        for (UserRole role : roles) {
+//            if (role.getName().equals(UserRole.Roles.ROLE_ADMIN.name())) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
 }

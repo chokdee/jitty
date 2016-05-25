@@ -5,12 +5,8 @@ import com.jmelzer.jitty.model.User;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,4 +33,11 @@ public class UserController {
         return repository.findOne(Long.valueOf(id));
 
     }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public User create(User user) {
+        return repository.save(user);
+    }
+
 }

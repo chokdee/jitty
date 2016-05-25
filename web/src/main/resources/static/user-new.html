@@ -1,0 +1,42 @@
+<div class="container">
+    <h1>Create a new user</h1>
+
+    <form novalidate="novalidate" class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="loginName">Login-Name:</label>
+
+            <div class="controls">
+                <input type="text" id="loginName" ng-model="user.loginName" placeholder="Login-name"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputName">Name:</label>
+
+            <div class="controls">
+                <input type="text" id="inputName" ng-model="user.name" placeholder="Name"/>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="inputEmail">E-Mail:</label>
+
+            <div class="controls">
+                <input type="text" id="inputEmail" ng-model="user.email" placeholder="E-Mail"/>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="inputPw">Passwort:</label>
+
+            <div class="controls">
+                <input type="text" id="inputPw" ng-model="user.password" placeholder="Passwort"/>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <a ng-click="saveNewUser()" class="btn btn-small btn-primary">create new user</a>
+            </div>
+        </div>
+    </form>
+</div>

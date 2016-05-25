@@ -1,5 +1,4 @@
-
-angular.module('jitty.controllers', []).controller('UserListController', function($scope, popupService, $window, User) {
+angular.module('jitty.controllers', []).controller('UserListController', function ($scope, popupService, $window, User) {
 
     //first one is working without User parameter
     //$scope.users = [
@@ -8,27 +7,29 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
     //];
     $scope.users = User.query();
 
-    $scope.deleteUser=function(user){
+    $scope.deleteUser = function (user) {
         console.log($user.loginName);
-        if(popupService.showPopup('Really delete this?')){
-            user.$delete(function(){
-                $window.location.href='';
+        if (popupService.showPopup('Really delete this?')) {
+            user.$delete(function () {
+                $window.location.href = '';
             });
         }
+    };
+
+    $scope.createNewUser = function () {
+        $window.location.href = '/#/users-add';
     }
 
-}).controller('UserViewController',function($scope,$routeParams,User){
+}).controller('UserViewController', function ($scope, $routeParams, User) {
 
-    $scope.user=User.get({id:$routeParams.id});
+    $scope.user = User.get({id: $routeParams.id});
 
-}).controller('UserCreateController',function($scope,$state,$stateParams,User){
+}).controller('UserCreateController', function ($scope, User, $location) {
 
-    $scope.user=new User();
-
-    $scope.addUser()=function(){
-        $scope.user.$save(function(){
-            $state.go('users');
-        });
+// callback for ng-click 'saveNewUser ':
+    $scope.saveNewUser = function () {
+        User.save($scope.user);
+        $location.path('/user-list');
     }
 
 });

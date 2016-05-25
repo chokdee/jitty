@@ -10,14 +10,17 @@
 
 package com.jmelzer.jitty.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "user_role")
-public class UserRole extends ModelBase {
+public class UserRole implements Serializable{
     private static final long serialVersionUID = 7181113920788192505L;
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     String name;
 
