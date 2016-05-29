@@ -27,9 +27,19 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
 }).controller('UserCreateController', function ($scope, User, $location) {
 
 // callback for ng-click 'saveNewUser ':
+    $scope.debugMe = function () {
+        console.log('hallo')
+    };
     $scope.saveNewUser = function () {
         User.save($scope.user);
         $location.path('/user-list');
-    }
+    };
+    $scope.submitted = false;
+    $scope.submit = function() {
+        $scope.submitted = true;
+    };
+    $scope.interacted = function(field) {
+        return $scope.submitted || field.$dirty;
+    };
 
 });

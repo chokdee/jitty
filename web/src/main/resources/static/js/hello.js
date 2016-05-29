@@ -1,5 +1,4 @@
-angular.module('jitty', ['ngRoute', 'ngResource', 'jitty.controllers', 'jitty.services']).config(function ($routeProvider, $httpProvider) {
-//angular.module('hello', ['ngRoute']).config(function ($routeProvider, $httpProvider) {
+angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ngPassword', 'jitty.controllers', 'jitty.services', 'jitty.directives']).config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.when('/', {
         templateUrl: 'home.html',

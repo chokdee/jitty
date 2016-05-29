@@ -44,7 +44,7 @@ public class User implements Serializable {
     private String name;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String email;
     @Column(nullable = true)
     private String locale;
