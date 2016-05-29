@@ -31,14 +31,16 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
         console.log('hallo')
     };
     $scope.saveNewUser = function () {
-        User.save($scope.user);
-        $location.path('/user-list');
+        if ($scope.userForm.$valid) {
+            User.save($scope.user);
+            $location.path('/users');
+        }
     };
     $scope.submitted = false;
-    $scope.submit = function() {
+    $scope.submit = function () {
         $scope.submitted = true;
     };
-    $scope.interacted = function(field) {
+    $scope.interacted = function (field) {
         return $scope.submitted || field.$dirty;
     };
 

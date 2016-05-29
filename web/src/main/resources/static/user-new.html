@@ -1,6 +1,6 @@
 <div class="form-style-2">
     <div class="form-style-2-heading">Benutzerinformationen eingeben</div>
-      <form name="userForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate=""  >
+      <form name="userForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate=""  ng-submit="saveNewUser()" >
 
         <div class="control-group">
             <label for="loginName"><span>Login-Name <span class="required">*</span></span></label>
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <input type="submit" value="Speichern" ng-click="saveNewUser()"/>
+        <input type="submit" value="Speichern" />
     </form>
 
 
