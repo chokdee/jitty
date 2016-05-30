@@ -27,12 +27,11 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
 
     $scope.saveUser = function () {
         if ($scope.userForm.$valid) {
-            $scope.user = User.save($scope.user);
-            if ($scope.user !== null) {
+            User.save($scope.user, function () {
                 console.log('user saved successful');
-                $scope.users = Users.query();
+                $scope.users = User.query();
                 $location.path('/users');
-            }
+            });
         }
     };
 
@@ -40,12 +39,11 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
 
     $scope.saveNewUser = function () {
         if ($scope.userForm.$valid) {
-            $scope.user = User.save($scope.user);
-            if ($scope.user !== null) {
+            User.save($scope.user, function () {
                 console.log('user created successful');
-                $scope.users = Users.query();
+                $scope.users = User.query();
                 $location.path('/users');
-            }
+            });
         }
     };
     $scope.submitted = false;
