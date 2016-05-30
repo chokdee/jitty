@@ -28,9 +28,10 @@ angular.module('jitty.directives', [])
         link : function(scope, element, attrs, ngModel) {
           ngModel.$parsers.push(function(value) {
             var status = true;
-            angular.forEach(PASSWORD_FORMATS, function(regex) {
-              status = status && regex.test(value);
-            });
+            //todo uncomment if you want to enable format
+            //angular.forEach(PASSWORD_FORMATS, function(regex) {
+            //  status = status && regex.test(value);
+            //});
             ngModel.$setValidity('password-characters', status);
             return value;
           });

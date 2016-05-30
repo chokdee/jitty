@@ -1,15 +1,17 @@
-<a ng-click="createNewUser()" class="btn-primary btn-lg nodecoration">Add New User</a>
+</br>
+<a ng-click="createNewUser()" class="btn-primary btn" style="top:20px;">Neuen Benutzer anlegen</a>
 
 <table class="table usertable">
     <tr>
-        <td><h3>All User</h3></td>
+        <td><h3>Alle Benutzer</h3></td>
         <td></td>
     </tr>
     <tr ng-repeat="user in users">
         <td>{{user.name}}</td>
         <td>
-            <a class="btn btn-primary" href="#/users/{{user.id}}">View</a>
-            <a class="btn btn-danger"  ng-click="deleteUser(user)">Delete</a>
+            <a class="btn btn-primary" href="#/users/{{user.id}}">Bearbeiten</a>
+            <a class="btn btn-danger"  ng-click="deleteUser(user.id)">Löschen</a>
         </td>
     </tr>
 </table>
+

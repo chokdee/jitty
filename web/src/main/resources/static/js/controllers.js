@@ -7,11 +7,12 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
     //];
     $scope.users = User.query();
 
-    $scope.deleteUser = function (user) {
-        console.log($user.loginName);
-        if (popupService.showPopup('Really delete this?')) {
-            user.$delete(function () {
-                $window.location.href = '';
+    $scope.deleteUser = function (userId) {
+        if (popupService.showPopup('Möchten Sie den Benutzer wirklich löschen?')) {
+            User.delete({id: userId}, function () {
+                console.log('successful deleted user with id ' + userId);
+                $scope.users = User.query();
+                console.log('queried all user');
             });
         }
     };
@@ -20,20 +21,31 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
         $window.location.href = '/#/users-add';
     }
 
-}).controller('UserViewController', function ($scope, $routeParams, User) {
+}).controller('UserEditController', function ($scope, $routeParams, User, $location) {
 
     $scope.user = User.get({id: $routeParams.id});
 
+    $scope.saveUser = function () {
+        if ($scope.userForm.$valid) {
+            $scope.user = User.save($scope.user);
+            if ($scope.user !== null) {
+                console.log('user saved successful');
+                $scope.users = Users.query();
+                $location.path('/users');
+            }
+        }
+    };
+
 }).controller('UserCreateController', function ($scope, User, $location) {
 
-// callback for ng-click 'saveNewUser ':
-    $scope.debugMe = function () {
-        console.log('hallo')
-    };
     $scope.saveNewUser = function () {
         if ($scope.userForm.$valid) {
-            User.save($scope.user);
-            $location.path('/users');
+            $scope.user = User.save($scope.user);
+            if ($scope.user !== null) {
+                console.log('user created successful');
+                $scope.users = Users.query();
+                $location.path('/users');
+            }
         }
     };
     $scope.submitted = false;

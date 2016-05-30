@@ -10,8 +10,8 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages',  'jitty.controll
         templateUrl: 'users.html',
         controller: 'UserListController'
     }).when('/users/:id', {
-        templateUrl: 'user-view.html',
-        controller: 'UserViewController'
+        templateUrl: 'user-edit.html',
+        controller: 'UserEditController'
     }).when('/users-add', {
             templateUrl: 'user-new.html',
             controller: 'UserCreateController'
