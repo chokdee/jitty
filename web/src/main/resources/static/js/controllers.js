@@ -1,10 +1,8 @@
 angular.module('jitty.controllers', []).controller('UserListController', function ($scope, popupService, $window, User) {
 
-    //first one is working without User parameter
-    //$scope.users = [
-    //    {loginname:'1111'},
-    //    {loginname:'222'}
-    //];
+    $scope.predicate = 'name';
+    $scope.reverse = true;
+
     $scope.users = User.query();
 
     $scope.deleteUser = function (userId) {
@@ -19,7 +17,12 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
 
     $scope.createNewUser = function () {
         $window.location.href = '/#/users-add';
-    }
+    };
+
+    $scope.order = function (predicate) {
+        $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+        $scope.predicate = predicate;
+    };
 
 }).controller('UserEditController', function ($scope, $routeParams, User, $location) {
 

@@ -1,13 +1,25 @@
 </br>
+<!--suppress HtmlFormInputWithoutLabel -->
 <a ng-click="createNewUser()" class="btn-primary btn" style="top:20px;">Neuen Benutzer anlegen</a>
 
+<h3>Alle Benutzer</h3>
+
 <table class="table usertable">
+    <thead>
     <tr>
-        <td><h3>Alle Benutzer</h3></td>
-        <td></td>
+        <th>
+            <a href="" ng-click="order('name')">Name</a>
+        </th>
+        <th><a href="" ng-click="order('email')"> E-Mail</a> </th>
     </tr>
-    <tr ng-repeat="user in users">
+    </thead>
+    <tr>
+        <td> <input type="text" ng-model="search.name" /></td>
+        <td> <input type="text" ng-model="search.email" /> </td>
+    </tr>
+    <tr ng-repeat="user in users| orderBy:predicate:reverse | filter:paginate| filter:search">
         <td>{{user.name}}</td>
+        <td>{{user.email}}</td>
         <td>
             <a class="btn btn-primary" href="#/users/{{user.id}}">Bearbeiten</a>
             <a class="btn btn-danger"  ng-click="deleteUser(user.id)">Löschen</a>
