@@ -15,7 +15,11 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages',  'jitty.controll
     }).when('/users-add', {
             templateUrl: 'user-new.html',
             controller: 'UserCreateController'
-        })
+    }).when('/user-pw-change/:id', {
+        templateUrl: 'user-pw-change.html',
+        controller: 'UserEditController'
+    })
+
         .otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

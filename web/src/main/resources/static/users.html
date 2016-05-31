@@ -22,6 +22,7 @@
         <td>{{user.email}}</td>
         <td>
             <a class="btn btn-primary" href="#/users/{{user.id}}">Bearbeiten</a>
+            <a class="btn btn-primary" href="#/user-pw-change/{{user.id}}">PW ändern</a>
             <a class="btn btn-danger"  ng-click="deleteUser(user.id)">Löschen</a>
         </td>
     </tr>

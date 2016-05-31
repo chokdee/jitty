@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
@@ -61,6 +62,17 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     public User create(User user) {
         return repository.save(user);
+    }
+
+    @POST
+    @Path("/change-password")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changePassword(User user) {
+        LOG.info("pw change for user {}", user.getId());
+        User userDB = repository.findOne(user.getId());
+        userDB.setPassword(user.getPassword());
+        repository.save(userDB);
+        return Response.ok().build();
     }
 
 }

@@ -24,7 +24,7 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
         $scope.predicate = predicate;
     };
 
-}).controller('UserEditController', function ($scope, $routeParams, User, $location) {
+}).controller('UserEditController', function ($scope, $routeParams, User, $location, $http) {
 
     $scope.user = User.get({id: $routeParams.id});
 
@@ -34,6 +34,24 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
                 console.log('user saved successful');
                 $scope.users = User.query();
                 $location.path('/users');
+            });
+        }
+    };
+
+    $scope.savePassword = function () {
+        if ($scope.userForm.$valid) {
+            $http({
+                method: 'POST',
+                url: '/api/users/change-password',
+                data: { id: $scope.user.id,
+                        password: $scope.user.password}
+
+            }).then(function successCallback(response) {
+                console.log('password saved successful');
+                $location.path('/users');
+
+            }, function errorCallback(response) {
+                console.log('error save password');
             });
         }
     };
