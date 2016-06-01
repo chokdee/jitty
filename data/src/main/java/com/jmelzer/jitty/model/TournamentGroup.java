@@ -7,28 +7,30 @@ import java.util.List;
 
 /**
  * Created by J. Melzer on 01.06.2016.
- * Turnier-Klasse
+ * Turniergruppe
  */
 @Entity
-@Table(name = "tournament_class")
-public class TournamentClass {
+@Table(name = "tournament_group")
+public class TournamentGroup {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false, name = "name")
+    @Column(nullable = false, name = "name", length = 10)
     private String name;
 
-    /** Assoc to the player in the class. */
-    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    @JoinTable(name="TC_PLAYER")
+    /** Assoc to the player in the group. */
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinTable(name="TG_PLAYER")
     List<TournamentPlayer> players = new ArrayList<>();
 
-    /** Assoc to the groups in the class. */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "TC_ID")
-    List<TournamentGroup> groups = new ArrayList<>();
+    public TournamentGroup() {
+    }
+
+    public TournamentGroup(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;
@@ -46,19 +48,15 @@ public class TournamentClass {
         this.name = name;
     }
 
+    public void setPlayers(List<TournamentPlayer> players) {
+        this.players = players;
+    }
+
     public List<TournamentPlayer> getPlayers() {
         return Collections.unmodifiableList(players);
     }
 
     public void addPlayer(TournamentPlayer player) {
         players.add(player);
-    }
-
-    public List<TournamentGroup> getGroups() {
-        return Collections.unmodifiableList(groups);
-    }
-
-    public void addGroup(TournamentGroup group) {
-        groups.add(group);
     }
 }

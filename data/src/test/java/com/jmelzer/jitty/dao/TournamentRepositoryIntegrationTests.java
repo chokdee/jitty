@@ -16,17 +16,18 @@
 package com.jmelzer.jitty.dao;
 
 import com.jmelzer.jitty.SampleDataJpaApplication;
-import com.jmelzer.jitty.model.Gender;
 import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentClass;
+import com.jmelzer.jitty.model.TournamentGroup;
 import com.jmelzer.jitty.model.TournamentPlayer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 import static org.hamcrest.Matchers.greaterThan;
@@ -35,7 +36,6 @@ import static org.junit.Assert.*;
 
 /**
  * Integration tests for {@link UserRepository}.
- *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(SampleDataJpaApplication.class)
@@ -53,8 +53,22 @@ public class TournamentRepositoryIntegrationTests {
         assertThat(tournaments.size(), is(greaterThan(0)));
     }
 
+    @PostConstruct
+    public void post() {
+
+        Thread t = new Thread() {
+            public void run() {
+                org.hsqldb.util.DatabaseManagerSwing.main(new String[]{
+                        "--url", "jdbc:hsqldb:mem:testdb", "--noexit"
+                });
+            }
+        };
+        t.start();
+
+    }
 
     @Test
+    @Transactional
     public void save() {
         Tournament tournament = new Tournament();
         tournament.setName("ABC Open");
@@ -62,19 +76,49 @@ public class TournamentRepositoryIntegrationTests {
         TournamentClass tournamentClass = new TournamentClass();
         tournamentClass.setName("A-Klasse bis 3000 TTR");
         tournament.addClass(tournamentClass);
+        TournamentClass tournamentClass2 = new TournamentClass();
+        tournamentClass2.setName("B-Klasse bis 1800 TTR");
+        tournament.addClass(tournamentClass2);
+
+
         repository.save(tournament);
+
 
         assertNotNull(tournament.getId());
         assertNotNull(tournamentClass.getId());
+        assertNotNull(tournamentClass2.getId());
 
+        Tournament tDB = repository.findOne(tournament.getId());
 
         List<TournamentPlayer> players = playerRepository.findAll();
         for (TournamentPlayer player : players) {
-            tournamentClass.addPlayer(player);
+            tDB.getClasses().get(0).addPlayer(player);
+            tDB.getClasses().get(1).addPlayer(player);
         }
+        repository.save(tDB);
 
-        repository.save(tournament);
-        Tournament tDB = repository.findOne(tournament.getId());
+        tDB = repository.findOne(tournament.getId());
+
         assertEquals(players.size(), tDB.getClasses().get(0).getPlayers().size());
+        assertEquals(players.size(), tDB.getClasses().get(1).getPlayers().size());
+
+
+        //ok now add groups
+        TournamentGroup group = new TournamentGroup("A");
+        group.addPlayer(players.get(0));
+        group.addPlayer(players.get(1));
+        tDB.getClasses().get(0).addGroup(group);
+
+        TournamentGroup groupB = new TournamentGroup("B");
+        groupB.addPlayer(players.get(2));
+        groupB.addPlayer(players.get(3));
+        tDB.getClasses().get(0).addGroup(groupB);
+
+        repository.save(tDB);
+
+        tDB = repository.findOne(tournament.getId());
+        assertEquals(2, tDB.getClasses().get(0).getGroups().size());
+        assertEquals(2, tDB.getClasses().get(0).getGroups().get(0).getPlayers().size());
+
     }
 }

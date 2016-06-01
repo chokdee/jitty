@@ -21,8 +21,8 @@ public class Tournament {
 
 
     /** Assoc to the tournament classes. */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "TC_ID")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "T_ID")
     List<TournamentClass> classes = new ArrayList<>();
 
 
