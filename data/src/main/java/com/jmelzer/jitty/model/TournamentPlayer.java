@@ -35,8 +35,8 @@ public class TournamentPlayer {
     @Column(nullable = true)
     private Date birthday;
 
-    @Column(nullable = true)
-    private Gender gender;
+    @Column(nullable = true, length = 1)
+    private String gender;
 
     public Long getId() {
         return id;
@@ -103,10 +103,10 @@ public class TournamentPlayer {
     }
 
     public Gender getGender() {
-        return gender;
+        return Gender.valueOf(gender);
     }
 
     public void setGender(Gender gender) {
-        this.gender = gender;
+        this.gender = gender.getValue();
     }
 }
