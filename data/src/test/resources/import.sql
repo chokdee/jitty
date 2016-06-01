@@ -1,3 +1,8 @@
-insert into user(id, name, email, locked, login_name, password, optlock) values (1,'user' , 'user@bla.de', 0, 'user', '42', 1);
-insert into user(id, name, email, locked, login_name, password, optlock) values (2,'admin', 'user@bla.de', 0, 'admin', '42', 1);
-insert into user(id, name, email, locked, login_name, password, optlock) values (3,'superuser', 'user@bla.de', 0, 'superuser', '42', 1);
+insert into user(name, email, locked, loginname, password) values ('user' , 'user@bla.de', 0, 'user', '42');
+insert into user(name, email, locked, loginname, password) values ('admin', 'user@bla.de', 0, 'admin', '42');
+insert into user(name, email, locked, loginname, password) values ('superuser', 'user@bla.de', 0, 'superuser', '42');
+
+
+INSERT INTO TOURNAMENT_PLAYER (BIRTHDAY, EMAIL, FIRSTNAME, GENDER, LASTNAME, MOBILENUMBER, QTTR, TTR) VALUES ('1988-06-02', 'pmeier@gmx.net', 'Peter', 0, 'Meier', '0177-22223333', 1690, 1699);
+INSERT INTO TOURNAMENT_PLAYER (BIRTHDAY, EMAIL, FIRSTNAME, GENDER, LASTNAME, MOBILENUMBER, QTTR, TTR) VALUES ('2001-02-02', 'karlchen@web.net', 'Karl', 0, 'Gülle', '0151-22223333', 1400, 1405);
+INSERT INTO TOURNAMENT_PLAYER (BIRTHDAY, EMAIL, FIRSTNAME, GENDER, LASTNAME, MOBILENUMBER, QTTR, TTR) VALUES ('1990-09-02', 'lucky@gmail.com', 'Lucky', 1, 'Melzi', '0160-22223333', 1200, 1190);

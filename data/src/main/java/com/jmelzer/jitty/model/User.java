@@ -38,7 +38,7 @@ public class User implements Serializable {
     private Long id;
 
     private Integer type;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "loginname")
     private String loginName;
     @Column(nullable = false)
     private String name;
