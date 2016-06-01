@@ -8,7 +8,7 @@ import java.sql.Date;
  * Spieler
  */
 @Entity
-@Table(name = "tournament_player ")
+@Table(name = "tournament_player")
 public class TournamentPlayer {
     @Id
     @GeneratedValue
