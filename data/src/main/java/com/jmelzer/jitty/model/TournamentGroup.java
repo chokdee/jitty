@@ -20,9 +20,11 @@ public class TournamentGroup {
     @Column(nullable = false, name = "name", length = 10)
     private String name;
 
-    /** Assoc to the player in the group. */
+    /**
+     * Assoc to the player in the group.
+     */
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinTable(name="TG_PLAYER")
+    @JoinTable(name = "TG_PLAYER")
     List<TournamentPlayer> players = new ArrayList<>();
 
     public TournamentGroup() {
@@ -58,5 +60,15 @@ public class TournamentGroup {
 
     public void addPlayer(TournamentPlayer player) {
         players.add(player);
+    }
+
+    @Override
+    public String toString() {
+        String s = "\n----------------------\nKlasse " + name + "\n";
+        for (TournamentPlayer player : players) {
+            s += player.getFirstName() + " " + player.getLastName() + " " + player.getQttr() + "\n";
+        }
+        s += "--------------------";
+        return s;
     }
 }

@@ -1,0 +1,110 @@
+Konfiguration der Optionen für die Auslosung
+Wählen Sie im Menü Konfiguration den Befehl Optionen aus, um den Dialog Optionen zu öffnen und wählen Sie dort die Seite Auslosung aus.
+
+Für alle Austragungssysteme:
+
+·      Vereinszugehörigkeit berücksichtigen
+
+Falls diese Option gesetzt ist, wird bei der Auslosung die Vereinszugehörigkeit der Spieler (bzw. Mannschaften) berücksichtigt.
+Bei den KO-Systemen (Einfach- und Doppel-KO) werden Spieler (bzw. Mannschaften) des gleichen Vereins so ausgelost,
+dass sie erst möglichst spät aufeinander treffen können.
+Beim Gruppensystem werden Spieler (bzw. Mannschaften) des gleichen Vereins möglichst in verschiedene Gruppen gelost.
+Falls trotzdem zwei Spieler (bzw. Mannschaften) eines Vereins in der gleichen Gruppe sind, kann man durch Setzen der Option Vereinsinterne Spiele
+zuerst austragen erreichen, dass ihre Begegnung zuerst ausgetragen wird.
+
+·      Kreis- und Vereinszugehörigkeit berücksichtigen
+
+Falls diese Option gesetzt ist, wird bei der Auslosung die Kreis- und Vereinszugehörigkeit der Spieler (bzw. Mannschaften) berücksichtigt.
+Hier gilt Entsprechendes, wie es bei der Option Vereinszugehörigkeit berücksichtigen beschrieben wird.
+Voraussetzung für die Benutzung dieser Option ist die Spezifikation der Kreise in der Vereinsliste.
+
+·      Bezirks-, Kreis- und Vereinszugehörigkeit berücksichtigen
+
+Falls diese Option gesetzt ist, wird bei der Auslosung die Bezirks-, Kreis- und Vereinszugehörigkeit der Spieler (bzw. Mannschaften) berücksichtigt.
+Hier gilt Entsprechendes, wie es bei der Option Vereinszugehörigkeit berücksichtigen beschrieben wird.
+Voraussetzung für die Benutzung dieser Option ist die Spezifikation der Bezirke und Kreise in der Vereinsliste.
+
+
+·      Setzen: Spielstärke aufgrund der TTR-Werte berücksichtigen (zusätzliche TTR-Lizenz notwendig)
+
+Diese Option erlaubt das automatische Setzen von Spielern (bzw. Mannschaften) gemäß der Spielstärke nach TTR-Werten.
+Weitere Details für die verschiedene Austragungssysteme
+
+·      Kriterium (nur bei Mannschaftsturnieren)
+
+Hier kann das Kriterium gewählt werden, wie die TTR-Werte berücksichtigt werden sollen:
+
+–      Höchster TTR-Wert: Als Kriterium wird der höchster TTR-Wert der einzelnen Spieler der Mannschaft hergenommen.
+–      TTR-Mittelwert: Der Mittelwert der TTR-Werte aller Spieler der Mannschaft dient als Kriterium.
+·      Beim Setzen äquivalente Positionen auslosen
+
+Falls diese Option nicht gesetzt ist (Standardeinstellung), werden die gesetzten bzw. weitergekommenen Spieler (bzw. Mannschaften)
+auf feste vorbestimmte Positionen des Spielplans gesetzt.
+Andernfalls werden sie auf bestimmte privilegierte Positionen des Spielplans ausgelost.
+
+Weitere Details für die verschiedene Austragungssysteme
+
+Gruppensystem:
+-----------------------
+
+·      Vereinsinterne Spiele zuerst austragen
+
+            Falls diese Option gesetzt ist (Standardeinstellung), werden die Spiele zwischen Teilnehmern (bzw. Mannschaften) des gleichen Vereins
+            möglichst am Anfang ausgetragen. Dies beeinflusst die ausgelosten Positionen innerhalb der Gruppe nicht.
+
+·      Setzen: Alternierend (in Klammern ein Beispiel für 8 Vierergruppen):
+            Die besten (8) Spieler (bzw. Mannschaften) werden in alternierender Reihenfolge auf die Gruppenköpfe gesetzt
+            (Reihenfolge Gruppe 1,8,5,4,3,6,7,2).
+
+            Die nächstbesten (8) Spieler (bzw. Mannschaften) werden unter Berücksichtigung der Bezirks-, Kreis-
+            oder Vereinsabhängigkeit auf Position 2 der einzelnen Gruppen gelost (siehe auch Setzungsliste).
+
+·      Setzen: Linear (in Klammern ein Beispiel für 8 Vierergruppen):
+            Die besten (8) Spieler (bzw. Mannschaften) werden in linearer Reihenfolge auf die Gruppenköpfe gesetzt (Reihenfolge Gruppe 1,2,3,4,5,6,7,8).
+            Die nächstbesten (8) Spieler (bzw. Mannschaften) werden unter Berücksichtigung der Bezirks-, Kreis-
+            oder Vereinsabhängigkeit auf Position 2 der einzelnen Gruppen gelost (siehe auch Setzungsliste).
+
+Setzen der Gruppensieger in KO-Endrunde:
+
+·      Nach TTR-Werten
+
+Falls diese Option gesetzt ist (Standardeinstellung), wird für die Gruppensieger eine Setzungsreihenfolge gemäß ihrer TTR-Werte für die Übernahme in die KO-Endrunde erstellt.
+
+·      Nach Setzpositionen der Vorrunde
+
+Falls diese Option gesetzt ist, wird für die Gruppensieger eine Setzungsreihenfolge gemäß ihrer Setzpositionen der Vorrunde für die Übernahme in die KO-Endrunde erstellt. Konkret bedeutet dies: Zunächst werden alle Gruppensieger, die in den Vorrundengruppen an Position 1 gesetzt waren, der Reihe nach von der ersten bis zur letzten Gruppe in die Liste übernommen. Danach kommen die Gruppensieger an die Reihe, die an Position 2 gestanden haben, usw.
+Mit dieser Reihenfolge wird dann das gleiche Setzungsschema verwendet wie bei der Setzungsliste aufgrund der Spielstärke.
+
+Hinweis: Diese Option hat Vorrang vor der Option Setzen: Spielstärke aufgrund der TTR-Werte berücksichtigen.
+
+·      Nach festem Schema
+
+Falls diese Option gesetzt ist, werden die Gruppensieger nach einem festen Schema in die KO-Endrunde übernommen.
+
+Hinweis: Diese Option hat Vorrang vor der Option Setzen: Spielstärke aufgrund der TTR-Werte berücksichtigen.
+
+Ranglistenspiele: Übernahme der Spieler aus den Vorrundengruppen (nur bei Individual-Turnieren)
+
+·      Linear (aus Vorrundengruppe 1, 2, … n):
+
+Die Gruppen in der Zwischenrunde werden so gebildet, dass nacheinander die Spieler der 1., 2., 3. bis zur letzten Vorrundengruppe in den Spielplan gesetzt werden.
+
+Beispiel mit 4 Vorrundengruppen zu je 6 Spielern:
+
+Die ersten drei jeder Gruppe kommen in die Zwischenrunde mit 2 Gruppen und werden so verteilt, dass die Spieler der 1. und 2. bzw. die der 3. und 4. Vorrundengruppe jeweils in eine Zwischenrundengruppe kommen (siehe auch Setzungsliste).
+
+Für die letzten drei jeder Vorrundengruppe gilt entsprechendes.
+
+·      Alterierend (aus Vorrundengruppe 1, n, 2, n-1):
+
+Die Gruppen in der Zwischenrunde werden so gebildet, dass nacheinander die Spieler der 1., der letzen, der 2., der zweitletzten usw. Vorrundengruppe in den Spielplan gesetzt werden.
+
+Beispiel mit 4 Vorrundengruppen zu je 6 Spielern:
+
+Die ersten drei jeder Gruppe kommen in die Zwischenrunde mit 2 Gruppen und werden so verteilt, dass die Spieler der 1. und 4. bzw. die der 2. und 3. Vorrundengruppe jeweils in eine Zwischenrundengruppe kommen (siehe auch Setzungsliste).
+
+Für die letzten drei jeder Vorrundengruppe gilt entsprechendes.
+
+Beenden Sie den Dialog durch Klicken auf OK, um Änderungen zu übernehmen.
+
+Hinweis: Alle Optionen gelten allgemein und sind unabhängig von der aktuellen Turnierdatei. Sie werden dort aber zusätzlich gespeichert, um sie später importieren zu können.

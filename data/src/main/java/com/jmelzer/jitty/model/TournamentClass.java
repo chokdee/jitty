@@ -20,6 +20,21 @@ public class TournamentClass {
     @Column(nullable = false, name = "name")
     private String name;
 
+    /**
+     * Min TTR Wert.
+     */
+    @Column(nullable = true, name = "start_ttr")
+    private int startTTR = 0;
+
+    /**
+     * Max TTR Wert.
+     */
+    @Column(nullable = true, name = "end_ttr")
+    private String endTTR;
+
+    //type (Einzel / Doppem / Mixed)
+    //trostrunden?
+
     /** Assoc to the player in the class. */
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinTable(name="TC_PLAYER")
@@ -29,6 +44,13 @@ public class TournamentClass {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TC_ID")
     List<TournamentGroup> groups = new ArrayList<>();
+
+    public TournamentClass(String name) {
+        this.name = name;
+    }
+
+    public TournamentClass() {
+    }
 
     public Long getId() {
         return id;

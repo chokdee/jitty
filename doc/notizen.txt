@@ -1,0 +1,12 @@
+C 8.5 Gleiche Punkt- und Satzdifferenz
+Bei Punktgleichheit innerhalb einer Gruppe entscheidet die größere Differenz zwischen den ge-
+wonnenen und verlorenen Spielen (Subtraktionsverfahren).
+C 8.5.1 Punkt- und Satzgleichheit bei 2 Spielern
+Ist diese gleich, entscheidet die größere Differenz zwischen gewonnen und verlorenen Sätzen.
+Ist auch diese gleich, zählt der direkte Vergleich.
+C 8.5.2 Punkt- und Satzgleichheit bei mehr als 2 Spielern
+Bei Punkt- und Satzgleichheit von mehr als zwei Spielern einer Gruppe werden nur die Ergeb-
+nisse dieser Spieler untereinander verglichen. Kommt man bei diesem Punkt- und Satzdiffe-
+renzvergleichen Spielern immer  noch nicht zu einem Ergebnis, so entscheidet die größere Dif-
+ferenz zwischen gewonnenen und verlorenen Bällen. Die Spiele gegen die anderen Spieler die-
+ser Gruppe werden beim direkten Vergleich nicht berücksichtigt.

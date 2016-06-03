@@ -109,4 +109,19 @@ public class TournamentPlayer {
     public void setGender(Gender gender) {
         this.gender = gender.getValue();
     }
+
+    @Override
+    public String toString() {
+        return "TournamentPlayer{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", mobileNumber='" + mobileNumber + '\'' +
+                ", qttr=" + qttr +
+                ", ttr=" + ttr +
+                ", birthday=" + birthday +
+                ", gender='" + gender + '\'' +
+                '}';
+    }
 }
