@@ -2,10 +2,7 @@ package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.SampleDataJpaApplication;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
-import com.jmelzer.jitty.model.Tournament;
-import com.jmelzer.jitty.model.TournamentClass;
-import com.jmelzer.jitty.model.TournamentGroup;
-import com.jmelzer.jitty.model.TournamentPlayer;
+import com.jmelzer.jitty.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +10,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.Assert.assertTrue;
 
@@ -38,6 +32,7 @@ public class TournamentIntegrationTest {
         //ok lets start to have 59 player
         for (int i = 1; i <= 59; i++) {
             TournamentPlayer player = new TournamentPlayer();
+            player.setId((long) i);
             player.setFirstName("Vorname#" + i);
             player.setLastName("Nachname#" + i);
             player.setTtr(randomIntFromInterval(1400, 1600));
@@ -69,14 +64,32 @@ public class TournamentIntegrationTest {
 
         //calculate groups
         List<TournamentGroup> groups = caluculateGroups(classC);
+        // test the order of the groups player
         for (TournamentGroup group : groups) {
-            System.out.println(group);
+            int last_ttr = 5000;
+            for (TournamentPlayer player : group.getPlayers()) {
+                assertTrue(player.toString(), last_ttr > player.getQttr());
+                last_ttr = player.getQttr();
+            }
         }
+
+//        for (TournamentGroup group : groups) {
+//            System.out.println(group);
+//        }
         //questions:
         //how many groups?
         //how many player in every group
 
-        //
+        //start the tournament with games
+        //calculate possible games
+        setGameOrder(groups, 1);
+
+        //todo add table manager to get free tables
+        List<TournamentSingleGame> possibleGames = calcPossibleGames(groups);
+    }
+
+    private List<TournamentSingleGame> calcPossibleGames(List<TournamentGroup> groups) {
+        return null;
     }
 
     private List<TournamentGroup> caluculateGroups(TournamentClass tournamentClass) {
@@ -97,29 +110,96 @@ public class TournamentIntegrationTest {
 
         List<TournamentGroup> groups = createGroups(groupCount);
 
-        //todo don't forget the rules see auslosung.txt
         List<TournamentPlayer> allPlayer = new ArrayList<>(tournamentClass.getPlayers());
         Random randomGenerator = new Random();
 
         //sort all player by qttr
         Collections.sort(allPlayer, (o1, o2) -> {
-            if (o1.getQttr() < o2.getQttr()) return 1;
-            if (o1.getQttr() > o2.getQttr()) return -1;
+            if (o1.getQttr() < o2.getQttr()) {
+                return 1;
+            }
+            if (o1.getQttr() > o2.getQttr()) {
+                return -1;
+            }
             return 0;
         });
 
+        //todo don't forget the rules see auslosung.txt
         setPlayerRandomAccordingToQTTR(groupCount, groups, allPlayer, randomGenerator);
 
-        // test the order of the groups player
-        for (TournamentGroup group : groups) {
-            int last_ttr = 5000;
-            for (TournamentPlayer player : group.getPlayers()) {
-                assertTrue(player.toString(), last_ttr > player.getQttr());
-                last_ttr = player.getQttr();
+
+        return groups;
+    }
+
+    /**
+     * calculate the order of the possible games in the correct order
+     *
+     * @param groups for calc
+     */
+    private void setGameOrder(List<TournamentGroup> groups, int stage) {
+        if (stage == 1) {
+            for (TournamentGroup group : groups) {
+                System.out.println(group);
+//                List<TournamentPlayer> players = group.getPlayers();
+                List<TournamentPlayer> list = new ArrayList<>(group.getPlayers());
+                if (list.size() % 2 == 1) {
+                    // Number of teams uneven ->  add the bye team.
+                    list.add(new TournamentPlayer("bye", "bye"));
+                }
+                for (int i = 1; i < list.size(); i++) {
+
+
+                    System.out.println("---- games round " + i + " ----");
+                    //first 1 against last
+
+                    createOneRound(i, list);
+                    list.add(1, list.get(list.size()-1));
+                    list.remove(list.size()-1);
+
+                    System.out.println("-----------------");
+                }
             }
         }
 
-        return groups;
+    }
+
+    /**
+     * Creates one round, i.e. a set of matches where each team plays once.
+     *
+     * @param round   Round number.
+     * @param players List of players
+     */
+    private void createOneRound(int round, List<TournamentPlayer> players) {
+        int mid = players.size() / 2;
+        // Split list into two
+
+        List<TournamentPlayer> l1 = new ArrayList<>();
+        // Can't use sublist (can't cast it to ArrayList - how stupid is that)??
+        for (int j = 0; j < mid; j++) {
+            l1.add(players.get(j));
+        }
+
+        List<TournamentPlayer> l2 = new ArrayList<>();
+        // We need to reverse the other list
+        for (int j = players.size() - 1; j >= mid; j--) {
+            l2.add(players.get(j));
+        }
+
+        for (int tId = 0; tId < l1.size(); tId++) {
+            TournamentPlayer t1;
+            TournamentPlayer t2;
+            // Switch sides after each round
+            if (round % 2 == 1) {
+                t1 = l1.get(tId);
+                t2 = l2.get(tId);
+            } else {
+                t1 = l2.get(tId);
+                t2 = l1.get(tId);
+            }
+            System.out.println(t1.getLastName() + " --> " + t2.getLastName());
+//            System.out.println("" + round + ":" +  ((round-1)*l1.size())+(tId+1) + " " + t1.getLastName() + " -->" + t2.getLastName());
+//            matches.addNew(round, ((round-1)*l1.size())+(tId+1), (String)t1.get("name"), (String)t2.get("name"));
+        }
     }
 
     private void setPlayerRandomAccordingToQTTR(int groupCount, List<TournamentGroup> groups, List<TournamentPlayer> allPlayer, Random randomGenerator) {
@@ -130,7 +210,9 @@ public class TournamentIntegrationTest {
                 if (index >= allPlayer.size()) {
                     index--;
                 }
-                if (index == -1 || allPlayer.size()==0) break;
+                if (index == -1 || allPlayer.size() == 0) {
+                    break;
+                }
                 TournamentPlayer p = allPlayer.get(index);
                 allPlayer.remove(index);
                 groups.get(i).addPlayer(p);
@@ -145,8 +227,9 @@ public class TournamentIntegrationTest {
         int groupCount = playerSize / optGroupSize;
         int rest = (playerSize % optGroupSize);
 
-        if (rest > 0)
+        if (rest > 0) {
             groupCount++;
+        }
 
         return groupCount;
     }

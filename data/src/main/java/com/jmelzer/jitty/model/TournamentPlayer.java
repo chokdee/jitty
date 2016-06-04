@@ -38,6 +38,14 @@ public class TournamentPlayer {
     @Column(nullable = true, length = 1)
     private String gender;
 
+    public TournamentPlayer() {
+    }
+
+    public TournamentPlayer(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public Long getId() {
         return id;
     }
