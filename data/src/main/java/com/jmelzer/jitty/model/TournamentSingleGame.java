@@ -2,6 +2,7 @@ package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,8 +22,33 @@ public class TournamentSingleGame {
     @OneToOne(cascade = CascadeType.DETACH)
     TournamentPlayer player2;
 
+    /**
+     * Bereits gespielt?
+     */
+    @Column(nullable = false, name = "played")
+    boolean played;
+
+    /**
+     * Bereits aufgerufen?
+     */
+    @Column(nullable = false, name = "called")
+    boolean called;
+
+    @Column(nullable = true, name = "start_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    Date startTime;
+    /**
+     * Nummer des zugewiesenen Tisches.
+     */
+    @Column(nullable = true, name = "table_no")
+    Integer tableNo;
+
+    //todo add Schiedsrichter
+
     @OneToMany(cascade = CascadeType.ALL)
     List<GameSet> sets = new ArrayList<>();
+
+    private int winner = -1;
 
     public Long getId() {
         return id;
@@ -54,5 +80,69 @@ public class TournamentSingleGame {
 
     public void setSets(List<GameSet> sets) {
         this.sets = sets;
+    }
+
+    public boolean isPlayed() {
+        return played;
+    }
+
+    public void setPlayed(boolean played) {
+        this.played = played;
+    }
+
+    public boolean isCalled() {
+        return called;
+    }
+
+    public void setCalled(boolean called) {
+        this.called = called;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Integer getTableNo() {
+        return tableNo;
+    }
+
+    public void setTableNo(Integer tableNo) {
+        this.tableNo = tableNo;
+    }
+
+    @Override
+    public String toString() {
+        return "  " + player1.getLastName() +
+                " ---> " + player2.getLastName();
+    }
+
+    public void addSet(GameSet gameSet) {
+        sets.add(gameSet);
+    }
+
+    public void setWinner(int winner) {
+        this.winner = winner;
+    }
+
+    public String printResult() {
+        String s = "";
+        s += "Player " + winner + " won with set statistics (" + printSets() + ")";
+        return s;
+    }
+
+    private String printSets() {
+        String s = "";
+        for (GameSet set : sets) {
+            s += set.points1 + ":" + set.points2 + ", ";
+        }
+        return s.trim().substring(0, s.length() - 2);
+    }
+
+    public boolean isFinishedOrCalled() {
+        return winner > -1 || called;
     }
 }

@@ -27,6 +27,14 @@ public class TournamentGroup {
     @JoinTable(name = "TG_PLAYER")
     List<TournamentPlayer> players = new ArrayList<>();
 
+    /**
+     * Assoc to the groups in the class.
+     */
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "TG_ID")
+    List<TournamentSingleGame> games = new ArrayList<>();
+
+
     public TournamentGroup() {
     }
 
@@ -60,6 +68,17 @@ public class TournamentGroup {
 
     public void addPlayer(TournamentPlayer player) {
         players.add(player);
+    }
+
+    public List<TournamentSingleGame> getGames() {
+        return Collections.unmodifiableList(games);
+    }
+
+    public void addGames(List<TournamentSingleGame> games) {
+        this.games.addAll(games);
+    }
+    public void addGame(TournamentSingleGame game) {
+        this.games.add(game);
     }
 
     @Override

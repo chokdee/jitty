@@ -132,4 +132,8 @@ public class TournamentPlayer {
                 ", gender='" + gender + '\'' +
                 '}';
     }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
