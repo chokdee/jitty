@@ -2,6 +2,8 @@ package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by J. Melzer on 01.06.2016.
@@ -38,10 +40,14 @@ public class TournamentPlayer {
     @Column(nullable = true, length = 1)
     private String gender;
 
+    @OneToMany(cascade = CascadeType.DETACH)
+    private List<TournamentSingleGame> games = new ArrayList<>();
+
     public TournamentPlayer() {
     }
 
-    public TournamentPlayer(String firstName, String lastName) {
+    public TournamentPlayer(Long id, String firstName, String lastName) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -133,7 +139,37 @@ public class TournamentPlayer {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TournamentPlayer player = (TournamentPlayer) o;
+
+        return id.equals(player.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+
+    public void addGame(TournamentSingleGame game) {
+        if (!games.contains(game)) {
+            games.add(game);
+        }
+    }
+
+    public List<TournamentSingleGame> getGames() {
+        return games;
     }
 }

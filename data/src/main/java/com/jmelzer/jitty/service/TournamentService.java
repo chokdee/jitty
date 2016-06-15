@@ -1,9 +1,6 @@
 package com.jmelzer.jitty.service;
 
-import com.jmelzer.jitty.model.TournamentClass;
-import com.jmelzer.jitty.model.TournamentGroup;
-import com.jmelzer.jitty.model.TournamentPlayer;
-import com.jmelzer.jitty.model.TournamentSingleGame;
+import com.jmelzer.jitty.model.*;
 
 import java.util.*;
 
@@ -14,8 +11,9 @@ import java.util.*;
 public class TournamentService {
 
     List<TournamentSingleGame> busyGames = new ArrayList<>();
+    List<TournamentGroup> groups = new ArrayList<>();
 
-    public List<TournamentGroup> caluculateGroups(TournamentClass tournamentClass) {
+    public void caluculateGroups(TournamentClass tournamentClass) {
         //first calc the field size , 16 / 32 etc
         //todo smallest possible size calucation
         int ps = tournamentClass.getPlayers().size();
@@ -31,7 +29,7 @@ public class TournamentService {
 
         int groupCount = calcOptimalGroupSize(ps);
 
-        List<TournamentGroup> groups = createGroups(groupCount);
+        groups = createGroups(groupCount);
 
         List<TournamentPlayer> allPlayer = new ArrayList<>(tournamentClass.getPlayers());
         Random randomGenerator = new Random();
@@ -50,10 +48,11 @@ public class TournamentService {
         //todo don't forget the rules see auslosung.txt
         setPlayerRandomAccordingToQTTR(groupCount, groups, allPlayer, randomGenerator);
 
-
-        return groups;
     }
 
+    public List<TournamentGroup> getGroups() {
+        return Collections.unmodifiableList(groups);
+    }
 
     private void setPlayerRandomAccordingToQTTR(int groupCount, List<TournamentGroup> groups, List<TournamentPlayer> allPlayer, Random randomGenerator) {
         while (allPlayer.size() > 0) {
@@ -77,11 +76,10 @@ public class TournamentService {
     /**
      * iterate thrw all groups and add not played games. but take care of the player isn't already in the list
      *
-     * @param groups
      * @param gameQueue
      * @param busyGames
      */
-    public void addPossibleGamesToQueue(List<TournamentGroup> groups, Collection<TournamentSingleGame> gameQueue, Collection<TournamentSingleGame> busyGames) {
+    public void addPossibleGamesToQueue(Collection<TournamentSingleGame> gameQueue, Collection<TournamentSingleGame> busyGames) {
         for (TournamentGroup group : groups) {
             List<TournamentSingleGame> games = group.getGames();
             for (TournamentSingleGame game : games) {
@@ -133,17 +131,15 @@ public class TournamentService {
 
     /**
      * calculate the order of the possible games in the correct order
-     *
-     * @param groups for calc
      */
-    public void calcGroupGames(List<TournamentGroup> groups) {
+    public void calcGroupGames() {
         for (TournamentGroup group : groups) {
             System.out.println(group);
 //                List<TournamentPlayer> players = group.getPlayers();
             List<TournamentPlayer> list = new ArrayList<>(group.getPlayers());
             if (list.size() % 2 == 1) {
                 // Number of teams uneven ->  add the bye team.
-                list.add(new TournamentPlayer("bye", "bye"));
+                list.add(new TournamentPlayer(-1L, "bye", "bye"));
             }
             for (int i = 1; i < list.size(); i++) {
 
@@ -217,5 +213,121 @@ public class TournamentService {
 
     public void removeBusyGame(TournamentSingleGame game) {
         busyGames.remove(game);
+    }
+
+    public void markGroupWinner() {
+        for (TournamentGroup group : groups) {
+            System.out.println("----------------------------------");
+            System.out.println("#\tSpieler\t\t\t\t\tSpiele\tSätze");
+            calcRankingForGroup(group);
+            List<TournamentService.PS> pss = group.getRanking();
+            int i = 1;
+            for (PS ps : pss) {
+                System.out.println("" + i + "\t" + ps.player.getFullName() + "\t" + ps.win + ":" + ps.lose + "\t\t" + ps.setsWon + ":" + ps.setsLost);
+                i++;
+            }
+            System.out.println("----------------------------------  ");
+        }
+    }
+
+    public void addGroup(TournamentGroup group) {
+        groups.add(group);
+    }
+
+    static public class PS implements Comparable<PS> {
+        TournamentPlayer player;
+        int win;
+        int lose;
+        int setsWon;
+        int setsLost;
+
+        //todo points
+
+        //todo C 8.5.2 Punkt- und Satzgleichheit bei mehr als 2 Spielern
+//        Bei Punkt- und Satzgleichheit von mehr als zwei Spielern einer Gruppe werden nur die Ergeb-
+//        nisse dieser Spieler untereinander verglichen. Kommt man bei diesem Punkt- und Satzdiffe-
+//        renzvergleichen Spielern immer  noch nicht zu einem Ergebnis, so entscheidet die größere Dif-
+//        ferenz zwischen gewonnenen und verlorenen Bällen. Die Spiele gegen die anderen Spieler die-
+//        ser Gruppe werden beim direkten Vergleich nicht berücksichtigt.
+
+        @Override
+        public int compareTo(PS o) {
+            int w = Integer.compare(win, o.win);
+            if (w != 0) {
+                return w;
+            }
+            int l = Integer.compare(lose, o.lose);
+            if (l != 0) {
+                return l;
+            }
+            return Integer.compare(setsRatio(), o.setsRatio());
+            //todo compare balls or make it generic
+        }
+
+        int setsRatio() {
+            return setsWon - setsLost;
+        }
+
+        @Override
+        public String toString() {
+            return "PS{" +
+                    "player=" + player.getFullName() +
+                    ", win=" + win +
+                    ", lose=" + lose +
+                    ", setsWon=" + setsWon +
+                    ", setsLost=" + setsLost +
+                    '}';
+        }
+    }
+
+    void calcRankingForGroup(TournamentGroup group) {
+        List<PS> list = new ArrayList<>(4);
+        for (TournamentPlayer player : group.getPlayers()) {
+            PS ps = new PS();
+            ps.player = player;
+            for (TournamentSingleGame singleGame : group.getGames()) {
+                if (singleGame.getPlayer1().equals(player)) {
+                    for (GameSet gameSet : singleGame.getSets()) {
+                        if (gameSet.getPoints1() < gameSet.getPoints2()) {
+                            ps.setsLost++;
+                        } else {
+                            ps.setsWon++;
+                        }
+                    }
+                    if (singleGame.getWinner() == 1) {
+                        ps.win++;
+                    } else {
+                        ps.lose++;
+                    }
+                } else if (singleGame.getPlayer2().equals(player)) {
+                    for (GameSet gameSet : singleGame.getSets()) {
+                        if (gameSet.getPoints1() > gameSet.getPoints2()) {
+                            ps.setsLost++;
+                        } else {
+                            ps.setsWon++;
+                        }
+                    }
+                    if (singleGame.getWinner() == 2) {
+                        ps.win++;
+                    } else {
+                        ps.lose++;
+                    }
+                }
+
+            }
+            list.add(ps);
+        }
+        Collections.sort(list);
+        Collections.reverse(list);
+        group.setRanking(list);
+//        for (int i = 0; i < list.size(); i++) {
+//            PS ps = list.get(i);
+//            if (i < list.size()-1 && ps.win == list.get(i+1).win) {
+//                System.out.println("same");
+//            }
+//        }
+//        for (PS ps : list) {
+//            System.out.println("ps = " + ps);
+//        }
     }
 }

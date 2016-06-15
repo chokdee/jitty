@@ -56,14 +56,14 @@ public class TournamentRepositoryIntegrationTests {
     @PostConstruct
     public void post() {
 
-        Thread t = new Thread() {
-            public void run() {
-                org.hsqldb.util.DatabaseManagerSwing.main(new String[]{
-                        "--url", "jdbc:hsqldb:mem:testdb", "--noexit"
-                });
-            }
-        };
-        t.start();
+//        Thread t = new Thread() {
+//            public void run() {
+//                org.hsqldb.util.DatabaseManagerSwing.main(new String[]{
+//                        "--url", "jdbc:hsqldb:mem:testdb", "--noexit"
+//                });
+//            }
+//        };
+//        t.start();
 
     }
 

@@ -1,5 +1,7 @@
 package com.jmelzer.jitty.model;
 
+import com.jmelzer.jitty.service.TournamentService;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +35,8 @@ public class TournamentGroup {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TG_ID")
     List<TournamentSingleGame> games = new ArrayList<>();
+
+    transient private List<TournamentService.PS> ranking;
 
 
     public TournamentGroup() {
@@ -89,5 +93,13 @@ public class TournamentGroup {
         }
         s += "--------------------";
         return s;
+    }
+
+    public void setRanking(List<TournamentService.PS> ranking) {
+        this.ranking = ranking;
+    }
+
+    public List<TournamentService.PS> getRanking() {
+        return ranking;
     }
 }

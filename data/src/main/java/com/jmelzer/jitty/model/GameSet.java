@@ -21,4 +21,12 @@ public class GameSet {
         this.points1 = points1;
         this.points2 = points2;
     }
+
+    public int getPoints1() {
+        return points1;
+    }
+
+    public int getPoints2() {
+        return points2;
+    }
 }

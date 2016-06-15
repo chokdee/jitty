@@ -66,9 +66,9 @@ public class TournamentIntegrationTest {
         //do auslosung
 
         //calculate groups
-        List<TournamentGroup> groups = tournamentService.caluculateGroups(classC);
+        tournamentService.caluculateGroups(classC);
         // test the order of the groups player
-        for (TournamentGroup group : groups) {
+        for (TournamentGroup group : tournamentService.getGroups()) {
             int last_ttr = 5000;
             for (TournamentPlayer player : group.getPlayers()) {
                 assertTrue(player.toString(), last_ttr > player.getQttr());
@@ -84,14 +84,14 @@ public class TournamentIntegrationTest {
 
         //start the tournament with games
         //calculate possible games
-        tournamentService.calcGroupGames(groups);
+        tournamentService.calcGroupGames();
 
         //todo add table manager to get free tables
 
         //start the games, we assume we have 20 table to play
         //algo for find the player who can play
         Queue<TournamentSingleGame> gameQueue = new LinkedList<>();
-        tournamentService.addPossibleGamesToQueue(groups, gameQueue, tournamentService.getBusyGames());
+        tournamentService.addPossibleGamesToQueue(gameQueue, tournamentService.getBusyGames());
         int i = 0;
         for (TournamentSingleGame tournamentSingleGame : gameQueue) {
             System.out.println(++i + ": " + tournamentSingleGame);
@@ -107,7 +107,7 @@ public class TournamentIntegrationTest {
 
         //list the busy games in a table on the UI
         i = 0;
-        int max = 6 * groups.size();
+        int max = 6 * tournamentService.getGroups().size();
         while (true) {
 
             List<TournamentSingleGame> busyGames = tournamentService.getBusyGames();
@@ -117,16 +117,13 @@ public class TournamentIntegrationTest {
             //get random busy game
             TournamentSingleGame game = busyGames.get(randomIntFromInterval(0, busyGames.size() - 1));
 
-            //todo generate random results?
-            game.addSet(new GameSet(11, 5));
-            game.addSet(new GameSet(11, 9));
-            game.addSet(new GameSet(12, 10));
-            game.setWinner(1);
+            createRandomResult(game);
+
             tournamentService.removeBusyGame(game);
 
 
             System.out.println("game " + game + " finished with " + game.printResult());
-            tournamentService.addPossibleGamesToQueue(groups, gameQueue, busyGames);
+            tournamentService.addPossibleGamesToQueue(gameQueue, busyGames);
             tableManager.setFreeTablesNo(game.getTableNo());
 
             callPossibleGames(tournamentService, gameQueue, tableManager);
@@ -134,6 +131,48 @@ public class TournamentIntegrationTest {
             i++;
         }
         assertEquals(max, i);
+
+        //todo remove bye games
+        for (TournamentPlayer player : allPlayer) {
+            assertEquals(player.toString(), 3, player.getGames().size());
+        }
+
+        tournamentService.markGroupWinner();
+
+    }
+
+    private void createRandomResult(TournamentSingleGame game) {
+        int playedSets = randomIntFromInterval(3, 5);
+        int winner = randomIntFromInterval(1, 2);
+        int loser = 0;
+        if (winner == 1) {
+            loser = 2;
+        } else {
+            loser = 1;
+        }
+        game.setWinner(winner);
+        for (int i = 1; i <= playedSets; i++) {
+            if (i < 3) {
+                addSetFor(winner, game);
+            } else  {
+                if (playedSets == i) {
+                    addSetFor(winner, game);
+                } else {
+                    addSetFor(loser, game);
+                }
+            }
+        }
+        assertTrue(playedSets < 6 && playedSets > 2);
+        assertEquals(playedSets, game.getSets().size());
+    }
+
+    private void addSetFor(int winner, TournamentSingleGame game) {
+        if (winner == 1) {
+            game.addSet(new GameSet(11, randomIntFromInterval(0, 9)));
+        } else {
+            game.addSet(new GameSet(randomIntFromInterval(0, 9), 11));
+        }
+
     }
 
     private void callPossibleGames(TournamentService tournamentService, Queue<TournamentSingleGame> gameQueue, TableManager tableManager) {

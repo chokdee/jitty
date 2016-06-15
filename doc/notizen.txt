@@ -10,3 +10,10 @@ nisse dieser Spieler untereinander verglichen. Kommt man bei diesem Punkt- und S
 renzvergleichen Spielern immer  noch nicht zu einem Ergebnis, so entscheidet die größere Dif-
 ferenz zwischen gewonnenen und verlorenen Bällen. Die Spiele gegen die anderen Spieler die-
 ser Gruppe werden beim direkten Vergleich nicht berücksichtigt.
+
+Die Platzierung innerhalb der jeweiligen Gruppen ergibt sich aus dieser Wertungs-Rangfolge:
+1. Punkte
+2. Satzverhältnis
+3. Ballverhältnis
+4. Direkter Vergleich
+5. Losentscheid

@@ -64,6 +64,7 @@ public class TournamentSingleGame {
 
     public void setPlayer1(TournamentPlayer player1) {
         this.player1 = player1;
+        player1.addGame(this);
     }
 
     public TournamentPlayer getPlayer2() {
@@ -72,10 +73,15 @@ public class TournamentSingleGame {
 
     public void setPlayer2(TournamentPlayer player2) {
         this.player2 = player2;
+        player2.addGame(this);
     }
 
     public List<GameSet> getSets() {
         return sets;
+    }
+
+    public int getWinner() {
+        return winner;
     }
 
     public void setSets(List<GameSet> sets) {
@@ -125,11 +131,15 @@ public class TournamentSingleGame {
     }
 
     public void setWinner(int winner) {
+        if (winner < 1 || winner > 2) {
+            throw new IllegalArgumentException("winner must be 1 or 2");
+        }
         this.winner = winner;
     }
 
     public String printResult() {
         String s = "";
+        if (winner == -1) return " not played";
         s += "Player " + winner + " won with set statistics (" + printSets() + ")";
         return s;
     }
