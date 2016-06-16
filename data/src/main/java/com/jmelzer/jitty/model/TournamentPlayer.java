@@ -12,6 +12,9 @@ import java.util.List;
 @Entity
 @Table(name = "tournament_player")
 public class TournamentPlayer {
+
+    public static TournamentPlayer BYE = new TournamentPlayer(0L, "FREI", "LOS");
+
     @Id
     @GeneratedValue
     private Long id;
@@ -40,7 +43,7 @@ public class TournamentPlayer {
     @Column(nullable = true, length = 1)
     private String gender;
 
-    public int ranking=0;
+    public int ranking = 0;
 
     @OneToMany(cascade = CascadeType.DETACH)
     private List<TournamentSingleGame> games = new ArrayList<>();
