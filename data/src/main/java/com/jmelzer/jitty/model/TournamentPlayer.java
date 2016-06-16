@@ -40,6 +40,8 @@ public class TournamentPlayer {
     @Column(nullable = true, length = 1)
     private String gender;
 
+    public int ranking=0;
+
     @OneToMany(cascade = CascadeType.DETACH)
     private List<TournamentSingleGame> games = new ArrayList<>();
 
@@ -127,15 +129,10 @@ public class TournamentPlayer {
     @Override
     public String toString() {
         return "TournamentPlayer{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
+                "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", mobileNumber='" + mobileNumber + '\'' +
                 ", qttr=" + qttr +
-                ", ttr=" + ttr +
-                ", birthday=" + birthday +
-                ", gender='" + gender + '\'' +
+                ", ranking=" + ranking +
                 '}';
     }
 

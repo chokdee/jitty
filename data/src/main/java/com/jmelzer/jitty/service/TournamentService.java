@@ -234,6 +234,125 @@ public class TournamentService {
         groups.add(group);
     }
 
+    public KOField createKOField(RoundType roundType) {
+        KOField field = new KOField();
+        field.setRound(new Round(roundType));
+        switch (roundType) {
+            case R128:
+                createSubRounds(field.getRound(), 6, 64);
+                break;
+            case R64:
+                createSubRounds(field.getRound(), 5, 32);
+                break;
+            case R32:
+                createSubRounds(field.getRound(), 4, 16);
+                break;
+            case R16:
+                createSubRounds(field.getRound(), 3, 8);
+                break;
+            case QUARTER:
+                createSubRounds(field.getRound(), 2, 4);
+                break;
+            default:
+                throw new RuntimeException("not yet implemented");
+        }
+        return field;
+    }
+
+    private void createSubRounds(Round round, int i, int size) {
+        Round lastRound = round;
+        lastRound.setSize(size * 2);
+        for (int j = 0; j < i; j++) {
+            lastRound.setNextRound(new Round(size));
+            size = size / 2;
+            lastRound = lastRound.getNextRound();
+        }
+    }
+
+    public TournamentPlayer[] assignPlayerToKoField(KOField field) {
+        List<TournamentPlayer> winner = new ArrayList<>();
+        for (TournamentGroup group : groups) {
+            winner.add(group.getRanking().get(0).player);
+        }
+        List<TournamentPlayer> second = new ArrayList<>();
+        int r = winner.size() + 1;
+        for (TournamentGroup group : groups) {
+            second.add(group.getRanking().get(1).player);
+            group.getRanking().get(1).player.ranking = r++;
+        }
+        //sort with qttr
+        Collections.sort(winner, (o1, o2) -> Integer.compare(o1.getQttr(), o2.getQttr()) * -1);
+        Collections.sort(second, (o1, o2) -> Integer.compare(o1.getQttr(), o2.getQttr()) * -1);
+        Round round = field.getRound();
+        int fieldSize = round.getSize();
+        TournamentPlayer[] players = new TournamentPlayer[round.getSize() + 1];
+
+        winner.addAll(second);
+
+        for (int i = 0; i < winner.size() && i < fieldSize; i++) {
+            TournamentPlayer player = winner.get(i);
+            if (i == 0) {
+                players[1] = player;
+            }
+            if (i == 1) {
+                players[fieldSize] = player;
+            }
+            if (i == 2) {
+                players[fieldSize / 2 + 1] = player;
+            }
+            if (i == 3) {
+                players[fieldSize / 2] = player;
+            }
+            if (i == 4) {
+                players[fieldSize / 2 - fieldSize / 4 + 1] = player;
+            }
+            if (i == 5) {
+                players[(fieldSize / 2) + (fieldSize / 4)] = player;
+            }
+            if (i == 6) {
+                players[fieldSize - (fieldSize / 4) + 1] = player;
+            }
+            if (i == 7) {
+                players[fieldSize / 4] = player;
+            }
+            if (i == 8) {
+                players[(fieldSize / 8) + 1] = player;
+            }
+            if (i == 9) {
+                players[fieldSize - (fieldSize / 8)] = player;
+            }
+            if (i == 10) {
+                players[fieldSize / 2 + (fieldSize / 8) + 1] = player;
+            }
+            if (i == 11) {
+                players[fieldSize / 2 - (fieldSize / 8)] = player;
+            }
+            if (i == 12) {
+                players[fieldSize / 2 - (fieldSize / 8) + 1] = player;
+            }
+            if (i == 13) {
+                players[fieldSize / 2 + 1 + (fieldSize / 16) ] = player;
+            }
+            if (i == 14) {
+                players[fieldSize - (fieldSize / 16) ] = player;
+            }
+            if (i == 15) {
+                players[(fieldSize / 8)] = player;
+            }
+        }
+
+        int i = 0;
+        for (TournamentPlayer player : players) {
+            if (0 == i) {
+                i++;
+                continue;
+            }
+            System.out.println(i + " --> " + (player != null ? player.ranking : " bye"));
+            i++;
+        }
+        return players;
+    }
+
     static public class PS implements Comparable<PS> {
         TournamentPlayer player;
         int win;

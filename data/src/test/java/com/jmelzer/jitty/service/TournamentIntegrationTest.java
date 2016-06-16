@@ -139,6 +139,11 @@ public class TournamentIntegrationTest {
 
         tournamentService.markGroupWinner();
 
+        //64 K.O
+        KOField field = tournamentService.createKOField(RoundType.R64);
+        System.out.println("field = " + field);
+        tournamentService.assignPlayerToKoField(field);
+
     }
 
     private void createRandomResult(TournamentSingleGame game) {

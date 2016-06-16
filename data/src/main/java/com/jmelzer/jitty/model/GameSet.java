@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,8 +15,13 @@ public class GameSet {
     @GeneratedValue
     private Long id;
 
+    @Column
     int points1;
+    @Column
     int points2;
+
+    public GameSet() {
+    }
 
     public GameSet(int points1, int points2) {
         this.points1 = points1;

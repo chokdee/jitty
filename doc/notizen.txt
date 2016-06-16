@@ -17,3 +17,28 @@ Die Platzierung innerhalb der jeweiligen Gruppen ergibt sich aus dieser Wertungs
 3. Ballverhältnis
 4. Direkter Vergleich
 5. Losentscheid
+
+
+SETZUNGEN
+-------------
+Jeweils zwei Spieler pro Gruppe qualifizieren sich für die Endrunde, die im KO-System
+ausgetragen wird.
+Hierbei werden die Gruppensieger gesetzt; bezüglich der Reihenfolge in der Setzliste gelten
+die oben genannten Kriterien; Gruppenzweite werden auch dann nicht gesetzt, wenn dies
+gemäß ihres QTTR-Werts der Fall wäre.
+Die Positionierung der gesetzten Spieler im KO-Feld (Turnierliste) erfolgt gemäß WO A 4.1.
+Bei der Zulosung innerhalb einer Setzebene (Pos. 3 und 4; Pos. 5 bis 8; ...) wird nach
+Möglichkeit ein Zusammentreffen von vereinsgleichen gesetzten Spielern vermieden.
+Sind G Freilose notwendig, um die Feldgröße eine
+s KO-Felds (8; 16; 32; ...) zu erreichen, so
+werden diese Freilose in der 1. KO-Runde den auf die Positionen 1 bis G gesetzten Spielern
+zugewiesen. Übersteigt G die Gruppenanzahl
+X, so werden die überzähligen Freilose
+gleichmäßig über das KO-Feld verteilt.
+Die Gruppenzweiten werden jeweils der Hälfte der Turnierliste zugewiesen, in der sich nicht
+der Gruppensieger derselben Gruppe befindet.
+ Wiederholtes Aufeinandertreffen vor dem
+Finale wird somit vermieden.
+Innerhalb der Hälften werden die Gruppenzweiten so zugelost, dass die Anzahl
+vereinsinterner Duelle in der 1. KO-Runde minimal ist (nachrangig werden mögliche
+vereinsinterne Duelle in der 2. KO-Runde usw. minimiert).
