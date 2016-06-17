@@ -1,7 +1,6 @@
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.model.*;
-import com.jmelzer.jitty.utl.RandomUtil;
 
 import java.util.*;
 
@@ -13,6 +12,8 @@ public class TournamentService {
 
     List<TournamentSingleGame> busyGames = new ArrayList<>();
     List<TournamentGroup> groups = new ArrayList<>();
+    //todo use spring
+    private SeedingManager seedingManager = new SeedingManager();
 
     public void caluculateGroups(TournamentClass tournamentClass) {
         //first calc the field size , 16 / 32 etc
@@ -33,7 +34,7 @@ public class TournamentService {
         groups = createGroups(groupCount);
 
         List<TournamentPlayer> allPlayer = new ArrayList<>(tournamentClass.getPlayers());
-        Random randomGenerator = new Random();
+
 
         //sort all player by qttr
         Collections.sort(allPlayer, (o1, o2) -> {
@@ -46,8 +47,8 @@ public class TournamentService {
             return 0;
         });
 
-        //todo don't forget the rules see auslosung.txt
-        setPlayerRandomAccordingToQTTR(groupCount, groups, allPlayer, randomGenerator);
+
+        seedingManager.setPlayerRandomAccordingToQTTR(groupCount, groups, allPlayer);
 
     }
 
@@ -55,24 +56,7 @@ public class TournamentService {
         return Collections.unmodifiableList(groups);
     }
 
-    private void setPlayerRandomAccordingToQTTR(int groupCount, List<TournamentGroup> groups, List<TournamentPlayer> allPlayer, Random randomGenerator) {
-        while (allPlayer.size() > 0) {
-            //set the best n player in the groups
-            for (int i = 0; i < groupCount; i++) {
-                int index = randomGenerator.nextInt(groupCount - i);
-                if (index >= allPlayer.size()) {
-                    index--;
-                }
-                if (index == -1 || allPlayer.size() == 0) {
-                    break;
-                }
-                TournamentPlayer p = allPlayer.get(index);
-                allPlayer.remove(index);
-                groups.get(i).addPlayer(p);
 
-            }
-        }
-    }
 
     /**
      * iterate thrw all groups and add not played games. but take care of the player isn't already in the list
@@ -271,166 +255,9 @@ public class TournamentService {
     }
 
     public List<TournamentSingleGame> assignPlayerToKoField(KOField field) {
-        List<TournamentPlayer> winner = new ArrayList<>();
-        for (TournamentGroup group : groups) {
-            winner.add(group.getRanking().get(0).player);
-        }
-        List<TournamentPlayer> second = new ArrayList<>();
-        int r = winner.size() + 1;
-        for (TournamentGroup group : groups) {
-            second.add(group.getRanking().get(1).player);
-            group.getRanking().get(1).player.ranking = r++;
-        }
-        //sort with qttr
-        Collections.sort(winner, (o1, o2) -> Integer.compare(o1.getQttr(), o2.getQttr()) * -1);
-        Collections.sort(second, (o1, o2) -> Integer.compare(o1.getQttr(), o2.getQttr()) * -1);
-        Round round = field.getRound();
-        int fieldSize = round.getSize();
-        TournamentPlayer[] players = new TournamentPlayer[round.getSize() + 1];
-
-//        winner.addAll(second);
-        List<TournamentPlayer> rest = new ArrayList<>(winner);
-        List<Integer> positionOfSeededPlayers = new ArrayList<>();
-        for (int i = 0; i < winner.size() && i < fieldSize; i++) {
-            TournamentPlayer player = winner.get(i);
-            if (i < 16) {
-                rest.remove(player);
-            }
-            int pos = -1;
-            switch (i) {
-                case 0:
-                    pos = 1;
-                    break;
-                case 1:
-                    pos = fieldSize;
-                    break;
-                case 2:
-                    pos = fieldSize / 2 + 1;
-                    break;
-                case 3:
-                    pos = fieldSize / 2;
-                    break;
-                case 4:
-                    pos = fieldSize / 2 - fieldSize / 4 + 1;
-                    break;
-                case 5:
-                    pos = (fieldSize / 2) + (fieldSize / 4);
-                    break;
-                case 6:
-                    pos = fieldSize - (fieldSize / 4) + 1;
-                    break;
-                case 7:
-                    pos = fieldSize / 4;
-                    break;
-                case 8:
-                    pos = (fieldSize / 8) + 1;
-                    break;
-                case 9:
-                    pos = fieldSize - (fieldSize / 8);
-                    break;
-                case 10:
-                    pos = fieldSize / 2 + (fieldSize / 8) + 1;
-                    break;
-                case 11:
-                    pos = fieldSize / 2 - (fieldSize / 8);
-                    break;
-                case 12:
-                    pos = fieldSize / 2 - (fieldSize / 8) + 1;
-                    break;
-                case 13:
-                    pos = fieldSize / 2 + 1 + (fieldSize / 16);
-                    break;
-                case 14:
-                    pos = fieldSize - (fieldSize / 16);
-                    break;
-                case 15:
-                    pos = (fieldSize / 8);
-                    break;
-                default:
-                    break;
-                //todo add more if needed
-            }
-            if (pos >= 0) {
-                positionOfSeededPlayers.add(pos - 1); //0 indexed;
-                players[pos] = player;
-            }
-        }
-
-        //transform in to games
-        List<TournamentSingleGame> games = new ArrayList<>();
-        for (int i = 1; i <= fieldSize; i++) {
-            TournamentSingleGame game = new TournamentSingleGame();
-            TournamentPlayer player1 = players[i];
-            TournamentPlayer player2 = players[++i];
-            game.setPlayer1(player1);
-            game.setPlayer2(player2);
-            games.add(game);
-        }
-
-        rest.addAll(second);
-
-//        Sind Freilose notwendig, um die Feldgröße eines KO-Felds (8; 16; 32; ...) zu erreichen, so
-//        werden diese Freilose in der 1. KO-Runde den auf die Positionen 1 bis G gesetzten Spielern
-//        zugewiesen.
-
-
-        //set the no of free places to the top seeded players
-        int freePos = fieldSize - positionOfSeededPlayers.size() - rest.size();
-        for (int i = 0; i < positionOfSeededPlayers.size() && i < freePos; i++) {
-            int pos = positionOfSeededPlayers.get(i);
-            int gamePos = pos / 2;
-            if (gamePos >= games.size()) {
-                gamePos--;
-            }
-            TournamentSingleGame game = games.get(gamePos);
-            if (game.getPlayer1() != null) {
-                if (game.getPlayer2() == null) {
-                    game.setPlayer2(TournamentPlayer.BYE);
-                }
-            } else if (game.getPlayer2() != null) {
-                if (game.getPlayer1() == null) {
-                    game.setPlayer1(TournamentPlayer.BYE);
-                }
-            }
-        }
-
-
-        //fill up with other if free places are avaible
-        //need two runs here
-        for (int run = 0; run < 2; run++) {
-
-            for (int i = 0; i < games.size(); i++) {
-                TournamentSingleGame game = games.get(i);
-                if (game.getPlayer1() != null && game.getPlayer2() != null) {
-                    continue;
-                }
-                if (rest.size() == 0) {
-                    break;
-                }
-                int n = RandomUtil.randomIntFromInterval(0, rest.size() - 1);
-                if (game.getPlayer1() == null) {
-                    game.setPlayer1(rest.get(n));
-                    rest.remove(n);
-                } else if (game.getPlayer2() == null) {
-                    game.setPlayer2(rest.get(n));
-                    rest.remove(n);
-                }
-            }
-        }
-
-        printBracket(games);
-        return games;
+        return seedingManager.assignPlayerToKoField(field, groups);
     }
 
-    private void printBracket(List<TournamentSingleGame> games) {
-        for (TournamentSingleGame game : games) {
-            System.out.println("------------------");
-            System.out.println(game.getPlayer1().getFullName());
-            System.out.println(game.getPlayer2().getFullName());
-            System.out.println("------------------");
-            System.out.println();
-        }
-    }
 
     static public class PS implements Comparable<PS> {
         TournamentPlayer player;

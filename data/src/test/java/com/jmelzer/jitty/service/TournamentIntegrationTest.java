@@ -140,7 +140,7 @@ public class TournamentIntegrationTest {
         tournamentService.markGroupWinner();
 
         //64 K.O
-        KOField field = tournamentService.createKOField(RoundType.R64);
+        KOField field = tournamentService.createKOField(RoundType.R32);
         System.out.println("field = " + field);
         tournamentService.assignPlayerToKoField(field);
 

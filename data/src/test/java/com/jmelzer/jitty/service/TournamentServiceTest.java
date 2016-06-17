@@ -87,27 +87,14 @@ public class TournamentServiceTest {
 
         KOField field = service.createKOField(RoundType.R16);
         List<TournamentSingleGame> games = service.assignPlayerToKoField(field);
-//        assertEquals(1, players[1].ranking);
-//        assertEquals(2, players[16].ranking);
-//        assertEquals(3, players[9].ranking);
-//        assertEquals(4, players[8].ranking);
-//        assertEquals(5, players[5].ranking);
-//        assertEquals(6, players[12].ranking);
-//        assertEquals(7, players[13].ranking);
-//        assertEquals(8, players[4].ranking);
-//        for (int i = 1; i < players.length; i++) {
-//            assertNotNull(i + " must not be null", players[i]);
-//
-//        }
-//        assertEquals(9, players[3].ranking);
-//        assertEquals(10, players[14].ranking);
-//        assertEquals(11, players[11].ranking);
-//        assertEquals(12, players[6].ranking);
-//        assertEquals(13, players[7].ranking);
-//        assertEquals(14, players[10].ranking);
-//        assertEquals(15, players[15].ranking);
-//        assertEquals(16, players[2].ranking);
+        assertEquals("Ma", games.get(0).getPlayer1().getFirstName());
+        assertEquals("Fan", games.get(7).getPlayer2().getFirstName());
+        //todo etc
 
+        for (TournamentSingleGame game : games) {
+            assertNotNull("all player must be filled", game.getPlayer1());
+            assertNotNull("all player must be filled", game.getPlayer2());
+        }
 
     }
 

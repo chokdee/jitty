@@ -43,7 +43,7 @@ public class TournamentPlayer {
     @Column(nullable = true, length = 1)
     private String gender;
 
-    public int ranking = 0;
+    public transient int ranking = 0;
 
     @OneToMany(cascade = CascadeType.DETACH)
     private List<TournamentSingleGame> games = new ArrayList<>();
