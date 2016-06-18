@@ -191,9 +191,10 @@ public class SeedingManager {
     }
 
     //todo don't forget the rules see auslosung.txt
-    public void setPlayerRandomAccordingToQTTR(int groupCount, List<TournamentGroup> groups, List<TournamentPlayer> allPlayer) {
+    public void setPlayerRandomAccordingToQTTR(List<TournamentGroup> groups, List<TournamentPlayer> allPlayer) {
         Random randomGenerator = new Random();
 
+        int groupCount = groups.size();
         while (allPlayer.size() > 0) {
             //set the best n player in the groups
             for (int i = 0; i < groupCount; i++) {

@@ -32,6 +32,7 @@ public class TournamentService {
         int groupCount = calcOptimalGroupSize(ps);
 
         groups = createGroups(groupCount);
+        tournamentClass.setGroups(groups);
 
         List<TournamentPlayer> allPlayer = new ArrayList<>(tournamentClass.getPlayers());
 
@@ -48,7 +49,7 @@ public class TournamentService {
         });
 
 
-        seedingManager.setPlayerRandomAccordingToQTTR(groupCount, groups, allPlayer);
+        seedingManager.setPlayerRandomAccordingToQTTR(groups, allPlayer);
 
     }
 

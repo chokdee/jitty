@@ -67,6 +67,8 @@ public class TournamentIntegrationTest {
 
         //calculate groups
         tournamentService.caluculateGroups(classC);
+        assertEquals("14*4 groups + 1 with 3 player", 15, classC.getGroups().size());
+
         // test the order of the groups player
         for (TournamentGroup group : tournamentService.getGroups()) {
             int last_ttr = 5000;
@@ -139,7 +141,7 @@ public class TournamentIntegrationTest {
 
         tournamentService.markGroupWinner();
 
-        //64 K.O
+        //59 Player , 2 per group are winner 32 K.O
         KOField field = tournamentService.createKOField(RoundType.R32);
         System.out.println("field = " + field);
         tournamentService.assignPlayerToKoField(field);

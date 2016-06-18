@@ -83,4 +83,8 @@ public class TournamentClass {
     public void addGroup(TournamentGroup group) {
         groups.add(group);
     }
+
+    public void setGroups(List<TournamentGroup> groups) {
+        this.groups = groups;
+    }
 }
