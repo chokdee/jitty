@@ -92,23 +92,23 @@ public class TournamentIntegrationTest {
 
         //start the games, we assume we have 20 table to play
         //algo for find the player who can play
-        Queue<TournamentSingleGame> gameQueue = new LinkedList<>();
-        tournamentService.addPossibleGamesToQueue(gameQueue, tournamentService.getBusyGames());
-        int i = 0;
-        for (TournamentSingleGame tournamentSingleGame : gameQueue) {
-            System.out.println(++i + ": " + tournamentSingleGame);
-        }
+
+        tournamentService.addPossibleGroupGamesToQueue();
+//        int i = 0;
+//        for (TournamentSingleGame tournamentSingleGame : gameQueue) {
+//            System.out.println(++i + ": " + tournamentSingleGame);
+//        }
         //20 free tables
         TableManager tableManager = new TableManager();
         for (int j = 1; j < 21; j++) {
             tableManager.setFreeTablesNo(j);
         }
 
-        callPossibleGames(tournamentService, gameQueue, tableManager);
+        callPossibleGames(tournamentService, tableManager);
 
 
         //list the busy games in a table on the UI
-        i = 0;
+        int i = 0;
         int max = 6 * tournamentService.getGroups().size();
         while (true) {
 
@@ -125,11 +125,10 @@ public class TournamentIntegrationTest {
 
 
             System.out.println("game " + game + " finished with " + game.printResult());
-            tournamentService.addPossibleGamesToQueue(gameQueue, busyGames);
+            tournamentService.addPossibleGroupGamesToQueue();
             tableManager.setFreeTablesNo(game.getTableNo());
 
-            callPossibleGames(tournamentService, gameQueue, tableManager);
-            System.out.println("possible game count = " + gameQueue.size());
+            callPossibleGames(tournamentService, tableManager);
             i++;
         }
         assertEquals(max, i);
@@ -144,10 +143,24 @@ public class TournamentIntegrationTest {
         //59 Player , 2 per group are winner 32 K.O
         KOField field = tournamentService.createKOField(RoundType.R32);
         System.out.println("field = " + field);
-        tournamentService.assignPlayerToKoField(field);
+        List<TournamentSingleGame> games = tournamentService.assignPlayerToKoField(field);
+        printBracket(games);
+
+        for (TournamentSingleGame game : games) {
+            createRandomResult(game);
+        }
 
     }
-
+    private void printBracket(List<TournamentSingleGame> games) {
+        for (TournamentSingleGame game : games) {
+            System.out.println("------------------");
+            System.out.println(game.getPlayer1().getFullName());
+            System.out.println("                       --------------");
+            System.out.println(game.getPlayer2().getFullName());
+            System.out.println("------------------");
+            System.out.println();
+        }
+    }
     private void createRandomResult(TournamentSingleGame game) {
         int playedSets = randomIntFromInterval(3, 5);
         int winner = randomIntFromInterval(1, 2);
@@ -182,10 +195,10 @@ public class TournamentIntegrationTest {
 
     }
 
-    private void callPossibleGames(TournamentService tournamentService, Queue<TournamentSingleGame> gameQueue, TableManager tableManager) {
+    private void callPossibleGames(TournamentService tournamentService, TableManager tableManager) {
         //let's play
         while (tableManager.isTableAvaible()) {
-            TournamentSingleGame singleGame = gameQueue.poll();
+            TournamentSingleGame singleGame = tournamentService.poll();
             if (singleGame == null) {
                 break;
             }

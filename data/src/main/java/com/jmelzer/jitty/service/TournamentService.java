@@ -9,7 +9,7 @@ import java.util.*;
  * manage the tournament
  */
 public class TournamentService {
-
+    Queue<TournamentSingleGame> gameQueue = new LinkedList<>();
     List<TournamentSingleGame> busyGames = new ArrayList<>();
     List<TournamentGroup> groups = new ArrayList<>();
     //todo use spring
@@ -57,15 +57,15 @@ public class TournamentService {
         return Collections.unmodifiableList(groups);
     }
 
-
+    public int getQueueSize() {
+        return gameQueue.size();
+    }
 
     /**
      * iterate thrw all groups and add not played games. but take care of the player isn't already in the list
      *
-     * @param gameQueue
-     * @param busyGames
      */
-    public void addPossibleGamesToQueue(Collection<TournamentSingleGame> gameQueue, Collection<TournamentSingleGame> busyGames) {
+    public void addPossibleGroupGamesToQueue() {
         for (TournamentGroup group : groups) {
             List<TournamentSingleGame> games = group.getGames();
             for (TournamentSingleGame game : games) {
@@ -256,7 +256,13 @@ public class TournamentService {
     }
 
     public List<TournamentSingleGame> assignPlayerToKoField(KOField field) {
-        return seedingManager.assignPlayerToKoField(field, groups);
+        List<TournamentSingleGame> games = seedingManager.assignPlayerToKoField(field, groups);
+//        qu
+        return games;
+    }
+
+    public TournamentSingleGame poll() {
+        return gameQueue.poll();
     }
 
 

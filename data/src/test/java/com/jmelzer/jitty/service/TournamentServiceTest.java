@@ -25,26 +25,25 @@ public class TournamentServiceTest {
 
     @Test
     public void testAddPossibleGamesToQueue() throws Exception {
-        Queue<TournamentSingleGame> gameQueue = new LinkedList<>();
 
         TournamentGroup group = prepareGroupWithPlayerAndGames();
         service.addGroup(group);
 
-        service.addPossibleGamesToQueue(gameQueue, service.getBusyGames());
-        assertEquals(2, gameQueue.size());
+        service.addPossibleGroupGamesToQueue();
+        assertEquals(2, service.getQueueSize());
 
-        TournamentSingleGame game = gameQueue.poll();
+        TournamentSingleGame game = service.poll();
         game.setCalled(true);
-        assertEquals(1, gameQueue.size());
-        service.addPossibleGamesToQueue(gameQueue, service.getBusyGames());
-        assertEquals("player busy no new player can be added", 1, gameQueue.size());
+        assertEquals(1, service.getQueueSize());
+        service.addPossibleGroupGamesToQueue();
+        assertEquals("player busy no new player can be added", 1, service.getQueueSize());
 
-        game = gameQueue.poll();
+        game = service.poll();
         game.setCalled(true);
-        assertEquals(0, gameQueue.size());
+        assertEquals(0, service.getQueueSize());
 
-        service.addPossibleGamesToQueue(gameQueue, service.getBusyGames());
-        assertEquals(2, gameQueue.size());
+        service.addPossibleGroupGamesToQueue();
+        assertEquals(2, service.getQueueSize());
     }
 
     @Test

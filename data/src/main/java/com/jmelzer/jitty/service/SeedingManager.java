@@ -123,7 +123,6 @@ public class SeedingManager {
 
         fillupWithOtherPlayer(rest, games);
 
-        printBracket(games);
         return games;
     }
 
@@ -213,13 +212,5 @@ public class SeedingManager {
         }
     }
 
-    private void printBracket(List<TournamentSingleGame> games) {
-        for (TournamentSingleGame game : games) {
-            System.out.println("------------------");
-            System.out.println(game.getPlayer1().getFullName());
-            System.out.println(game.getPlayer2().getFullName());
-            System.out.println("------------------");
-            System.out.println();
-        }
-    }
+
 }
