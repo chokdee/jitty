@@ -2,6 +2,7 @@ package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.model.*;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 /**
@@ -14,6 +15,7 @@ public class TournamentService {
     List<TournamentGroup> groups = new ArrayList<>();
     //todo use spring
     private SeedingManager seedingManager = new SeedingManager();
+    private KOField field;
 
     public void caluculateGroups(TournamentClass tournamentClass) {
         //first calc the field size , 16 / 32 etc
@@ -63,20 +65,11 @@ public class TournamentService {
 
     /**
      * iterate thrw all groups and add not played games. but take care of the player isn't already in the list
-     *
      */
     public void addPossibleGroupGamesToQueue() {
         for (TournamentGroup group : groups) {
             List<TournamentSingleGame> games = group.getGames();
-            for (TournamentSingleGame game : games) {
-                TournamentPlayer player1 = game.getPlayer1();
-                TournamentPlayer player2 = game.getPlayer2();
-                if (!playerInQueue(player1, gameQueue) && !playerInQueue(player2, gameQueue) &&
-                        !playerInQueue(player1, busyGames) && !playerInQueue(player2, busyGames) &&
-                        !game.isFinishedOrCalled()) {
-                    gameQueue.add(game);
-                }
-            }
+            addGamesToQueueInternally(games);
         }
 
     }
@@ -221,7 +214,7 @@ public class TournamentService {
     }
 
     public KOField createKOField(RoundType roundType) {
-        KOField field = new KOField();
+        field = new KOField();
         field.setRound(new Round(roundType));
         switch (roundType) {
             case R128:
@@ -242,6 +235,7 @@ public class TournamentService {
             default:
                 throw new RuntimeException("not yet implemented");
         }
+        //todo persist it
         return field;
     }
 
@@ -263,6 +257,47 @@ public class TournamentService {
 
     public TournamentSingleGame poll() {
         return gameQueue.poll();
+    }
+
+    public void addPossibleKoGamesToQueue() {
+        if (field != null) {
+
+            List<TournamentSingleGame> games = field.getRound().getGames();
+            addGamesToQueueInternally(games);
+            Round r = field.getRound();
+            while (r != null) {
+                if (r.getNextRound() != null) {
+                    r = r.getNextRound();
+                    addGamesToQueueInternally(r.getGames());
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    private void addGamesToQueueInternally(List<TournamentSingleGame> games) {
+        for (TournamentSingleGame game : games) {
+            TournamentPlayer player1 = game.getPlayer1();
+            TournamentPlayer player2 = game.getPlayer2();
+            if (!playerInQueue(player1, gameQueue) && !playerInQueue(player2, gameQueue) &&
+                    !playerInQueue(player1, busyGames) && !playerInQueue(player2, busyGames) &&
+                    !game.isFinishedOrCalled()) {
+                gameQueue.add(game);
+            }
+        }
+    }
+
+    @Transactional
+    public void enterResult(TournamentSingleGame game) {
+        if (field != null) {
+            moveWinnerToNextRound(game);
+        }
+        removeBusyGame(game);
+    }
+
+    private void moveWinnerToNextRound(TournamentSingleGame game) {
+        TournamentPlayer player = game.getWinningPlayer();
     }
 
 

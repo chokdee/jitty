@@ -123,7 +123,6 @@ public class TournamentIntegrationTest {
 
             tournamentService.removeBusyGame(game);
 
-
             System.out.println("game " + game + " finished with " + game.printResult());
             tournamentService.addPossibleGroupGamesToQueue();
             tableManager.setFreeTablesNo(game.getTableNo());
@@ -146,9 +145,20 @@ public class TournamentIntegrationTest {
         List<TournamentSingleGame> games = tournamentService.assignPlayerToKoField(field);
         printBracket(games);
 
+        tournamentService.addPossibleKoGamesToQueue();
+
+        callPossibleGames(tournamentService, tableManager);
+
         for (TournamentSingleGame game : games) {
             createRandomResult(game);
+            tournamentService.enterResult(game);
+
         }
+        assertEquals(0, tournamentService.getQueueSize());
+
+
+        tournamentService.addPossibleKoGamesToQueue();
+        assertEquals(0, tournamentService.getQueueSize());
 
     }
     private void printBracket(List<TournamentSingleGame> games) {

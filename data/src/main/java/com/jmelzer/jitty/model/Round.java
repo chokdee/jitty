@@ -2,6 +2,7 @@ package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -58,5 +59,13 @@ public class Round {
 
     public int getSize() {
         return size;
+    }
+
+    public List<TournamentSingleGame> getGames() {
+        return Collections.unmodifiableList(games);
+    }
+
+    public void addAllGames(List<TournamentSingleGame> games) {
+        this.games.addAll(games);
     }
 }

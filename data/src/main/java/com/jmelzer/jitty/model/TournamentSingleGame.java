@@ -162,4 +162,12 @@ public class TournamentSingleGame {
     public boolean isFinishedOrCalled() {
         return winner > -1 || called;
     }
+
+    public TournamentPlayer getWinningPlayer() {
+        if (winner == 1) {
+            return player1;
+        }
+
+        return player2;
+    }
 }

@@ -122,7 +122,7 @@ public class SeedingManager {
 
 
         fillupWithOtherPlayer(rest, games);
-
+        field.getRound().addAllGames(games);
         return games;
     }
 
