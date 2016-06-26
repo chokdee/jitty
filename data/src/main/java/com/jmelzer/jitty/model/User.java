@@ -55,6 +55,7 @@ public class User implements Serializable {
 
 
     @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinColumn(name="TOURNAMENT_ID")
     Tournament lastUsedTournament;
 
 //    private Set<UserRole> roles = new LinkedHashSet<UserRole>();

@@ -105,6 +105,7 @@
         name varchar(255) not null,
         password varchar(255) not null,
         type integer,
+        TOURNAMENT_ID bigint,
         primary key (id)
     );
 
@@ -207,3 +208,8 @@
         add constraint FK_j48gxx1sy679tjpw2kd1fijjo 
         foreign key (tournament_single_game_id) 
         references tournament_single_game;
+
+    alter table user 
+        add constraint FK_jyl9a30maocxl1jmocgin4mct 
+        foreign key (TOURNAMENT_ID) 
+        references tournament;

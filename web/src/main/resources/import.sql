@@ -8,5 +8,7 @@ insert into user(id, name, email, locked, loginname, password ) values (7,'Valen
 insert into user(id, name, email, locked, loginname, password ) values (8,'Karl Foggarty', 'k@k.com', 0, 'user', '42');
 
 
-INSERT INTO TOURNAMENT (END_DATE, NAME, START_DATE) VALUES ('2015-06-03', 'Jitty Open 2015', '2015-06-01');
-INSERT INTO TOURNAMENT (END_DATE, NAME, START_DATE) VALUES ('2016-06-29', 'Jitty Open 2016', '2016-06-27');
+INSERT INTO TOURNAMENT (ID, END_DATE, NAME, START_DATE) VALUES (1, '2015-06-03', 'Jitty Open 2015', '2015-06-01');
+INSERT INTO TOURNAMENT (ID, END_DATE, NAME, START_DATE) VALUES (2, '2016-06-29', 'Jitty Open 2016', '2016-06-27');
+
+update USER SET TOURNAMENT_ID = 2 where ID = 1;
