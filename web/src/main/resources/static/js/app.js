@@ -1,4 +1,5 @@
-angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages',  'jitty.controllers', 'jitty.services', 'jitty.directives']).config(function ($routeProvider, $httpProvider) {
+angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'jitty.controllers', 'jitty.services', 'jitty.directives',
+'jitty.tournament']).config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.when('/', {
         templateUrl: 'home.html',
@@ -13,8 +14,8 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages',  'jitty.controll
         templateUrl: 'user-edit.html',
         controller: 'UserEditController'
     }).when('/users-add', {
-            templateUrl: 'user-new.html',
-            controller: 'UserCreateController'
+        templateUrl: 'user-new.html',
+        controller: 'UserCreateController'
     }).when('/user-pw-change/:id', {
         templateUrl: 'user-pw-change.html',
         controller: 'UserEditController'
@@ -55,7 +56,7 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages',  'jitty.controll
                 callback && callback(false);
             });
 
-        }
+        };
 
         authenticate();
 

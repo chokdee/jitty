@@ -18,6 +18,7 @@
         <li><a href="#/login">login</a></li>
         <li ng-show="authenticated"><a href="" ng-click="logout()">logout</a></li>
         <li><a href="#/users">User</a></li>
+        <li><a href="#/tournaments">Turnier</a></li>
     </ul>
 </div>
 <div ng-view class="container"></div>
@@ -26,5 +27,8 @@
 <script src="js/controllers.js"></script>
 <script src="js/services.js"></script>
 <script src="js/directives.js"></script>
+<script src="js/tournament/tournamentModule.js"></script>
+<script src="js/tournament/tournamentController.js"></script>
+<script src="js/tournament/tournamentService.js"></script>
 </body>
 </html>

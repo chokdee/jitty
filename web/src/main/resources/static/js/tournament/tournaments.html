@@ -1,0 +1,29 @@
+</br>
+<!--suppress HtmlFormInputWithoutLabel -->
+<a ng-click="createNewTournament()" class="btn-primary btn" style="top:20px;">Neues Turnier anlegen</a>
+
+<h3>Alle Turniere</h3>
+
+<table class="table usertable">
+    <thead>
+    <tr>
+        <th>
+            <a href="" ng-click="order('name')">Name</a>
+        </th>
+        <th><a href="" ng-click="order('startDate')">Start</a> </th>
+        <th><a href="" ng-click="order('endDate')">Ende</a> </th>
+    </tr>
+    </thead>
+    <tr>
+        <td> <input type="text" ng-model="search.name" /></td>
+    </tr>
+    <tr ng-repeat="t in tournaments| orderBy:predicate:reverse | filter:paginate| filter:search">
+        <td>{{t.name}}</td>
+        <td>{{t.startDate}}</td>
+        <td>{{t.endDate}}</td>
+        <td>
+            <a class="btn btn-primary" href="#/tournament/{{t.id}}">Bearbeiten</a>
+        </td>
+    </tr>
+</table>
+

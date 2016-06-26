@@ -14,6 +14,6 @@ import javax.ws.rs.ApplicationPath;
 @ApplicationPath("/api")
 public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
-        register(UserController.class);
+        register(UserController.class).register(TournamentController.class);
     }
 }
