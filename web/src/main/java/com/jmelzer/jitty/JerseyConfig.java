@@ -1,7 +1,6 @@
 package com.jmelzer.jitty;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.ApplicationPath;
@@ -14,6 +13,7 @@ import javax.ws.rs.ApplicationPath;
 @ApplicationPath("/api")
 public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
-        register(UserController.class).register(TournamentController.class);
+        register(UserController.class).
+                register(TournamentController.class);
     }
 }

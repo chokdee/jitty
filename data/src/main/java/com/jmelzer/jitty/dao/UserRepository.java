@@ -18,12 +18,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.Repository;
 
+@org.springframework.stereotype.Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findAll(Pageable pageable);
 
 //    User findByUserNameNonLocked(String username);
 //
     User findByName(String username);
+
+    User findByLoginName(String loginName);
 //
 //    User findByEmail(String email);
 }

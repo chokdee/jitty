@@ -53,6 +53,10 @@ public class User implements Serializable {
     @Column(nullable = true)
     byte[] avatar;
 
+
+    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    Tournament lastUsedTournament;
+
 //    private Set<UserRole> roles = new LinkedHashSet<UserRole>();
 
     public User() {
@@ -64,7 +68,13 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    public Tournament getLastUsedTournament() {
+        return lastUsedTournament;
+    }
 
+    public void setLastUsedTournament(Tournament lastUsedTournament) {
+        this.lastUsedTournament = lastUsedTournament;
+    }
 
     public String getPassword() {
         return password;

@@ -1,6 +1,6 @@
-insert into user(name, email, locked, loginname, password) values ('user' , 'user@bla.de', 0, 'user', '42');
-insert into user(name, email, locked, loginname, password) values ('admin', 'user@bla.de', 0, 'admin', '42');
-insert into user(name, email, locked, loginname, password) values ('superuser', 'user@bla.de', 0, 'superuser', '42');
+insert into user(name, email, locked, loginname, password) values ('username' , 'user@bla.de', 0, 'user', '42');
+insert into user(name, email, locked, loginname, password) values ('adminname', 'user@bla.de', 0, 'admin', '42');
+insert into user(name, email, locked, loginname, password) values ('superusername', 'user@bla.de', 0, 'superuser', '42');
 
 
 INSERT INTO TOURNAMENT_PLAYER (BIRTHDAY, EMAIL, FIRSTNAME, GENDER, LASTNAME, MOBILENUMBER, QTTR, TTR) VALUES ('1988-06-02', 'pmeier@gmx.net', 'Peter', 'm', 'Meier', '0177-22223333', 1690, 1699);

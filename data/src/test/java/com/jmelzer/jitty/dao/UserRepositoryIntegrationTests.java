@@ -51,9 +51,15 @@ public class UserRepositoryIntegrationTests {
     public void findByName() {
 
         assertNull(repository.findByName("xxx"));
-        assertEquals("admin", repository.findByName("admin").getName());
+        assertEquals("adminname", repository.findByName("adminname").getName());
     }
 
+    @Test
+    public void findByLoginName() {
+
+        assertNull(repository.findByLoginName("xxx"));
+        assertEquals("username", repository.findByLoginName("user").getName());
+    }
     @Test
     public void save() {
 

@@ -1,10 +1,9 @@
-angular.module('jitty.tournament.controllers', []).controller('TournamentListController', function ($scope, $window, Tournament) {
+angular.module('jitty.tournament.controllers', []).controller('TournamentListController', function ($scope, $window, Tournament, $http, $location) {
 
     $scope.predicate = 'startDate';
     $scope.reverse = true;
 
     $scope.tournaments = Tournament.query();
-
 
 
     $scope.createNewTournament = function () {
@@ -16,4 +15,13 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
         $scope.predicate = predicate;
     };
 
-})
+    $scope.selectTournament = function (tid) {
+        $http.get('http://localhost:8080/api/tournaments/actual/' + tid).
+        success(function(data) {
+            console.log('successful selected tournament ');
+            $scope.tournamentname = data.name;
+            $window.location.href = '/';
+        });
+
+    };
+});
