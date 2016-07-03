@@ -12,5 +12,11 @@
         <js>webjar:angularjs/1.5.5/angular-route.js</js>
         <!--<js>webjar:angularjs/1.5.5/angular-cookies.min.js</js>-->
         <js>webjar:angularjs/1.5.5/angular-cookies.js</js>
+        <!--<js>webjar:ui-bootstrap-tpls.js</js>-->
+        <!--<js>webjar:ui-bootstrap.js</js>-->
+    </group>
+    <group name="ui-bootstrap">
+        <js>webjar:ui-bootstrap.js</js>
+        <js>webjar:ui-bootstrap-tpls.js</js>
     </group>
 </groups>

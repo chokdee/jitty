@@ -1,43 +1,38 @@
 <div class="form-style-2">
-    <div class="form-style-2-heading">Benutzerinformationen eingeben</div>
-      <form name="userForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate=""  ng-submit="saveUser()" >
-
-        <div class="control-group">
-            <label for="loginName"><span>Login-Name <span class="required">*</span></span></label>
-            <input type="text" ng-model="user.loginName" name="loginName" required id="loginName"
-                   class="form-control ng-pristine ng-invalid ng-invalid-required"/>
-            <div class="clearfix">
-                <div ng-messages="userForm.loginName.$error" ng-if="userForm.$submitted || userForm.loginName.$dirty"
-                     class="error-messages slide-right">
-                    <div ng-message="required" class="message slide-left">Bitte einen Login-Namen eingeben</div>
-                </div>
-            </div>
-        </div>
+    <div class="form-style-2-heading">Turnier eingeben</div>
+      <form name="tournamentForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate=""  ng-submit="saveTournament()" >
 
         <div class="control-group">
             <label for="name"><span>Name <span class="required">*</span></span></label>
-            <input type="text" ng-model="user.name" name="name" required id="name"
+            <input type="text" ng-model="tournament.name" name="name" required id="name"
                    class="form-control ng-pristine ng-invalid ng-invalid-required"/>
             <div class="clearfix">
-                <div ng-messages="userForm.name.$error" ng-if="userForm.$submitted || userForm.name.$dirty"
+                <div ng-messages="tournamentForm.name.$error" ng-if="tournamentForm.$submitted || tournamentForm.name.$dirty"
                      class="error-messages slide-right">
-                    <div ng-message="required" class="message slide-left">Bitte einen Namen für den Benutzer eingeben</div>
+                    <div ng-message="required" class="message slide-left">Bitte einen Namen eingeben</div>
                 </div>
             </div>
         </div>
+          <pre>Selected date is: <em>{{tournament.startDate | date:'fullDate' }}</em></pre>
+          <div class="control-group"  ng-controller="TournamentEditController">
+              <label for="startDate"><span>Start<span class="required">*</span></span></label>
+              <p class="input-group">
 
-        <div class="control-group">
-            <label for="input_email_address">E-Mail:</label>
-            <input class="form-control ng-pristine ng-invalid ng-valid-email"
-                   type="email" name="input_email_address" ng-model="user.email" id="input_email_address"/>
-            <div class="clearfix">
-                <div ng-messages="userForm.input_email_address.$error"
-                     class="error-messages slide-right">
-                    <div ng-message="email" class="message slide-left">Bitte eine korrekte E-Mail eingeben</div>
-                </div>
-            </div>
-        </div>
-
+                  <input name=startDate" id="startDate" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="tournament.startDate" is-open="popup1.opened"
+                         ng-required="true" close-text="Schließen""
+                         datepicker-options="dateOptions" alt-input-formats="altInputFormats" />
+                     <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+              </p>
+              </div>
+              <div class="clearfix">
+                  <div ng-messages="tournamentForm.startDate.$error" ng-if="tournamentForm.$submitted || tournamentForm.startDate.$dirty"
+                       class="error-messages slide-right">
+                      <div ng-message="required" class="message slide-left">Bitte einen Startdatum eingeben</div>
+                  </div>
+              </div>
+          </div>
         <input type="submit" value="Speichern" />
     </form>
 
