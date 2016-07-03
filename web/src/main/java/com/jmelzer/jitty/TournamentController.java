@@ -4,6 +4,7 @@ import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.User;
+import com.jmelzer.jitty.service.TournamentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -32,16 +33,21 @@ public class TournamentController {
     @Inject
     UserRepository userRepository;
 
+    @Inject
+    TournamentService service;
+
     @GET
-    public List<Tournament> getUserList() {
+    public List<Tournament> getList() {
         LOG.info("query all Tournament ");
-        return repository.findAll();
+        return service.findAll();
     }
 
     @Path("{id}")
     @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Tournament tournament(@PathParam(value = "id") String id) {
-        return repository.findOne(Long.valueOf(id));
+        return service.findOne(Long.valueOf(id));
 
     }
 

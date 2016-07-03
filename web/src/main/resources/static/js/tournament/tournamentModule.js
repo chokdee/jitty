@@ -6,6 +6,9 @@ angular.module('jitty.tournament', ['ngRoute', 'ngResource', 'ngMessages', 'jitt
     }).when('/tournaments/:id', {
         templateUrl: '/js/tournament/tournament-edit.html',
         controller: 'TournamentEditController'
+    }).when('/tournament-add', {
+        templateUrl: '/js/tournament/tournament-new.html',
+        controller: 'TournamentCreateController'
     }).otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

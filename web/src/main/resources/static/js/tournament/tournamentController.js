@@ -36,13 +36,21 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
         //$scope.tournament.startDate = new Date();
         //$scope.tournament.name = 'test1';
         //$scope.tournament.id = 1;
-    $scope.tournament = Tournament.get({id: $routeParams.id});
+    $scope.tournament = {};
+
+
+    //$scope.tournament = Tournament.get({id: $routeParams.id});
+    $scope.tournament = Tournament.get({id: $routeParams.id}, function () {
+        console.log('Tournament got successful');
+        $scope.startDate = new Date($scope.tournament.startDate);
+        $scope.endDate = new Date($scope.tournament.endDate);
+    });
 
     $scope.dateOptions = {
         dateDisabled: false,
         formatYear: 'yy',
         maxDate: new Date(2020, 5, 22),
-        minDate: new Date(),
+        minDate: new Date(2014, 1, 1),
         startingDay: 1
     };
 
@@ -55,6 +63,51 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
 
     $scope.saveTournament = function () {
         if ($scope.tournamentForm.$valid) {
+            Tournament.save($scope.tournament, function () {
+                console.log('Tournament saved successful');
+                $scope.tournaments = Tournament.query();
+                $location.path('/tournaments');
+            });
+        }
+    };
+
+
+}).controller('TournamentCreateController', function ($scope, $routeParams, Tournament, $location, $http) {
+
+
+    $scope.formats = ['dd.MM.yyyy'];
+    $scope.format = $scope.formats[0];
+    $scope.altInputFormats = ['d!/M!/yyyy'];
+
+    $scope.startDate = new Date();
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    $scope.endDate = tomorrow;
+
+    $scope.dateOptions = {
+        dateDisabled: false,
+        formatYear: 'yy',
+        maxDate: new Date(2020, 5, 22),
+        minDate: new Date(2014, 5, 22),
+        startingDay: 1
+    };
+
+    $scope.open1 = function() {
+        $scope.popup1.opened = true;
+    };
+    $scope.popup1 = {
+        opened: false
+    };
+    $scope.open2 = function() {
+        $scope.popup2.opened = true;
+    };
+    $scope.popup2 = {
+        opened: false
+    };
+    $scope.saveTournament = function () {
+        if ($scope.tournamentForm.$valid) {
+            $scope.tournament.startDate = $scope.startDate;
+            $scope.tournament.endDate = $scope.endDate;
             Tournament.save($scope.tournament, function () {
                 console.log('Tournament saved successful');
                 $scope.tournaments = Tournament.query();

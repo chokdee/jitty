@@ -87,4 +87,12 @@ public class TournamentClass {
     public void setGroups(List<TournamentGroup> groups) {
         this.groups = groups;
     }
+
+    public int getStartTTR() {
+        return startTTR;
+    }
+
+    public String getEndTTR() {
+        return endTTR;
+    }
 }

@@ -1,7 +1,10 @@
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.model.*;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.*;
 
@@ -9,6 +12,7 @@ import java.util.*;
  * Created by J. Melzer on 01.06.2016.
  * manage the tournament
  */
+@Component
 public class TournamentService {
     Queue<TournamentSingleGame> gameQueue = new LinkedList<>();
     List<TournamentSingleGame> busyGames = new ArrayList<>();
@@ -16,6 +20,9 @@ public class TournamentService {
     //todo use spring
     private SeedingManager seedingManager = new SeedingManager();
     private KOField field;
+
+    @Resource
+    TournamentRepository repository;
 
     public void caluculateGroups(TournamentClass tournamentClass) {
         //first calc the field size , 16 / 32 etc
@@ -298,6 +305,31 @@ public class TournamentService {
 
     private void moveWinnerToNextRound(TournamentSingleGame game) {
         TournamentPlayer player = game.getWinningPlayer();
+    }
+
+    @Transactional
+    public List<Tournament> findAll() {
+        List<Tournament> list = repository.findAll();
+        for (Tournament tournament : list) {
+            loadAssocs(tournament);
+        }
+
+        return list;
+    }
+
+    private void loadAssocs(Tournament tournament) {
+        for (TournamentClass tournamentClass : tournament.getClasses()) {
+            for (TournamentGroup group : tournamentClass.getGroups()) {
+                group.getId();
+            }
+        }
+    }
+
+    @Transactional
+    public Tournament findOne(Long id) {
+        Tournament tournament = repository.findOne(id);
+        loadAssocs(tournament);
+        return tournament;
     }
 
 
