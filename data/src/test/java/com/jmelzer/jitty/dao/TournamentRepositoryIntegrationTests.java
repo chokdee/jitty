@@ -28,6 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.greaterThan;
@@ -72,6 +73,8 @@ public class TournamentRepositoryIntegrationTests {
     public void save() {
         Tournament tournament = new Tournament();
         tournament.setName("ABC Open");
+        tournament.setStartDate(new Date());
+        tournament.setEndDate(new Date());
 
         TournamentClass tournamentClass = new TournamentClass();
         tournamentClass.setName("A-Klasse bis 3000 TTR");

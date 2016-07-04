@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
@@ -60,10 +59,15 @@ public class TournamentController {
         userRepository.saveAndFlush(user);
         return t;
     }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Tournament create(Tournament tournament) {
-        return repository.save(tournament);
+    public Tournament saveOrCreate(Tournament tournament) {
+        if (tournament.getId() == null) {
+            return service.create(tournament);
+        } else {
+            return service.update(tournament);
+        }
     }
 
 

@@ -30,7 +30,7 @@ public class TournamentClass {
      * Max TTR Wert.
      */
     @Column(nullable = true, name = "end_ttr")
-    private String endTTR;
+    private int endTTR = 0;
 
     //type (Einzel / Doppem / Mixed)
     //trostrunden?
@@ -92,7 +92,16 @@ public class TournamentClass {
         return startTTR;
     }
 
-    public String getEndTTR() {
+
+    public void setStartTTR(int startTTR) {
+        this.startTTR = startTTR;
+    }
+
+    public int getEndTTR() {
         return endTTR;
+    }
+
+    public void setEndTTR(int endTTR) {
+        this.endTTR = endTTR;
     }
 }

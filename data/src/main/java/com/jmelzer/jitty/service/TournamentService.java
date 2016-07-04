@@ -331,6 +331,28 @@ public class TournamentService {
         loadAssocs(tournament);
         return tournament;
     }
+    @Transactional
+    public Tournament create(Tournament tournament) {
+        //todo where to config it?
+        //todo add double and women and child classes
+        tournament.addClass(createTC("A-Klasse", 0, 3000));
+        tournament.addClass(createTC("B-Klasse", 0, 1800));
+        tournament.addClass(createTC("C-Klasse", 0, 1600));
+        tournament.addClass(createTC("D-Klasse", 0, 1400));
+        tournament.addClass(createTC("E-Klasse", 0, 1200));
+        return repository.saveAndFlush(tournament);
+    }
+
+    private TournamentClass createTC(String name, int startTTR, int endTTR) {
+        TournamentClass tc = new TournamentClass(name);
+        tc.setStartTTR(startTTR);
+        tc.setEndTTR(endTTR);
+        return tc;
+    }
+
+    public Tournament update(Tournament tournament) {
+        return repository.saveAndFlush(tournament);
+    }
 
 
     static public class PS implements Comparable<PS> {
