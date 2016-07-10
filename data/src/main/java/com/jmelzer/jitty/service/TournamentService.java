@@ -1,7 +1,9 @@
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.model.*;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -23,6 +25,9 @@ public class TournamentService {
 
     @Resource
     TournamentRepository repository;
+
+    @Resource
+    TournamentClassRepository repositoryClass;
 
     public void caluculateGroups(TournamentClass tournamentClass) {
         //first calc the field size , 16 / 32 etc
@@ -325,12 +330,19 @@ public class TournamentService {
         }
     }
 
+    private void loadAssocs(TournamentClass tournamentClass) {
+        for (TournamentGroup group : tournamentClass.getGroups()) {
+            group.getId();
+        }
+    }
+
     @Transactional
     public Tournament findOne(Long id) {
         Tournament tournament = repository.findOne(id);
         loadAssocs(tournament);
         return tournament;
     }
+
     @Transactional
     public Tournament create(Tournament tournament) {
         //todo where to config it?
@@ -352,6 +364,31 @@ public class TournamentService {
 
     public Tournament update(Tournament tournament) {
         return repository.saveAndFlush(tournament);
+    }
+
+    @Transactional
+    public TournamentClass findOneClass(Long aLong) {
+        TournamentClass tc = repositoryClass.findOne(aLong);
+        loadAssocs(tc);
+        return tc;
+    }
+
+    @Transactional
+    public TournamentClass updateClass(TournamentClass tournamentClass) {
+        return repositoryClass.saveAndFlush(tournamentClass);
+    }
+
+    @Transactional
+    public void deleteClass(Long aLong) throws IntegrationViolation {
+        TournamentClass tc = repositoryClass.findOne(aLong);
+        if (tc == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+        if (tc.getGroups().size() > 0) {
+            throw new IntegrationViolation("Es wurden bereits Gruppen angelegt, die Klasse kann nicht mehr gelöscht werden");
+        }
+
+        repositoryClass.delete(aLong);
     }
 
 

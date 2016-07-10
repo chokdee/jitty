@@ -1,6 +1,5 @@
 package com.jmelzer.jitty;
 
-import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.User;
@@ -24,10 +23,6 @@ import java.util.List;
 public class TournamentController {
 
     final static Logger LOG = LoggerFactory.getLogger(TournamentController.class);
-
-    @SuppressWarnings("SpringJavaAutowiringInspection")
-    @Inject
-    TournamentRepository repository;
 
     @Inject
     UserRepository userRepository;
@@ -54,7 +49,7 @@ public class TournamentController {
     @GET
     public Tournament select(@PathParam(value = "id") String id) {
         User user = userRepository.findOne(1L);
-        Tournament t = repository.findOne(Long.valueOf(id));
+        Tournament t = service.findOne(Long.valueOf(id));
         user.setLastUsedTournament(t);
         userRepository.saveAndFlush(user);
         return t;
