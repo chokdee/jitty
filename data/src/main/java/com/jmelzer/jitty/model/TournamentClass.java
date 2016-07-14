@@ -104,4 +104,16 @@ public class TournamentClass {
     public void setEndTTR(int endTTR) {
         this.endTTR = endTTR;
     }
+
+    @Override
+    public String toString() {
+        return "TournamentClass{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", startTTR=" + startTTR +
+                ", endTTR=" + endTTR +
+                ", players=" + players +
+                ", groups=" + groups +
+                '}';
+    }
 }

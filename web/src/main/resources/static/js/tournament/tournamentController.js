@@ -24,7 +24,8 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
 
     };
 
-}).controller('TournamentEditController', function ($scope, $routeParams, Tournament, $location, $http, popupService) {
+}).controller('TournamentEditController', function ($scope, $routeParams, Tournament, $location, $http, popupService, $window) {
+        $scope.id = $routeParams.id;
 
         $scope.formats = ['dd.MM.yyyy'];
         $scope.format = $scope.formats[0];
@@ -74,26 +75,22 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
                     method: 'DELETE',
                     url: 'http://localhost:8080/api/tournament-classes/' + cid
                 }).then(function successCallback(response) {
-                    // this callback will be called asynchronously
-                    // when the response is available
+                    //refresh data
                     $scope.getTournament();
 
                 }, function errorCallback(response) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with ant error status.
                     if (response.status == 400) {
                         $scope.errorMessage = response.data.error;
-                        //todo add status error in scope and display afield
-                        //popupService.showPopup(response.data.error);
                         console.log('got 400 response message = ' + response.data.error);
-
                     }
                 });
 
             }
         };
 
-
+        $scope.createNewTournamentClass = function () {
+            $window.location.href = '/#/tournament/' + $scope.id + '/tournament-classes-add';
+        };
     }
 ).controller('TournamentCreateController', function ($scope, $routeParams, Tournament, $location, $http) {
 
@@ -140,7 +137,19 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
     };
 
 
-}).controller('TournamentClassController', function ($scope, $routeParams, popupService, TournamentClass, $location, $http) {
+}).controller('TournamentClassCreateController', function ($scope, $routeParams, popupService, TournamentClass, Tournament, $location, $http) {
+    $scope.tourmentClass = {};
+    $scope.tourmentClass.startTTR = 0;
 
+    $scope.saveTournamentClass = function () {
+        if ($scope.tournamentClassForm.$valid) {
+            TournamentClass.save($scope.tournamentClass, function () {
+                console.log('TournamentClass saved successful');
+                //refresh
+                $scope.tournament = Tournament.get({id: $scope.id});
+                $location.path('/tournament/' + $scope.id);
+            });
+        }
+    };
 });
 

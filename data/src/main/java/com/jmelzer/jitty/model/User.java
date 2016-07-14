@@ -54,7 +54,7 @@ public class User implements Serializable {
     byte[] avatar;
 
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name="TOURNAMENT_ID")
     Tournament lastUsedTournament;
 

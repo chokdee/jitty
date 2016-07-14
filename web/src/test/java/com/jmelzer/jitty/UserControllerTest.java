@@ -1,21 +1,17 @@
 package com.jmelzer.jitty;
 
-import com.jmelzer.jitty.model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.TestRestTemplate;
-import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
@@ -25,33 +21,24 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 //@WebAppConfiguration
-@WebIntegrationTest("server.port=9999")
-public class UserControllerTest {
-    private RestTemplate restTemplate = new TestRestTemplate("user", "42");
+public class UserControllerTest extends SecureResourceTest {
 
     @Test
     public void testGetUserList() throws Exception {
-        ResponseEntity<List<User>> entity =
-                getUsers("http://localhost:9999/api/users");
+        try {
+            HttpHeaders loginHeaders = doLogin();
 
-        int i = 0;
-//        while (i < 1000) {
-//            Thread.sleep(2000);
-//            i++;
-//            System.out.println("i = " + i);
-//        }
-        assertTrue(entity.getStatusCode().is2xxSuccessful());
+            ResponseEntity<List> entity = http(HttpMethod.GET, "api/users",
+                    createHttpEntity(null, loginHeaders), List.class);
+
+            assertTrue(entity.getStatusCode().is2xxSuccessful());
+            assertThat(entity.getBody().get(0), is(1L));
+
+            assertTrue(entity.getStatusCode().is2xxSuccessful());
+        } catch (HttpClientErrorException e) {
+            System.out.println(e.getResponseBodyAsString());
+            fail();
+        }
     }
 
-
-
-    private ResponseEntity<List<User>> getUsers(String uri) {
-        return restTemplate.exchange(
-                uri, HttpMethod.GET, null, getParameterizedPageTypeReference()
-        );
-    }
-    private ParameterizedTypeReference<List<User>> getParameterizedPageTypeReference() {
-        return new ParameterizedTypeReference<List<User>>() {
-        };
-    }
 }

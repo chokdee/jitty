@@ -73,4 +73,15 @@ public class Tournament {
     public void addClass(TournamentClass cl) {
         classes.add(cl);
     }
+
+    @Override
+    public String toString() {
+        return "Tournament{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", classes=" + classes +
+                '}';
+    }
 }

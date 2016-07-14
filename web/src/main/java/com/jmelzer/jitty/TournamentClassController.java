@@ -1,5 +1,6 @@
 package com.jmelzer.jitty;
 
+import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.service.IntegrationViolation;
 import com.jmelzer.jitty.service.TournamentService;
@@ -41,8 +42,12 @@ public class TournamentClassController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public TournamentClass saveOrCreate(TournamentClass tournamentClass) {
-        return service.updateClass(tournamentClass);
+    public TournamentClass saveOrCreate(@PathParam(value = "tid") String tid,
+                                        TournamentClass tournamentClass) {
+        Tournament t = service.findOne(Long.valueOf(tid));
+        t.addClass(tournamentClass);
+        service.update(t);
+        return tournamentClass;
     }
 
     @Path("{id}")
