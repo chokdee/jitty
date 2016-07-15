@@ -8,14 +8,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 /**
  * Created by J. Melzer on 14.07.2016.
  */
 @WebIntegrationTest("server.port=9999")
 public class SecureResourceTest {
+    private String sessionId;
     RestTemplate restTemplate = new TestRestTemplate();
     static final String SET_COOKIE = "Set-Cookie";
-    static final String CSRF_TOKEN_HEADER = "X-CSRF-TOKEN";
+    static final String CSRF_TOKEN_HEADER = "X-XSRF-TOKEN";
 
 
     protected <T> ResponseEntity<T> http(final HttpMethod method, final String path, HttpEntity<?> entity, Class<T> responseType) {
@@ -36,16 +39,18 @@ public class SecureResourceTest {
 
     }
 
-    static HttpEntity<?> createHttpEntity(Object o, HttpHeaders headers) {
+    HttpEntity<?> createHttpEntity(Object o, HttpHeaders headers) {
         String token = extractCsrfToken(headers);
         String jSessionId = extractJSessionId(headers);
         return createHttpEntity(o, jSessionId, token);
     }
 
-    static HttpEntity<?> createHttpEntity(Object o, String jSessionId, String csrfToken) {
+    HttpEntity<?> createHttpEntity(Object o, String jSessionId, String csrfToken) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add(CSRF_TOKEN_HEADER, csrfToken);
-        headers.add("Cookie", String.format("JSESSIONID=%s", jSessionId));
+        String t = csrfToken.substring(csrfToken.indexOf("=") + 1);
+        t = t.substring(0, t.indexOf(';'));
+        headers.add(CSRF_TOKEN_HEADER, t);
+        headers.add("Cookie", String.format("JSESSIONID=%s", jSessionId) + "; XSRF-TOKEN=" + t);
         if (o == null) {
             return new HttpEntity<>(headers);
         } else {
@@ -53,13 +58,22 @@ public class SecureResourceTest {
         }
     }
 
-    static String extractJSessionId(HttpHeaders headers) {
+    String extractJSessionId(HttpHeaders headers) {
+        if (sessionId != null) {
+            return sessionId;
+        }
         String setCookieHeader = headers.get(SET_COOKIE).get(0);
-        return setCookieHeader.substring(setCookieHeader.indexOf('=') + 1, setCookieHeader.indexOf(';'));
+        sessionId = setCookieHeader.substring(setCookieHeader.indexOf('=') + 1, setCookieHeader.indexOf(';'));
+        return sessionId;
     }
 
     static String extractCsrfToken(HttpHeaders headers) {
-        return headers.get(CSRF_TOKEN_HEADER).get(0);
+        List<String> list = headers.get(SET_COOKIE);
+        if (list.size() == 1) {
+            return list.get(0);
+        } else {
+            return list.get(1);
+        }
     }
 
 }

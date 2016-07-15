@@ -7,6 +7,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
@@ -18,8 +19,10 @@ import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
 
 /**
  * Created by J. Melzer on 19.05.2016.
@@ -50,15 +53,21 @@ public class TourmentControllerTest extends SecureResourceTest {
     public void testsave() throws Exception {
         try {
             HttpHeaders loginHeaders = doLogin();
+            ResponseEntity<String> okResponse = restTemplate.exchange(
+                    "http://localhost:9999/resource",
+                    HttpMethod.GET,
+                    createHttpEntity(null, loginHeaders),
+                    String.class);
+
+            assertThat(okResponse.getStatusCode(), is(HttpStatus.OK));
+
             Tournament tournament = new Tournament();
             tournament.setName("dummy");
             tournament.setStartDate(new Date());
             tournament.setEndDate(new Date());
-            Map<String, String> vars = new HashMap<String, String>();
             String uri = "http://localhost:9999/api/tournaments";
-            ResponseEntity<Tournament> ex = http(HttpMethod.POST, "api/tournaments",
-                    createHttpEntity(tournament, loginHeaders), Tournament.class);
-            Tournament result = ex.getBody();
+            Tournament result = restTemplate.postForObject(uri,
+                    createHttpEntity(tournament, okResponse.getHeaders()), Tournament.class);
             System.out.println();
             System.out.println("-----------------");
             System.out.println("result = " + result);

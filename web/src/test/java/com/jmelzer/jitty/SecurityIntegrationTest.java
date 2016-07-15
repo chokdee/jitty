@@ -26,8 +26,8 @@ public class SecurityIntegrationTest extends SecureResourceTest {
     @Test
     public void thatSecuredIsNotAccessible() {
         ResponseEntity<String> response = anonymous.getForEntity("http://localhost:9999/resource", String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
-        assertThat(response.getBody(), containsString("Expected CSRF token not found. Has your session expired?"));
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+        assertThat(response.getBody(), containsString("Full authentication is required to access this resource"));
     }
 
 
@@ -50,18 +50,17 @@ public class SecurityIntegrationTest extends SecureResourceTest {
     public void thatCsrfTokenAndSessionIsReturned() {
         ResponseEntity<String> response = http(HttpMethod.GET, "user", new HttpEntity<>(getAuthHeaders()), String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        // csrf token
-        assertThat(response.getHeaders().get(CSRF_TOKEN_HEADER).size(), is(1));
-        assertNotNull(response.getHeaders().get(CSRF_TOKEN_HEADER).get(0));
+        // csrf token and session
+        assertThat(response.getHeaders().get(SET_COOKIE).size(), is(2));
+        assertThat(response.getHeaders().get(SET_COOKIE).get(1), containsString("XSRF-TOKE"));
         // session id
-        assertThat(response.getHeaders().get(SET_COOKIE).size(), is(1));
         assertThat(response.getHeaders().get(SET_COOKIE).get(0), containsString("JSESSIONID"));
     }
 
     @Test
     public void thatSessionIsNeededToAccessSecuredResource() {
         ResponseEntity<String> response = http(HttpMethod.GET, "user", new HttpEntity<>(getAuthHeaders()), String.class);
-        String token = response.getHeaders().get(CSRF_TOKEN_HEADER).get(0);
+        String token = response.getHeaders().get(SET_COOKIE).get(1);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(CSRF_TOKEN_HEADER, token);
@@ -74,8 +73,20 @@ public class SecurityIntegrationTest extends SecureResourceTest {
                 httpEntity,
                 String.class);
 
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
-        assertThat(response.getBody(), containsString("Expected CSRF token not found. Has your session expired?"));
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+        assertThat(response.getBody(), containsString("Full authentication is required to access this resource"));
+    }
+
+    @Test
+    public void thatSomeUrlsAreOpenWithoutLogin() {
+
+        ResponseEntity<String> response = anonymous.exchange(
+                "http://localhost:9999/index.html",
+                HttpMethod.GET,
+                new HttpEntity<>(""),
+                String.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
     }
 
     @Test
@@ -97,7 +108,7 @@ public class SecurityIntegrationTest extends SecureResourceTest {
 
 
     @Test
-    public void thatTokenCannotBeUsedTwoTimesToAccessSecuredResource() {
+    public void thatTokenCanBeUsedTwoTimesToAccessSecuredResource() {
         HttpHeaders loginHeaders = doLogin();
 
         HttpEntity<?> httpEntity = createHttpEntity(loginHeaders);
@@ -118,8 +129,7 @@ public class SecurityIntegrationTest extends SecureResourceTest {
                 httpEntity,
                 String.class);
 
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
-        assertThat(response.getBody(), containsString("Invalid CSRF Token"));
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
 
     }
 
@@ -136,11 +146,11 @@ public class SecurityIntegrationTest extends SecureResourceTest {
 
         assertThat(okResponse.getStatusCode(), is(HttpStatus.OK));
 
-        // we can use token from new response
+        // we can use token from first response
         ResponseEntity<String> newResponse = anonymous.exchange(
                 "http://localhost:9999/resource",
                 HttpMethod.GET,
-                createHttpEntity(null, extractJSessionId(loginHeaders), extractCsrfToken(okResponse.getHeaders())),
+                createHttpEntity(loginHeaders),
                 String.class);
 
         assertThat(newResponse.getStatusCode(), is(HttpStatus.OK));
@@ -151,17 +161,26 @@ public class SecurityIntegrationTest extends SecureResourceTest {
     public void thatSecuredResourceIsInaccessibleAfterLogout() {
         HttpHeaders loginHeaders = doLogin();
 
+        // first time everything is ok
+        ResponseEntity<String> okResponse = anonymous.exchange(
+                "http://localhost:9999/resource",
+                HttpMethod.GET,
+                createHttpEntity(loginHeaders),
+                String.class);
+
+        assertThat(okResponse.getStatusCode(), is(HttpStatus.OK));
+
         // logout
         ResponseEntity<String> logoutResponse = anonymous.exchange(
                 "http://localhost:9999/logout",
                 HttpMethod.POST,
-                createHttpEntity(loginHeaders),
+                createHttpEntity(okResponse.getHeaders()),
                 String.class);
 
         assertThat(logoutResponse.getStatusCode(), is(HttpStatus.FOUND));
 
         // no csrf token
-        assertNull(logoutResponse.getHeaders().get(CSRF_TOKEN_HEADER));
+        assertNull(logoutResponse.getHeaders().get(SET_COOKIE));
 
         // second time csrf token is invalid
         ResponseEntity<String> response = anonymous.exchange(
@@ -170,8 +189,7 @@ public class SecurityIntegrationTest extends SecureResourceTest {
                 createHttpEntity(loginHeaders),
                 String.class);
 
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
-        assertThat(response.getBody(), containsString("Expected CSRF token not found. Has your session expired?"));
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
 
     }
 

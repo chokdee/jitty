@@ -8,11 +8,14 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.util.MatcherAssertionErrors;
 import org.springframework.web.client.HttpClientErrorException;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -40,15 +43,24 @@ public class TourmentClassControllerTest extends SecureResourceTest {
     public void testsaveTC() throws Exception {
         try {
             HttpHeaders loginHeaders = doLogin();
+            ResponseEntity<String> okResponse = restTemplate.exchange(
+                    "http://localhost:9999/resource",
+                    HttpMethod.GET,
+                    createHttpEntity(null, loginHeaders),
+                    String.class);
+
+            assertThat(okResponse.getStatusCode(), is(HttpStatus.OK));
+
 
             TournamentClass tournamentClass = new TournamentClass();
             tournamentClass.setName("dummy");
             tournamentClass.setStartTTR(0);
             tournamentClass.setEndTTR(1000);
 
-            TournamentClass result = restTemplate.postForObject("http://localhost:9999/api/tournament-classes",
-                    createHttpEntity(tournamentClass, loginHeaders), TournamentClass.class);
+            TournamentClass result = restTemplate.postForObject("http://localhost:9999/api/tournament-classes?tid=2",
+                    createHttpEntity(tournamentClass, okResponse.getHeaders()), TournamentClass.class);
             System.out.println("result = " + result);
+            assertNotNull(result.getId());
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
             fail();
