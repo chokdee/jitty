@@ -1,5 +1,6 @@
 package com.jmelzer.jitty;
 
+import com.jmelzer.jitty.model.dto.UserDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -28,11 +29,11 @@ public class UserControllerTest extends SecureResourceTest {
         try {
             HttpHeaders loginHeaders = doLogin();
 
-            ResponseEntity<List> entity = http(HttpMethod.GET, "api/users",
-                    createHttpEntity(null, loginHeaders), List.class);
+            ResponseEntity<UserDTO[]> entity = http(HttpMethod.GET, "api/users",
+                    createHttpEntity(null, loginHeaders), UserDTO[].class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
-            assertThat(entity.getBody().get(0), is(1L));
+            assertThat(entity.getBody()[0].getId(), is(1L));
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
         } catch (HttpClientErrorException e) {

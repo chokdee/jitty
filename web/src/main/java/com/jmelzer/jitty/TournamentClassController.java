@@ -39,7 +39,7 @@ public class TournamentClassController {
         return clz;
 
     }
-
+    @Path("{tid}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public TournamentClass saveOrCreate(@PathParam(value = "tid") String tid,

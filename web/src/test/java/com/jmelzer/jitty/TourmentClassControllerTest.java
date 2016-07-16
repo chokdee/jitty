@@ -57,10 +57,13 @@ public class TourmentClassControllerTest extends SecureResourceTest {
             tournamentClass.setStartTTR(0);
             tournamentClass.setEndTTR(1000);
 
-            TournamentClass result = restTemplate.postForObject("http://localhost:9999/api/tournament-classes?tid=2",
+//            TournamentClass result = restTemplate.postForObject("http://localhost:9999/api/tournament-classes/2",
+//                    createHttpEntity(tournamentClass, okResponse.getHeaders()), TournamentClass.class);
+            ResponseEntity<TournamentClass> entity = http(HttpMethod.POST, "api/tournament-classes/2",
                     createHttpEntity(tournamentClass, okResponse.getHeaders()), TournamentClass.class);
-            System.out.println("result = " + result);
-            assertNotNull(result.getId());
+
+            System.out.println("result = " + entity);
+            assertNotNull(entity.getBody().getId());
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
             fail();

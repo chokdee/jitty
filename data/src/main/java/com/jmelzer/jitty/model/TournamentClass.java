@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.model;
 
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,12 +36,16 @@ public class TournamentClass {
     //type (Einzel / Doppem / Mixed)
     //trostrunden?
 
-    /** Assoc to the player in the class. */
+    /**
+     * Assoc to the player in the class.
+     */
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    @JoinTable(name="TC_PLAYER")
+    @JoinTable(name = "TC_PLAYER")
     List<TournamentPlayer> players = new ArrayList<>();
 
-    /** Assoc to the groups in the class. */
+    /**
+     * Assoc to the groups in the class.
+     */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TC_ID")
     List<TournamentGroup> groups = new ArrayList<>();
@@ -77,7 +82,7 @@ public class TournamentClass {
     }
 
     public List<TournamentGroup> getGroups() {
-        return Collections.unmodifiableList(groups);
+        return groups;
     }
 
     public void addGroup(TournamentGroup group) {
@@ -115,5 +120,12 @@ public class TournamentClass {
                 ", players=" + players +
                 ", groups=" + groups +
                 '}';
+    }
+
+    public void fetchAssocs() {
+
+        for (TournamentGroup group : getGroups()) {
+            group.getId();
+        }
     }
 }

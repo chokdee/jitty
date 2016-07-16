@@ -363,6 +363,9 @@ public class TournamentService {
     }
 
     public Tournament update(Tournament tournament) {
+        for (TournamentClass tournamentClass : tournament.getClasses()) {
+            repositoryClass.save(tournamentClass);
+        }
         return repository.saveAndFlush(tournament);
     }
 

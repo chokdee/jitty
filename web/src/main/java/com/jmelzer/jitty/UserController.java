@@ -2,6 +2,8 @@ package com.jmelzer.jitty;
 
 import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.User;
+import com.jmelzer.jitty.model.dto.UserDTO;
+import com.jmelzer.jitty.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -24,20 +26,19 @@ public class UserController {
 
     final static Logger LOG = LoggerFactory.getLogger(UserController.class);
 
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Inject
-    UserRepository repository;
+    UserService service;
 
     @GET
-    public List<User> getUserList() {
+    public List<UserDTO> getUserList() {
         LOG.info("query all user ");
-        return repository.findAll();
+        return service.findAll();
     }
 
     @Path("{id}")
     @GET
     public User users(@PathParam(value = "id") String id) {
-        return repository.findOne(Long.valueOf(id));
+        return service.findOne(Long.valueOf(id));
 
     }
 
@@ -46,7 +47,7 @@ public class UserController {
     public String delete(@PathParam(value = "id") String id) {
         LOG.info("delete user {}", id);
         try {
-            repository.delete(Long.valueOf(id));
+            service.delete(Long.valueOf(id));
         } catch (EmptyResultDataAccessException e) {
             LOG.warn("user with id {} not found ", id);
             return null;
@@ -61,7 +62,7 @@ public class UserController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public User create(User user) {
-        return repository.save(user);
+        return service.save(user);
     }
 
     @POST
@@ -69,9 +70,9 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response changePassword(User user) {
         LOG.info("pw change for user {}", user.getId());
-        User userDB = repository.findOne(user.getId());
+        User userDB = service.findOne(user.getId());
         userDB.setPassword(user.getPassword());
-        repository.save(userDB);
+        service.save(userDB);
         return Response.ok().build();
     }
 
