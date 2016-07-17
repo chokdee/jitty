@@ -1,4 +1,4 @@
-package com.jmelzer.jitty;
+package com.jmelzer.jitty.rest;
 
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.boot.test.WebIntegrationTest;
@@ -14,12 +14,20 @@ import java.util.List;
  * Created by J. Melzer on 14.07.2016.
  */
 @WebIntegrationTest("server.port=9999")
-public class SecureResourceTest {
-    private String sessionId;
-    RestTemplate restTemplate = new TestRestTemplate();
+public abstract class SecureResourceTest {
     static final String SET_COOKIE = "Set-Cookie";
     static final String CSRF_TOKEN_HEADER = "X-XSRF-TOKEN";
+    RestTemplate restTemplate = new TestRestTemplate();
+    private String sessionId;
 
+    static String extractCsrfToken(HttpHeaders headers) {
+        List<String> list = headers.get(SET_COOKIE);
+        if (list.size() == 1) {
+            return list.get(0);
+        } else {
+            return list.get(1);
+        }
+    }
 
     protected <T> ResponseEntity<T> http(final HttpMethod method, final String path, HttpEntity<?> entity, Class<T> responseType) {
         RestTemplate restTemplate = new RestTemplate();
@@ -65,15 +73,6 @@ public class SecureResourceTest {
         String setCookieHeader = headers.get(SET_COOKIE).get(0);
         sessionId = setCookieHeader.substring(setCookieHeader.indexOf('=') + 1, setCookieHeader.indexOf(';'));
         return sessionId;
-    }
-
-    static String extractCsrfToken(HttpHeaders headers) {
-        List<String> list = headers.get(SET_COOKIE);
-        if (list.size() == 1) {
-            return list.get(0);
-        } else {
-            return list.get(1);
-        }
     }
 
 }

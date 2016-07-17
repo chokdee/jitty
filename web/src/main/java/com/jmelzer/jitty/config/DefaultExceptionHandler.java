@@ -3,7 +3,7 @@
  *  Copyright(c) 2011-2016 by Deutsche Post AG
  *  All rights reserved.
  */
-package com.jmelzer.jitty;
+package com.jmelzer.jitty.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

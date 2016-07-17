@@ -1,5 +1,8 @@
-package com.jmelzer.jitty;
+package com.jmelzer.jitty.config;
 
+import com.jmelzer.jitty.rest.TournamentClassController;
+import com.jmelzer.jitty.rest.TournamentController;
+import com.jmelzer.jitty.rest.UserController;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
 

@@ -30,12 +30,11 @@ import java.io.IOException;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    ExternalAuthenticationProvider authenticationProvider;
-
     // csrfTokenRepository is inaccessible in CsrfConfigurer so we create our own instance
     // and we give it to the CsrfTokenGeneratorFilter
     private final CsrfTokenRepository csrfTokenRepository = new HttpSessionCsrfTokenRepository();
+    @Autowired
+    ExternalAuthenticationProvider authenticationProvider;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -67,6 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 }
                 filterChain.doFilter(request, response);
             }
+
             @Override
             protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
                 return ignoreMatcher.matches(request);

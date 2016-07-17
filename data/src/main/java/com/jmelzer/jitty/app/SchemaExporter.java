@@ -12,14 +12,8 @@ package com.jmelzer.jitty.app;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
-import org.springframework.util.FileCopyUtils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +24,14 @@ import java.util.List;
  * @author john.thompson
  */
 public class SchemaExporter {
-    /** prefix . */
-    String prefix;
-
-    /** Config object */
+    /**
+     * Config object
+     */
     private final Configuration cfg = new Configuration();
+    /**
+     * prefix .
+     */
+    String prefix;
 
     /**
      * default constructor.
@@ -149,15 +146,23 @@ public class SchemaExporter {
         return filename;
     }
 
-    /** Holds the classnames of hibernate dialects for easy reference. */
+    /**
+     * Holds the classnames of hibernate dialects for easy reference.
+     */
     private static enum Dialect {
-        /** . */
+        /**
+         * .
+         */
         ORACLE("org.hibernate.dialect.Oracle10gDialect"),
-        /** . */
+        /**
+         * .
+         */
         HSQL("org.hibernate.dialect.HSQLDialect"),
         H2("org.hibernate.dialect.H2Dialect");
 
-        /** . */
+        /**
+         * .
+         */
         private String dialectClass;
 
         /**

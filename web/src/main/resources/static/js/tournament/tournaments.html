@@ -10,12 +10,12 @@
         <th>
             <a href="" ng-click="order('name')">Name</a>
         </th>
-        <th><a href="" ng-click="order('startDate')">Start</a> </th>
-        <th><a href="" ng-click="order('endDate')">Ende</a> </th>
+        <th><a href="" ng-click="order('startDate')">Start</a></th>
+        <th><a href="" ng-click="order('endDate')">Ende</a></th>
     </tr>
     </thead>
     <tr>
-        <td> <input type="text" ng-model="search.name" /></td>
+        <td><input type="text" ng-model="search.name"/></td>
     </tr>
     <tr ng-repeat="t in tournaments| orderBy:predicate:reverse | filter:paginate| filter:search">
         <td>{{t.name}}</td>

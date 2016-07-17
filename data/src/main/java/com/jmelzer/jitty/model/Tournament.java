@@ -13,26 +13,23 @@ import java.util.List;
 @Entity
 @Table(name = "tournament")
 public class Tournament {
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Column(nullable = false, name = "name")
-    private String name;
-
-    @Temporal(TemporalType.DATE)
-    @Column(nullable = false, name = "start_date")
-    private Date startDate;
-
-    @Temporal(TemporalType.DATE)
-    @Column(nullable = false, name = "end_date")
-    private Date endDate;
-
-    /** Assoc to the tournament classes. */
+    /**
+     * Assoc to the tournament classes.
+     */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "T_ID")
     List<TournamentClass> classes = new ArrayList<>();
-
+    @Id
+    @GeneratedValue
+    private Long id;
+    @Column(nullable = false, name = "name")
+    private String name;
+    @Temporal(TemporalType.DATE)
+    @Column(nullable = false, name = "start_date")
+    private Date startDate;
+    @Temporal(TemporalType.DATE)
+    @Column(nullable = false, name = "end_date")
+    private Date endDate;
 
     public Long getId() {
         return id;

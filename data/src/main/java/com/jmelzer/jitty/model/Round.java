@@ -11,18 +11,15 @@ import java.util.List;
 @Entity
 @Table(name = "round")
 public class Round {
+    @OneToOne(cascade = CascadeType.ALL)
+    Round nextRound;
+    @OneToMany(cascade = CascadeType.ALL)
+    List<TournamentSingleGame> games = new ArrayList<>();
     @Id
     @GeneratedValue
     private Long id;
-    @OneToOne(cascade = CascadeType.ALL)
-    Round nextRound;
     @Column
     private int size;
-
-
-    @OneToMany(cascade = CascadeType.ALL)
-    List<TournamentSingleGame> games = new ArrayList<>();
-
     @Column
     private RoundType roundType;
 
@@ -41,10 +38,6 @@ public class Round {
         games.add(tournamentSingleGame);
     }
 
-    public void setNextRound(Round nextRound) {
-        this.nextRound = nextRound;
-    }
-
     public Long getId() {
         return id;
     }
@@ -53,12 +46,16 @@ public class Round {
         return nextRound;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void setNextRound(Round nextRound) {
+        this.nextRound = nextRound;
     }
 
     public int getSize() {
         return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     public List<TournamentSingleGame> getGames() {

@@ -15,19 +15,12 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "user_role")
-public class UserRole implements Serializable{
+public class UserRole implements Serializable {
     private static final long serialVersionUID = 7181113920788192505L;
-
+    String name;
     @Id
     @GeneratedValue
     private Long id;
-
-    String name;
-
-    public enum Roles {
-        ROLE_ADMIN,
-        ROLE_USER
-    }
 
     public UserRole() {
     }
@@ -43,5 +36,10 @@ public class UserRole implements Serializable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public enum Roles {
+        ROLE_ADMIN,
+        ROLE_USER
     }
 }

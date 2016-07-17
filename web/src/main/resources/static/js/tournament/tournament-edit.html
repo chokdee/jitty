@@ -15,7 +15,7 @@
         </div>
         <!--<pre>Selected date is: <em>{{startDate | date:'fullDate' }}</em></pre>-->
         <!--<pre>Selected date is: <em>{{endDate | date:'fullDate' }}</em></pre>-->
-        <div class="control-group" >
+        <div class="control-group">
             <label for="startDate"><span>Start<span class="required">*</span></span></label>
             <p class="input-group">
 
@@ -27,7 +27,7 @@
                     </span>
             </p>
         </div>
-        <div class="control-group" >
+        <div class="control-group">
             <label for="endDate"><span>Ende<span class="required">*</span></span></label>
             <p class="input-group">
 
@@ -48,7 +48,7 @@
 
     <h4>Turnierklassen</h4>
     <hr/>
-    <table class="table" >
+    <table class="table">
         <thead>
         <tr>
             <th>Name</th>
@@ -62,14 +62,14 @@
             <td>{{c.startTTR}}</td>
             <td>{{c.endTTR}}</td>
             <!--<div class="clearfix">-->
-                <!--<div ng-messages="errorMessage" ng-if="errorMessage"-->
-                     <!--class="error-messages slide-right">-->
-                    <!--<div class="message slide-left"><em>{errorMessage}</em></div>-->
-                <!--</div>-->
+            <!--<div ng-messages="errorMessage" ng-if="errorMessage"-->
+            <!--class="error-messages slide-right">-->
+            <!--<div class="message slide-left"><em>{errorMessage}</em></div>-->
+            <!--</div>-->
             <!--</div>-->
             <td>
                 <a class="btn btn-primary" href="#/tournament-classes/{{c.id}}">Bearbeiten</a>
-                <a class="btn btn-danger"  ng-click="deleteClass(c.id)">Löschen</a>
+                <a class="btn btn-danger" ng-click="deleteClass(c.id)">Löschen</a>
             </td>
         </tr>
     </table>

@@ -1,4 +1,4 @@
-package com.jmelzer.jitty;
+package com.jmelzer.jitty.rest;
 
 /**
  * Created by J. Melzer on 10.07.2016.

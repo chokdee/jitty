@@ -12,28 +12,20 @@ import java.util.List;
 @Entity
 @Table(name = "tournament_single_game")
 public class TournamentSingleGame {
-    @Id
-    @GeneratedValue
-    private Long id;
-
     @OneToOne(cascade = CascadeType.DETACH)
     TournamentPlayer player1;
-
     @OneToOne(cascade = CascadeType.DETACH)
     TournamentPlayer player2;
-
     /**
      * Bereits gespielt?
      */
     @Column(nullable = false, name = "played")
     boolean played;
-
     /**
      * Bereits aufgerufen?
      */
     @Column(nullable = false, name = "called")
     boolean called;
-
     @Column(nullable = true, name = "start_time")
     @Temporal(TemporalType.TIMESTAMP)
     Date startTime;
@@ -42,12 +34,13 @@ public class TournamentSingleGame {
      */
     @Column(nullable = true, name = "table_no")
     Integer tableNo;
-
-    //todo add Schiedsrichter
-
     @OneToMany(cascade = CascadeType.ALL)
     List<GameSet> sets = new ArrayList<>();
 
+    //todo add Schiedsrichter
+    @Id
+    @GeneratedValue
+    private Long id;
     private int winner = -1;
 
     public Long getId() {
@@ -84,12 +77,19 @@ public class TournamentSingleGame {
         return sets;
     }
 
+    public void setSets(List<GameSet> sets) {
+        this.sets = sets;
+    }
+
     public int getWinner() {
         return winner;
     }
 
-    public void setSets(List<GameSet> sets) {
-        this.sets = sets;
+    public void setWinner(int winner) {
+        if (winner < 1 || winner > 2) {
+            throw new IllegalArgumentException("winner must be 1 or 2");
+        }
+        this.winner = winner;
     }
 
     public boolean isPlayed() {
@@ -133,13 +133,6 @@ public class TournamentSingleGame {
 
     public void addSet(GameSet gameSet) {
         sets.add(gameSet);
-    }
-
-    public void setWinner(int winner) {
-        if (winner < 1 || winner > 2) {
-            throw new IllegalArgumentException("winner must be 1 or 2");
-        }
-        this.winner = winner;
     }
 
     public String printResult() {

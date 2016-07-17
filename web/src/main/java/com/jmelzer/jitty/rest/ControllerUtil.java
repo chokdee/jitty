@@ -1,4 +1,4 @@
-package com.jmelzer.jitty;
+package com.jmelzer.jitty.rest;
 
 import javax.ws.rs.core.Response;
 

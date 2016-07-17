@@ -16,7 +16,9 @@
 package com.jmelzer.jitty.dao;
 
 import com.jmelzer.jitty.SampleDataJpaApplication;
-import com.jmelzer.jitty.model.*;
+import com.jmelzer.jitty.model.KOField;
+import com.jmelzer.jitty.model.Round;
+import com.jmelzer.jitty.model.TournamentSingleGame;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +26,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import java.util.List;
-
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Integration tests for {@link UserRepository}.
@@ -48,7 +45,7 @@ public class KOFieldRepositoryIntegrationTests {
         //lets say 32 field
         Round round1 = new Round();
         field.setRound(round1);
-        for (int i = 0; i < 16 ; i++) {
+        for (int i = 0; i < 16; i++) {
             round1.addGame(new TournamentSingleGame());
         }
         Round round2 = new Round();

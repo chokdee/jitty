@@ -1,6 +1,6 @@
-package com.jmelzer.jitty;
+package com.jmelzer.jitty.config;
 
-import org.springframework.boot.SpringApplication;
+import com.jmelzer.jitty.Application;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 

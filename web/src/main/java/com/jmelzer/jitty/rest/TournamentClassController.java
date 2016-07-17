@@ -1,4 +1,4 @@
-package com.jmelzer.jitty;
+package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentClass;
@@ -39,6 +39,7 @@ public class TournamentClassController {
         return clz;
 
     }
+
     @Path("{tid}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

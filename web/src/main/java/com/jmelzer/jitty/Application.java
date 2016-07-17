@@ -29,6 +29,10 @@ public class Application {
     @Resource
     UserRepository userRepository;
 
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
     @RequestMapping("/resource")
     public Map<String, Object> home(HttpSession session) {
         Map<String, Object> model = new HashMap<String, Object>();
@@ -75,9 +79,5 @@ public class Application {
     @Bean(name = "inViewVilter")
     public Filter inViewVilter() {
         return new OpenEntityManagerInViewFilter();
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
     }
 }

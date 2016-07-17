@@ -14,37 +14,26 @@ import java.util.List;
 public class TournamentPlayer {
 
     public static TournamentPlayer BYE = new TournamentPlayer(0L, "FREI", "LOS");
-
+    public transient int ranking = 0;
     @Id
     @GeneratedValue
     private Long id;
-
     @Column(nullable = false, name = "firstname")
     private String firstName;
-
     @Column(nullable = false, name = "lastname")
     private String lastName;
-
     @Column(nullable = true)
     private String email;
-
     @Column(nullable = true, name = "mobilenumber")
     private String mobileNumber;
-
     @Column(nullable = true)
     private int qttr;
-
     @Column(nullable = true)
     private int ttr;
-
     @Column(nullable = true)
     private Date birthday;
-
     @Column(nullable = true, length = 1)
     private String gender;
-
-    public transient int ranking = 0;
-
     @OneToMany(cascade = CascadeType.DETACH)
     private List<TournamentSingleGame> games = new ArrayList<>();
 

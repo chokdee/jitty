@@ -10,12 +10,12 @@
         <th>
             <a href="" ng-click="order('name')">Name</a>
         </th>
-        <th><a href="" ng-click="order('email')"> E-Mail</a> </th>
+        <th><a href="" ng-click="order('email')"> E-Mail</a></th>
     </tr>
     </thead>
     <tr>
-        <td> <input type="text" ng-model="search.name" /></td>
-        <td> <input type="text" ng-model="search.email" /> </td>
+        <td><input type="text" ng-model="search.name"/></td>
+        <td><input type="text" ng-model="search.email"/></td>
     </tr>
     <tr ng-repeat="user in users| orderBy:predicate:reverse | filter:paginate| filter:search">
         <td>{{user.name}}</td>
@@ -23,7 +23,7 @@
         <td>
             <a class="btn btn-primary" href="#/users/{{user.id}}">Bearbeiten</a>
             <a class="btn btn-primary" href="#/user-pw-change/{{user.id}}">PW ändern</a>
-            <a class="btn btn-danger"  ng-click="deleteUser(user.id)">Löschen</a>
+            <a class="btn btn-danger" ng-click="deleteUser(user.id)">Löschen</a>
         </td>
     </tr>
 </table>

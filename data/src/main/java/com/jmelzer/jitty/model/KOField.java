@@ -1,9 +1,6 @@
 package com.jmelzer.jitty.model;
 
-import javax.annotation.processing.RoundEnvironment;
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by J. Melzer on 15.06.2016.
@@ -11,16 +8,11 @@ import java.util.List;
 @Entity
 @Table(name = "ko_field")
 public class KOField {
+    @OneToOne(cascade = CascadeType.ALL)
+    Round round;
     @Id
     @GeneratedValue
     private Long id;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    Round round;
-
-    public void setRound(Round round) {
-        this.round = round;
-    }
 
     public Long getId() {
         return id;
@@ -28,6 +20,10 @@ public class KOField {
 
     public Round getRound() {
         return round;
+    }
+
+    public void setRound(Round round) {
+        this.round = round;
     }
 
 }

@@ -18,15 +18,11 @@ package com.jmelzer.jitty.dao;
 import com.jmelzer.jitty.SampleDataJpaApplication;
 import com.jmelzer.jitty.model.Gender;
 import com.jmelzer.jitty.model.TournamentPlayer;
-import com.jmelzer.jitty.model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import sun.util.calendar.CalendarUtils;
 
 import java.sql.Date;
 import java.util.List;
@@ -37,7 +33,6 @@ import static org.junit.Assert.*;
 
 /**
  * Integration tests for {@link UserRepository}.
- *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(SampleDataJpaApplication.class)

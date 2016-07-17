@@ -30,6 +30,7 @@ public class TableManager {
         busyTables.add(no);
         freeTables.remove(no);
     }
+
     public boolean isTableAvaible() {
         return freeTables.size() > 0;
     }

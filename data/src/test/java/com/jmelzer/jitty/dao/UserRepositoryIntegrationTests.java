@@ -31,7 +31,6 @@ import static org.junit.Assert.*;
 
 /**
  * Integration tests for {@link UserRepository}.
- *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(SampleDataJpaApplication.class)
@@ -43,7 +42,7 @@ public class UserRepositoryIntegrationTests {
     @Test
     public void findsFirstPageOfUser() {
 
-        Page<User> users = repository.findAll(new PageRequest(1,100));
+        Page<User> users = repository.findAll(new PageRequest(1, 100));
         assertThat(users.getTotalElements(), is(greaterThan(2L)));
     }
 
@@ -60,6 +59,7 @@ public class UserRepositoryIntegrationTests {
         assertNull(repository.findByLoginName("xxx"));
         assertEquals("username", repository.findByLoginName("user").getName());
     }
+
     @Test
     public void save() {
 

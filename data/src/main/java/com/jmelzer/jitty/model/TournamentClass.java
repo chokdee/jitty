@@ -14,41 +14,36 @@ import java.util.List;
 @Table(name = "tournament_class")
 public class TournamentClass {
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Column(nullable = false, name = "name")
-    private String name;
-
-    /**
-     * Min TTR Wert.
-     */
-    @Column(nullable = true, name = "start_ttr")
-    private int startTTR = 0;
-
-    /**
-     * Max TTR Wert.
-     */
-    @Column(nullable = true, name = "end_ttr")
-    private int endTTR = 0;
-
-    //type (Einzel / Doppem / Mixed)
-    //trostrunden?
-
     /**
      * Assoc to the player in the class.
      */
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinTable(name = "TC_PLAYER")
     List<TournamentPlayer> players = new ArrayList<>();
-
     /**
      * Assoc to the groups in the class.
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TC_ID")
     List<TournamentGroup> groups = new ArrayList<>();
+    @Id
+    @GeneratedValue
+    private Long id;
+    @Column(nullable = false, name = "name")
+    private String name;
+
+    //type (Einzel / Doppem / Mixed)
+    //trostrunden?
+    /**
+     * Min TTR Wert.
+     */
+    @Column(nullable = true, name = "start_ttr")
+    private int startTTR = 0;
+    /**
+     * Max TTR Wert.
+     */
+    @Column(nullable = true, name = "end_ttr")
+    private int endTTR = 0;
 
     public TournamentClass(String name) {
         this.name = name;
@@ -85,12 +80,12 @@ public class TournamentClass {
         return groups;
     }
 
-    public void addGroup(TournamentGroup group) {
-        groups.add(group);
-    }
-
     public void setGroups(List<TournamentGroup> groups) {
         this.groups = groups;
+    }
+
+    public void addGroup(TournamentGroup group) {
+        groups.add(group);
     }
 
     public int getStartTTR() {

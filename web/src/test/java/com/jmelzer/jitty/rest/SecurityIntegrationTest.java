@@ -1,5 +1,6 @@
-package com.jmelzer.jitty;
+package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
@@ -13,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import static junit.framework.TestCase.assertNull;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
 
 @IntegrationTest
@@ -26,6 +26,10 @@ public class SecurityIntegrationTest extends SecureResourceTest {
     @Test
     public void thatSecuredIsNotAccessible() {
         ResponseEntity<String> response = anonymous.getForEntity("http://localhost:9999/resource", String.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+        assertThat(response.getBody(), containsString("Full authentication is required to access this resource"));
+
+        response = anonymous.getForEntity("http://localhost:9999/api/users/7", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
         assertThat(response.getBody(), containsString("Full authentication is required to access this resource"));
     }

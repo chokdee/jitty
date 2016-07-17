@@ -15,27 +15,23 @@ import java.util.List;
 @Table(name = "tournament_group")
 public class TournamentGroup {
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Column(nullable = false, name = "name", length = 10)
-    private String name;
-
     /**
      * Assoc to the player in the group.
      */
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(name = "TG_PLAYER")
     List<TournamentPlayer> players = new ArrayList<>();
-
     /**
      * Assoc to the groups in the class.
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TG_ID")
     List<TournamentSingleGame> games = new ArrayList<>();
-
+    @Id
+    @GeneratedValue
+    private Long id;
+    @Column(nullable = false, name = "name", length = 10)
+    private String name;
     transient private List<TournamentService.PS> ranking;
 
 
@@ -62,12 +58,12 @@ public class TournamentGroup {
         this.name = name;
     }
 
-    public void setPlayers(List<TournamentPlayer> players) {
-        this.players = players;
-    }
-
     public List<TournamentPlayer> getPlayers() {
         return Collections.unmodifiableList(players);
+    }
+
+    public void setPlayers(List<TournamentPlayer> players) {
+        this.players = players;
     }
 
     public void addPlayer(TournamentPlayer player) {
@@ -81,6 +77,7 @@ public class TournamentGroup {
     public void addGames(List<TournamentSingleGame> games) {
         this.games.addAll(games);
     }
+
     public void addGame(TournamentSingleGame game) {
         this.games.add(game);
     }
@@ -95,11 +92,11 @@ public class TournamentGroup {
         return s;
     }
 
-    public void setRanking(List<TournamentService.PS> ranking) {
-        this.ranking = ranking;
-    }
-
     public List<TournamentService.PS> getRanking() {
         return ranking;
+    }
+
+    public void setRanking(List<TournamentService.PS> ranking) {
+        this.ranking = ranking;
     }
 }

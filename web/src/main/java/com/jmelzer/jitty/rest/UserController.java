@@ -1,6 +1,5 @@
-package com.jmelzer.jitty;
+package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.User;
 import com.jmelzer.jitty.model.dto.UserDTO;
 import com.jmelzer.jitty.service.UserService;
@@ -37,7 +36,7 @@ public class UserController {
 
     @Path("{id}")
     @GET
-    public User users(@PathParam(value = "id") String id) {
+    public UserDTO users(@PathParam(value = "id") String id) {
         return service.findOne(Long.valueOf(id));
 
     }
@@ -61,8 +60,9 @@ public class UserController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public User create(User user) {
-        return service.save(user);
+    public UserDTO create(UserDTO user) {
+        service.save(user);
+        return user;
     }
 
     @POST
@@ -70,9 +70,7 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response changePassword(User user) {
         LOG.info("pw change for user {}", user.getId());
-        User userDB = service.findOne(user.getId());
-        userDB.setPassword(user.getPassword());
-        service.save(userDB);
+        service.changePassword(user.getId(), user.getPassword());
         return Response.ok().build();
     }
 

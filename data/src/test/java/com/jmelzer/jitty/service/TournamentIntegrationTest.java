@@ -11,7 +11,9 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -161,6 +163,7 @@ public class TournamentIntegrationTest {
         assertEquals(0, tournamentService.getQueueSize());
 
     }
+
     private void printBracket(List<TournamentSingleGame> games) {
         for (TournamentSingleGame game : games) {
             System.out.println("------------------");
@@ -171,6 +174,7 @@ public class TournamentIntegrationTest {
             System.out.println();
         }
     }
+
     private void createRandomResult(TournamentSingleGame game) {
         int playedSets = randomIntFromInterval(3, 5);
         int winner = randomIntFromInterval(1, 2);
@@ -184,7 +188,7 @@ public class TournamentIntegrationTest {
         for (int i = 1; i <= playedSets; i++) {
             if (i < 3) {
                 addSetFor(winner, game);
-            } else  {
+            } else {
                 if (playedSets == i) {
                     addSetFor(winner, game);
                 } else {

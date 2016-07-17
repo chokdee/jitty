@@ -1,25 +1,20 @@
-package com.jmelzer.jitty;
+package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.model.Tournament;
+import com.jmelzer.jitty.Application;
 import com.jmelzer.jitty.model.TournamentClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.util.MatcherAssertionErrors;
 import org.springframework.web.client.HttpClientErrorException;
 
-import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Created by J. Melzer on 19.05.2016.

@@ -18,8 +18,6 @@ package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * Standard User entity with attributes such as name, password etc.
@@ -33,10 +31,14 @@ import java.util.Set;
 public class User implements Serializable {
 
     private static final long serialVersionUID = -2388299912396255263L;
+    @Column(nullable = true)
+    byte[] avatar;
+    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "TOURNAMENT_ID")
+    Tournament lastUsedTournament;
     @Id
     @GeneratedValue
     private Long id;
-
     private Integer type;
     @Column(nullable = false, name = "loginname")
     private String loginName;
@@ -50,13 +52,6 @@ public class User implements Serializable {
     private String locale;
     @Column(nullable = false)
     private boolean locked = true;
-    @Column(nullable = true)
-    byte[] avatar;
-
-
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name="TOURNAMENT_ID")
-    Tournament lastUsedTournament;
 
 //    private Set<UserRole> roles = new LinkedHashSet<UserRole>();
 
@@ -81,6 +76,10 @@ public class User implements Serializable {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Column(nullable = false)
     public String getName() {
         return name;
@@ -88,10 +87,6 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {

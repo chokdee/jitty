@@ -11,14 +11,13 @@ import javax.persistence.Id;
  */
 @Entity
 public class GameSet {
-    @Id
-    @GeneratedValue
-    private Long id;
-
     @Column
     int points1;
     @Column
     int points2;
+    @Id
+    @GeneratedValue
+    private Long id;
 
     public GameSet() {
     }

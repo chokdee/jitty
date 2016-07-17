@@ -43,8 +43,10 @@ angular.module('jitty.controllers', []).controller('UserListController', functio
             $http({
                 method: 'POST',
                 url: '/api/users/change-password',
-                data: { id: $scope.user.id,
-                        password: $scope.user.password}
+                data: {
+                    id: $scope.user.id,
+                    password: $scope.user.password
+                }
 
             }).then(function successCallback(response) {
                 console.log('password saved successful');
