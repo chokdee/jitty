@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.config;
 
+import com.jmelzer.jitty.rest.PlayerController;
 import com.jmelzer.jitty.rest.TournamentClassController;
 import com.jmelzer.jitty.rest.TournamentController;
 import com.jmelzer.jitty.rest.UserController;
@@ -18,6 +19,7 @@ public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
         register(UserController.class).
                 register(TournamentClassController.class).
+                register(PlayerController.class).
                 register(TournamentController.class);
     }
 }

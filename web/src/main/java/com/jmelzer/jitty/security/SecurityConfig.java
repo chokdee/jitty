@@ -38,11 +38,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authenticationProvider(authenticationProvider).httpBasic().and().authorizeRequests()
-                .antMatchers("/index.html", "/home.html", "/login.html", "/").permitAll().anyRequest()
-                .authenticated().and().csrf()
-                .csrfTokenRepository(csrfTokenRepository()).and().logout().logoutUrl("/logout").and()
-                .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
+//        http.authenticationProvider(authenticationProvider).httpBasic().and().authorizeRequests()
+//                .antMatchers("/index.html", "/home.html", "/login.html", "/").permitAll().anyRequest()
+//                .authenticated()
+//                .and().csrf().requireCsrfProtectionMatcher(new AntPathRequestMatcher("/h2-console**"))
+//                .csrfTokenRepository(csrfTokenRepository()).and().logout().logoutUrl("/logout").and()
+//                .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
+        http.authorizeRequests().antMatchers("/").permitAll().and()
+
+                .authorizeRequests().antMatchers("/console/**").permitAll();
+
+        http.csrf().disable();
+
+        http.headers().frameOptions().disable();
     }
 
     private Filter csrfHeaderFilter() {
@@ -69,7 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             @Override
             protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-                return ignoreMatcher.matches(request);
+//                return ignoreMatcher.matches(request);
+                return true;
             }
         };
     }
@@ -84,7 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
 //        web.debug(true);
-        web.ignoring().antMatchers("/index.html", "/home.html", "/login.html", "/js/**", "/css/**", "/images/**", "/");
+        web.ignoring().antMatchers("/h2-console**", "/index.html", "/home.html", "/login.html", "/js/**", "/css/**", "/images/**", "/");
     }
 
 }

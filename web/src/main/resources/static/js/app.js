@@ -1,5 +1,5 @@
 angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 'jitty.controllers', 'jitty.services', 'jitty.directives',
-    'jitty.tournament']).config(function ($routeProvider, $httpProvider) {
+    'jitty.tournament', 'jitty.player']).config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.when('/', {
         templateUrl: 'home.html',

@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * Created by J. Melzer on 16.03.2016.
- * REST API for User
+ * REST API for Tournament
  */
 @Component
 @Path("/tournaments")

@@ -62,7 +62,9 @@ public class TournamentPlayerRepositoryIntegrationTests {
         player.setEmail("blub@blub.de");
         player.setFirstName("Macy");
         player.setLastName("Stacey");
-        player.setGender(Gender.W);
+        player.setAssociation("WTTV");
+        player.setClubName("Bla Club");
+        player.setGender(Gender.W.toString());
         player.setMobileNumber("0800-26662662");
         player.setQttr(2000);
         player.setTtr(2100);

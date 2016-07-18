@@ -22,6 +22,10 @@ public class TournamentPlayer {
     private String firstName;
     @Column(nullable = false, name = "lastname")
     private String lastName;
+    @Column(nullable = false, name = "clubname")
+    private String clubName;
+    @Column(nullable = false, name = "association")
+    private String association;
     @Column(nullable = true)
     private String email;
     @Column(nullable = true, name = "mobilenumber")
@@ -110,12 +114,28 @@ public class TournamentPlayer {
         this.birthday = birthday;
     }
 
-    public Gender getGender() {
-        return Gender.valueOf(gender);
+    public String getAssociation() {
+        return association;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender.getValue();
+    public void setAssociation(String association) {
+        this.association = association;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getClubName() {
+        return clubName;
+    }
+
+    public void setClubName(String clubName) {
+        this.clubName = clubName;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     @Override

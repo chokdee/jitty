@@ -1,0 +1,38 @@
+</br>
+<!--suppress HtmlFormInputWithoutLabel -->
+<a ng-click="createNewPlayer()" class="btn-primary btn" style="top:20px;">Neuen Spieler anlegen</a>
+
+<h3>Alle Spieler</h3>
+
+<table class="table usertable">
+    <thead>
+    <tr>
+        <th>
+            <a href="" ng-click="order('firstname')">Vorname</a>
+        </th>
+        <th>
+            <a href="" ng-click="order('lastname')">Nachname</a>
+        </th>
+        <th>
+            <a href="" ng-click="order('clubname')">Verein</a>
+        </th>
+        <th>
+            <a href="" ng-click="order('association')">Verband</a>
+        </th>
+    </tr>
+    </thead>
+    <tr>
+        <td><input type="text" ng-model="search.name"/></td>
+    </tr>
+    <tr ng-repeat="t in players| orderBy:predicate:reverse | filter:paginate| filter:search">
+        <td>{{t.firstName}}</td>
+        <td>{{t.lastName}}</td>
+        <td>{{t.clubName}}</td>
+        <td>{{t.association}}</td>
+        <td>
+            <a class="btn btn-primary" href="#/players/{{t.id}}">Bearbeiten</a>
+            <a class="btn btn-primary" ng-click="selectPlayer(t.id)">Auswählen</a>
+        </td>
+    </tr>
+</table>
+
