@@ -138,18 +138,47 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
 
 
 }).controller('TournamentClassCreateController', function ($scope, $routeParams, popupService, TournamentClass, Tournament, $location, $http) {
-    $scope.tourmentClass = {};
-    $scope.tourmentClass.startTTR = 0;
+    $scope.tournamentClass = {startTTR: 0};
 
     $scope.saveTournamentClass = function () {
         if ($scope.tournamentClassForm.$valid) {
-            TournamentClass.save($scope.tournamentClass, function () {
-                console.log('TournamentClass saved successful');
-                //refresh
-                $scope.tournament = Tournament.get({id: $scope.id});
-                $location.path('/tournament/' + $scope.id);
+
+            $http({
+                method: 'POST',
+                url: 'http://localhost:8080/api/tournament-classes/' + $routeParams.id,
+                data: $scope.tournamentClass
+            }).then(function successCallback(response) {
+                //refresh data
+                //$scope.getTournament();
+                $location.path('/tournaments/' + $routeParams.id);
+
+            }, function errorCallback(response) {
+                $scope.errorMessage = response.data.error;
             });
+
+
         }
     };
-});
+}).controller('TournamentClassEditController', function ($scope, $routeParams, TournamentClass, $location, $http, popupService, $window) {
+        $scope.tournamentClass = {};
+
+
+        $scope.getTournamentClass = function () {
+            $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
+                console.log('Got TournamentClass successful');
+            })
+        };
+        $scope.getTournamentClass();
+
+        $scope.saveTournamentClass = function () {
+            if ($scope.tournamentClassForm.$valid) {
+                TournamentClass.save($scope.tournamentClass, function () {
+                    console.log('TournamentClass saved successful');
+                    //$location.path('/tournaments' + $scope.id);
+                    $scope.back();
+                });
+            }
+        };
+    }
+);
 

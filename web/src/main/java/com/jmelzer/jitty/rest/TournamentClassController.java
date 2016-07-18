@@ -51,6 +51,13 @@ public class TournamentClassController {
         return tournamentClass;
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public TournamentClass save(TournamentClass tournamentClass) {
+        service.updateClass(tournamentClass);
+        return tournamentClass;
+    }
+
     @Path("{id}")
     @DELETE
     public Response delete(@PathParam(value = "id") String id) {
