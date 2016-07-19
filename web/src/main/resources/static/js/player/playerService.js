@@ -4,4 +4,8 @@ angular.module('jitty.player.services', []).factory('Player', function ($resourc
             method: 'PUT'
         }
     });
+}).factory('Club', function ($resource) {
+    return $resource('http://localhost:8080/api/clubs/:id', {id: '@_id'}, {
+
+    });
 });

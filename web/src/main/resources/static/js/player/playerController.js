@@ -14,7 +14,7 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
         $scope.predicate = predicate;
     };
 
-}).controller('PlayerEditController', function ($scope, $routeParams, Player, $location, $http, popupService, $window) {
+}).controller('PlayerEditController', function ($scope, $routeParams, Player, $location, $http, Club, $window) {
         $scope.id = $routeParams.id;
 
         $scope.player = {};
@@ -34,8 +34,9 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
                 $scope.player.birthday = $scope.birthdate;
                 Player.save($scope.player, function () {
                     console.log('Player saved successful');
-                    $scope.players = Player.query();
+                    //$scope.players = Player.query();
                     $location.path('/players');
+                    //$scope.back();
                 });
             }
         };
@@ -55,6 +56,11 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
         $scope.popup1 = {
             opened: false
         };
+
+        $scope.person = {};
+        $scope.clubs = Club.query();
+
+        $scope.selected = {value: $scope.clubs[0]};
     }
 ).controller('PlayerCreateController', function ($scope, $routeParams, Player, $location, $http) {
 

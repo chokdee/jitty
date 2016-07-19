@@ -28,6 +28,7 @@
     border-color: transparent transparent maroon;
     border-width: 5px;
 }
+/*
 
 .form-style-2 {
     max-width: 500px;
@@ -119,4 +120,14 @@
 .form-style-2 input[type=button]:hover {
     background: #EA7B00;
     color: #fff;
+}
+*/
+
+.select2 > .select2-choice.ui-select-match {
+    /* Because of the inclusion of Bootstrap */
+    height: 29px;
+}
+
+.selectize-control > .selectize-dropdown {
+    top: 36px;
 }

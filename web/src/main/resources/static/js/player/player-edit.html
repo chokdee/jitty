@@ -49,6 +49,16 @@
                 </div>
             </div>
         </div>
+        <div style="width: 50%">
+            <label for="clubinput">Verein</label>
+            <ui-select id="clubinput" ng-model="player.clubName">
+                <ui-select-match placeholder="Einen Verein aussuchen">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="club in clubs">
+                    <!--<div ng-bind-html="club.name | highlight: $select.search"></div>-->
+                    <span ng-bind="club.name"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
         <input type="submit" value="Speichern"/>
     </form>
 

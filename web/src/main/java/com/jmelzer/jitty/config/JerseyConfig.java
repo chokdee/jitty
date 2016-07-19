@@ -1,9 +1,6 @@
 package com.jmelzer.jitty.config;
 
-import com.jmelzer.jitty.rest.PlayerController;
-import com.jmelzer.jitty.rest.TournamentClassController;
-import com.jmelzer.jitty.rest.TournamentController;
-import com.jmelzer.jitty.rest.UserController;
+import com.jmelzer.jitty.rest.*;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +17,7 @@ public class JerseyConfig extends ResourceConfig {
         register(UserController.class).
                 register(TournamentClassController.class).
                 register(PlayerController.class).
+                register(ClubController.class).
                 register(TournamentController.class);
     }
 }

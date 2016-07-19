@@ -1,4 +1,5 @@
-angular.module('jitty.player', ['ngRoute', 'ngResource', 'ngMessages', 'jitty.player.controllers', 'jitty.player.services', 'ui.bootstrap']).config(function ($routeProvider, $httpProvider) {
+angular.module('jitty.player', ['ngRoute', 'ngResource', 'ngMessages', 'ui.select', 'ngSanitize',
+    'jitty.player.controllers', 'jitty.player.services', 'ui.bootstrap']).config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.when('/players', {
         templateUrl: '/js/player/players.html',
