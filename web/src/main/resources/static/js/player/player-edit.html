@@ -1,0 +1,55 @@
+<div class="form-style-2">
+    <div class="form-style-2-heading">Spieler eingeben</div>
+    <form name="form" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="savePlayer()">
+        <div style="width: 50%">
+            <div class="control-group">
+                <label for="firstName"><span>Vorname <span class="required">*</span></span></label>
+                <input type="text" ng-model="player.firstName" name="firstName" required id="firstName"
+                       class="form-control ng-pristine ng-invalid ng-invalid-required"/>
+                <div class="clearfix">
+                    <div ng-messages="form.name.$error" ng-if="form.$submitted || form.name.$dirty"
+                         class="error-messages slide-right">
+                        <div ng-message="required" class="message slide-left">Bitte einen Vornamen eingeben</div>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="lastName"><span>Nachname <span class="required">*</span></span></label>
+                <input type="text" ng-model="player.lastName" name="lastName" required id="lastName"
+                       class="form-control ng-pristine ng-invalid ng-invalid-required"/>
+                <div class="clearfix">
+                    <div ng-messages="form.name.$error" ng-if="form.$submitted || form.name.$dirty"
+                         class="error-messages slide-right">
+                        <div ng-message="required" class="message slide-left">Bitte einen Nachnamen eingeben</div>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="birthday">Geburtstag</label>
+                <div class="input-group">
+                    <input name=birthday" id="birthday" type="text" uib-datepicker-popup="{{format}}" ng-model="birthdate" is-open="popup1.opened"
+                           ng-required="true" close-text="Schließen" clear-text="Zurücksetzen" current-text="Heute"
+                           datepicker-options="dateOptions" alt-input-formats="altInputFormats" class="form-control"/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="gender">Geschlecht</label>
+                <div>
+                    <input type="radio" ng-model="player.gender" name="gender" id="gender" value="w"/> Frau<br>
+                    <input type="radio" ng-model="player.gender" name="gender2" id="gender2" value="m"/> Mann<br>
+                </div>
+                <div class="clearfix">
+                    <div ng-messages="form.name.$error" ng-if="form.$submitted || form.name.$dirty"
+                         class="error-messages slide-right">
+                        <div ng-message="required" class="message slide-left">Bitte einen Geburtstag eingeben</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="submit" value="Speichern"/>
+    </form>
+
+</div>

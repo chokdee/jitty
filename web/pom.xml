@@ -135,6 +135,12 @@
                         <artifactId>angularjs</artifactId>
                         <version>1.5.5</version>
                     </dependency>
+                    <!-- https://mvnrepository.com/artifact/org.webjars.bower/angular-i18n -->
+                    <dependency>
+                        <groupId>org.webjars.bower</groupId>
+                        <artifactId>angular-i18n</artifactId>
+                        <version>1.5.5</version>
+                    </dependency>
                     <dependency>
                         <groupId>org.webjars.bower</groupId>
                         <artifactId>angular-resource</artifactId>

@@ -1,6 +1,7 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.model.TournamentPlayer;
+import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.service.PlayerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,16 +27,14 @@ public class PlayerController {
     PlayerService service;
 
     @GET
-    public List<TournamentPlayer> getList() {
+    public List<TournamentPlayerDTO> getList() {
         LOG.info("query all TournamentPlayer ");
         return service.findAll();
     }
 
     @Path("{id}")
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public TournamentPlayer getById(@PathParam(value = "id") String id) {
+    public TournamentPlayerDTO getById(@PathParam(value = "id") String id) {
         return service.findOne(Long.valueOf(id));
 
     }

@@ -1,5 +1,6 @@
 package com.jmelzer.jitty;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jmelzer.jitty.dao.UserRepository;
@@ -59,25 +60,11 @@ public class Application {
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
         ObjectMapper mapper = new ObjectMapper();
+//        mapper.disable(MapperFeature.USE_GETTERS_AS_SETTERS);
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         MappingJackson2HttpMessageConverter converter =
                 new MappingJackson2HttpMessageConverter(mapper);
         return converter;
     }
 
-    @Bean
-    public FilterRegistrationBean someFilterRegistration() {
-
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(inViewVilter());
-        registration.addUrlPatterns("/api/*");
-        registration.setName("inViewVilter");
-        registration.setOrder(1);
-        return registration;
-    }
-
-    @Bean(name = "inViewVilter")
-    public Filter inViewVilter() {
-        return new OpenEntityManagerInViewFilter();
-    }
 }

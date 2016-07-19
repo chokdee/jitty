@@ -2,10 +2,13 @@ package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.model.TournamentPlayer;
+import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,14 +20,24 @@ public class PlayerService {
     TournamentPlayerRepository repository;
 
     @Transactional(readOnly = true)
-    public List<TournamentPlayer> findAll() {
+    public List<TournamentPlayerDTO> findAll() {
         List<TournamentPlayer> players = repository.findAll();
-        return players;
+        List<TournamentPlayerDTO> dtos = new ArrayList<>();
+        for (TournamentPlayer player : players) {
+            TournamentPlayerDTO dto = new TournamentPlayerDTO();
+            BeanUtils.copyProperties(player, dto);
+            dtos.add(dto);
+        }
+        return dtos;
     }
 
     @Transactional
-    public TournamentPlayer findOne(Long aLong) {
-        return repository.findOne(aLong);
+    public TournamentPlayerDTO findOne(Long aLong) {
+
+        TournamentPlayer tournamentPlayer = repository.findOne(aLong);
+        TournamentPlayerDTO dto = new TournamentPlayerDTO();
+        BeanUtils.copyProperties(tournamentPlayer, dto);
+        return dto;
     }
 
     @Transactional

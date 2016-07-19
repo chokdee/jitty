@@ -3,6 +3,7 @@ package com.jmelzer.jitty.rest;
 import com.jmelzer.jitty.Application;
 import com.jmelzer.jitty.model.TournamentPlayer;
 import com.jmelzer.jitty.model.User;
+import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.model.dto.UserDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,8 +36,8 @@ public class PlayerControllerTest extends SecureResourceTest {
         try {
             HttpHeaders loginHeaders = doLogin();
 
-            ResponseEntity<TournamentPlayer[]> entity = http(HttpMethod.GET, "api/players",
-                    createHttpEntity(null, loginHeaders), TournamentPlayer[].class);
+            ResponseEntity<TournamentPlayerDTO[]> entity = http(HttpMethod.GET, "api/players",
+                    createHttpEntity(null, loginHeaders), TournamentPlayerDTO[].class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
             assertThat(entity.getBody()[0].getId(), is(1L));

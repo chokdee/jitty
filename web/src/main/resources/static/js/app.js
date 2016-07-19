@@ -91,4 +91,21 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 
     $http.get('/resource/').success(function (data) {
         $scope.greeting = data;
     })
+}).run(function ($rootScope, $location) {
+
+    var history = [];
+
+    $rootScope.$on('$routeChangeSuccess', function() {
+        history.push($location.$$path);
+    });
+
+    $rootScope.back = function () {
+        var prevUrl = history.length > 1 ? history.splice(-2)[0] : "/";
+        $location.path(prevUrl);
+    };
+
+    $rootScope.dateFormat = 'dd.MM.yyyy';
+    $rootScope.altInputFormats = ['d!/M!/yyyy'];
+
+    $rootScope.tournament = {};
 });

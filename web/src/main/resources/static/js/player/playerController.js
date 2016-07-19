@@ -19,16 +19,19 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
 
         $scope.player = {};
 
+        $scope.birthdate = {};
 
         $scope.getPlayer = function () {
             $scope.player = Player.get({id: $routeParams.id}, function () {
-                console.log('Player got successful');
+                $scope.birthdate = new Date($scope.player.birthday);
+                console.log('got Player ' + $routeParams.id + ' successfully');
             })
         };
         $scope.getPlayer();
 
         $scope.savePlayer = function () {
-            if ($scope.playerForm.$valid) {
+            if ($scope.form.$valid) {
+                $scope.player.birthday = $scope.birthdate;
                 Player.save($scope.player, function () {
                     console.log('Player saved successful');
                     $scope.players = Player.query();
@@ -36,13 +39,43 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
                 });
             }
         };
+        $scope.formats = ['dd.MM.yyyy'];
+        $scope.format = $scope.formats[0];
+        $scope.dateOptions = {
+            dateDisabled: false,
+            formatYear: 'yy',
+            maxDate: new Date(),
+            minDate: new Date(1900, 1, 1),
+            startingDay: 1
+        };
 
+        $scope.open1 = function () {
+            $scope.popup1.opened = true;
+        };
+        $scope.popup1 = {
+            opened: false
+        };
     }
 ).controller('PlayerCreateController', function ($scope, $routeParams, Player, $location, $http) {
 
+    $scope.dateOptions = {
+        dateDisabled: false,
+        formatYear: 'yy',
+        maxDate: new Date(),
+        minDate: new Date(2000, 1, 1),
+        startingDay: 1
+    };
+
+    $scope.open1 = function () {
+        $scope.popup1.opened = true;
+    };
+    $scope.popup1 = {
+        opened: false
+    };
+
 
     $scope.savePlayer = function () {
-        if ($scope.playerForm.$valid) {
+        if ($scope.form.$valid) {
             Player.save($scope.player, function () {
                 console.log('Player saved successful');
                 $scope.players = Player.query();
