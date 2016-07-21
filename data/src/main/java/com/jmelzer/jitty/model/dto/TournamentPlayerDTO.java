@@ -1,5 +1,8 @@
 package com.jmelzer.jitty.model.dto;
 
+import com.jmelzer.jitty.model.Association;
+import com.jmelzer.jitty.model.Club;
+
 import java.sql.Date;
 
 /**
@@ -11,8 +14,8 @@ public class TournamentPlayerDTO {
     private Long id;
     private String firstName;
     private String lastName;
-    private String clubName;
-    private String association;
+    private Club club;
+    private Association association;
     private String email;
     private String mobileNumber;
     private int qttr;
@@ -44,19 +47,19 @@ public class TournamentPlayerDTO {
         this.lastName = lastName;
     }
 
-    public String getClubName() {
-        return clubName;
+    public Club getClub() {
+        return club;
     }
 
-    public void setClubName(String clubName) {
-        this.clubName = clubName;
+    public void setClub(Club club) {
+        this.club = club;
     }
 
-    public String getAssociation() {
+    public Association getAssociation() {
         return association;
     }
 
-    public void setAssociation(String association) {
+    public void setAssociation(Association association) {
         this.association = association;
     }
 

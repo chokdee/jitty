@@ -17,11 +17,12 @@ public class Club {
     @Id
     @GeneratedValue
     private Long id;
+
     @Column(nullable = false, name = "name")
     private String name;
 
-    @Column(nullable = false, name = "association")
-    private String association;
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    private Association association;
 
     public Club() {
     }
@@ -42,11 +43,11 @@ public class Club {
         this.name = name;
     }
 
-    public String getAssociation() {
+    public Association getAssociation() {
         return association;
     }
 
-    public void setAssociation(String association) {
+    public void setAssociation(Association association) {
         this.association = association;
     }
 }

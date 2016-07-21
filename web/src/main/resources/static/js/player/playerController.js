@@ -14,12 +14,15 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
         $scope.predicate = predicate;
     };
 
-}).controller('PlayerEditController', function ($scope, $routeParams, Player, $location, $http, Club, $window) {
+}).controller('PlayerEditController', function ($scope, $routeParams, Player, $location, $http, Club, Association) {
         $scope.id = $routeParams.id;
 
         $scope.player = {};
+        $scope.association = {};
 
         $scope.birthdate = {};
+        $scope.clubs = Club.query();
+        $scope.associations = Association.query();
 
         $scope.getPlayer = function () {
             $scope.player = Player.get({id: $routeParams.id}, function () {
@@ -57,10 +60,7 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
             opened: false
         };
 
-        $scope.person = {};
-        $scope.clubs = Club.query();
 
-        $scope.selected = {value: $scope.clubs[0]};
     }
 ).controller('PlayerCreateController', function ($scope, $routeParams, Player, $location, $http) {
 

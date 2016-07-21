@@ -28,7 +28,6 @@
     border-color: transparent transparent maroon;
     border-width: 5px;
 }
-/*
 
 .form-style-2 {
     max-width: 500px;
@@ -51,11 +50,11 @@
 }
 
 .form-style-2 label > span {
-    width: 200px;
-    font-weight: bold;
-    float: left;
-    padding-top: 8px;
-    padding-right: 5px;
+    /*width: 200px;*/
+    /*font-weight: bold;*/
+    /*float: left;*/
+    /*padding-top: 8px;*/
+    /*padding-right: 5px;*/
 }
 
 .form-style-2 span.required {
@@ -121,7 +120,6 @@
     background: #EA7B00;
     color: #fff;
 }
-*/
 
 .select2 > .select2-choice.ui-select-match {
     /* Because of the inclusion of Bootstrap */

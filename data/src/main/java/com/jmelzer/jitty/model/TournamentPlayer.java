@@ -22,10 +22,10 @@ public class TournamentPlayer {
     private String firstName;
     @Column(nullable = false, name = "lastname")
     private String lastName;
-    @Column(nullable = false, name = "clubname")
-    private String clubName;
-    @Column(nullable = false, name = "association")
-    private String association;
+    @ManyToOne(optional = true, cascade = CascadeType.DETACH)
+    private Club club;
+    @ManyToOne(optional = true, cascade = CascadeType.DETACH)
+    private Association association;
     @Column(nullable = true)
     private String email;
     @Column(nullable = true, name = "mobilenumber")
@@ -114,28 +114,28 @@ public class TournamentPlayer {
         this.birthday = birthday;
     }
 
-    public String getAssociation() {
-        return association;
-    }
-
-    public void setAssociation(String association) {
-        this.association = association;
-    }
-
     public String getGender() {
         return gender;
     }
 
-    public String getClubName() {
-        return clubName;
-    }
-
-    public void setClubName(String clubName) {
-        this.clubName = clubName;
-    }
-
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public Association getAssociation() {
+        return association;
+    }
+
+    public void setAssociation(Association association) {
+        this.association = association;
+    }
+
+    public Club getClub() {
+        return club;
+    }
+
+    public void setClub(Club club) {
+        this.club = club;
     }
 
     @Override

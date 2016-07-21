@@ -40,6 +40,10 @@ public class TournamentPlayerRepositoryIntegrationTests {
 
     @Autowired
     TournamentPlayerRepository repository;
+    @Autowired
+    AssociationRepository associationRepository;
+    @Autowired
+    ClubRepository clubRepository;
 
     @Test
     public void findsFirstPageOf() {
@@ -52,7 +56,7 @@ public class TournamentPlayerRepositoryIntegrationTests {
     public void findByName() {
 
         assertNull(repository.findByLastName("xxx"));
-        assertEquals("Meier", repository.findByLastName("Meier").getLastName());
+        assertEquals("Boll", repository.findByLastName("Boll").getLastName());
     }
 
     @Test
@@ -62,12 +66,12 @@ public class TournamentPlayerRepositoryIntegrationTests {
         player.setEmail("blub@blub.de");
         player.setFirstName("Macy");
         player.setLastName("Stacey");
-        player.setAssociation("WTTV");
-        player.setClubName("Bla Club");
         player.setGender(Gender.W.toString());
         player.setMobileNumber("0800-26662662");
         player.setQttr(2000);
         player.setTtr(2100);
+        player.setAssociation(associationRepository.findOne(1L));
+        player.setClub(clubRepository.findOne(1L));
         repository.save(player);
 
         assertNotNull(player.getId());

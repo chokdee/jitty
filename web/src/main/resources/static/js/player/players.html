@@ -27,8 +27,8 @@
     <tr ng-repeat="t in players| orderBy:predicate:reverse | filter:paginate| filter:search">
         <td>{{t.firstName}}</td>
         <td>{{t.lastName}}</td>
-        <td>{{t.clubName}}</td>
-        <td>{{t.association}}</td>
+        <td>{{t.club.name}}</td>
+        <td>{{t.association.shortName}}</td>
         <td>
             <a class="btn btn-primary" href="#/players/{{t.id}}">Bearbeiten</a>
         </td>

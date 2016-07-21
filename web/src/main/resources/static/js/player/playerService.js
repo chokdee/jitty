@@ -8,4 +8,8 @@ angular.module('jitty.player.services', []).factory('Player', function ($resourc
     return $resource('http://localhost:8080/api/clubs/:id', {id: '@_id'}, {
 
     });
+}).factory('Association', function ($resource) {
+    return $resource('http://localhost:8080/api/associations/:id', {id: '@_id'}, {
+
+    });
 });

@@ -1,63 +1,77 @@
 <div class="form-style-2">
     <div class="form-style-2-heading">Spieler eingeben</div>
     <form name="form" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="savePlayer()">
-        <div style="width: 50%">
-            <div class="control-group">
-                <label for="firstName"><span>Vorname <span class="required">*</span></span></label>
-                <input type="text" ng-model="player.firstName" name="firstName" required id="firstName"
-                       class="form-control ng-pristine ng-invalid ng-invalid-required"/>
-                <div class="clearfix">
-                    <div ng-messages="form.name.$error" ng-if="form.$submitted || form.name.$dirty"
-                         class="error-messages slide-right">
-                        <div ng-message="required" class="message slide-left">Bitte einen Vornamen eingeben</div>
+        <div class="row">
+            <div class="col-md-5">
+                <div class="control-group">
+                    <label for="firstName">Vorname <span class="required">*</span></label>
+                    <input type="text" ng-model="player.firstName" name="firstName" required id="firstName"
+                           class="form-control ng-pristine ng-invalid ng-invalid-required"/>
+                    <div class="clearfix">
+                        <div ng-messages="form.name.$error" ng-if="form.$submitted || form.name.$dirty"
+                             class="error-messages slide-right">
+                            <div ng-message="required" class="message slide-left">Bitte einen Vornamen eingeben</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label for="lastName"><span>Nachname <span class="required">*</span></span></label>
-                <input type="text" ng-model="player.lastName" name="lastName" required id="lastName"
-                       class="form-control ng-pristine ng-invalid ng-invalid-required"/>
-                <div class="clearfix">
-                    <div ng-messages="form.name.$error" ng-if="form.$submitted || form.name.$dirty"
-                         class="error-messages slide-right">
-                        <div ng-message="required" class="message slide-left">Bitte einen Nachnamen eingeben</div>
+                <div class="control-group">
+                    <label for="lastName"><span>Nachname <span class="required">*</span></span></label>
+                    <input type="text" ng-model="player.lastName" name="lastName" required id="lastName"
+                           class="form-control ng-pristine ng-invalid ng-invalid-required"/>
+                    <div class="clearfix">
+                        <div ng-messages="form.name.$error" ng-if="form.$submitted || form.name.$dirty"
+                             class="error-messages slide-right">
+                            <div ng-message="required" class="message slide-left">Bitte einen Nachnamen eingeben</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label for="birthday">Geburtstag</label>
-                <div class="input-group">
-                    <input name=birthday" id="birthday" type="text" uib-datepicker-popup="{{format}}" ng-model="birthdate" is-open="popup1.opened"
-                           ng-required="true" close-text="Schließen" clear-text="Zurücksetzen" current-text="Heute"
-                           datepicker-options="dateOptions" alt-input-formats="altInputFormats" class="form-control"/>
+                <div class="control-group">
+                    <label for="birthday">Geburtstag</label>
+                    <div class="input-group">
+                        <input name=birthday" id="birthday" type="text" uib-datepicker-popup="{{format}}" ng-model="birthdate" is-open="popup1.opened"
+                               ng-required="true" close-text="Schließen" clear-text="Zurücksetzen" current-text="Heute"
+                               datepicker-options="dateOptions" alt-input-formats="altInputFormats" class="form-control"/>
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
+                    </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label for="gender">Geschlecht</label>
-                <div>
-                    <input type="radio" ng-model="player.gender" name="gender" id="gender" value="w"/> Frau<br>
-                    <input type="radio" ng-model="player.gender" name="gender2" id="gender2" value="m"/> Mann<br>
-                </div>
-                <div class="clearfix">
-                    <div ng-messages="form.name.$error" ng-if="form.$submitted || form.name.$dirty"
-                         class="error-messages slide-right">
-                        <div ng-message="required" class="message slide-left">Bitte einen Geburtstag eingeben</div>
+                <div class="control-group">
+                    <label for="gender">Geschlecht</label>
+                    <div>
+                        <input type="radio" ng-model="player.gender" name="gender" id="gender" value="w"/> Frau<br>
+                        <input type="radio" ng-model="player.gender" name="gender2" id="gender2" value="m"/> Mann<br>
+                    </div>
+                    <div class="clearfix">
+                        <div ng-messages="form.name.$error" ng-if="form.$submitted || form.name.$dirty"
+                             class="error-messages slide-right">
+                            <div ng-message="required" class="message slide-left">Bitte einen Geburtstag eingeben</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div style="width: 50%">
-            <label for="clubinput">Verein</label>
-            <ui-select id="clubinput" ng-model="player.clubName">
-                <ui-select-match placeholder="Einen Verein aussuchen">{{$select.selected.name}}</ui-select-match>
-                <ui-select-choices repeat="club in clubs">
-                    <!--<div ng-bind-html="club.name | highlight: $select.search"></div>-->
-                    <span ng-bind="club.name"></span>
-                </ui-select-choices>
-            </ui-select>
+            <div class="col-md-5">
+                <p>Assoc {{player.association}}</p>
+                <div class="control-group">
+                    <label for="clubinput">Verband</label>
+                    <ui-select id="associnput" ng-model="player.association">
+                        <ui-select-match placeholder="Einen Verband aussuchen">{{$select.selected.longName}}</ui-select-match>
+                        <ui-select-choices repeat="association in associations">
+                            <span ng-bind="association.longName"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="control-group">
+                    <p>club {{player.club}}</p>
+                    <label for="clubinput">Verein</label>
+                    <ui-select id="clubinput" ng-model="player.club">
+                        <ui-select-match placeholder="Einen Verein aussuchen">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="club in clubs">
+                            <span ng-bind="club.name"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
         </div>
         <input type="submit" value="Speichern"/>
     </form>
