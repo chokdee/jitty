@@ -33,7 +33,7 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
         $scope.getPlayer();
 
         $scope.savePlayer = function () {
-            if ($scope.form.$valid) {
+            if ($scope.playerForm.$valid) {
                 $scope.player.birthday = $scope.birthdate;
                 Player.save($scope.player, function () {
                     console.log('Player saved successful');
@@ -81,7 +81,7 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
 
 
     $scope.savePlayer = function () {
-        if ($scope.form.$valid) {
+        if ($scope.playerForm.$valid) {
             Player.save($scope.player, function () {
                 console.log('Player saved successful');
                 $scope.players = Player.query();

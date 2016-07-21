@@ -1,6 +1,6 @@
 <div class="form-style-2">
     <div class="form-style-2-heading">Spieler eingeben</div>
-    <form name="form" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="savePlayer()">
+    <form name="playerForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="savePlayer()">
         <div class="row">
             <div class="col-md-5">
                 <div class="control-group">
@@ -8,9 +8,9 @@
                     <input type="text" ng-model="player.firstName" name="firstName" required id="firstName"
                            class="form-control ng-pristine ng-invalid ng-invalid-required"/>
                     <div class="clearfix">
-                        <div ng-messages="form.name.$error" ng-if="form.$submitted || form.name.$dirty"
+                        <div ng-messages="playerForm.firstName.$error" ng-if="playerForm.$submitted || playerForm.firstName.$dirty"
                              class="error-messages slide-right">
-                            <div ng-message="required" class="message slide-left">Bitte einen Vornamen eingeben</div>
+                            <div ng-message="required">Bitte einen Vornamen eingeben</div>
                         </div>
                     </div>
                 </div>
@@ -19,7 +19,7 @@
                     <input type="text" ng-model="player.lastName" name="lastName" required id="lastName"
                            class="form-control ng-pristine ng-invalid ng-invalid-required"/>
                     <div class="clearfix">
-                        <div ng-messages="form.name.$error" ng-if="form.$submitted || form.name.$dirty"
+                        <div ng-messages="playerForm.lastName.$error" ng-if="playerForm.$submitted || playerForm.lastName.$dirty"
                              class="error-messages slide-right">
                             <div ng-message="required" class="message slide-left">Bitte einen Nachnamen eingeben</div>
                         </div>
@@ -43,7 +43,7 @@
                         <input type="radio" ng-model="player.gender" name="gender2" id="gender2" value="m"/> Mann<br>
                     </div>
                     <div class="clearfix">
-                        <div ng-messages="form.name.$error" ng-if="form.$submitted || form.name.$dirty"
+                        <div ng-messages="playerForm.name.$error" ng-if="playerForm.$submitted || playerForm.name.$dirty"
                              class="error-messages slide-right">
                             <div ng-message="required" class="message slide-left">Bitte einen Geburtstag eingeben</div>
                         </div>
@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="col-md-5">
-                <p>Assoc {{player.association}}</p>
+                <!--<p>Assoc {{player.association}}</p>-->
                 <div class="control-group">
                     <label for="clubinput">Verband</label>
                     <ui-select id="associnput" ng-model="player.association">
@@ -62,7 +62,7 @@
                     </ui-select>
                 </div>
                 <div class="control-group">
-                    <p>club {{player.club}}</p>
+                    <!--<p>club {{player.club}}</p>-->
                     <label for="clubinput">Verein</label>
                     <ui-select id="clubinput" ng-model="player.club">
                         <ui-select-match placeholder="Einen Verein aussuchen">{{$select.selected.name}}</ui-select-match>
@@ -70,6 +70,37 @@
                             <span ng-bind="club.name"></span>
                         </ui-select-choices>
                     </ui-select>
+                </div>
+
+                <div class="control-group">
+                    <label for="qttr">QTTR</label>
+                    <input type="number" ng-model="player.qttr" name="qttr" required id="qttr" class="form-control ng-pristine ng-invalid ng-invalid-required"/>
+                    <div class="clearfix">
+                        <div ng-messages="playerForm.qttr.$error" ng-if="playerForm.$submitted || playerForm.qttr.$dirty" class="error-messages slide-right">
+                            <div ng-message="required" class="message slide-left">Bitte einen gültigen QTTR-Werteingeben</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="input_email_address">E-Mail:</label>
+                    <input class="form-control ng-pristine ng-invalid ng-valid-email" type="email" name="input_email_address" ng-model="player.email" id="input_email_address"/>
+                    <div class="clearfix">
+                        <div ng-messages="playerForm.input_email_address.$error" class="error-messages slide-right">
+                            <div ng-message="email" class="message slide-left">Bitte eine korrekte E-Mail eingeben</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <!--todo add phone pattern here-->
+                    <label for="input_mobile_number">Mobilnummer</label>
+                    <input class="form-control ng-pristine ng-invalid " type="text" name="input_mobile_number" ng-model="player.mobileNumber" id="input_mobile_number"/>
+                    <div class="clearfix">
+                        <div ng-messages="playerForm.input_mobile_number.$error" class="error-messages slide-right">
+                            <div ng-message="email" class="message slide-left">Bitte eine korrekte Telefonnummer eingeben</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
