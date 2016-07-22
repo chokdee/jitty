@@ -30,9 +30,6 @@ import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
 //@WebAppConfiguration
 public class UserControllerTest extends SecureResourceTest {
 
-    @Autowired
-    DataSource dataSource;
-
     @Test
     public void testGetUserList() throws Exception {
         try {

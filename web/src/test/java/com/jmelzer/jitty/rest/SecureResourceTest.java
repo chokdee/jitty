@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.rest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 /**
@@ -15,6 +17,10 @@ import java.util.List;
  */
 @WebIntegrationTest("server.port=9999")
 public abstract class SecureResourceTest {
+    @Autowired
+    DataSource dataSource;
+
+
     static final String SET_COOKIE = "Set-Cookie";
     static final String CSRF_TOKEN_HEADER = "X-XSRF-TOKEN";
     RestTemplate restTemplate = new TestRestTemplate();

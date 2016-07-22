@@ -7,7 +7,7 @@
     );
 
     create table TC_PLAYER (
-        tournament_class_id bigint not null,
+        classes_id bigint not null,
         players_id bigint not null
     );
 
@@ -152,8 +152,8 @@
         references tournament_player;
 
     alter table TC_PLAYER 
-        add constraint FK_jlrwx0t0fqa3k8rtf5lkfl3ks 
-        foreign key (tournament_class_id) 
+        add constraint FK_qxf2qn0ihgjq7p82fo462o82c 
+        foreign key (classes_id) 
         references tournament_class;
 
     alter table TG_PLAYER 

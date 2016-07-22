@@ -3,6 +3,9 @@ package com.jmelzer.jitty.service;
 import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.model.*;
+import com.jmelzer.jitty.model.dto.TournamentClassDTO;
+import com.jmelzer.jitty.model.dto.TournamentDTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
@@ -311,34 +314,37 @@ public class TournamentService {
     }
 
     @Transactional
-    public List<Tournament> findAll() {
+    public List<TournamentDTO> findAll() {
         List<Tournament> list = repository.findAll();
+        List<TournamentDTO> ret = new ArrayList<>(list.size());
         for (Tournament tournament : list) {
-            loadAssocs(tournament);
+            TournamentDTO dto = createDTO(tournament);
+            ret.add(dto);
         }
 
-        return list;
+        return ret;
     }
 
-    private void loadAssocs(Tournament tournament) {
+    private TournamentDTO createDTO(Tournament tournament) {
+        TournamentDTO dto = new TournamentDTO();
+        BeanUtils.copyProperties(tournament, dto);
         for (TournamentClass tournamentClass : tournament.getClasses()) {
-            for (TournamentGroup group : tournamentClass.getGroups()) {
-                group.getId();
-            }
+            dto.addClass(createClassDTO(tournamentClass));
         }
+        return dto;
     }
 
-    private void loadAssocs(TournamentClass tournamentClass) {
-        for (TournamentGroup group : tournamentClass.getGroups()) {
-            group.getId();
-        }
+    private TournamentClassDTO createClassDTO(TournamentClass tournamentClass) {
+        TournamentClassDTO dto = new TournamentClassDTO();
+        BeanUtils.copyProperties(tournamentClass, dto);
+        return dto;
     }
+
 
     @Transactional
-    public Tournament findOne(Long id) {
+    public TournamentDTO findOne(Long id) {
         Tournament tournament = repository.findOne(id);
-        loadAssocs(tournament);
-        return tournament;
+        return createDTO(tournament);
     }
 
     @Transactional
@@ -361,22 +367,26 @@ public class TournamentService {
     }
 
     public Tournament update(Tournament tournament) {
-        for (TournamentClass tournamentClass : tournament.getClasses()) {
-            repositoryClass.save(tournamentClass);
-        }
+//        for (TournamentClass tournamentClass : tournament.getClasses()) {
+//            repositoryClass.save(tournamentClass);
+//        }
         return repository.saveAndFlush(tournament);
     }
 
     @Transactional
-    public TournamentClass findOneClass(Long aLong) {
+    public TournamentClassDTO findOneClass(Long aLong) {
         TournamentClass tc = repositoryClass.findOne(aLong);
-        loadAssocs(tc);
-        return tc;
+        TournamentClassDTO dto = new TournamentClassDTO();
+        BeanUtils.copyProperties(tc, dto);
+        return dto;
     }
 
     @Transactional
-    public TournamentClass updateClass(TournamentClass tournamentClass) {
-        return repositoryClass.saveAndFlush(tournamentClass);
+    public void updateClass(TournamentClassDTO dto) {
+        TournamentClass tc = repositoryClass.findOne(dto.getId());
+        BeanUtils.copyProperties(dto, tc);
+
+        repositoryClass.saveAndFlush(tc);
     }
 
     @Transactional
@@ -388,8 +398,11 @@ public class TournamentService {
         if (tc.getGroups().size() > 0) {
             throw new IntegrationViolation("Es wurden bereits Gruppen angelegt, die Klasse kann nicht mehr gelöscht werden");
         }
+        Tournament t = tc.getTournament();
+        t.removeClass(tc);
 
         repositoryClass.delete(aLong);
+        repository.saveAndFlush(t);
     }
 
     void calcRankingForGroup(TournamentGroup group) {
@@ -441,6 +454,14 @@ public class TournamentService {
 //        for (PS ps : list) {
 //            System.out.println("ps = " + ps);
 //        }
+    }
+
+    @Transactional
+    public TournamentClass addTC(Long aLong, TournamentClass tournamentClass) {
+        Tournament t = repository.findOne(aLong);
+        t.addClass(tournamentClass);
+        update(t);
+        return tournamentClass;
     }
 
     static public class PS implements Comparable<PS> {

@@ -9,10 +9,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
-import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -25,18 +25,26 @@ import static org.junit.Assert.*;
 public class TourmentClassControllerTest extends SecureResourceTest {
     @Test
     public void testGetTournamentClass() throws Exception {
-        HttpHeaders loginHeaders = doLogin();
+        try {
+            HttpHeaders loginHeaders = doLogin();
 
-        ResponseEntity<TournamentClass> entity = http(HttpMethod.GET, "api/tournament-classes/2",
-                createHttpEntity(null, loginHeaders), TournamentClass.class);
+            ResponseEntity<TournamentClass> entity = http(HttpMethod.GET, "api/tournament-classes/2",
+                    createHttpEntity(null, loginHeaders), TournamentClass.class);
 
-        assertTrue(entity.getStatusCode().is2xxSuccessful());
-        assertThat(entity.getBody().getId(), is(2L));
+            assertTrue(entity.getStatusCode().is2xxSuccessful());
+            assertThat(entity.getBody().getId(), is(2L));
+        } catch (HttpClientErrorException e) {
+            System.out.println(e.getResponseBodyAsString());
+            fail();
+        }
     }
 
     @Test
-    public void testsaveTC() throws Exception {
+    public void testSaveNewTC() throws Exception {
         try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            assertThat(jdbcTemplate.queryForObject("select count(*) from tournament_class where t_id = 2", Integer.class), is(3));
+
             HttpHeaders loginHeaders = doLogin();
             ResponseEntity<String> okResponse = restTemplate.exchange(
                     "http://localhost:9999/resource",
@@ -52,13 +60,12 @@ public class TourmentClassControllerTest extends SecureResourceTest {
             tournamentClass.setStartTTR(0);
             tournamentClass.setEndTTR(1000);
 
-//            TournamentClass result = restTemplate.postForObject("http://localhost:9999/api/tournament-classes/2",
-//                    createHttpEntity(tournamentClass, okResponse.getHeaders()), TournamentClass.class);
-            ResponseEntity<TournamentClass> entity = http(HttpMethod.POST, "api/tournament-classes/2",
-                    createHttpEntity(tournamentClass, okResponse.getHeaders()), TournamentClass.class);
+            ResponseEntity<Void> entity = http(HttpMethod.POST, "api/tournament-classes/2",
+                    createHttpEntity(tournamentClass, okResponse.getHeaders()), Void.class);
 
-            System.out.println("result = " + entity);
-            assertNotNull(entity.getBody().getId());
+            assertThat(entity.getStatusCode(), is(HttpStatus.OK));
+
+            assertThat(jdbcTemplate.queryForObject("select count(*) from tournament_class where t_id = 2", Integer.class), is(4));
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
             fail();

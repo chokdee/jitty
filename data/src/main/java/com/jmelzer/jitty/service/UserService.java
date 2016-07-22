@@ -1,6 +1,8 @@
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.dao.UserRepository;
+import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.User;
 import com.jmelzer.jitty.model.dto.UserDTO;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +20,9 @@ import java.util.List;
 public class UserService {
     @Resource
     UserRepository repository;
+
+    @Resource
+    TournamentRepository tournamentRepository;
 
     @Transactional(readOnly = true)
     public List<UserDTO> findAll() {
@@ -61,5 +66,13 @@ public class UserService {
         User user = repository.findOne(id);
         user.setPassword(password);
         repository.saveAndFlush(user);
+    }
+
+    @Transactional
+    public void selectTournamentForUser(User user, String id) {
+        Tournament t = tournamentRepository.findOne(Long.valueOf(id));
+        user.setLastUsedTournament(t);
+        repository.saveAndFlush(user);
+
     }
 }

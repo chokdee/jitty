@@ -1,7 +1,7 @@
 package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentClass;
+import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.service.IntegrationViolation;
 import com.jmelzer.jitty.service.TournamentService;
 import org.slf4j.Logger;
@@ -33,8 +33,8 @@ public class TournamentClassController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public TournamentClass tournamentClass(@PathParam(value = "id") String id) {
-        TournamentClass clz = service.findOneClass(Long.valueOf(id));
+    public TournamentClassDTO tournamentClass(@PathParam(value = "id") String id) {
+        TournamentClassDTO clz = service.findOneClass(Long.valueOf(id));
         LOG.debug("found clz {}", clz);
         return clz;
 
@@ -43,19 +43,18 @@ public class TournamentClassController {
     @Path("{tid}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public TournamentClass saveOrCreate(@PathParam(value = "tid") String tid,
-                                        TournamentClass tournamentClass) {
-        Tournament t = service.findOne(Long.valueOf(tid));
-        t.addClass(tournamentClass);
-        service.update(t);
-        return tournamentClass;
+    public Response saveOrCreate(@PathParam(value = "tid") String tid,
+                                 TournamentClass tournamentClass) {
+        service.addTC(Long.valueOf(tid), tournamentClass);
+        return Response.ok().build();
+
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public TournamentClass save(TournamentClass tournamentClass) {
+    public Response save(TournamentClassDTO tournamentClass) {
         service.updateClass(tournamentClass);
-        return tournamentClass;
+        return Response.ok().build();
     }
 
     @Path("{id}")

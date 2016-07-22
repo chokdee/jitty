@@ -13,7 +13,9 @@ import java.util.List;
 @Entity
 @Table(name = "tournament_class")
 public class TournamentClass {
-
+    @Id
+    @GeneratedValue
+    private Long id;
     /**
      * Assoc to the player in the class.
      */
@@ -26,11 +28,13 @@ public class TournamentClass {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TC_ID")
     List<TournamentGroup> groups = new ArrayList<>();
-    @Id
-    @GeneratedValue
-    private Long id;
+
     @Column(nullable = false, name = "name")
     private String name;
+
+    @ManyToOne(targetEntity = Tournament.class)
+    @JoinColumn(name = "T_ID")
+    Tournament tournament;
 
     //type (Einzel / Doppem / Mixed)
     //trostrunden?
@@ -105,6 +109,14 @@ public class TournamentClass {
         this.endTTR = endTTR;
     }
 
+    public Tournament getTournament() {
+        return tournament;
+    }
+
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
+    }
+
     @Override
     public String toString() {
         return "TournamentClass{" +
@@ -117,10 +129,23 @@ public class TournamentClass {
                 '}';
     }
 
-    public void fetchAssocs() {
-
-        for (TournamentGroup group : getGroups()) {
-            group.getId();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TournamentClass that = (TournamentClass) o;
+
+        return id.equals(that.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

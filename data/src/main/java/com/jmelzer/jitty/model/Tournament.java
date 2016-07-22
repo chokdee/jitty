@@ -16,8 +16,7 @@ public class Tournament {
     /**
      * Assoc to the tournament classes.
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "T_ID")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "tournament")
     List<TournamentClass> classes = new ArrayList<>();
     @Id
     @GeneratedValue
@@ -69,6 +68,7 @@ public class Tournament {
 
     public void addClass(TournamentClass cl) {
         classes.add(cl);
+        cl.setTournament(this);
     }
 
     @Override
@@ -80,5 +80,9 @@ public class Tournament {
                 ", endDate=" + endDate +
                 ", classes=" + classes +
                 '}';
+    }
+
+    public void removeClass(TournamentClass tc) {
+        classes.remove(tc);
     }
 }

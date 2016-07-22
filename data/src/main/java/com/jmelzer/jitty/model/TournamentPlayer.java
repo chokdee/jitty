@@ -41,6 +41,10 @@ public class TournamentPlayer {
     @OneToMany(cascade = CascadeType.DETACH)
     private List<TournamentSingleGame> games = new ArrayList<>();
 
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER, mappedBy = "players")
+    List<TournamentClass> classes = new ArrayList<>();
+
+
     public TournamentPlayer() {
     }
 
@@ -180,5 +184,13 @@ public class TournamentPlayer {
 
     public List<TournamentSingleGame> getGames() {
         return games;
+    }
+
+    public List<TournamentClass> getClasses() {
+        return classes;
+    }
+
+    public void setClasses(List<TournamentClass> classes) {
+        this.classes = classes;
     }
 }
