@@ -14,7 +14,7 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
         $scope.predicate = predicate;
     };
 
-}).controller('PlayerEditController', function ($scope, $routeParams, Player, $location, $http, Club, Association) {
+}).controller('PlayerEditController', function ($scope, $routeParams, Player, $location, $http, Club, Association, TournamentClass) {
         $scope.id = $routeParams.id;
 
         $scope.player = {};
@@ -60,6 +60,23 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
             opened: false
         };
 
+
+        $scope.getPossibleClasses = function () {
+            $http.get('/api/players/possible-tournaments-classes', {params: {id: $routeParams.id}}).then(function(response) {
+                $scope.possibleClasses = response.data;
+            });
+            //result =  $http({
+            //    method: 'GET',
+            //    url: '/api/players/possible-tournaments-classes',
+            //    params: {
+            //        id: $routeParams.id
+            //    }
+            //
+            //});
+
+        };
+
+    $scope.getPossibleClasses();
 
     }
 ).controller('PlayerCreateController', function ($scope, $routeParams, Player, $location, $http) {

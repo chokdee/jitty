@@ -104,6 +104,43 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+        <br>
+            <h4>Turnierklassen</h4>
+        <br>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Angemeldete Klassen</div>
+                <span ng-repeat="clz in player.classes">
+                    <a href="#" class="list-group-item">{{clz.name}} : {{clz.startTTR}}-{{clz.endTTR}}
+                        <input ng-click="selectB(user.id)" name="selectedB[]" value="{{user.id}}" ng-checked="selectedB.indexOf(user.id) > -1" class="pull-right" type="checkbox">
+                    </a>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-2 v-center text-center">
+            <div class="btn-group">
+                <button title="Send to list 1" class="btn btn-default" ng-click="bToA()"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                <button title="Send to list 2" class="btn btn-default" ng-click="aToB()"><i class="glyphicon glyphicon-chevron-right"></i></button>
+
+            </div>
+        </div>
+        <div class="col-sm-4 col-sm-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">Mögliche Klassen</div>
+
+                <div class="list-group" id="list1">
+                    <span ng-repeat="cp in possibleClasses">
+                      <a href="#" class="list-group-item">{{cp.name}} : {{cp.startTTR}}-{{cp.endTTR}}
+                          <input ng-click="selectA(user.id)" name="selectedA[]" value="{{user.id}}" ng-checked="selectedA.indexOf(user.id) > -1" class="pull-right" type="checkbox">
+                      </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        </div>
+        <br>
+        <br>
         <!--todo add pick list-->
         <input type="submit" value="Speichern"/>
     </form>

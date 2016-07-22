@@ -1,26 +1,20 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.Application;
-import com.jmelzer.jitty.model.TournamentPlayer;
-import com.jmelzer.jitty.model.User;
+import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
-import com.jmelzer.jitty.model.dto.UserDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
-import javax.sql.DataSource;
-
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
 
 /**
@@ -48,4 +42,20 @@ public class PlayerControllerTest extends SecureResourceTest {
         }
     }
 
+    @Test
+    public void possibleTournaments() throws Exception {
+        try {
+            HttpHeaders loginHeaders = doLogin();
+
+            ResponseEntity<TournamentClassDTO[]> entity = http(HttpMethod.GET, "api/players/possible-tournaments-classes?id=4",
+                    createHttpEntity(null, loginHeaders), TournamentClassDTO[].class);
+
+            assertTrue(entity.getStatusCode().is2xxSuccessful());
+            assertThat(entity.getBody().length, is(4));
+
+        } catch (HttpClientErrorException e) {
+            System.out.println(e.getResponseBodyAsString());
+            fail();
+        }
+    }
 }

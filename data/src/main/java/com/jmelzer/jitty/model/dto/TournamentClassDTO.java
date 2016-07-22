@@ -51,4 +51,37 @@ public class TournamentClassDTO {
     public void setEndTTR(int endTTR) {
         this.endTTR = endTTR;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TournamentClassDTO classDTO = (TournamentClassDTO) o;
+
+        if (startTTR != classDTO.startTTR) {
+            return false;
+        }
+        if (endTTR != classDTO.endTTR) {
+            return false;
+        }
+        if (!id.equals(classDTO.id)) {
+            return false;
+        }
+        return name.equals(classDTO.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + startTTR;
+        result = 31 * result + endTTR;
+        return result;
+    }
 }

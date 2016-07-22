@@ -1,7 +1,9 @@
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
+import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentPlayer;
+import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -37,6 +39,11 @@ public class PlayerService {
         TournamentPlayer tournamentPlayer = repository.findOne(aLong);
         TournamentPlayerDTO dto = new TournamentPlayerDTO();
         BeanUtils.copyProperties(tournamentPlayer, dto);
+        for (TournamentClass tournamentClass : tournamentPlayer.getClasses()) {
+            TournamentClassDTO classDTO = new TournamentClassDTO();
+            BeanUtils.copyProperties(tournamentClass, classDTO);
+            dto.addClass(classDTO);
+        }
         return dto;
     }
 

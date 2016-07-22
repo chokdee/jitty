@@ -2,9 +2,11 @@ package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentRepository;
+import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentDTO;
+import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
@@ -25,7 +27,10 @@ public class TournamentService {
     @Resource
     TournamentRepository repository;
     @Resource
-    TournamentClassRepository repositoryClass;
+    TournamentClassRepository tcRepository;
+    @Resource
+    UserRepository userRepository;
+
     //todo use spring
     private SeedingManager seedingManager = new SeedingManager();
     private KOField field;
@@ -368,14 +373,14 @@ public class TournamentService {
 
     public Tournament update(Tournament tournament) {
 //        for (TournamentClass tournamentClass : tournament.getClasses()) {
-//            repositoryClass.save(tournamentClass);
+//            tcRepository.save(tournamentClass);
 //        }
         return repository.saveAndFlush(tournament);
     }
 
     @Transactional
     public TournamentClassDTO findOneClass(Long aLong) {
-        TournamentClass tc = repositoryClass.findOne(aLong);
+        TournamentClass tc = tcRepository.findOne(aLong);
         TournamentClassDTO dto = new TournamentClassDTO();
         BeanUtils.copyProperties(tc, dto);
         return dto;
@@ -383,15 +388,15 @@ public class TournamentService {
 
     @Transactional
     public void updateClass(TournamentClassDTO dto) {
-        TournamentClass tc = repositoryClass.findOne(dto.getId());
+        TournamentClass tc = tcRepository.findOne(dto.getId());
         BeanUtils.copyProperties(dto, tc);
 
-        repositoryClass.saveAndFlush(tc);
+        tcRepository.saveAndFlush(tc);
     }
 
     @Transactional
     public void deleteClass(Long aLong) throws IntegrationViolation {
-        TournamentClass tc = repositoryClass.findOne(aLong);
+        TournamentClass tc = tcRepository.findOne(aLong);
         if (tc == null) {
             throw new EmptyResultDataAccessException(1);
         }
@@ -401,7 +406,7 @@ public class TournamentService {
         Tournament t = tc.getTournament();
         t.removeClass(tc);
 
-        repositoryClass.delete(aLong);
+        tcRepository.delete(aLong);
         repository.saveAndFlush(t);
     }
 
@@ -462,6 +467,22 @@ public class TournamentService {
         t.addClass(tournamentClass);
         update(t);
         return tournamentClass;
+    }
+
+    @Transactional
+    public List<TournamentClassDTO> getAllClasses(TournamentPlayerDTO player, String userName) {
+        Tournament t = userRepository.findByLoginName(userName).getLastUsedTournament();
+        List<TournamentClassDTO> ret = new ArrayList<>();
+
+        if (t == null) {
+            return ret;
+        }
+        List<TournamentClass> classes = tcRepository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(t, player.getQttr(), player.getQttr());
+//        List<TournamentClass> classes = t.getClasses();
+        for (TournamentClass aClass : classes) {
+            ret.add(createClassDTO(aClass));
+        }
+        return ret;
     }
 
     static public class PS implements Comparable<PS> {

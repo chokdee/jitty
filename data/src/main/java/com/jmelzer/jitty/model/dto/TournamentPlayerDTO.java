@@ -4,6 +4,8 @@ import com.jmelzer.jitty.model.Association;
 import com.jmelzer.jitty.model.Club;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by J. Melzer on 01.06.2016.
@@ -22,6 +24,8 @@ public class TournamentPlayerDTO {
     private int ttr;
     private Date birthday;
     private String gender;
+
+    List<TournamentClassDTO> classes = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -109,5 +113,13 @@ public class TournamentPlayerDTO {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public List<TournamentClassDTO> getClasses() {
+        return classes;
+    }
+
+    public void addClass(TournamentClassDTO classDTO) {
+        classes.add(classDTO);
     }
 }

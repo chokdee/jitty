@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.config.SecurityUtil;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.service.IntegrationViolation;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Created by J. Melzer on 16.03.2016.
@@ -27,7 +29,8 @@ public class TournamentClassController {
 
     @Inject
     TournamentService service;
-
+    @Inject
+    SecurityUtil securityUtil;
 
     @Path("{id}")
     @GET
