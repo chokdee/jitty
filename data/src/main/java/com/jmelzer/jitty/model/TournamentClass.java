@@ -148,4 +148,8 @@ public class TournamentClass {
     public int hashCode() {
         return id.hashCode();
     }
+
+    public void removePlayer(TournamentPlayer player) {
+        players.remove(player);
+    }
 }

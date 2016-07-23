@@ -17,6 +17,8 @@ package com.jmelzer.jitty.dao;
 
 import com.jmelzer.jitty.SampleDataJpaApplication;
 import com.jmelzer.jitty.model.Gender;
+import com.jmelzer.jitty.model.Tournament;
+import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentPlayer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +27,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.greaterThan;
@@ -44,6 +47,9 @@ public class TournamentPlayerRepositoryIntegrationTests {
     AssociationRepository associationRepository;
     @Autowired
     ClubRepository clubRepository;
+    @Autowired
+    TournamentClassRepository tournamentClassRepository;
+
 
     @Test
     public void findsFirstPageOf() {
@@ -75,5 +81,18 @@ public class TournamentPlayerRepositoryIntegrationTests {
         repository.save(player);
 
         assertNotNull(player.getId());
+
+        TournamentClass clz = tournamentClassRepository.findAll().get(0);
+        Tournament t = clz.getTournament();
+
+        assertThat(tournamentClassRepository.findAll().size(), is(3));
+        assertThat(tournamentClassRepository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(t, 1000, 1000).size(), is(2));
+
+        player.setClasses(Arrays.asList(clz));
+        repository.saveAndFlush(player);
+
+        assertThat(repository.findOne(player.getId()).getClasses().size(), is(1));
+        assertThat(tournamentClassRepository.findAll().size(), is(3));
+        assertThat(tournamentClassRepository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(t, 1000, 1000).size(), is(2));
     }
 }

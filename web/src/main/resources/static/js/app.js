@@ -1,4 +1,5 @@
-angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 'jitty.controllers', 'jitty.services', 'jitty.directives',
+angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 'frapontillo.bootstrap-duallistbox',
+    'jitty.controllers', 'jitty.services', 'jitty.directives',
     'jitty.tournament', 'jitty.player']).config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.when('/', {

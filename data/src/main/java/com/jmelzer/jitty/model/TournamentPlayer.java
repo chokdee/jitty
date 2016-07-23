@@ -41,7 +41,7 @@ public class TournamentPlayer {
     @OneToMany(cascade = CascadeType.DETACH)
     private List<TournamentSingleGame> games = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER, mappedBy = "players")
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, mappedBy = "players")
     List<TournamentClass> classes = new ArrayList<>();
 
 
@@ -191,6 +191,21 @@ public class TournamentPlayer {
     }
 
     public void setClasses(List<TournamentClass> classes) {
+
         this.classes = classes;
+        for (TournamentClass aClass : classes) {
+            aClass.addPlayer(this);
+        }
+    }
+    public void addClass(TournamentClass tournamentClass) {
+        classes.add(tournamentClass);
+        tournamentClass.addPlayer(this);
+    }
+
+    public void removeAllClasses() {
+        for (TournamentClass aClass : classes) {
+            aClass.removePlayer(this);
+        }
+        classes.clear();
     }
 }

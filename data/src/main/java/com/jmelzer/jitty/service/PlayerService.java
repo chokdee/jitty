@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentPlayer;
@@ -20,6 +21,9 @@ import java.util.List;
 public class PlayerService {
     @Resource
     TournamentPlayerRepository repository;
+
+    @Resource
+    TournamentClassRepository classRepository;
 
     @Transactional(readOnly = true)
     public List<TournamentPlayerDTO> findAll() {
@@ -53,8 +57,14 @@ public class PlayerService {
     }
 
     @Transactional
-    public TournamentPlayer save(TournamentPlayer player) {
-        return repository.save(player);
+    public void save(TournamentPlayerDTO player) {
+        TournamentPlayer playerDB = repository.findOne(player.getId());
+        BeanUtils.copyProperties(player, playerDB, "classes");
+        for (TournamentClassDTO classDTO : player.getClasses()) {
+            playerDB.removeAllClasses();
+            playerDB.addClass(classRepository.findOne(classDTO.getId()));
+        }
+        repository.save(playerDB);
     }
 
 }

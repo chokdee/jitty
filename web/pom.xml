@@ -169,6 +169,11 @@
                         <artifactId>bootstrap</artifactId>
                         <version>3.2.0</version>
                     </dependency>
+                    <!--<dependency>-->
+                        <!--<groupId>org.webjars.bower</groupId>-->
+                        <!--<artifactId>angular-bootstrap-duallistbox</artifactId>-->
+                        <!--<version>0.1.0</version>-->
+                    <!--</dependency>-->
                 </dependencies>
             </plugin>
         </plugins>

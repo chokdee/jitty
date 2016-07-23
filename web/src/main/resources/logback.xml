@@ -12,7 +12,7 @@
     <!--<logger name="org.springframework.security" level="DEBUG" />-->
     <!--<logger name="org.glassfish.jersey" level="DEBUG" />-->
     <!--switch this on only when you need and PLEASE don't commit it-->
-    <!--<logger name="org.hibernate" level="DEBUG" />-->
+    <logger name="org.hibernate.sql" level="DEBUG" />
     <root level="INFO">
         <appender-ref ref="stdout"/>
     </root>

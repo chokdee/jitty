@@ -478,7 +478,6 @@ public class TournamentService {
             return ret;
         }
         List<TournamentClass> classes = tcRepository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(t, player.getQttr(), player.getQttr());
-//        List<TournamentClass> classes = t.getClasses();
         for (TournamentClass aClass : classes) {
             ret.add(createClassDTO(aClass));
         }

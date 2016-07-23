@@ -65,18 +65,45 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
             $http.get('/api/players/possible-tournaments-classes', {params: {id: $routeParams.id}}).then(function(response) {
                 $scope.possibleClasses = response.data;
             });
-            //result =  $http({
-            //    method: 'GET',
-            //    url: '/api/players/possible-tournaments-classes',
-            //    params: {
-            //        id: $routeParams.id
-            //    }
-            //
-            //});
 
         };
 
     $scope.getPossibleClasses();
+
+    $scope.selectedA = [];
+    $scope.selectedB = [];
+
+    $scope.selectA = function(i) {
+        $scope.selectedA.push(i);
+    };
+
+    $scope.selectB = function(i) {
+        $scope.selectedB.push(i);
+    };
+
+        $scope.settings = {
+            bootstrap2: false,
+            filterClear: 'Show all!',
+            filterPlaceHolder: 'Filter!',
+            moveSelectedLabel: 'Move selected only',
+            moveAllLabel: 'Move all!',
+            removeSelectedLabel: 'Remove selected only',
+            removeAllLabel: 'Remove all!',
+            moveOnSelect: true,
+            preserveSelection: 'moved',
+            selectedListLabel: 'Angemeldet',
+            nonSelectedListLabel: 'Mögliche Klassen',
+            postfix: '_helperz',
+            selectMinHeight: 130,
+            filter: false,
+            filterNonSelected: '1',
+            filterSelected: '4',
+            infoAll: ' ',
+            infoFiltered: '<span class="label label-warning">Filtered</span> {0} from {1}!',
+            infoEmpty: ' ',
+            filterValues: false
+        };
+
 
     }
 ).controller('PlayerCreateController', function ($scope, $routeParams, Player, $location, $http) {

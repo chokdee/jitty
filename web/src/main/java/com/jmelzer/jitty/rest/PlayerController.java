@@ -1,7 +1,6 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.config.SecurityUtil;
-import com.jmelzer.jitty.model.TournamentPlayer;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.service.PlayerService;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,22 +50,18 @@ public class PlayerController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public TournamentPlayer saveOrCreate(TournamentPlayer tournament) {
-        return service.save(tournament);
+    public Response saveOrCreate(TournamentPlayerDTO player) {
+        service.save(player);
+        return Response.ok().build();
     }
 
     @GET
     @Path("/possible-tournaments-classes")
     public List<TournamentClassDTO> possibleTournaments(@QueryParam("id") String playerId) {
+
         LOG.info("possible tournaments for player with id {}", playerId);
+
         TournamentPlayerDTO player = service.findOne(Long.valueOf(playerId));
-        List<TournamentClassDTO> allList = tournamentService.getAllClasses(player, securityUtil.getActualUsername());
-        List<TournamentClassDTO> retList = new ArrayList<>();
-        for (TournamentClassDTO classDTO : allList) {
-            if (!player.getClasses().contains(classDTO)) {
-                retList.add(classDTO);
-            }
-        }
-        return retList;
+        return tournamentService.getAllClasses(player, securityUtil.getActualUsername());
     }
 }

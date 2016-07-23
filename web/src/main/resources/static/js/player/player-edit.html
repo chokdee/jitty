@@ -105,39 +105,70 @@
             </div>
         </div>
         <div class="row">
-        <br>
+            <br>
             <h4>Turnierklassen</h4>
-        <br>
-        <div class="col-sm-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">Angemeldete Klassen</div>
+            <br>
+      <!--      <div class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Angemeldete Klassen</div>
                 <span ng-repeat="clz in player.classes">
                     <a href="#" class="list-group-item">{{clz.name}} : {{clz.startTTR}}-{{clz.endTTR}}
-                        <input ng-click="selectB(user.id)" name="selectedB[]" value="{{user.id}}" ng-checked="selectedB.indexOf(user.id) > -1" class="pull-right" type="checkbox">
+                        <input ng-click="selectB(clz.id)" name="selectedB[]" value="{{clz.id}}" ng-checked="selectedB.indexOf(clz.id) > -1" class="pull-right" type="checkbox">
                     </a>
                 </span>
-            </div>
-        </div>
-        <div class="col-md-2 v-center text-center">
-            <div class="btn-group">
-                <button title="Send to list 1" class="btn btn-default" ng-click="bToA()"><i class="glyphicon glyphicon-chevron-left"></i></button>
-                <button title="Send to list 2" class="btn btn-default" ng-click="aToB()"><i class="glyphicon glyphicon-chevron-right"></i></button>
-
-            </div>
-        </div>
-        <div class="col-sm-4 col-sm-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading">Mögliche Klassen</div>
-
-                <div class="list-group" id="list1">
-                    <span ng-repeat="cp in possibleClasses">
-                      <a href="#" class="list-group-item">{{cp.name}} : {{cp.startTTR}}-{{cp.endTTR}}
-                          <input ng-click="selectA(user.id)" name="selectedA[]" value="{{user.id}}" ng-checked="selectedA.indexOf(user.id) > -1" class="pull-right" type="checkbox">
-                      </a>
-                    </span>
                 </div>
             </div>
-        </div>
+            <div class="col-md-2 v-center text-center">
+                <div class="btn-group">
+                    <button title="Send to list 1" class="btn btn-default" ng-click="bToA()"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                    <button title="Send to list 2" class="btn btn-default" ng-click="aToB()"><i class="glyphicon glyphicon-chevron-right"></i></button>
+
+                </div>
+            </div>
+            <div class="col-sm-4 col-sm-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Mögliche Klassen</div>
+
+                    <div class="list-group" id="list1">
+                    <span ng-repeat="cp in possibleClasses">
+                      <a href="#" class="list-group-item">{{cp.name}} : {{cp.startTTR}}-{{cp.endTTR}}
+                          <input ng-click="selectA(cp.id)" name="selectedA[]" value="{{cp.id}}" ng-checked="selectedA.indexOf(cp.id) > -1" class="pull-right" type="checkbox">
+                      </a>
+                    </span>
+                    </div>
+                </div>
+            </div>-->
+            <div class="container" >
+                <!--<p>{{player.classes}}</p>-->
+                <select
+                        ng-model="player.classes"
+                        ng-options='cp as (cp.name + " - " + cp.startTTR + " -> " + cp.endTTR) for cp in possibleClasses track by cp.id'
+                        multiple
+                        bs-duallistbox
+                        bootstrap2="{{ settings.bootstrap2 }}"
+
+                        move-on-select="{{ settings.moveOnSelect }}"
+                        preserve-selection="{{ settings.preserveSelection }}"
+
+                        move-selected-label="{{ settings.moveSelectedLabel }}"
+                        move-all-label="{{ settings.moveAllLabel }}"
+                        remove-selected-label="{{ settings.removeSelectedLabel }}"
+                        remove-all-label="{{ settings.removeAllLabel }}"
+
+                        non-selected-list-label="{{ settings.nonSelectedListLabel }}"
+                        selected-list-label="{{ settings.selectedListLabel }}"
+
+                        postfix="{{ settings.postfix }}"
+                        select-min-height="{{ settings.selectMinHeight }}"
+
+                        filter="{{ settings.filter }}"
+                        info-all="{{ settings.infoAll }}"
+                        info-filtered="{{ settings.infoFiltered }}"
+                        info-empty="{{ settings.infoEmpty }}"
+                >
+                </select>
+
+            </div>
         </div>
         <br>
         <br>
