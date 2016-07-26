@@ -4,6 +4,7 @@ package com.jmelzer.jitty.model;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,6 +49,27 @@ public class TournamentClass {
      */
     @Column(nullable = true, name = "end_ttr")
     private int endTTR = 0;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = true, name = "start_time")
+    Date startTime;
+
+    @Column(nullable = true)
+    String type;
+
+    @Temporal(TemporalType.DATE)
+    @Column(nullable = true, name = "min_age")
+    private Date minAge;
+
+    @Temporal(TemporalType.DATE)
+    @Column(nullable = true, name = "max_age")
+    private Date maxAge;
+
+    @Column(nullable = false, name = "open_for_men")
+    private boolean openForMen;
+    @Column(nullable = false, name = "open_for_women")
+    private boolean openForWomen;
+
 
     public TournamentClass(String name) {
         this.name = name;

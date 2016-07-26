@@ -20,7 +20,7 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
         $scope.player = {};
         $scope.association = {};
 
-        $scope.birthdate = {};
+        $scope.birthdate = null;
         $scope.clubs = Club.query();
         $scope.associations = Association.query();
 
@@ -30,7 +30,8 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
                 console.log('got Player ' + $routeParams.id + ' successfully');
             })
         };
-        $scope.getPlayer();
+        if ($routeParams.id != null)
+            $scope.getPlayer();
 
         $scope.savePlayer = function () {
             if ($scope.playerForm.$valid) {
@@ -62,24 +63,24 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
 
 
         $scope.getPossibleClasses = function () {
-            $http.get('/api/players/possible-tournaments-classes', {params: {id: $routeParams.id}}).then(function(response) {
+            $http.get('/api/players/possible-tournaments-classes', {params: {id: $routeParams.id}}).then(function (response) {
                 $scope.possibleClasses = response.data;
             });
 
         };
 
-    $scope.getPossibleClasses();
+        $scope.getPossibleClasses();
 
-    $scope.selectedA = [];
-    $scope.selectedB = [];
+        $scope.selectedA = [];
+        $scope.selectedB = [];
 
-    $scope.selectA = function(i) {
-        $scope.selectedA.push(i);
-    };
+        $scope.selectA = function (i) {
+            $scope.selectedA.push(i);
+        };
 
-    $scope.selectB = function(i) {
-        $scope.selectedB.push(i);
-    };
+        $scope.selectB = function (i) {
+            $scope.selectedB.push(i);
+        };
 
         $scope.settings = {
             bootstrap2: false,

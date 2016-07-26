@@ -58,7 +58,13 @@ public class PlayerService {
 
     @Transactional
     public void save(TournamentPlayerDTO player) {
-        TournamentPlayer playerDB = repository.findOne(player.getId());
+        TournamentPlayer playerDB = null;
+
+        if (player.getId() == null) {
+            playerDB = new TournamentPlayer();
+        } else {
+            playerDB = repository.findOne(player.getId());
+        }
         BeanUtils.copyProperties(player, playerDB, "classes");
         for (TournamentClassDTO classDTO : player.getClasses()) {
             playerDB.removeAllClasses();

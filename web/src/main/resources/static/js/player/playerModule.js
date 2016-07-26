@@ -1,5 +1,5 @@
 angular.module('jitty.player', ['ngRoute', 'ngResource', 'ngMessages', 'ui.select', 'ngSanitize',
-    'jitty.player.controllers', 'jitty.player.services', 'ui.bootstrap']).config(function ($routeProvider, $httpProvider) {
+    'jitty.player.controllers', 'jitty.player.services', 'ui.bootstrap']).config(function ($routeProvider, $httpProvider, $provide) {
 
     $routeProvider.when('/players', {
         templateUrl: '/js/player/players.html',
@@ -8,8 +8,8 @@ angular.module('jitty.player', ['ngRoute', 'ngResource', 'ngMessages', 'ui.selec
         templateUrl: '/js/player/player-edit.html',
         controller: 'PlayerEditController'
     }).when('/player-add', {
-        templateUrl: '/js/player/player-new.html',
-        controller: 'PlayerCreateController'
+        templateUrl: '/js/player/player-edit.html',
+        controller: 'PlayerEditController'
     }).otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

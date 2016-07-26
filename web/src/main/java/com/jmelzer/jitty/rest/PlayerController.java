@@ -55,12 +55,15 @@ public class PlayerController {
         return Response.ok().build();
     }
 
+    //todo change to qttr value
     @GET
     @Path("/possible-tournaments-classes")
     public List<TournamentClassDTO> possibleTournaments(@QueryParam("id") String playerId) {
 
         LOG.info("possible tournaments for player with id {}", playerId);
-
+        if (playerId == null) {
+            return new ArrayList<>();
+        }
         TournamentPlayerDTO player = service.findOne(Long.valueOf(playerId));
         return tournamentService.getAllClasses(player, securityUtil.getActualUsername());
     }
