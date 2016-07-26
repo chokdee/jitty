@@ -166,6 +166,46 @@ public class TournamentClass {
 
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Date getMinAge() {
+        return minAge;
+    }
+
+    public void setMinAge(Date minAge) {
+        this.minAge = minAge;
+    }
+
+    public Date getMaxAge() {
+        return maxAge;
+    }
+
+    public void setMaxAge(Date maxAge) {
+        this.maxAge = maxAge;
+    }
+
+    public boolean isOpenForMen() {
+        return openForMen;
+    }
+
+    public void setOpenForMen(boolean openForMen) {
+        this.openForMen = openForMen;
+    }
+
+    public boolean isOpenForWomen() {
+        return openForWomen;
+    }
+
+    public void setOpenForWomen(boolean openForWomen) {
+        this.openForWomen = openForWomen;
+    }
+
     @Override
     public int hashCode() {
         return id.hashCode();

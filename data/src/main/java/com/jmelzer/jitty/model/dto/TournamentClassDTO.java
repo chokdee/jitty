@@ -8,6 +8,7 @@ import com.jmelzer.jitty.model.TournamentPlayer;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +20,55 @@ public class TournamentClassDTO {
     private String name;
     private int startTTR = 0;
     private int endTTR = 0;
+
+    String type;
+
+    private Date minAge;
+
+    private Date maxAge;
+
+    private boolean openForMen;
+    private boolean openForWomen;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Date getMinAge() {
+        return minAge;
+    }
+
+    public void setMinAge(Date minAge) {
+        this.minAge = minAge;
+    }
+
+    public Date getMaxAge() {
+        return maxAge;
+    }
+
+    public void setMaxAge(Date maxAge) {
+        this.maxAge = maxAge;
+    }
+
+    public boolean isOpenForMen() {
+        return openForMen;
+    }
+
+    public void setOpenForMen(boolean openForMen) {
+        this.openForMen = openForMen;
+    }
+
+    public boolean isOpenForWomen() {
+        return openForWomen;
+    }
+
+    public void setOpenForWomen(boolean openForWomen) {
+        this.openForWomen = openForWomen;
+    }
 
     public Long getId() {
         return id;
