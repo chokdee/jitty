@@ -42,6 +42,22 @@ public class TourmentClassControllerTest extends SecureResourceTest {
     }
 
     @Test
+    public void getNotRunning() throws Exception {
+        try {
+            HttpHeaders loginHeaders = doLogin();
+
+            ResponseEntity<TournamentClassDTO[]> entity = http(HttpMethod.GET, "api/tournament-classes/not-running",
+                    createHttpEntity(null, loginHeaders), TournamentClassDTO[].class);
+
+            assertTrue(entity.getStatusCode().is2xxSuccessful());
+            assertThat(entity.getBody().length, is(5));
+        } catch (HttpClientErrorException e) {
+            System.out.println(e.getResponseBodyAsString());
+            fail();
+        }
+    }
+
+    @Test
     public void testSaveNewTC() throws Exception {
         try {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);

@@ -22,4 +22,6 @@ import java.util.List;
 public interface TournamentClassRepository extends JpaRepository<TournamentClass, Long> {
     List<TournamentClass> findByTournament(Tournament tournament);
     List<TournamentClass> findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(Tournament tournament, int et, int st);
+
+    List<TournamentClass> findByTournamentAndRunning(Tournament t, boolean b);
 }

@@ -1,0 +1,28 @@
+<h3>Auslosung</h3>
+<div class="row">
+    <div class="col-md-10">
+        <h4>Parameter</h4>
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-md-3">
+
+        <h4>Spieler</h4>
+        <ul dnd-list="list" style="width: 100%">
+            <!-- The dnd-draggable directive makes an element draggable and will
+                 transfer the object that was assigned to it. If an element was
+                 dragged away, you have to remove it from the original list
+                 yourself using the dnd-moved attribute -->
+            <li ng-repeat="item in players"
+                dnd-draggable="item"
+                dnd-moved="list.splice($index, 1)"
+                dnd-effect-allowed="move"
+                dnd-selected="models.selected = item"
+                ng-class="{'selected': models.selected === item}"
+            >
+                {{item.firstName + ' ' + item.lastName + ' - ' + item.club.name + ' - ' + item.qttr}}
+            </li>
+        </ul>
+    </div>
+</div>

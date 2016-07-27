@@ -70,6 +70,8 @@ public class TournamentClass {
     @Column(nullable = false, name = "open_for_women")
     private boolean openForWomen;
 
+    @Column(nullable = false, name = "running")
+    Boolean running;
 
     public TournamentClass(String name) {
         this.name = name;
@@ -137,6 +139,22 @@ public class TournamentClass {
 
     public void setTournament(Tournament tournament) {
         this.tournament = tournament;
+    }
+
+    public Boolean getRunning() {
+        return running;
+    }
+
+    public void setRunning(Boolean running) {
+        this.running = running;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
     @Override

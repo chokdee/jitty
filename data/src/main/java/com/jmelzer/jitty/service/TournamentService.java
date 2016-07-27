@@ -1,6 +1,7 @@
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TournamentClassRepository;
+import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.*;
@@ -30,6 +31,8 @@ public class TournamentService {
     TournamentClassRepository tcRepository;
     @Resource
     UserRepository userRepository;
+    @Resource
+    TournamentPlayerRepository playerRepository;
 
     //todo use spring
     private SeedingManager seedingManager = new SeedingManager();
@@ -480,6 +483,29 @@ public class TournamentService {
         List<TournamentClass> classes = tcRepository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(t, player.getQttr(), player.getQttr());
         for (TournamentClass aClass : classes) {
             ret.add(createClassDTO(aClass));
+        }
+        return ret;
+    }
+
+    public List<TournamentClassDTO> getNotRunning(String userName) {
+        Tournament t = userRepository.findByLoginName(userName).getLastUsedTournament();
+        List<TournamentClassDTO> ret = new ArrayList<>();
+        //todo write correct find method
+        List<TournamentClass> classes = tcRepository.findByTournamentAndRunning(t, false);
+        for (TournamentClass aClass : classes) {
+            ret.add(createClassDTO(aClass));
+        }
+
+        return ret;
+    }
+
+    public List<TournamentPlayerDTO> getPlayerforClass(Long id) {
+        List<TournamentPlayer> players = playerRepository.findByClasses(Arrays.asList(tcRepository.findOne(id)));
+        List<TournamentPlayerDTO> ret = new ArrayList<>();
+        for (TournamentPlayer player : players) {
+            TournamentPlayerDTO dto = new TournamentPlayerDTO();
+            BeanUtils.copyProperties(player, dto, "classes");
+            ret.add(dto);
         }
         return ret;
     }

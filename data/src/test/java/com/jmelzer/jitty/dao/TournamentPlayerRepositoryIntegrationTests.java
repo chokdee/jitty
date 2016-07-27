@@ -95,4 +95,10 @@ public class TournamentPlayerRepositoryIntegrationTests {
         assertThat(tournamentClassRepository.findAll().size(), is(3));
         assertThat(tournamentClassRepository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(t, 1000, 1000).size(), is(2));
     }
+
+    @Test
+    public void findByClasses() {
+        TournamentClass tc = tournamentClassRepository.findOne(1L);
+        assertThat(repository.findByClasses(Arrays.asList(tc)).size(), is (1));
+    }
 }

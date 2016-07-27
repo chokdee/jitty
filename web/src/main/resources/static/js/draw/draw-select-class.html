@@ -1,0 +1,28 @@
+
+<h3>Bitte zunächst eine Klasse auswählen</h3>
+
+<table class="table usertable">
+    <thead>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Startzeit
+        </th>
+        <th>
+            Aktion
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="c in possibleClasses">
+        <td>{{c.name}}</td>
+        <td>{{c.startTime}}</td>
+        <td>
+            <a class="btn btn-primary" href="#/draw/{{c.id}}">Auswählen</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+

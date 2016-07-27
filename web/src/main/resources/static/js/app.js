@@ -1,6 +1,6 @@
-angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 'frapontillo.bootstrap-duallistbox',
+angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 'frapontillo.bootstrap-duallistbox', 'dndLists',
     'jitty.controllers', 'jitty.services', 'jitty.directives',
-    'jitty.tournament', 'jitty.player']).config(function ($routeProvider, $httpProvider) {
+    'jitty.tournament', 'jitty.player', 'jitty.draw']).config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.when('/', {
         templateUrl: 'home.html',

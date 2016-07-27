@@ -65,6 +65,7 @@
         name varchar(255) not null,
         open_for_men boolean not null,
         open_for_women boolean not null,
+        running boolean not null,
         start_ttr integer,
         start_time timestamp,
         type varchar(255),

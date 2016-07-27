@@ -64,4 +64,12 @@ public class TournamentClassRepositoryIntegrationTests {
         assertThat(repository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(tournament, 3500, 1).size(), is(0));
         assertThat(repository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(tournament, 2000, 2000).size(), is(1));
     }
+
+    @Test
+    public void findByTournamentAndRunning() {
+        Tournament tournament = tournamentRepository.findOne(2L);
+        assertNotNull(tournament);
+        assertThat(repository.findByTournamentAndRunning(tournament, false).size(), is(3));
+        assertThat(repository.findByTournamentAndRunning(tournament, true).size(), is(0));
+    }
 }

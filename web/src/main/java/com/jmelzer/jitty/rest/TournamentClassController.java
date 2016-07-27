@@ -32,10 +32,15 @@ public class TournamentClassController {
     @Inject
     SecurityUtil securityUtil;
 
+    @Path("/not-running")
+    @GET
+    public List<TournamentClassDTO> getNotRunning() {
+        return service.getNotRunning(securityUtil.getActualUsername());
+    }
+
     @Path("{id}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public TournamentClassDTO tournamentClass(@PathParam(value = "id") String id) {
         TournamentClassDTO clz = service.findOneClass(Long.valueOf(id));
         LOG.debug("found clz {}", clz);

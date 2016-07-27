@@ -29,6 +29,15 @@ public class TournamentClassDTO {
 
     private boolean openForMen;
     private boolean openForWomen;
+    Date startTime;
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
 
     public String getType() {
         return type;
