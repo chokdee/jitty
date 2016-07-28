@@ -57,8 +57,14 @@ public class UserService {
     }
 
     @Transactional
-    public User findByLoginName(String user) {
-        return repository.findByLoginName(user);
+    public UserDTO findByLoginName(String userName) {
+        UserDTO userDTO = new UserDTO();
+        User user = repository.findByLoginName(userName);
+        BeanUtils.copyProperties(user, userDTO);
+        if (user.getLastUsedTournament() != null) {
+            userDTO.setLastUsedTournamentName(user.getLastUsedTournament().getName());
+        }
+        return userDTO;
     }
 
     @Transactional

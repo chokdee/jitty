@@ -4,6 +4,7 @@ import com.jmelzer.jitty.SampleDataJpaApplication;
 import com.jmelzer.jitty.TableManager;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.model.*;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class TournamentIntegrationTest {
 
     @Transactional
     @Test
+    @Ignore
     public void testit() {
         List<TournamentPlayer> allPlayer = new ArrayList<>();
         //ok lets start to have 59 player

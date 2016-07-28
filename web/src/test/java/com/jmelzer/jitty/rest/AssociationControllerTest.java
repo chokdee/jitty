@@ -15,7 +15,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by J. Melzer on 19.07.2016.

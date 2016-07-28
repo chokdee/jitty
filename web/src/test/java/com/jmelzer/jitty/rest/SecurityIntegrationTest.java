@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import static junit.framework.TestCase.assertNull;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
+import static org.junit.Assert.assertThat;
 
 @IntegrationTest
 @RunWith(SpringJUnit4ClassRunner.class)

@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by J. Melzer on 19.05.2016.

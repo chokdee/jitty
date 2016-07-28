@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jmelzer.jitty.dao.UserRepository;
+import com.jmelzer.jitty.model.dto.UserDTO;
+import com.jmelzer.jitty.service.UserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
@@ -28,7 +30,7 @@ import java.util.Map;
 public class Application {
 
     @Resource
-    UserRepository userRepository;
+    UserService userService;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -45,8 +47,8 @@ public class Application {
 
             System.out.println("    context.getAuthentication().getPrincipal() = " + context.getAuthentication().getPrincipal());
             String user = (String) context.getAuthentication().getPrincipal();
-            com.jmelzer.jitty.model.User userFromDB = userRepository.findByLoginName(user);
-            model.put("tname", userFromDB.getLastUsedTournament().getName());
+            UserDTO userFromDB = userService.findByLoginName(user);
+            model.put("tname", userFromDB.getLastUsedTournamentName());
 
         }
         return model;

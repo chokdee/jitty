@@ -9,6 +9,15 @@ public class UserDTO {
     private String loginName;
     private String name;
     private String email;
+    private String lastUsedTournamentName;
+
+    public String getLastUsedTournamentName() {
+        return lastUsedTournamentName;
+    }
+
+    public void setLastUsedTournamentName(String lastUsedTournamentName) {
+        this.lastUsedTournamentName = lastUsedTournamentName;
+    }
 
     public Long getId() {
         return id;
