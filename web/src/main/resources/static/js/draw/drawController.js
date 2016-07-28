@@ -16,6 +16,12 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
     };
     if ($routeParams.id != null)
-        $scope.getPlayerForClass()
+        $scope.getPlayerForClass();
+
+    $scope.createDummyPlayer = function () {
+        $http.get('/api/draw/dummy-player?cid=' + $routeParams.id, {}).then(function (response) {
+        });
+
+    };
 });
 

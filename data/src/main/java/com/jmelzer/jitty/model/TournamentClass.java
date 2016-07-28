@@ -73,11 +73,39 @@ public class TournamentClass {
     @Column(nullable = false, name = "running")
     Boolean running;
 
+    /**
+     * @see GameMode for values
+     */
+    @Column(nullable = false, name = "game_mode_phase_1", length = 1)
+    String gameModePhase1;
+
+    /**
+     * @see GameMode for values
+     */
+    @Column(nullable = false, name = "game_mode_phase_2", length = 1)
+    String gameModePhase2;
+
     public TournamentClass(String name) {
         this.name = name;
     }
 
     public TournamentClass() {
+    }
+
+    public String getGameModePhase1() {
+        return gameModePhase1;
+    }
+
+    public void setGameModePhase1(String gameModePhase1) {
+        this.gameModePhase1 = gameModePhase1;
+    }
+
+    public String getGameModePhase2() {
+        return gameModePhase2;
+    }
+
+    public void setGameModePhase2(String gameModePhase2) {
+        this.gameModePhase2 = gameModePhase2;
     }
 
     public Long getId() {

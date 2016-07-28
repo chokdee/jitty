@@ -510,6 +510,27 @@ public class TournamentService {
         return ret;
     }
 
+    @Transactional
+    public void createDummyPlayer(Long id) {
+        TournamentClass tc = tcRepository.findOne(id);
+        for (int i = 0; i < 20; i++) {
+            TournamentPlayer player = new TournamentPlayer();
+            player.setId((long) i);
+            player.setFirstName("Vorname#" + i);
+            player.setLastName("Nachname#" + i);
+            player.setTtr(randomIntFromInterval(2200, 2500));
+            int qttr = randomIntFromInterval(player.getTtr() - 20, player.getTtr() + 20);
+            player.setQttr(qttr);
+
+            player.addClass(tc);
+            playerRepository.save(player);
+        }
+    }
+
+    int randomIntFromInterval(int min, int max) {
+        return (int) Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
     static public class PS implements Comparable<PS> {
         TournamentPlayer player;
         int win;

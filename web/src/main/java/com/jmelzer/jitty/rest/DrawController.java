@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.model.TournamentPlayer;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.service.TournamentService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
@@ -34,4 +36,13 @@ public class DrawController {
         return list;
 
     }
+
+    @Path("/dummy-player")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response dummyPlayer(@QueryParam(value = "cid") String id) {
+        service.createDummyPlayer(Long.valueOf(id));
+        return Response.ok().build();
+    }
+
 }

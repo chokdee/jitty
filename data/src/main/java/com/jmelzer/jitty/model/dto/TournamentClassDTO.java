@@ -1,15 +1,9 @@
 package com.jmelzer.jitty.model.dto;
 
 
-import com.jmelzer.jitty.model.Tournament;
-import com.jmelzer.jitty.model.TournamentGroup;
-import com.jmelzer.jitty.model.TournamentPlayer;
+import com.jmelzer.jitty.model.GameMode;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by J. Melzer on 01.06.2016.
@@ -30,6 +24,16 @@ public class TournamentClassDTO {
     private boolean openForMen;
     private boolean openForWomen;
     Date startTime;
+    /**
+     * @see GameMode for values
+     */
+    String gameModePhase1;
+
+    /**
+     * @see GameMode for values
+     */
+    String gameModePhase2;
+
 
     public Date getStartTime() {
         return startTime;
@@ -109,6 +113,22 @@ public class TournamentClassDTO {
 
     public void setEndTTR(int endTTR) {
         this.endTTR = endTTR;
+    }
+
+    public String getGameModePhase1() {
+        return gameModePhase1;
+    }
+
+    public void setGameModePhase1(String gameModePhase1) {
+        this.gameModePhase1 = gameModePhase1;
+    }
+
+    public String getGameModePhase2() {
+        return gameModePhase2;
+    }
+
+    public void setGameModePhase2(String gameModePhase2) {
+        this.gameModePhase2 = gameModePhase2;
     }
 
     @Override
