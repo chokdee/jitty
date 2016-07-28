@@ -71,18 +71,18 @@ public class TournamentClass {
     private boolean openForWomen;
 
     @Column(nullable = false, name = "running")
-    Boolean running;
+    Boolean running = false;
 
     /**
      * @see GameMode for values
      */
-    @Column(nullable = false, name = "game_mode_phase_1", length = 1)
+    @Column(nullable = true, name = "game_mode_phase_1", length = 1)
     String gameModePhase1;
 
     /**
      * @see GameMode for values
      */
-    @Column(nullable = false, name = "game_mode_phase_2", length = 1)
+    @Column(nullable = true, name = "game_mode_phase_2", length = 1)
     String gameModePhase2;
 
     public TournamentClass(String name) {
