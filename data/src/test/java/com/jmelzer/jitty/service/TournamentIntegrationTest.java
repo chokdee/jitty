@@ -32,7 +32,7 @@ public class TournamentIntegrationTest {
 
     @Transactional
     @Test
-    @Ignore
+//    @Ignore
     public void testit() {
         List<TournamentPlayer> allPlayer = new ArrayList<>();
         //ok lets start to have 59 player
@@ -44,7 +44,7 @@ public class TournamentIntegrationTest {
             player.setTtr(randomIntFromInterval(1400, 1600));
             int qttr = randomIntFromInterval(player.getTtr() - 20, player.getTtr() + 20);
             player.setQttr(qttr);
-            System.out.println("player = " + player);
+            //System.out.println("player = " + player);
             allPlayer.add(player);
         }
 
@@ -83,7 +83,7 @@ public class TournamentIntegrationTest {
         }
 
 //        for (TournamentGroup group : groups) {
-//            System.out.println(group);
+//            //System.out.println(group);
 //        }
         //questions:
         //how many player in every group --> Configurable
@@ -100,7 +100,7 @@ public class TournamentIntegrationTest {
         tournamentService.addPossibleGroupGamesToQueue();
 //        int i = 0;
 //        for (TournamentSingleGame tournamentSingleGame : gameQueue) {
-//            System.out.println(++i + ": " + tournamentSingleGame);
+//            //System.out.println(++i + ": " + tournamentSingleGame);
 //        }
         //20 free tables
         TableManager tableManager = new TableManager();
@@ -127,7 +127,7 @@ public class TournamentIntegrationTest {
 
             tournamentService.removeBusyGame(game);
 
-            System.out.println("game " + game + " finished with " + game.printResult());
+            //System.out.println("game " + game + " finished with " + game.printResult());
             tournamentService.addPossibleGroupGamesToQueue();
             tableManager.setFreeTablesNo(game.getTableNo());
 
@@ -145,7 +145,7 @@ public class TournamentIntegrationTest {
 
         //59 Player , 2 per group are winner 32 K.O
         KOField field = tournamentService.createKOField(RoundType.R32);
-        System.out.println("field = " + field);
+        //System.out.println("field = " + field);
         List<TournamentSingleGame> games = tournamentService.assignPlayerToKoField(field);
         printBracket(games);
 
@@ -168,12 +168,12 @@ public class TournamentIntegrationTest {
 
     private void printBracket(List<TournamentSingleGame> games) {
         for (TournamentSingleGame game : games) {
-            System.out.println("------------------");
-            System.out.println(game.getPlayer1().getFullName());
-            System.out.println("                       --------------");
-            System.out.println(game.getPlayer2().getFullName());
-            System.out.println("------------------");
-            System.out.println();
+            //System.out.println("------------------");
+            //System.out.println(game.getPlayer1().getFullName());
+            //System.out.println("                       --------------");
+            //System.out.println(game.getPlayer2().getFullName());
+            //System.out.println("------------------");
+            //System.out.println();
         }
     }
 
@@ -219,12 +219,12 @@ public class TournamentIntegrationTest {
                 break;
             }
             int no = tableManager.getFreeTableNo();
-            System.out.println("---------------------------------");
-            System.out.println("Aufruf an Tisch " + no);
-            System.out.println(singleGame.getPlayer1().getFullName());
-            System.out.println("gegen");
-            System.out.println(singleGame.getPlayer2().getFullName());
-            System.out.println("---------------------------------");
+            //System.out.println("---------------------------------");
+            //System.out.println("Aufruf an Tisch " + no);
+            //System.out.println(singleGame.getPlayer1().getFullName());
+            //System.out.println("gegen");
+            //System.out.println(singleGame.getPlayer2().getFullName());
+            //System.out.println("---------------------------------");
             singleGame.setCalled(true);
             singleGame.setStartTime(new Date());
             singleGame.setTableNo(no);

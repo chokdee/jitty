@@ -21,12 +21,21 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <jacoco.reportPath>${project.basedir}/../target/jacoco.exec</jacoco.reportPath>
     </properties>
     <modules>
         <module>data</module>
         <module>web</module>
+        <!--<module>tests</module>-->
     </modules>
-
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.sonar-plugins.java</groupId>
+            <artifactId>sonar-jacoco-listeners</artifactId>
+            <version>3.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -40,14 +49,35 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.6.201602180812</version>
+                <version>0.7.7.201606060606</version>
+                <configuration>
+                    <!--<destFile>${jacoco.reportPath}</destFile>-->
+                    <append>true</append>
+                    <excludes>
+                        <exclude>**/model/**/*.*</exclude>
+                        <exclude>**/SchemaExporter*.*</exclude>
+                    </excludes>
+                    <dataFileIncludes>
+                        <dataFileInclude>data/target/jacoco.exec</dataFileInclude>
+                        <dataFileInclude>web/target/jacoco.exec</dataFileInclude>
+                    </dataFileIncludes>
+                </configuration>
+
                 <executions>
                     <execution>
-                        <id>prepare-agent</id>
+                        <id>default-prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+
                 </executions>
             </plugin>
         </plugins>
