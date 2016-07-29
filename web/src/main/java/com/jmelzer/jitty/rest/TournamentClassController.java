@@ -80,7 +80,7 @@ public class TournamentClassController {
             LOG.warn("id not a number ", id);
             return null;
         } catch (IntegrationViolation integrationViolation) {
-            LOG.warn("", integrationViolation);
+            LOG.warn("not possible to delete the class {} error message is '{}'" , id, integrationViolation.getMessage());
             return ControllerUtil.buildErrorResponse(integrationViolation.getMessage());
         }
         return Response.ok().build();

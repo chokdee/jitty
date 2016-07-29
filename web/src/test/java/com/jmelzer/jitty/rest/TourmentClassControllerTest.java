@@ -3,7 +3,9 @@ package com.jmelzer.jitty.rest;
 import com.jmelzer.jitty.Application;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +17,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
 
 /**
@@ -25,6 +26,10 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class TourmentClassControllerTest extends SecureResourceTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+
     @Test
     public void testGetTournamentClass() throws Exception {
         try {
@@ -42,6 +47,18 @@ public class TourmentClassControllerTest extends SecureResourceTest {
     }
 
     @Test
+    public void testDeleteWithErrors() throws Exception {
+        HttpHeaders loginHeaders = doLogin();
+
+        thrown.expect(HttpClientErrorException.class);
+        thrown.expectMessage("400 Bad Request");
+
+        http(HttpMethod.DELETE, "api/tournament-classes/5",
+                createHttpEntity(null, loginHeaders), ErrorMessage.class);
+
+    }
+
+    @Test
     public void getNotRunning() throws Exception {
         try {
             HttpHeaders loginHeaders = doLogin();
@@ -50,7 +67,7 @@ public class TourmentClassControllerTest extends SecureResourceTest {
                     createHttpEntity(null, loginHeaders), TournamentClassDTO[].class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
-            assertThat(entity.getBody().length, is(5));
+            assertThat(entity.getBody().length, is(4));
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
             fail();
