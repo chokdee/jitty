@@ -515,7 +515,7 @@ public class TournamentService {
         TournamentClass tc = tcRepository.findOne(id);
         for (int i = 0; i < 20; i++) {
             TournamentPlayer player = new TournamentPlayer();
-            player.setId((long) i);
+//            player.setId((long) i);
             player.setFirstName("Vorname#" + i);
             player.setLastName("Nachname#" + i);
             player.setTtr(randomIntFromInterval(2200, 2500));
