@@ -34,6 +34,9 @@ public class TournamentClassDTO {
      */
     String gameModePhase2;
 
+    Integer playerPerGroup;
+
+    Integer groupCount;
 
     public Date getStartTime() {
         return startTime;
@@ -162,5 +165,41 @@ public class TournamentClassDTO {
         result = 31 * result + startTTR;
         result = 31 * result + endTTR;
         return result;
+    }
+
+    public Integer getPlayerPerGroup() {
+        return playerPerGroup;
+    }
+
+    public void setPlayerPerGroup(Integer playerPerGroup) {
+        this.playerPerGroup = playerPerGroup;
+    }
+
+    public Integer getGroupCount() {
+        return groupCount;
+    }
+
+    public void setGroupCount(Integer groupCount) {
+        this.groupCount = groupCount;
+    }
+
+    @Override
+    public String toString() {
+        return "TournamentClassDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", startTTR=" + startTTR +
+                ", endTTR=" + endTTR +
+                ", type='" + type + '\'' +
+                ", minAge=" + minAge +
+                ", maxAge=" + maxAge +
+                ", openForMen=" + openForMen +
+                ", openForWomen=" + openForWomen +
+                ", startTime=" + startTime +
+                ", gameModePhase1='" + gameModePhase1 + '\'' +
+                ", gameModePhase2='" + gameModePhase2 + '\'' +
+                ", playerPerGroup=" + playerPerGroup +
+                ", groupCount=" + groupCount +
+                '}';
     }
 }

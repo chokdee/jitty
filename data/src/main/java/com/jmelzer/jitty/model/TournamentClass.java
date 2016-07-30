@@ -85,11 +85,34 @@ public class TournamentClass {
     @Column(nullable = true, name = "game_mode_phase_2", length = 1)
     String gameModePhase2;
 
+    @Column(nullable = true, name = "player_per_group")
+    Integer playerPerGroup;
+
+    @Column(nullable = true, name = "group_count")
+    Integer groupCount;
+
+
     public TournamentClass(String name) {
         this.name = name;
     }
 
     public TournamentClass() {
+    }
+
+    public Integer getPlayerPerGroup() {
+        return playerPerGroup;
+    }
+
+    public void setPlayerPerGroup(Integer playerPerGroup) {
+        this.playerPerGroup = playerPerGroup;
+    }
+
+    public Integer getGroupCount() {
+        return groupCount;
+    }
+
+    public void setGroupCount(Integer groupCount) {
+        this.groupCount = groupCount;
     }
 
     public String getGameModePhase1() {
@@ -259,5 +282,10 @@ public class TournamentClass {
 
     public void removePlayer(TournamentPlayer player) {
         players.remove(player);
+    }
+
+    @Transient
+    public int getPlayerCount() {
+        return players.size();
     }
 }

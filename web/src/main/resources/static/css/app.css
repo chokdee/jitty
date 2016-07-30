@@ -130,11 +130,15 @@
     top: 36px;
 }
 
+.playerlist {
+    overflow: scroll;
+    height:400px;
+}
 /**
  * For the correct positioning of the placeholder element, the dnd-list and
  * it's children must have position: relative
  */
-ul[dnd-list],
+.playerlist ul[dnd-list],
 ul[dnd-list] > li {
     position: relative;
 }
@@ -143,7 +147,7 @@ ul[dnd-list] > li {
  * The dnd-list should always have a min-height,
  * otherwise you can't drop to it once it's empty
  */
-ul[dnd-list] {
+.playerlist ul[dnd-list] {
     min-height: 42px;
     padding-left: 0px;
 }
@@ -154,7 +158,7 @@ ul[dnd-list] {
  * sense to hide it to give the user the feeling
  * that he's actually moving it.
  */
-ul[dnd-list] .dndDraggingSource {
+.playerlist ul[dnd-list] .dndDraggingSource {
     display: none;
 }
 
@@ -163,7 +167,7 @@ ul[dnd-list] .dndDraggingSource {
  * added to the dnd-list while the user is dragging
  * over it.
  */
-ul[dnd-list] .dndPlaceholder {
+.playerlist ul[dnd-list] .dndPlaceholder {
     display: block;
     background-color: #ddd;
     min-height: 42px;
@@ -176,7 +180,7 @@ ul[dnd-list] .dndPlaceholder {
  * half of the element we are dragging over. In other
  * browsers we can use event.offsetY for this.
  */
-ul[dnd-list] li {
+.playerlist ul[dnd-list] li {
     background-color: #fff;
     border: 1px solid #ddd;
     border-top-right-radius: 4px;
@@ -189,7 +193,131 @@ ul[dnd-list] li {
 /**
  * Show selected elements in green
  */
-ul[dnd-list] li.selected {
+.playerlist ul[dnd-list] li.selected {
     background-color: #dff0d8;
     color: #3c763d;
+}
+
+
+/***************************** Dropzone Styling *****************************/
+
+/**
+ * The dnd-list should always have a min-height,
+ * otherwise you can't drop to it once it's empty
+ */
+.dropzone ul[dnd-list] {
+    min-height: 42px;
+    margin: 0px;
+    padding-left: 0px;
+}
+
+/**
+ * The dnd-lists's child elements currently MUST have
+ * position: relative. Otherwise we can not determine
+ * whether the mouse pointer is in the upper or lower
+ * half of the element we are dragging over. In other
+ * browsers we can use event.offsetY for this.
+ */
+.dropzone li {
+    display: block;
+
+}
+
+/**
+ * Reduce opacity of elements during the drag operation. This allows the user
+ * to see where he is dropping his element, even if the element is huge. The
+ * .dndDragging class is automatically set during the drag operation.
+ */
+.dropzone .dndDragging {
+    opacity: 0.7;
+}
+
+/**
+ * The dndDraggingSource class will be applied to the source element of a drag
+ * operation. It makes sense to hide it to give the user the feeling that he's
+ * actually moving it. Note that the source element has also .dndDragging class.
+ */
+.dropzone .dndDraggingSource {
+    display: none;
+}
+
+/**
+ * An element with .dndPlaceholder class will be added as child of the dnd-list
+ * while the user is dragging over it.
+ */
+.dropzone .dndPlaceholder {
+    background-color: #ddd !important;
+    min-height: 42px;
+    display: block;
+    position: relative;
+}
+
+.dropzone .group-list > li {
+    border: none;
+    float: left;
+    width: 150px;
+}
+/***************************** Element type specific styles *****************************/
+
+.dropzone .itemlist {
+    min-height: 120px !important;
+}
+
+.dropzone .itemlist > li {
+    background-color: #337ab7;
+    border: none;
+    border-radius: .25em;
+    color: #fff;
+    float: left;
+    font-weight: 700;
+    height: 50px;
+    margin: 5px;
+    padding: 3px;
+    text-align: center;
+    width: 100%;
+}
+
+.dropzone .container-element {
+    margin: 10px;
+}
+
+
+.box {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+
+
+.box > h3 {
+    color: #333;
+    border-color: #ddd;
+    border-bottom: 1px solid transparent;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    background-repeat: repeat-x;
+    display: block;
+    font-size: 16px;
+    padding: 10px 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+
+.box-padding {
+    padding: 15px;
+}
+.box-blue {
+    border-color: #bce8f1;
+}
+
+.box-blue > h3 {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    background-image: -webkit-linear-gradient(top,#d9edf7 0,#c4e3f3 100%);
+    background-image: linear-gradient(to bottom,#d9edf7 0,#c4e3f3 100%);
 }

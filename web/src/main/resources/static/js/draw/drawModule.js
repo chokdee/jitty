@@ -1,5 +1,5 @@
 angular.module('jitty.draw', ['ngRoute', 'ngResource', 'ngMessages', 'ui.select', 'ngSanitize',
-    'jitty.draw.controllers', 'ui.bootstrap']).config(function ($routeProvider, $httpProvider, $provide) {
+    'jitty.draw.controllers', 'jitty.draw.services', 'ui.bootstrap']).config(function ($routeProvider, $httpProvider, $provide) {
 
     $routeProvider.when('/draw-select-class', {
         templateUrl: '/js/draw/draw-select-class.html',

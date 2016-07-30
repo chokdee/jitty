@@ -35,8 +35,8 @@ public class TourmentClassControllerTest extends SecureResourceTest {
         try {
             HttpHeaders loginHeaders = doLogin();
 
-            ResponseEntity<TournamentClass> entity = http(HttpMethod.GET, "api/tournament-classes/2",
-                    createHttpEntity(null, loginHeaders), TournamentClass.class);
+            ResponseEntity<TournamentClassDTO> entity = http(HttpMethod.GET, "api/tournament-classes/2",
+                    createHttpEntity(null, loginHeaders), TournamentClassDTO.class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
             assertThat(entity.getBody().getId(), is(2L));
@@ -90,7 +90,7 @@ public class TourmentClassControllerTest extends SecureResourceTest {
             assertThat(okResponse.getStatusCode(), is(HttpStatus.OK));
 
 
-            TournamentClass tournamentClass = new TournamentClass();
+            TournamentClassDTO tournamentClass = new TournamentClassDTO();
             tournamentClass.setName("dummy");
             tournamentClass.setStartTTR(0);
             tournamentClass.setEndTTR(1000);

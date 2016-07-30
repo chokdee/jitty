@@ -53,7 +53,7 @@ public class SchemaExporter {
         SchemaExporter gen = new SchemaExporter("com.jmelzer.jitty.model");
         gen.setPrefix("");
 
-        gen.generate(Dialect.H2);
+//        gen.generate(Dialect.H2);
         gen = new SchemaExporter("com.jmelzer.jitty.model");
         gen.setPrefix("");
         gen.generate(Dialect.HSQL);

@@ -52,7 +52,7 @@ public class TournamentService {
         }
 
 
-        int groupCount = calcOptimalGroupSize(ps);
+        int groupCount = calcOptimalGroupSize(ps, 4);
 
         groups = createGroups(groupCount);
         tournamentClass.setGroups(groups);
@@ -104,11 +104,19 @@ public class TournamentService {
         return false;
     }
 
-    private int calcOptimalGroupSize(int playerSize) {
+    @Transactional
+    public TournamentClassDTO calcOptimalGroupSize(TournamentClassDTO tournamentClassDTO) {
+        TournamentClass tournamentClass = tcRepository.findOne(tournamentClassDTO.getId());
+        int ppg = tournamentClassDTO.getPlayerPerGroup() == null ? 4 : tournamentClassDTO.getPlayerPerGroup();
+        int optGroupSize = calcOptimalGroupSize(tournamentClass.getPlayerCount(), ppg);
+        tournamentClassDTO.setGroupCount(optGroupSize);
+        return tournamentClassDTO;
+    }
+
+    private int calcOptimalGroupSize(int playerSize, int groupSize) {
         //how many groups?
-        int optGroupSize = 4; //todo config it or let the user do manual move players
-        int groupCount = playerSize / optGroupSize;
-        int rest = (playerSize % optGroupSize);
+        int groupCount = playerSize / groupSize;
+        int rest = (playerSize % groupSize);
 
         if (rest > 0) {
             groupCount++;

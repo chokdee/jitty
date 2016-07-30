@@ -42,4 +42,26 @@ public class DrawControllerTest extends SecureResourceTest {
         }
     }
 
+    @Test
+    public void calcOptimalGroupSize() throws Exception {
+        try {
+            HttpHeaders loginHeaders = doLogin();
+
+            ResponseEntity<TournamentClassDTO> entity = http(HttpMethod.GET, "api/tournament-classes/1",
+                    createHttpEntity(null, loginHeaders), TournamentClassDTO.class);
+
+            assertNull(entity.getBody().getGroupCount());
+
+            entity = http(HttpMethod.POST, "api/draw/calc-optimal-group-size",
+                    createHttpEntity(entity.getBody(), loginHeaders), TournamentClassDTO.class);
+
+            assertTrue(entity.getStatusCode().is2xxSuccessful());
+            assertThat(entity.getBody().getGroupCount(), is(greaterThan(1)));
+//            System.out.println("entity = " + entity.getBody());
+        } catch (HttpClientErrorException e) {
+            System.out.println(e.getResponseBodyAsString());
+            fail();
+        }
+    }
+
 }

@@ -37,6 +37,15 @@ public class DrawController {
 
     }
 
+    @Path("/calc-optimal-group-size")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public TournamentClassDTO calcOptimalGroupSize(TournamentClassDTO dto) {
+        dto = service.calcOptimalGroupSize(dto);
+        return dto;
+
+    }
+
     @Path("/dummy-player")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
