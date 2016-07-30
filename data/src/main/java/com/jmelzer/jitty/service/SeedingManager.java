@@ -1,6 +1,8 @@
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.model.*;
+import com.jmelzer.jitty.model.dto.TournamentGroupDTO;
+import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.utl.RandomUtil;
 
 import java.util.ArrayList;
@@ -190,7 +192,7 @@ public class SeedingManager {
     }
 
     //todo don't forget the rules see auslosung.txt
-    public void setPlayerRandomAccordingToQTTR(List<TournamentGroup> groups, List<TournamentPlayer> allPlayer) {
+    public void setPlayerRandomAccordingToQTTR(List<TournamentGroupDTO> groups, List<TournamentPlayerDTO> allPlayer) {
         Random randomGenerator = new Random();
 
         int groupCount = groups.size();
@@ -204,7 +206,7 @@ public class SeedingManager {
                 if (index == -1 || allPlayer.size() == 0) {
                     break;
                 }
-                TournamentPlayer p = allPlayer.get(index);
+                TournamentPlayerDTO p = allPlayer.get(index);
                 allPlayer.remove(index);
                 groups.get(i).addPlayer(p);
 

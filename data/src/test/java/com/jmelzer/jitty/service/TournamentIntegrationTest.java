@@ -32,7 +32,7 @@ public class TournamentIntegrationTest {
 
     @Transactional
     @Test
-//    @Ignore
+    @Ignore
     public void testit() {
         List<TournamentPlayer> allPlayer = new ArrayList<>();
         //ok lets start to have 59 player

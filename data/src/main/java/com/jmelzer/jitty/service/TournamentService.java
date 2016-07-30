@@ -7,6 +7,7 @@ import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentDTO;
+import com.jmelzer.jitty.model.dto.TournamentGroupDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.*;
+
+import static com.jmelzer.jitty.service.CopyManager.copy;
 
 /**
  * Created by J. Melzer on 01.06.2016.
@@ -71,8 +74,8 @@ public class TournamentService {
             return 0;
         });
 
-
-        seedingManager.setPlayerRandomAccordingToQTTR(groups, allPlayer);
+//todo change to dtos here
+//        seedingManager.setPlayerRandomAccordingToQTTR(groups, allPlayer);
 
     }
 
@@ -136,6 +139,18 @@ public class TournamentService {
         return groups;
     }
 
+    private List<TournamentGroupDTO> createDTOGroups(int groupCount) {
+        List<TournamentGroupDTO> groups = new ArrayList<>(groupCount);
+        //todo must be configured maybe 1, 2 better
+        char name = 'A';
+        for (int i = 0; i < groupCount; i++) {
+            TournamentGroupDTO group = new TournamentGroupDTO();
+            group.setName("" + name);
+            groups.add(group);
+            name++;
+        }
+        return groups;
+    }
 
     /**
      * calculate the order of the possible games in the correct order
@@ -345,14 +360,8 @@ public class TournamentService {
         TournamentDTO dto = new TournamentDTO();
         BeanUtils.copyProperties(tournament, dto);
         for (TournamentClass tournamentClass : tournament.getClasses()) {
-            dto.addClass(createClassDTO(tournamentClass));
+            dto.addClass(copy(tournamentClass));
         }
-        return dto;
-    }
-
-    private TournamentClassDTO createClassDTO(TournamentClass tournamentClass) {
-        TournamentClassDTO dto = new TournamentClassDTO();
-        BeanUtils.copyProperties(tournamentClass, dto);
         return dto;
     }
 
@@ -392,9 +401,7 @@ public class TournamentService {
     @Transactional
     public TournamentClassDTO findOneClass(Long aLong) {
         TournamentClass tc = tcRepository.findOne(aLong);
-        TournamentClassDTO dto = new TournamentClassDTO();
-        BeanUtils.copyProperties(tc, dto);
-        return dto;
+        return copy(tc);
     }
 
     @Transactional
@@ -490,18 +497,19 @@ public class TournamentService {
         }
         List<TournamentClass> classes = tcRepository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(t, player.getQttr(), player.getQttr());
         for (TournamentClass aClass : classes) {
-            ret.add(createClassDTO(aClass));
+            ret.add(copy(aClass));
         }
         return ret;
     }
 
+    @Transactional
     public List<TournamentClassDTO> getNotRunning(String userName) {
         Tournament t = userRepository.findByLoginName(userName).getLastUsedTournament();
         List<TournamentClassDTO> ret = new ArrayList<>();
         //todo write correct find method
         List<TournamentClass> classes = tcRepository.findByTournamentAndRunning(t, false);
         for (TournamentClass aClass : classes) {
-            ret.add(createClassDTO(aClass));
+            ret.add(copy(aClass));
         }
 
         return ret;
@@ -537,6 +545,30 @@ public class TournamentService {
 
     int randomIntFromInterval(int min, int max) {
         return (int) Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    @Transactional
+    public TournamentClassDTO automaticDraw(TournamentClassDTO dto) {
+        List<TournamentGroupDTO> groups = createDTOGroups(dto.getGroupCount());
+        dto.setGroups(groups);
+
+        List<TournamentPlayerDTO> players = getPlayerforClass(dto.getId());
+
+        //sort all player by qttr
+        Collections.sort(players, (o1, o2) -> {
+            if (o1.getQttr() < o2.getQttr()) {
+                return 1;
+            }
+            if (o1.getQttr() > o2.getQttr()) {
+                return -1;
+            }
+            return 0;
+        });
+
+
+        seedingManager.setPlayerRandomAccordingToQTTR(groups, players);
+
+        return dto;
     }
 
     static public class PS implements Comparable<PS> {

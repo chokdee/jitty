@@ -43,7 +43,14 @@ public class DrawController {
     public TournamentClassDTO calcOptimalGroupSize(TournamentClassDTO dto) {
         dto = service.calcOptimalGroupSize(dto);
         return dto;
+    }
 
+    @Path("/automatic-draw")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public TournamentClassDTO automaticDraw(TournamentClassDTO dto) {
+        dto = service.automaticDraw(dto);
+        return dto;
     }
 
     @Path("/dummy-player")

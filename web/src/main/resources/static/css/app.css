@@ -186,6 +186,7 @@ ul[dnd-list] > li {
     border-top-right-radius: 4px;
     border-top-left-radius: 4px;
     display: block;
+    font-size: smaller;
     padding: 10px 15px;
     margin-bottom: -1px;
 }
@@ -256,6 +257,7 @@ ul[dnd-list] > li {
     border: none;
     float: left;
     width: 150px;
+    /*min-height: 450px;*/
 }
 /***************************** Element type specific styles *****************************/
 

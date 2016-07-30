@@ -3,7 +3,9 @@ package com.jmelzer.jitty.model.dto;
 
 import com.jmelzer.jitty.model.GameMode;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by J. Melzer on 01.06.2016.
@@ -37,6 +39,8 @@ public class TournamentClassDTO {
     Integer playerPerGroup;
 
     Integer groupCount;
+
+    List<TournamentGroupDTO> groups = new ArrayList<>();
 
     public Date getStartTime() {
         return startTime;
@@ -183,6 +187,14 @@ public class TournamentClassDTO {
         this.groupCount = groupCount;
     }
 
+    public List<TournamentGroupDTO> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<TournamentGroupDTO> groups) {
+        this.groups = groups;
+    }
+
     @Override
     public String toString() {
         return "TournamentClassDTO{" +
@@ -201,5 +213,9 @@ public class TournamentClassDTO {
                 ", playerPerGroup=" + playerPerGroup +
                 ", groupCount=" + groupCount +
                 '}';
+    }
+
+    public void addGroup(TournamentGroupDTO groupDTO) {
+        groups.add(groupDTO);
     }
 }
