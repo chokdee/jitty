@@ -194,14 +194,19 @@ public class SeedingManager {
     //todo don't forget the rules see auslosung.txt
     public void setPlayerRandomAccordingToQTTR(List<TournamentGroupDTO> groups, List<TournamentPlayerDTO> allPlayer) {
         Random randomGenerator = new Random();
-
+        System.out.println("set player for #" + groups.size() + " groups and #" + allPlayer.size() + " players");
         int groupCount = groups.size();
         while (allPlayer.size() > 0) {
             //set the best n player in the groups
             for (int i = 0; i < groupCount; i++) {
                 int index = randomGenerator.nextInt(groupCount - i);
                 if (index >= allPlayer.size()) {
-                    index--;
+//                    index--;
+                    if (allPlayer.size() < 2) {
+                        index = 0;
+                    } else {
+                        index = randomGenerator.nextInt(allPlayer.size() - 1);
+                    }
                 }
                 if (index == -1 || allPlayer.size() == 0) {
                     break;

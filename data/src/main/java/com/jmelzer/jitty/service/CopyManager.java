@@ -11,8 +11,6 @@ import org.springframework.beans.BeanUtils;
  *
  */
 public class CopyManager {
-    protected CopyManager() {
-    }
 
     static public TournamentClassDTO copy(TournamentClass clz) {
         TournamentClassDTO dto = new TournamentClassDTO();
