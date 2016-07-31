@@ -56,6 +56,8 @@
                     <excludes>
                         <exclude>**/model/**/*.*</exclude>
                         <exclude>**/SchemaExporter*.*</exclude>
+                        <exclude>**/ServletInitializer*.*</exclude>
+                        <exclude>**/exceptions/*.*</exclude>
                     </excludes>
                     <dataFileIncludes>
                         <dataFileInclude>data/target/jacoco.exec</dataFileInclude>

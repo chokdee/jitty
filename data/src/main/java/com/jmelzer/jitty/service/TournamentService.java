@@ -4,6 +4,7 @@ import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.dao.UserRepository;
+import com.jmelzer.jitty.exceptions.IntegrationViolation;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentDTO;

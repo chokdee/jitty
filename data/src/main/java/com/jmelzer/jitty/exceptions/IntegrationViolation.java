@@ -1,4 +1,4 @@
-package com.jmelzer.jitty.service;
+package com.jmelzer.jitty.exceptions;
 
 /**
  * Created by J. Melzer on 04.07.2016.

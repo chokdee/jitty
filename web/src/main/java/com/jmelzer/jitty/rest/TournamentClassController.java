@@ -3,7 +3,7 @@ package com.jmelzer.jitty.rest;
 import com.jmelzer.jitty.config.SecurityUtil;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
-import com.jmelzer.jitty.service.IntegrationViolation;
+import com.jmelzer.jitty.exceptions.IntegrationViolation;
 import com.jmelzer.jitty.service.TournamentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
