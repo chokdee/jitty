@@ -392,6 +392,7 @@ public class TournamentService {
         return tc;
     }
 
+    @Transactional
     public Tournament update(Tournament tournament) {
 //        for (TournamentClass tournamentClass : tournament.getClasses()) {
 //            tcRepository.save(tournamentClass);
@@ -408,9 +409,8 @@ public class TournamentService {
     @Transactional
     public void updateClass(TournamentClassDTO dto) {
         TournamentClass tc = tcRepository.findOne(dto.getId());
-        BeanUtils.copyProperties(dto, tc);
-
-        tcRepository.saveAndFlush(tc);
+        copy(dto, tc, playerRepository);
+            tcRepository.saveAndFlush(tc);
     }
 
     @Transactional

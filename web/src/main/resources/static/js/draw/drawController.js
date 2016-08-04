@@ -16,7 +16,9 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
             console.log('Got TournamentClass successful');
             if ($scope.tournamentClass.playerPerGroup == null)
                 $scope.tournamentClass.playerPerGroup = 4; //default
-        })
+
+        });
+        $scope.groups = $scope.tournamentClass.groups;
     };
 
 
@@ -45,6 +47,19 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
             $scope.tournamentClass = response.data;
 
             $scope.createGroups();
+
+        }, function errorCallback(response) {
+            $scope.errorMessage = response.data.error;
+        });
+
+    };
+    $scope.saveDraw = function () {
+        $scope.tournamentClass.groups = $scope.groups;
+        $http({
+            method: 'POST',
+            url: '/api/draw/save',
+            data: $scope.tournamentClass
+        }).then(function successCallback(response) {
 
         }, function errorCallback(response) {
             $scope.errorMessage = response.data.error;

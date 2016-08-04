@@ -18,7 +18,7 @@
     <tbody>
     <tr ng-repeat="c in possibleClasses">
         <td>{{c.name}}</td>
-        <td>{{c.startTime}}</td>
+        <td>{{c.startTime | date:'dd.MM.yyyy hh:mm' }}</td>
         <td>
             <a class="btn btn-primary" href="#/draw/{{c.id}}">Auswählen</a>
         </td>
