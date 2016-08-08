@@ -90,14 +90,14 @@ public class TournamentIntegrationTest {
 
         //start the tournament with games
         //calculate possible games
-        tournamentService.calcGroupGames();
+        tournamentService.calcGroupGames(tournamentService.getGroups());
 
         //todo add table manager to get free tables
 
         //start the games, we assume we have 20 table to play
         //algo for find the player who can play
 
-        tournamentService.addPossibleGroupGamesToQueue();
+        tournamentService.addPossibleGroupGamesToQueue(tournamentService.getGroups());
 //        int i = 0;
 //        for (TournamentSingleGame tournamentSingleGame : gameQueue) {
 //            //System.out.println(++i + ": " + tournamentSingleGame);
@@ -128,7 +128,7 @@ public class TournamentIntegrationTest {
             tournamentService.removeBusyGame(game);
 
             //System.out.println("game " + game + " finished with " + game.printResult());
-            tournamentService.addPossibleGroupGamesToQueue();
+            tournamentService.addPossibleGroupGamesToQueue(tournamentService.getGroups());
             tableManager.setFreeTablesNo(game.getTableNo());
 
             callPossibleGames(tournamentService, tableManager);

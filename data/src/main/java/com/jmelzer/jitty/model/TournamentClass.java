@@ -26,8 +26,7 @@ public class TournamentClass {
     /**
      * Assoc to the groups in the class.
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "TC_ID")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tournamentClass")
     List<TournamentGroup> groups = new ArrayList<>();
 
     @Column(nullable = false, name = "name")
@@ -165,6 +164,7 @@ public class TournamentClass {
 
     public void addGroup(TournamentGroup group) {
         groups.add(group);
+        group.setTournamentClass(this);
     }
 
     public int getStartTTR() {

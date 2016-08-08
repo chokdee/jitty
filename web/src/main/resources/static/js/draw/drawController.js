@@ -66,6 +66,11 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         });
 
     };
+    $scope.start = function () {
+        $http.get('/api/draw/start?cid=' + $routeParams.id, {}).then(function (response) {
+        });
+
+    };
     $scope.calcGroupSize = function () {
         $http({
             method: 'POST',

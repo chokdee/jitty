@@ -1,0 +1,37 @@
+<h3>Mögliche Begegnungen</h3>
+
+<div style="overflow: scroll; height:400px;">
+    <table class="table usertable">
+        <thead>
+        <tr>
+            <th>
+                Klasse
+            </th>
+            <th>
+                Gruppe
+            </th>
+            <th>
+                Spieler 1
+            </th>
+            <th>
+                Spieler 2
+            </th>
+            <th>
+                Aktionen
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="c in possibleGames">
+            <td>{{c.group.tournamentClass.name}}</td>
+            <td>{{c.group.name}}</td>
+            <td>{{c.player1.firstName + ' ' + c.player1.lastName}}</td>
+            <td>{{c.player2.firstName + ' ' + c.player2.lastName}}</td>
+            <td>
+                <a class="btn btn-primary" href="#/draw/{{c.id}}">Drucken etc</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>

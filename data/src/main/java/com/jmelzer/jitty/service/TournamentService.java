@@ -1,18 +1,13 @@
 package com.jmelzer.jitty.service;
 
-import com.jmelzer.jitty.dao.TournamentClassRepository;
-import com.jmelzer.jitty.dao.TournamentPlayerRepository;
-import com.jmelzer.jitty.dao.TournamentRepository;
-import com.jmelzer.jitty.dao.UserRepository;
+import com.jmelzer.jitty.dao.*;
 import com.jmelzer.jitty.exceptions.IntegrationViolation;
 import com.jmelzer.jitty.model.*;
-import com.jmelzer.jitty.model.dto.TournamentClassDTO;
-import com.jmelzer.jitty.model.dto.TournamentDTO;
-import com.jmelzer.jitty.model.dto.TournamentGroupDTO;
-import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
+import com.jmelzer.jitty.model.dto.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -37,6 +32,8 @@ public class TournamentService {
     UserRepository userRepository;
     @Resource
     TournamentPlayerRepository playerRepository;
+    @Resource
+    TournamentSingleGameRepository tournamentSingleGameRepository;
 
     //todo use spring
     private SeedingManager seedingManager = new SeedingManager();
@@ -91,7 +88,8 @@ public class TournamentService {
     /**
      * iterate thrw all groups and add not played games. but take care of the player isn't already in the list
      */
-    public void addPossibleGroupGamesToQueue() {
+    public void addPossibleGroupGamesToQueue(List<TournamentGroup> groups) {
+        //todo add possible games for all running classes
         for (TournamentGroup group : groups) {
             List<TournamentSingleGame> games = group.getGames();
             addGamesToQueueInternally(games);
@@ -156,14 +154,15 @@ public class TournamentService {
     /**
      * calculate the order of the possible games in the correct order
      */
-    public void calcGroupGames() {
+    @Transactional
+    public void calcGroupGames(List<TournamentGroup> groups) {
         for (TournamentGroup group : groups) {
             System.out.println(group);
 //                List<TournamentPlayer> players = group.getPlayers();
             List<TournamentPlayer> list = new ArrayList<>(group.getPlayers());
             if (list.size() % 2 == 1) {
-                // Number of teams uneven ->  add the bye team.
-                list.add(new TournamentPlayer(-1L, "bye", "bye"));
+                // Number of player uneven ->  add the bye player.
+                list.add(TournamentPlayer.BYE);
             }
             for (int i = 1; i < list.size(); i++) {
 
@@ -171,13 +170,17 @@ public class TournamentService {
                 System.out.println("---- games round " + i + " ----");
                 //first 1 against last
 
-                List<TournamentSingleGame> games = createOneRound(i, list);
-                group.addGames(games);
+                group.addGames(createOneRound(i, list));
 
                 list.add(1, list.get(list.size() - 1));
                 list.remove(list.size() - 1);
 
                 System.out.println("-----------------");
+            }
+
+            group.removeByePlayer();
+            for (TournamentSingleGame game : group.getGames()) {
+                Assert.isTrue(game.getId() != null, game.toString());
             }
         }
 
@@ -216,10 +219,13 @@ public class TournamentService {
                 t1 = l2.get(tId);
                 t2 = l1.get(tId);
             }
-            TournamentSingleGame game = new TournamentSingleGame();
-            game.setPlayer1(t1);
-            game.setPlayer2(t2);
-            games.add(game);
+            if (!TournamentPlayer.BYE.equals(t1) && !TournamentPlayer.BYE.equals(t2)) {
+                TournamentSingleGame game = new TournamentSingleGame();
+                game.setPlayer1(t1);
+                game.setPlayer2(t2);
+                tournamentSingleGameRepository.save(game);
+                games.add(game);
+            }
             System.out.println(t1.getLastName() + " --> " + t2.getLastName());
 //            System.out.println("" + round + ":" +  ((round-1)*l1.size())+(tId+1) + " " + t1.getLastName() + " -->" + t2.getLastName());
 //            matches.addNew(round, ((round-1)*l1.size())+(tId+1), (String)t1.get("name"), (String)t2.get("name"));
@@ -296,8 +302,16 @@ public class TournamentService {
 
     public List<TournamentSingleGame> assignPlayerToKoField(KOField field) {
         List<TournamentSingleGame> games = seedingManager.assignPlayerToKoField(field, groups);
-//        qu
         return games;
+    }
+
+    @Transactional
+    public List<TournamentSingleGameDTO> listQueue() {
+        List<TournamentSingleGameDTO> list = new ArrayList<>(gameQueue.size());
+        for (TournamentSingleGame game : gameQueue) {
+            list.add(copy(game));
+        }
+        return list;
     }
 
     public TournamentSingleGame poll() {
@@ -410,7 +424,7 @@ public class TournamentService {
     public void updateClass(TournamentClassDTO dto) {
         TournamentClass tc = tcRepository.findOne(dto.getId());
         copy(dto, tc, playerRepository);
-            tcRepository.saveAndFlush(tc);
+        tcRepository.saveAndFlush(tc);
     }
 
     @Transactional
@@ -570,6 +584,16 @@ public class TournamentService {
         seedingManager.setPlayerRandomAccordingToQTTR(groups, players);
 
         return dto;
+    }
+
+    @Transactional
+    public void startClass(Long id) {
+        TournamentClass clz = tcRepository.findOne(id);
+        calcGroupGames(clz.getGroups());
+        clz.setStartTime(new Date());
+        clz.setRunning(true);
+        tcRepository.saveAndFlush(clz);
+        addPossibleGroupGamesToQueue(clz.getGroups());
     }
 
     static public class PS implements Comparable<PS> {

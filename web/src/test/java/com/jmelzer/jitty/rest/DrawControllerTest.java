@@ -3,6 +3,7 @@ package com.jmelzer.jitty.rest;
 import com.jmelzer.jitty.Application;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
+import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,7 +91,7 @@ public class DrawControllerTest extends SecureResourceTest {
     }
 
     @Test
-    public void automaticDrawAndsave() throws Exception {
+    public void automaticDrawAndsaveAndStart() throws Exception {
         try {
             HttpHeaders loginHeaders = doLogin();
 
@@ -113,6 +114,21 @@ public class DrawControllerTest extends SecureResourceTest {
             ResponseEntity<Void> voidEntity = http(HttpMethod.POST, "api/draw/save",
                     createHttpEntity(entity.getBody(), loginHeaders), Void.class);
             assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+
+            voidEntity = http(HttpMethod.GET, "api/draw/start?cid=1",
+                    createHttpEntity(entity.getBody(), loginHeaders), Void.class);
+            assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+
+            ResponseEntity<TournamentSingleGameDTO[]> possibleGamesEntity = http(HttpMethod.GET, "api/draw/possible-games",
+                    createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
+            assertTrue(possibleGamesEntity.getStatusCode().is2xxSuccessful());
+            assertThat(possibleGamesEntity.getBody().length, is(3));
+            for (TournamentSingleGameDTO dto : possibleGamesEntity.getBody()) {
+                assertNotNull(dto.getPlayer1());
+                assertNotNull(dto.getPlayer2());
+                assertNotNull(dto.getGroup());
+                assertNotNull(dto.getGroup().getClass());
+            }
 
 
         } catch (HttpClientErrorException e) {

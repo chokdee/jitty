@@ -1,8 +1,9 @@
 package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.model.TournamentPlayer;
+import com.jmelzer.jitty.model.TournamentSingleGame;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
+import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import com.jmelzer.jitty.service.TournamentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,21 @@ public class DrawController {
 
     }
 
+    @Path("/start")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response start(@QueryParam(value = "cid") String id) {
+        service.startClass(Long.valueOf(id));
+        return Response.ok().build();
+    }
+
+    @Path("/possible-games")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<TournamentSingleGameDTO> possibleGames() {
+        return service.listQueue();
+    }
+
     @Path("/calc-optimal-group-size")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -58,6 +74,7 @@ public class DrawController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response save(TournamentClassDTO dto) {
         service.updateClass(dto);
+        dto = service.findOneClass(dto.getId());
         return Response.ok().build();
     }
 

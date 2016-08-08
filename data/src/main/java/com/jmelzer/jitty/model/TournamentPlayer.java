@@ -38,7 +38,7 @@ public class TournamentPlayer {
     private Date birthday;
     @Column(nullable = true, length = 1)
     private String gender;
-    @OneToMany(cascade = CascadeType.DETACH)
+    @ManyToMany(cascade = CascadeType.DETACH)
     private List<TournamentSingleGame> games = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, mappedBy = "players")
@@ -163,13 +163,22 @@ public class TournamentPlayer {
 
         TournamentPlayer player = (TournamentPlayer) o;
 
-        return id.equals(player.id);
+        if (id != null ? !id.equals(player.id) : player.id != null) {
+            return false;
+        }
+        if (firstName != null ? !firstName.equals(player.firstName) : player.firstName != null) {
+            return false;
+        }
+        return lastName != null ? lastName.equals(player.lastName) : player.lastName == null;
 
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        return result;
     }
 
     public String getFullName() {

@@ -27,20 +27,20 @@ public class TournamentServiceTest {
         TournamentGroup group = prepareGroupWithPlayerAndGames();
         service.addGroup(group);
 
-        service.addPossibleGroupGamesToQueue();
+        service.addPossibleGroupGamesToQueue(service.getGroups());
         assertEquals(2, service.getQueueSize());
 
         TournamentSingleGame game = service.poll();
         game.setCalled(true);
         assertEquals(1, service.getQueueSize());
-        service.addPossibleGroupGamesToQueue();
+        service.addPossibleGroupGamesToQueue(service.getGroups());
         assertEquals("player busy no new player can be added", 1, service.getQueueSize());
 
         game = service.poll();
         game.setCalled(true);
         assertEquals(0, service.getQueueSize());
 
-        service.addPossibleGroupGamesToQueue();
+        service.addPossibleGroupGamesToQueue(service.getGroups());
         assertEquals(2, service.getQueueSize());
     }
 

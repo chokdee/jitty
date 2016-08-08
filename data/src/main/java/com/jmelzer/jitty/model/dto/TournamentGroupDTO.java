@@ -23,6 +23,8 @@ public class TournamentGroupDTO {
      */
     List<TournamentPlayerDTO> players = new ArrayList<>();
 
+    TournamentClassDTO tournamentClass;
+
     public Long getId() {
         return id;
     }
@@ -49,5 +51,13 @@ public class TournamentGroupDTO {
 
     public void addPlayer(TournamentPlayerDTO playerDTO) {
         players.add(playerDTO);
+    }
+
+    public TournamentClassDTO getTournamentClass() {
+        return tournamentClass;
+    }
+
+    public void setTournamentClass(TournamentClassDTO tournamentClass) {
+        this.tournamentClass = tournamentClass;
     }
 }

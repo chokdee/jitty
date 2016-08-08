@@ -13,8 +13,10 @@ import java.util.List;
 @Table(name = "tournament_single_game")
 public class TournamentSingleGame {
     @OneToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name="player1_id")
     TournamentPlayer player1;
     @OneToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name="player2_id")
     TournamentPlayer player2;
     /**
      * Bereits gespielt?
@@ -36,6 +38,9 @@ public class TournamentSingleGame {
     Integer tableNo;
     @OneToMany(cascade = CascadeType.ALL)
     List<GameSet> sets = new ArrayList<>();
+
+    @ManyToOne()
+    TournamentGroup group;
 
     //todo add Schiedsrichter
     @Id
@@ -162,5 +167,46 @@ public class TournamentSingleGame {
         }
 
         return player2;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TournamentSingleGame game = (TournamentSingleGame) o;
+
+        if (player1 != null ? !player1.equals(game.player1) : game.player1 != null) {
+            return false;
+        }
+        if (player2 != null ? !player2.equals(game.player2) : game.player2 != null) {
+            return false;
+        }
+        return id != null ? id.equals(game.id) : game.id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = player1 != null ? player1.hashCode() : 0;
+        result = 31 * result + (player2 != null ? player2.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
+    }
+
+    public TournamentGroup getGroup() {
+        return group;
+    }
+
+    public void setGroup(TournamentGroup group) {
+        this.group = group;
+    }
+
+    public boolean containsBye() {
+        return TournamentPlayer.BYE.equals(player1) || TournamentPlayer.BYE.equals(player2);
     }
 }

@@ -15,6 +15,9 @@ import java.util.List;
 @Table(name = "tournament_group")
 public class TournamentGroup {
 
+    @Id
+    @GeneratedValue
+    private Long id;
     /**
      * Assoc to the player in the group.
      */
@@ -24,14 +27,16 @@ public class TournamentGroup {
     /**
      * Assoc to the groups in the class.
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "TG_ID")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "group")
     List<TournamentSingleGame> games = new ArrayList<>();
-    @Id
-    @GeneratedValue
-    private Long id;
+
     @Column(nullable = false, name = "name", length = 10)
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name="TC_ID")
+    TournamentClass tournamentClass;
+
     transient private List<TournamentService.PS> ranking;
 
 
@@ -75,11 +80,14 @@ public class TournamentGroup {
     }
 
     public void addGames(List<TournamentSingleGame> games) {
-        this.games.addAll(games);
+        for (TournamentSingleGame game : games) {
+            addGame(game);
+        }
     }
 
     public void addGame(TournamentSingleGame game) {
         this.games.add(game);
+        game.setGroup(this);
     }
 
     @Override
@@ -98,5 +106,21 @@ public class TournamentGroup {
 
     public void setRanking(List<TournamentService.PS> ranking) {
         this.ranking = ranking;
+    }
+
+    public void setGames(List<TournamentSingleGame> games) {
+        this.games = games;
+    }
+
+    public void removeByePlayer() {
+        players.remove(TournamentPlayer.BYE);
+    }
+
+    public TournamentClass getTournamentClass() {
+        return tournamentClass;
+    }
+
+    public void setTournamentClass(TournamentClass tournamentClass) {
+        this.tournamentClass = tournamentClass;
     }
 }

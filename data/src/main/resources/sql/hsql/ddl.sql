@@ -111,9 +111,9 @@
         start_time timestamp,
         table_no integer,
         winner integer not null,
+        group_id bigint,
         player1_id bigint,
         player2_id bigint,
-        TG_ID bigint,
         primary key (id)
     );
 
@@ -150,9 +150,6 @@
 
     alter table round_tournament_single_game 
         add constraint UK_3w2ugb7y1da0asgegqgjaxfp9 unique (games_id);
-
-    alter table tournament_player_tournament_single_game 
-        add constraint UK_84p5ugtr6tbk09d22i4qbchdy unique (games_id);
 
     alter table tournament_single_game_GameSet 
         add constraint UK_1ntuaj7ufxxifejbjvv21iip6 unique (sets_id);
@@ -233,6 +230,11 @@
         references tournament_player;
 
     alter table tournament_single_game 
+        add constraint FK_fb9bjwvympb6rl1l23y417m0j 
+        foreign key (group_id) 
+        references tournament_group;
+
+    alter table tournament_single_game 
         add constraint FK_dk9usfge9pakj2saha0pj2i7e 
         foreign key (player1_id) 
         references tournament_player;
@@ -241,11 +243,6 @@
         add constraint FK_iag0aw9oxg5qh0w5s28ju7tab 
         foreign key (player2_id) 
         references tournament_player;
-
-    alter table tournament_single_game 
-        add constraint FK_969al3ers5yuli4m5q7thml7p 
-        foreign key (TG_ID) 
-        references tournament_group;
 
     alter table tournament_single_game_GameSet 
         add constraint FK_1ntuaj7ufxxifejbjvv21iip6 

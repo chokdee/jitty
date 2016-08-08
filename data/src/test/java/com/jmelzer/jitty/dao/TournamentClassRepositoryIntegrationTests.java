@@ -17,11 +17,14 @@ package com.jmelzer.jitty.dao;
 
 import com.jmelzer.jitty.SampleDataJpaApplication;
 import com.jmelzer.jitty.model.Tournament;
+import com.jmelzer.jitty.model.TournamentClass;
+import com.jmelzer.jitty.model.TournamentGroup;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.CoreMatchers.is;
@@ -71,5 +74,19 @@ public class TournamentClassRepositoryIntegrationTests {
         assertNotNull(tournament);
         assertThat(repository.findByTournamentAndRunning(tournament, false).size(), is(3));
         assertThat(repository.findByTournamentAndRunning(tournament, true).size(), is(0));
+    }
+
+    @Transactional
+    @Test
+    public void saveWithGroup() {
+        TournamentClass clz = repository.findOne(1L);
+        assertNotNull(clz);
+
+        clz.addGroup(new TournamentGroup("1"));
+        clz.addGroup(new TournamentGroup("2"));
+
+        repository.save(clz);
+
+        assertThat(repository.findOne(1L).getGroups().size(), is(2));
     }
 }

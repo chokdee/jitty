@@ -4,9 +4,11 @@ import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentGroup;
 import com.jmelzer.jitty.model.TournamentPlayer;
+import com.jmelzer.jitty.model.TournamentSingleGame;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentGroupDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
+import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -15,6 +17,15 @@ import org.springframework.beans.BeanUtils;
  */
 public class CopyManager {
 
+    static public TournamentSingleGameDTO copy(TournamentSingleGame game) {
+        TournamentSingleGameDTO dto = new TournamentSingleGameDTO();
+        BeanUtils.copyProperties(game, dto, "player1", "player2");
+        dto.setPlayer1(copy(game.getPlayer1()));
+        dto.setPlayer2(copy(game.getPlayer2()));
+        dto.setGroup(copy(game.getGroup()));
+        return dto;
+
+    }
     static public void copy(TournamentClassDTO dto, TournamentClass clz, TournamentPlayerRepository playerRepository) {
         BeanUtils.copyProperties(dto, clz, "groups", "players");
         clz.getGroups().clear();
@@ -55,7 +66,9 @@ public class CopyManager {
 
     private static TournamentGroupDTO copy(TournamentGroup group) {
         TournamentGroupDTO dto = new TournamentGroupDTO();
-        BeanUtils.copyProperties(group, dto, "players");
+        BeanUtils.copyProperties(group, dto, "players", "tournamentClass");
+        dto.setTournamentClass(new TournamentClassDTO());
+        dto.getTournamentClass().setName(group.getTournamentClass().getName());
         return dto;
     }
 }
