@@ -79,14 +79,13 @@ public class TournamentClassRepositoryIntegrationTests {
     @Transactional
     @Test
     public void saveWithGroup() {
-        TournamentClass clz = repository.findOne(1L);
-        assertNotNull(clz);
+        TournamentClass clz = new TournamentClass("save");
 
         clz.addGroup(new TournamentGroup("1"));
         clz.addGroup(new TournamentGroup("2"));
 
         repository.save(clz);
 
-        assertThat(repository.findOne(1L).getGroups().size(), is(2));
+        assertThat(repository.findOne(clz.getId()).getGroups().size(), is(2));
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
 
 /**
@@ -67,7 +68,7 @@ public class TourmentClassControllerTest extends SecureResourceTest {
                     createHttpEntity(null, loginHeaders), TournamentClassDTO[].class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
-            assertThat(entity.getBody().length, is(4));
+            assertThat(entity.getBody().length, is(greaterThan(2)));
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
             fail();
