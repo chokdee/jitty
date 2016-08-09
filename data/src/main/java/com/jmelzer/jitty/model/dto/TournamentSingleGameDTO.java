@@ -113,4 +113,20 @@ public class TournamentSingleGameDTO {
     public void setGroup(TournamentGroupDTO group) {
         this.group = group;
     }
+
+    @Override
+    public String toString() {
+        return "TournamentSingleGameDTO{" +
+                "player1=" + player1 +
+                ", player2=" + player2 +
+                ", group=" + group +
+                ", played=" + played +
+                ", called=" + called +
+                ", startTime=" + startTime +
+                ", tableNo=" + tableNo +
+                ", sets=" + sets +
+                ", id=" + id +
+                ", winner=" + winner +
+                '}';
+    }
 }

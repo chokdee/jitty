@@ -4,6 +4,8 @@ import com.jmelzer.jitty.dao.*;
 import com.jmelzer.jitty.exceptions.IntegrationViolation;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
@@ -21,7 +23,10 @@ import static com.jmelzer.jitty.service.CopyManager.copy;
  */
 @Component
 public class TournamentService {
-    Queue<TournamentSingleGame> gameQueue = new LinkedList<>();
+    static final Logger LOG = LoggerFactory.getLogger(TournamentService.class);
+
+
+    List<TournamentSingleGame> gameQueue = new ArrayList<>();
     List<TournamentSingleGame> busyGames = new ArrayList<>();
     List<TournamentGroup> groups = new ArrayList<>();
     @Resource
@@ -237,8 +242,12 @@ public class TournamentService {
         busyGames.add(game);
     }
 
-    public List<TournamentSingleGame> getBusyGames() {
-        return busyGames;
+    public List<TournamentSingleGameDTO> getBusyGames() {
+        List<TournamentSingleGameDTO> list = new ArrayList<>(busyGames.size());
+        for (TournamentSingleGame game : busyGames) {
+            list.add(copy(game));
+        }
+        return list;
     }
 
     public void removeBusyGame(TournamentSingleGame game) {
@@ -315,7 +324,9 @@ public class TournamentService {
     }
 
     public TournamentSingleGame poll() {
-        return gameQueue.poll();
+        TournamentSingleGame game = gameQueue.get(0);
+        gameQueue.remove(0);
+        return game;
     }
 
     public void addPossibleKoGamesToQueue() {
@@ -594,6 +605,27 @@ public class TournamentService {
         clz.setRunning(true);
         tcRepository.saveAndFlush(clz);
         addPossibleGroupGamesToQueue(clz.getGroups());
+    }
+
+    @Transactional
+    public void startGame(Long id) {
+        TournamentSingleGame foundGame = null;
+        for (TournamentSingleGame game : gameQueue) {
+            if (game.getId().equals(id)) {
+                foundGame = game;
+                gameQueue.remove(game);
+                break;
+            }
+        }
+        if (foundGame == null) {
+            throw new IllegalArgumentException();
+        }
+        foundGame.setCalled(true);
+        foundGame.setStartTime(new Date());
+        addBusyGame(foundGame);
+        tournamentSingleGameRepository.save(foundGame);
+        LOG.debug("started game with id {}", id);
+
     }
 
     static public class PS implements Comparable<PS> {

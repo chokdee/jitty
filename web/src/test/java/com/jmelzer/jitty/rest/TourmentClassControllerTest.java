@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
 /**
  * Created by J. Melzer on 19.05.2016.
- * Test user controller
+ * Test TourmentClassController
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)

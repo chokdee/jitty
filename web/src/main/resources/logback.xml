@@ -11,8 +11,8 @@
     <!--<logger name="org.springframework.web" level="DEBUG" />-->
     <!--<logger name="org.springframework.security" level="DEBUG" />-->
     <!--<logger name="org.glassfish.jersey" level="DEBUG" />-->
-    <!--switch this on only when you need and PLEASE don't commit it-->
-    <logger name="org.hibernate.sql" level="DEBUG" />
+    <logger name="com.jmelzer.jitty" level="DEBUG"/>
+
     <root level="INFO">
         <appender-ref ref="stdout"/>
     </root>

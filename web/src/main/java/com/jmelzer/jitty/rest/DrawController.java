@@ -53,6 +53,14 @@ public class DrawController {
         return service.listQueue();
     }
 
+    @Path("/running-games")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<TournamentSingleGameDTO> runningGames() {
+        return service.getBusyGames();
+    }
+
+
     @Path("/calc-optimal-group-size")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -86,4 +94,11 @@ public class DrawController {
         return Response.ok().build();
     }
 
+    @Path("/start-game")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response startGame(@QueryParam(value = "id") String id) {
+        service.startGame(Long.valueOf(id));
+        return Response.ok().build();
+    }
 }

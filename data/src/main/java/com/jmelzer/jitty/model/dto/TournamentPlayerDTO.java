@@ -16,6 +16,7 @@ public class TournamentPlayerDTO {
     private Long id;
     private String firstName;
     private String lastName;
+    private String fullName;
     private Club club;
     private Association association;
     private String email;
@@ -121,5 +122,32 @@ public class TournamentPlayerDTO {
 
     public void addClass(TournamentClassDTO classDTO) {
         classes.add(classDTO);
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    @Override
+    public String toString() {
+        return "TournamentPlayerDTO{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", club=" + club +
+                ", association=" + association +
+                ", email='" + email + '\'' +
+                ", mobileNumber='" + mobileNumber + '\'' +
+                ", qttr=" + qttr +
+                ", ttr=" + ttr +
+                ", birthday=" + birthday +
+                ", gender='" + gender + '\'' +
+                ", classes=" + classes +
+                '}';
     }
 }

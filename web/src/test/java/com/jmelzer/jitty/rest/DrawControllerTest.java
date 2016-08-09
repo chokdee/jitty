@@ -130,6 +130,22 @@ public class DrawControllerTest extends SecureResourceTest {
                 assertNotNull(dto.getGroup().getClass());
             }
 
+            voidEntity = http(HttpMethod.GET, "api/draw/start-game?id=" + possibleGamesEntity.getBody()[0].getId(),
+                    createHttpEntity(entity.getBody(), loginHeaders), Void.class);
+            assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+
+            ResponseEntity<TournamentSingleGameDTO[]> runningGamesEntity = http(HttpMethod.GET, "api/draw/running-games",
+                    createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
+            assertTrue(runningGamesEntity.getStatusCode().is2xxSuccessful());
+            assertThat(runningGamesEntity.getBody().length, is(1));
+
+            possibleGamesEntity = http(HttpMethod.GET, "api/draw/possible-games",
+                    createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
+            assertThat(possibleGamesEntity.getBody().length, is(2));
+            for (TournamentSingleGameDTO dto : possibleGamesEntity.getBody()) {
+                System.out.println("dto = " + dto);
+            }
+
 
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
