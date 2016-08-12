@@ -1,4 +1,54 @@
 <h3>Mögliche Begegnungen</h3>
+<h3>Klasse {{game.group.tournamentClass.name}}</h3>
+<script type="text/ng-template" id="myModalContent.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Ergebnis eingeben</h3>
+
+    </div>
+    <div class="modal-body">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <h4>Spiel-Klasse: {{game.group.tournamentClass.name}}</h4>
+                </div>
+                <div class="col-md-5">
+                    <h4>Gruppe: {{game.group.name}}</h4>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <span style="font-weight: bold">Spieler 1: </span><span>{{game.player1.fullName}}</span>
+            </div>
+            <div class="row">
+                <span style="font-weight: bold">Spieler 2: </span><span>{{game.player2.fullName}}</span>
+            </div>
+            <br>
+            <pr>{{sets}}</pr>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="control-group">
+                        <label for="gameResult">Ergebnis</label>
+                        <input type="text" ng-model="gameResult" name="gameResult" id="gameResult"
+                               class="form-control ng-pristine ng-invalid "/>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="control-group">
+                        <label for="open"></label>
+                        <br>
+                        <input type="checkbox" ng-model="game.winbydefault" name="winbydefault"/>  Kampflos
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
 
 <div>
     <div ui-grid="gridOptions" class="myGrid"></div>
@@ -8,77 +58,3 @@
     <div ui-grid="gridOptionsRunning" class="myGrid"></div>
 </div>
 
-<!--
-
-<div style="overflow: scroll; height:400px;">
-    <table class="table usertable">
-        <thead>
-        <tr>
-            <th>
-                Klasse
-            </th>
-            <th>
-                Gruppe
-            </th>
-            <th>
-                Spieler 1
-            </th>
-            <th>
-                Spieler 2
-            </th>
-            <th>
-                Aktionen
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="c in possibleGames">
-            <td>{{c.group.tournamentClass.name}}</td>
-            <td>{{c.group.name}}</td>
-            <td>{{c.player1.firstName + ' ' + c.player1.lastName}}</td>
-            <td>{{c.player2.firstName + ' ' + c.player2.lastName}}</td>
-            <td>
-                <a class="btn btn-primary" ng-click="startGame(c.id)">Spiel starten</a>
-                <a class="btn btn-primary" href="#/draw/{{c.id}}">Drucken etc</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-</div>
-<h3>Laufende Begegnungen</h3>
-<div style="overflow: scroll; height:400px;">
-    <table class="table usertable">
-        <thead>
-        <tr>
-            <th>
-                Klasse
-            </th>
-            <th>
-                Gruppe
-            </th>
-            <th>
-                Spieler 1
-            </th>
-            <th>
-                Spieler 2
-            </th>
-            <th>
-                Aktionen
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="c in runningGames">
-            <td>{{c.group.tournamentClass.name}}</td>
-            <td>{{c.group.name}}</td>
-            <td>{{c.player1.firstName + ' ' + c.player1.lastName}}</td>
-            <td>{{c.player2.firstName + ' ' + c.player2.lastName}}</td>
-            <td>
-                <a class="btn btn-primary" ng-click="enterResult(c.id)">Spiel eingeben</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-</div>-->
