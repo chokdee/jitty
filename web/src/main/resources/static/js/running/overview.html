@@ -1,5 +1,4 @@
 <h3>Mögliche Begegnungen</h3>
-<h3>Klasse {{game.group.tournamentClass.name}}</h3>
 <script type="text/ng-template" id="myModalContent.html">
     <div class="modal-header">
         <h3 class="modal-title">Ergebnis eingeben</h3>
@@ -17,14 +16,25 @@
                 </div>
             </div>
             <br>
+            <!--<pre>{{sets}}</pre>-->
             <div class="row">
-                <span style="font-weight: bold">Spieler 1: </span><span>{{game.player1.fullName}}</span>
+                <div class="col-md-3">
+                    <span style="font-weight: bold">Spieler 1: </span><span>{{game.player1.fullName}}</span>
+                </div>
+                <div ng-repeat="g in sets" class="col-md-1">
+                    <span>{{g.points1}}</span>
+                </div>
             </div>
             <div class="row">
-                <span style="font-weight: bold">Spieler 2: </span><span>{{game.player2.fullName}}</span>
+                <div class="col-md-3">
+                    <span style="font-weight: bold">Spieler 2: </span><span>{{game.player2.fullName}}</span>
+                </div>
+                <div ng-repeat="g in sets" class="col-md-1">
+                    <span>{{g.points2}}</span>
+                </div>
             </div>
             <br>
-            <pr>{{sets}}</pr>
+            <!--<pr>{{sets}}</pr>-->
             <div class="row">
                 <div class="col-md-5">
                     <div class="control-group">
@@ -38,7 +48,7 @@
                     <div class="control-group">
                         <label for="open"></label>
                         <br>
-                        <input type="checkbox" ng-model="game.winbydefault" name="winbydefault"/>  Kampflos
+                        <input type="checkbox" ng-model="game.winbydefault" name="winbydefault"/> Kampflos
                     </div>
                 </div>
             </div>
@@ -56,5 +66,9 @@
 <h3>Laufende Begegnungen</h3>
 <div>
     <div ui-grid="gridOptionsRunning" class="myGrid"></div>
+</div>
+<h3>Beendet</h3>
+<div>
+    <div ui-grid="gridOptionsFinished" class="myGrid"></div>
 </div>
 

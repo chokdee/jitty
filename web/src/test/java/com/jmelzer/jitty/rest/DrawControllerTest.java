@@ -1,6 +1,7 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.Application;
+import com.jmelzer.jitty.model.dto.GameSetDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
@@ -121,30 +122,55 @@ public class DrawControllerTest extends SecureResourceTest {
 
             ResponseEntity<TournamentSingleGameDTO[]> possibleGamesEntity = http(HttpMethod.GET, "api/draw/possible-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
+            TournamentSingleGameDTO[] possibleGames = possibleGamesEntity.getBody();
             assertTrue(possibleGamesEntity.getStatusCode().is2xxSuccessful());
-            assertThat(possibleGamesEntity.getBody().length, is(3));
-            for (TournamentSingleGameDTO dto : possibleGamesEntity.getBody()) {
+            assertThat(possibleGames.length, is(3));
+            for (TournamentSingleGameDTO dto : possibleGames) {
                 assertNotNull(dto.getPlayer1());
                 assertNotNull(dto.getPlayer2());
                 assertNotNull(dto.getGroup());
                 assertNotNull(dto.getGroup().getClass());
             }
 
-            voidEntity = http(HttpMethod.GET, "api/draw/start-game?id=" + possibleGamesEntity.getBody()[0].getId(),
+            voidEntity = http(HttpMethod.GET, "api/draw/start-game?id=" + possibleGames[0].getId(),
+                    createHttpEntity(entity.getBody(), loginHeaders), Void.class);
+            assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+            voidEntity = http(HttpMethod.GET, "api/draw/start-game?id=" + possibleGames[1].getId(),
+                    createHttpEntity(entity.getBody(), loginHeaders), Void.class);
+            assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+            voidEntity = http(HttpMethod.GET, "api/draw/start-game?id=" + possibleGames[2].getId(),
                     createHttpEntity(entity.getBody(), loginHeaders), Void.class);
             assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
 
             ResponseEntity<TournamentSingleGameDTO[]> runningGamesEntity = http(HttpMethod.GET, "api/draw/running-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
             assertTrue(runningGamesEntity.getStatusCode().is2xxSuccessful());
-            assertThat(runningGamesEntity.getBody().length, is(1));
+            assertThat(runningGamesEntity.getBody().length, is(3));
+
+//no more possible games, all are running
+            possibleGamesEntity = http(HttpMethod.GET, "api/draw/possible-games",
+                    createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
+            assertThat(possibleGamesEntity.getBody().length, is(0));
+
+
+            TournamentSingleGameDTO[] runningGames = runningGamesEntity.getBody();
+            for (TournamentSingleGameDTO runningGame : runningGames) {
+                runningGame.addSet(new GameSetDTO(11, 9));
+                runningGame.addSet(new GameSetDTO(11, 9));
+                runningGame.addSet(new GameSetDTO(11, 9));
+                voidEntity = http(HttpMethod.POST, "api/draw/save-result",
+                        createHttpEntity(runningGame, loginHeaders), Void.class);
+                assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+            }
+
+            ResponseEntity<TournamentSingleGameDTO[]> finishedGamesEntity = http(HttpMethod.GET, "api/draw/finished-games",
+                    createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
+            assertThat(finishedGamesEntity.getBody().length, is(3));
 
             possibleGamesEntity = http(HttpMethod.GET, "api/draw/possible-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
-            assertThat(possibleGamesEntity.getBody().length, is(2));
-            for (TournamentSingleGameDTO dto : possibleGamesEntity.getBody()) {
-                System.out.println("dto = " + dto);
-            }
+            assertThat(possibleGamesEntity.getBody().length, is(3));
+
 
 
         } catch (HttpClientErrorException e) {

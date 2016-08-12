@@ -329,3 +329,7 @@ ul[dnd-list] > li {
     width: 100%;
     height: 250px;
 }
+
+ul#result li {
+    display:inline;
+}

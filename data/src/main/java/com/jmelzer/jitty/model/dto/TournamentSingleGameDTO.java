@@ -15,6 +15,7 @@ import java.util.List;
 public class TournamentSingleGameDTO {
     TournamentPlayerDTO player1;
     TournamentPlayerDTO player2;
+    String winnerName;
     TournamentGroupDTO group;
     /**
      * Bereits gespielt?
@@ -29,7 +30,7 @@ public class TournamentSingleGameDTO {
      * Nummer des zugewiesenen Tisches.
      */
     Integer tableNo;
-    List<GameSet> sets = new ArrayList<>();
+    List<GameSetDTO> sets = new ArrayList<>();
 
     private Long id;
     private int winner = -1;
@@ -82,11 +83,11 @@ public class TournamentSingleGameDTO {
         this.tableNo = tableNo;
     }
 
-    public List<GameSet> getSets() {
+    public List<GameSetDTO> getSets() {
         return sets;
     }
 
-    public void setSets(List<GameSet> sets) {
+    public void setSets(List<GameSetDTO> sets) {
         this.sets = sets;
     }
 
@@ -128,5 +129,17 @@ public class TournamentSingleGameDTO {
                 ", id=" + id +
                 ", winner=" + winner +
                 '}';
+    }
+
+    public void addSet(GameSetDTO gameSetDTO) {
+        sets.add(gameSetDTO);
+    }
+
+    public String getWinnerName() {
+        return winnerName;
+    }
+
+    public void setWinnerName(String winnerName) {
+        this.winnerName = winnerName;
     }
 }

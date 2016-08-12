@@ -1,37 +1,45 @@
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
-import com.jmelzer.jitty.model.TournamentClass;
-import com.jmelzer.jitty.model.TournamentGroup;
-import com.jmelzer.jitty.model.TournamentPlayer;
-import com.jmelzer.jitty.model.TournamentSingleGame;
-import com.jmelzer.jitty.model.dto.TournamentClassDTO;
-import com.jmelzer.jitty.model.dto.TournamentGroupDTO;
-import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
-import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
+import com.jmelzer.jitty.model.*;
+import com.jmelzer.jitty.model.dto.*;
 import org.springframework.beans.BeanUtils;
 
 /**
  * Created by J. Melzer on 30.07.2016.
- *
  */
 public class CopyManager {
 
     static public TournamentSingleGameDTO copy(TournamentSingleGame game) {
         TournamentSingleGameDTO dto = new TournamentSingleGameDTO();
-        BeanUtils.copyProperties(game, dto, "player1", "player2");
+        BeanUtils.copyProperties(game, dto, "player1", "player2", "sets");
         dto.setPlayer1(copy(game.getPlayer1()));
         dto.setPlayer2(copy(game.getPlayer2()));
         dto.setGroup(copy(game.getGroup()));
         return dto;
 
     }
+
     static public void copy(TournamentClassDTO dto, TournamentClass clz, TournamentPlayerRepository playerRepository) {
         BeanUtils.copyProperties(dto, clz, "groups", "players");
         clz.getGroups().clear();
         for (TournamentGroupDTO group : dto.getGroups()) {
             clz.addGroup(copy(group, playerRepository));
         }
+    }
+
+    public static void copy(TournamentSingleGameDTO dto, TournamentSingleGame game) {
+        BeanUtils.copyProperties(dto, game, "group", "player1", "player2");
+        game.getSets().clear();
+        for (GameSetDTO gameSet : dto.getSets()) {
+            game.getSets().add(copy(gameSet));
+        }
+    }
+
+    public static GameSet copy(GameSetDTO dto) {
+        GameSet gameSet = new GameSet();
+        BeanUtils.copyProperties(dto, gameSet);
+        return gameSet;
     }
 
     public static TournamentGroup copy(TournamentGroupDTO dto, TournamentPlayerRepository playerRepository) {

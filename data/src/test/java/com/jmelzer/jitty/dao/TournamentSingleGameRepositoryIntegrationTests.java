@@ -26,6 +26,9 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -106,6 +109,38 @@ public class TournamentSingleGameRepositoryIntegrationTests {
 
         clz.getGroups().get(0).addGame(game);
         tournamentClassRepository.saveAndFlush(clz);
+    }
+
+    @Test
+    @Transactional
+    public void finishedGames() {
+
+//        calcGroupGames(clz.getGroups());
+        TournamentSingleGame game = new TournamentSingleGame();
+        game.setPlayer1(playerRepository.findOne(1L));
+        game.setPlayer2(playerRepository.findOne(2L));
+        game.setEndTime(new Date());
+        game.setPlayed(true);
+        repository.save(game);
+
+        assertThat(repository.findByPlayedOrderByEndTimeDesc(true).size(), is(1));
+
+        TournamentSingleGame game2 = new TournamentSingleGame();
+        game2.setPlayer1(playerRepository.findOne(1L));
+        game2.setPlayer2(playerRepository.findOne(2L));
+        repository.save(game2);
+
+        assertThat(repository.findByPlayedOrderByEndTimeDesc(true).size(), is(1));
+
+        game2.setPlayed(true);
+        game2.setEndTime(new Date());
+
+        repository.save(game2);
+
+        List<TournamentSingleGame> list =  repository.findByPlayedOrderByEndTimeDesc(true);
+        assertThat(list.size(), is(2));
+        assertThat(list.get(0).getId(), is(game2.getId()));
+
     }
 
 }

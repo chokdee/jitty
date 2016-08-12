@@ -6,12 +6,17 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         });
 
     };
-    $scope.getPossibleGames();
+
+
+    $scope.callAll = function () {
+        $scope.getPossibleGames();
+        $scope.getRunningGames();
+        $scope.getFinishedGames();
+    };
 
     $scope.startGame = function (id) {
         $http.get('/api/draw/start-game?id=' + id, {}).then(function (response) {
-            $scope.getPossibleGames();
-            $scope.getRunningGames();
+            $scope.callAll();
         });
 
     };
@@ -23,7 +28,13 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         });
 
     };
-    $scope.getRunningGames();
+
+    $scope.getFinishedGames = function () {
+        $http.get('/api/draw/finished-games', {}).then(function (response) {
+            $scope.gridOptionsFinished.data = response.data;
+        });
+
+    };
 
     $scope.columns = [{field: 'group.tournamentClass.name', displayName: 'Klasse'},
         {field: 'group.name', displayName: 'Gruppe'},
@@ -59,7 +70,9 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         });
 
         modalInstance.result.then(function (gameset) {
-           alert(gameset[0].points1);
+            $scope.game.sets = gameset;
+            $scope.saveGame();
+           //alert(gameset[0].points1);
             //todo safe the result in the db ab remove the game from the list
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -84,6 +97,33 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         columnDefs: $scope.columnsRunning
     };
 
+    $scope.columnsFinished = [{field: 'group.tournamentClass.name', displayName: 'Klasse'},
+        {field: 'group.name', displayName: 'Gruppe'},
+        {field: 'player1.fullName', displayName: 'Spieler 1'},
+        {field: 'player2.fullName', displayName: 'Spieler 2'},
+        {field: 'winnerName', displayName: 'Gewinner'}
+    ];
+
+    $scope.gridOptionsFinished = {
+        enableSorting: true,
+        rowHeight: 40,
+        columnDefs: $scope.columnsFinished
+    };
+
+    $scope.saveGame = function () {
+        $http({
+            method: 'POST',
+            url: '/api/draw/save-result',
+            data: $scope.game
+        }).then(function successCallback(response) {
+            $scope.callAll();
+        }, function errorCallback(response) {
+            $scope.errorMessage = response.data.error;
+        });
+
+    };
+
+    $scope.callAll();
 
 }).controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
 

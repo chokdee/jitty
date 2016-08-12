@@ -628,6 +628,65 @@ public class TournamentService {
 
     }
 
+    @Transactional
+    public void saveGame(TournamentSingleGameDTO dto) {
+        calcWinner(dto);
+        TournamentSingleGame game = tournamentSingleGameRepository.findOne(dto.getId());
+        copy(dto, game);
+        game.setEndTime(new Date());
+        game.setPlayed(true);
+        tournamentSingleGameRepository.save(game);
+    }
+
+    TournamentSingleGameDTO calcWinner(TournamentSingleGameDTO dto) {
+        int w = 0;
+        for (GameSetDTO gameSetDTO : dto.getSets()) {
+            w += gameSetDTO.getPoints1() > gameSetDTO.getPoints2() ? 1 : -1;
+        }
+        if (w < 0) {
+            w = 2;
+        } else if (w > 0) {
+            w = 1;
+        } else {
+            throw new IllegalArgumentException("no winner could be calculated");
+        }
+        dto.setWinner(w);
+        return dto;
+    }
+
+    public void finishGame(TournamentSingleGameDTO dto) {
+        TournamentSingleGame foundGame = null;
+        for (TournamentSingleGame busyGame : busyGames) {
+            if (busyGame.getId().equals(dto.getId())) {
+                foundGame = busyGame;
+                break;
+            }
+        }
+        if (foundGame != null) {
+            busyGames.remove(foundGame);
+            addPossibleGroupGamesToQueue(Collections.singletonList(foundGame.getGroup()));
+        }
+    }
+
+    @Transactional
+    public List<TournamentSingleGameDTO> getFinishedGames() {
+        List<TournamentSingleGame> dblist = tournamentSingleGameRepository.findByPlayedOrderByEndTimeDesc(true);
+
+        List<TournamentSingleGameDTO> list = new ArrayList<>(busyGames.size());
+        for (TournamentSingleGame game : dblist) {
+            list.add(copy(game));
+        }
+        for (TournamentSingleGameDTO singleGameDTO : list) {
+            if (singleGameDTO.getWinner() == 1) {
+                singleGameDTO.setWinnerName(singleGameDTO.getPlayer1().getFullName());
+            } else {
+                singleGameDTO.setWinnerName(singleGameDTO.getPlayer2().getFullName());
+
+            }
+        }
+        return list;
+    }
+
     static public class PS implements Comparable<PS> {
         TournamentPlayer player;
         int win;

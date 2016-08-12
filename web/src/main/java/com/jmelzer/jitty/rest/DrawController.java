@@ -60,6 +60,12 @@ public class DrawController {
         return service.getBusyGames();
     }
 
+    @Path("/finished-games")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<TournamentSingleGameDTO> finishedGames() {
+        return service.getFinishedGames();
+    }
 
     @Path("/calc-optimal-group-size")
     @POST
@@ -99,6 +105,15 @@ public class DrawController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response startGame(@QueryParam(value = "id") String id) {
         service.startGame(Long.valueOf(id));
+        return Response.ok().build();
+    }
+
+    @Path("/save-result")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response saveResult(TournamentSingleGameDTO dto) {
+        service.saveGame(dto);
+        service.finishGame(dto);
         return Response.ok().build();
     }
 }

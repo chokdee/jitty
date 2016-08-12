@@ -1,14 +1,19 @@
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.model.*;
+import com.jmelzer.jitty.model.dto.GameSetDTO;
+import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * Created by J. Melzer on 11.06.2016.
@@ -203,5 +208,21 @@ public class TournamentServiceTest {
         game.setPlayer1(group.getPlayers().get(i));
         game.setPlayer2(group.getPlayers().get(j));
         group.addGame(game);
+    }
+
+    @Test
+    public void calcWinner() {
+        TournamentSingleGameDTO game = new TournamentSingleGameDTO();
+        game.addSet(new GameSetDTO(11, 9));
+        assertThat(service.calcWinner(game).getWinner(), is(1));
+        game.addSet(new GameSetDTO(11, 13));
+        try {
+            service.calcWinner(game);
+            fail("no winner");
+        } catch (IllegalArgumentException e) {
+            //ok
+        }
+        game.addSet(new GameSetDTO(11, 13));
+        assertThat(service.calcWinner(game).getWinner(), is(2));
     }
 }

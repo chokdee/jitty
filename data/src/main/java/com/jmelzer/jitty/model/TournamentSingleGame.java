@@ -31,6 +31,9 @@ public class TournamentSingleGame {
     @Column(nullable = true, name = "start_time")
     @Temporal(TemporalType.TIMESTAMP)
     Date startTime;
+    @Column(nullable = true, name = "end_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    Date endTime;
     /**
      * Nummer des zugewiesenen Tisches.
      */
@@ -92,7 +95,7 @@ public class TournamentSingleGame {
 
     public void setWinner(int winner) {
         if (winner < 1 || winner > 2) {
-            throw new IllegalArgumentException("winner must be 1 or 2");
+            throw new IllegalArgumentException("winner must be 1 or -1");
         }
         this.winner = winner;
     }
@@ -206,7 +209,11 @@ public class TournamentSingleGame {
         this.group = group;
     }
 
-    public boolean containsBye() {
-        return TournamentPlayer.BYE.equals(player1) || TournamentPlayer.BYE.equals(player2);
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }
