@@ -10,13 +10,13 @@ import java.util.List;
  * Represents one game.
  */
 @Entity
-@Table(name = "tournament_single_game")
+@Table(name = "TOURNAMENT_SINGLE_GAME")
 public class TournamentSingleGame {
     @OneToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name="player1_id")
+    @JoinColumn(name = "player1_id")
     TournamentPlayer player1;
     @OneToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name="player2_id")
+    @JoinColumn(name = "player2_id")
     TournamentPlayer player2;
     /**
      * Bereits gespielt?
@@ -40,6 +40,7 @@ public class TournamentSingleGame {
     @Column(nullable = true, name = "table_no")
     Integer tableNo;
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="TOURNAMENT_SINGLE_GAME_SET")
     List<GameSet> sets = new ArrayList<>();
 
     @ManyToOne()

@@ -1,6 +1,6 @@
 angular.module('jitty.running.controllers', []).controller('RunningController', function ($scope, $http, $uibModal,$log) {
     $scope.getPossibleGames = function () {
-        $http.get('/api/draw/possible-games', {}).then(function (response) {
+        $http.get('/api/tournamentdirector/possible-games', {}).then(function (response) {
             $scope.possibleGames = response.data;
             $scope.gridOptions.data = response.data;
         });
@@ -15,14 +15,14 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     };
 
     $scope.startGame = function (id) {
-        $http.get('/api/draw/start-game?id=' + id, {}).then(function (response) {
+        $http.get('/api/tournamentdirector/start-game?id=' + id, {}).then(function (response) {
             $scope.callAll();
         });
 
     };
 
     $scope.getRunningGames = function () {
-        $http.get('/api/draw/running-games', {}).then(function (response) {
+        $http.get('/api/tournamentdirector/running-games', {}).then(function (response) {
             $scope.runningGames = response.data;
             $scope.gridOptionsRunning.data = response.data;
         });
@@ -30,7 +30,7 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     };
 
     $scope.getFinishedGames = function () {
-        $http.get('/api/draw/finished-games', {}).then(function (response) {
+        $http.get('/api/tournamentdirector/finished-games', {}).then(function (response) {
             $scope.gridOptionsFinished.data = response.data;
         });
 
@@ -113,7 +113,7 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     $scope.saveGame = function () {
         $http({
             method: 'POST',
-            url: '/api/draw/save-result',
+            url: '/api/tournamentdirector/save-result',
             data: $scope.game
         }).then(function successCallback(response) {
             $scope.callAll();

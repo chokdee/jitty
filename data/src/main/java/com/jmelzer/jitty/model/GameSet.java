@@ -9,7 +9,7 @@ import javax.persistence.Id;
  * Created by J. Melzer on 03.06.2016.
  * Ein satz im SPiel
  */
-@Entity
+@Entity(name = "GAME_SET")
 public class GameSet {
     @Column
     int points1;

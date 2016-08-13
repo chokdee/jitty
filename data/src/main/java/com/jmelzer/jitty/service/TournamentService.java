@@ -7,10 +7,17 @@ import com.jmelzer.jitty.model.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.*;
@@ -39,6 +46,9 @@ public class TournamentService {
     TournamentPlayerRepository playerRepository;
     @Resource
     TournamentSingleGameRepository tournamentSingleGameRepository;
+    @Autowired
+    @Qualifier("transactionManager")
+    protected PlatformTransactionManager txManager;
 
     //todo use spring
     private SeedingManager seedingManager = new SeedingManager();
@@ -687,6 +697,83 @@ public class TournamentService {
         return list;
     }
 
+    @PostConstruct
+    @Transactional
+    public void postConstruct() {
+        TransactionTemplate tmpl = new TransactionTemplate(txManager);
+        tmpl.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                List<Tournament> tournaments = repository.findAll();
+                for (Tournament tournament : tournaments) {
+                    List<TournamentClass> tcs = tcRepository.findByTournamentAndRunning(tournament, true);
+                    for (TournamentClass tc : tcs) {
+                        //todo remove later
+//                        calcGroupGames(tc.getGroups());
+//                        if (tc.getGroups().size() > 1) {
+//                            int n = 1;
+//                            int s = 1;
+//                            for (TournamentGroup group : tc.getGroups()) {
+//                                for (TournamentSingleGame game : group.getGames()) {
+//                                    createRandomResult(game);
+//                                    System.out.println("INSERT INTO TOURNAMENT_SINGLE_GAME (ID, CALLED, PLAYED, START_TIME, " +
+//                                            "WINNER, GROUP_ID, PLAYER1_ID, PLAYER2_ID) VALUES(" +
+//                                            n++ + ",1, 1, NOW(), " + game.getWinner() +  ", " + group.getId() + ", " +
+//                                            game.getPlayer1().getId() + ", " + game.getPlayer2().getId() + ");");
+//
+//                                    for (GameSet gameSet : game.getSets()) {
+//                                        System.out.println("INSERT INTO GAME_SET (ID, POINTS1, POINTS2) VALUES (" + s + "," + gameSet.getPoints1() + "," + gameSet.getPoints2() + ");");
+//                                        System.out.println("INSERT INTO TOURNAMENT_SINGLE_GAME_SET ( TOURNAMENT_SINGLE_GAME_ID, SETS_ID) VALUES (" + + game.getId() + "," + s + ");");
+//                                        s++;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        tcRepository.saveAndFlush(tc);
+                        addPossibleGroupGamesToQueue(tc.getGroups());
+
+                    }
+                }
+            }
+        });
+        for (TournamentSingleGame game : gameQueue) {
+            System.out.println("game = " + game);
+        }
+
+    }
+    private void createRandomResult(TournamentSingleGame game) {
+        int playedSets = randomIntFromInterval(3, 5);
+        int winner = randomIntFromInterval(1, 2);
+        int loser = 0;
+        if (winner == 1) {
+            loser = 2;
+        } else {
+            loser = 1;
+        }
+        game.setWinner(winner);
+        for (int i = 1; i <= playedSets; i++) {
+            if (i < 3) {
+                addSetFor(winner, game);
+            } else {
+                if (playedSets == i) {
+                    addSetFor(winner, game);
+                } else {
+                    addSetFor(loser, game);
+                }
+            }
+        }
+    }
+
+
+    private void addSetFor(int winner, TournamentSingleGame game) {
+        if (winner == 1) {
+            game.addSet(new GameSet(11, randomIntFromInterval(0, 9)));
+        } else {
+            game.addSet(new GameSet(randomIntFromInterval(0, 9), 11));
+        }
+
+    }
     static public class PS implements Comparable<PS> {
         TournamentPlayer player;
         int win;

@@ -19,6 +19,7 @@ public class JerseyConfig extends ResourceConfig {
                 register(PlayerController.class).
                 register(ClubController.class).
                 register(AssociationController.class).
+                register(TournamentDirectorController.class).
                 register(DrawController.class).
                 register(TournamentController.class);
     }

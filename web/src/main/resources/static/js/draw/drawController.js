@@ -38,6 +38,14 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         $http.get('/api/draw/dummy-player?cid=' + $routeParams.id, {}).then(function (response) {
         });
     };
+
+    $scope.fillAll = function () {
+        $scope.automaticDraw();
+        after(1000, $scope.saveDraw());
+        after(1000, $scope.start());
+    };
+    function after(ms, fn){ setTimeout(fn, ms); }
+
     $scope.automaticDraw = function () {
         $http({
             method: 'POST',

@@ -11,7 +11,7 @@
                         <label for="modus1">Modus <span class="required">*</span></label>
                         <br>
                         <select name="modus1" id="modus1" ng-model="tournamentClass.gameModePhase1" class="form-control ng-pristine ng-invalid ng-invalid-required">
-                            <option value="">Bitte auswählen</option> <!-- not selected / blank option -->
+                            <!--<option value="">Bitte auswählen</option> &lt;!&ndash; not selected / blank option &ndash;&gt;-->
                             <option value="g">Gruppe</option> <!-- interpolation -->
                             <option value="k">KO</option>
                         </select>
@@ -40,6 +40,7 @@
             <br>
         </form>
         <button ng-click="createDummyPlayer()">Create 20 Player</button>
+        <button ng-click="fillAll()">Mach alles plus Ergebnisse</button>
     </div>
 </div>
 <hr/>
