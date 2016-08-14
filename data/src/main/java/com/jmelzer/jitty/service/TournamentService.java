@@ -194,9 +194,6 @@ public class TournamentService {
             }
 
             group.removeByePlayer();
-            for (TournamentSingleGame game : group.getGames()) {
-                Assert.isTrue(game.getId() != null, game.toString());
-            }
         }
 
     }
@@ -241,7 +238,7 @@ public class TournamentService {
                 tournamentSingleGameRepository.save(game);
                 games.add(game);
             }
-            System.out.println(t1.getLastName() + " --> " + t2.getLastName());
+            System.out.println(t1.getFullName() + " --> " + t2.getFullName());
 //            System.out.println("" + round + ":" +  ((round-1)*l1.size())+(tId+1) + " " + t1.getLastName() + " -->" + t2.getLastName());
 //            matches.addNew(round, ((round-1)*l1.size())+(tId+1), (String)t1.get("name"), (String)t2.get("name"));
         }
@@ -264,7 +261,7 @@ public class TournamentService {
         busyGames.remove(game);
     }
 
-    public void markGroupWinner() {
+    public void markGroupWinner(List<TournamentGroup> groups) {
         for (TournamentGroup group : groups) {
             System.out.println("----------------------------------");
             System.out.println("#\tSpieler\t\t\t\t\tSpiele\tSätze");
@@ -464,6 +461,7 @@ public class TournamentService {
         repository.saveAndFlush(t);
     }
 
+    //todo change to DTO object
     void calcRankingForGroup(TournamentGroup group) {
         List<PS> list = new ArrayList<>(4);
         for (TournamentPlayer player : group.getPlayers()) {
@@ -480,7 +478,7 @@ public class TournamentService {
                     }
                     if (singleGame.getWinner() == 1) {
                         ps.win++;
-                    } else {
+                    } else if (singleGame.getWinner() == 2) {
                         ps.lose++;
                     }
                 } else if (singleGame.getPlayer2().equals(player)) {
@@ -493,7 +491,7 @@ public class TournamentService {
                     }
                     if (singleGame.getWinner() == 2) {
                         ps.win++;
-                    } else {
+                    } else if (singleGame.getWinner() == 1) {
                         ps.lose++;
                     }
                 }
@@ -503,16 +501,32 @@ public class TournamentService {
         }
         Collections.sort(list);
         Collections.reverse(list);
+        int n = 0;
+        for (PS ps : list) {
+            TournamentPlayer own = ps.player;
+            //find games and add entries
+            for (int i = 0; i < list.size(); i++) {
+
+                TournamentPlayer other = list.get(i).player;
+                if (other.equals(own)) {
+                    ps.detailResult.add("X");
+                    continue;
+                }
+                boolean found = false;
+                for (TournamentSingleGame game : group.getGames()) {
+                    if ((game.getPlayer1().equals(own) || game.getPlayer2().equals(own)) &&
+                            (game.getPlayer1().equals(other) || game.getPlayer2().equals(other))) {
+                        ps.detailResult.add(game.getResultInShort(own));
+                        found = true;
+                        break;
+                    }
+                }
+                Assert.isTrue(found);
+            }
+            n++;
+            Assert.isTrue(ps.detailResult.size() > 1);
+        }
         group.setRanking(list);
-//        for (int i = 0; i < list.size(); i++) {
-//            PS ps = list.get(i);
-//            if (i < list.size()-1 && ps.win == list.get(i+1).win) {
-//                System.out.println("same");
-//            }
-//        }
-//        for (PS ps : list) {
-//            System.out.println("ps = " + ps);
-//        }
     }
 
     @Transactional
@@ -742,6 +756,7 @@ public class TournamentService {
         }
 
     }
+
     private void createRandomResult(TournamentSingleGame game) {
         int playedSets = randomIntFromInterval(3, 5);
         int winner = randomIntFromInterval(1, 2);
@@ -774,12 +789,53 @@ public class TournamentService {
         }
 
     }
+
+    @Transactional
+    public List<TournamentClassDTO> getStartedClasses(String actualUsername) {
+        Tournament t = userRepository.findByLoginName(actualUsername).getLastUsedTournament();
+        List<TournamentClass> classes = tcRepository.findByTournamentAndRunning(t, true);
+        List<TournamentClassDTO> ret = new ArrayList<>();
+        for (TournamentClass aClass : classes) {
+            ret.add(copy(aClass));
+        }
+
+        return ret;
+    }
+
+    @Transactional
+    public List<GroupResultDTO> getGroupResults(Long id) {
+        TournamentClass tournamentClass = tcRepository.findOne(id);
+
+        markGroupWinner(tournamentClass.getGroups());
+
+        List<GroupResultDTO> results = new ArrayList<>();
+        for (TournamentGroup group : tournamentClass.getGroups()) {
+            GroupResultDTO groupResultDTO = new GroupResultDTO();
+            groupResultDTO.setGroupName(group.getName());
+            results.add(groupResultDTO);
+            int pos = 1;
+            for (PS ps : group.getRanking()) {
+                GroupResultEntryDTO entry = new GroupResultEntryDTO();
+                entry.setPos(pos++);
+                entry.setClub(ps.player.getClub().getName());
+                entry.setPlayerName(ps.player.getFullName());
+                entry.setGameStat(ps.win + ":" + ps.lose);
+                entry.setSetStat(ps.setsWon + ":" + ps.setsLost);
+                entry.setDetailResult(ps.detailResult);
+                groupResultDTO.getEntries().add(entry);
+            }
+        }
+
+        return results;
+    }
+
     static public class PS implements Comparable<PS> {
         TournamentPlayer player;
         int win;
         int lose;
         int setsWon;
         int setsLost;
+        List<String> detailResult = new ArrayList<>();
 
         //todo points
 

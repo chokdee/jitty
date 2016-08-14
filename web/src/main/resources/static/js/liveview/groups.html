@@ -1,1 +1,32 @@
-<h3>{{tournamentClass}}</h3>
+<h3>{{tournamentClass.name}}</h3>
+
+<table style="margin-bottom: 20px" class="" ng-repeat="group in groups">
+    <thead>
+    <tr>
+        <!--todo-->
+        <td colspan="5">Gruppe {{group.groupName}}</td>
+    </tr>
+    <tr>
+        <th>#</th>
+        <th>Spieler</th>
+        <th>Verein</th>
+        <th>Spiele</th>
+        <th>Sätze</th>
+        <th>Bälle</th>
+        <th ng-repeat="a in group.entries" style="width: 40px">{{$index+ 1}}</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="g in group.entries">
+        <td style="width: 15px">{{g.pos}}</td>
+        <td style="width: 150px">{{g.playerName}}</td>
+        <td style="width: 150px" title="{{g.club}}">{{ g.club | limitTo: 10 }}{{g.club.length > 10 ? '...' : ''}}</td>
+        <td style="width: 60px">{{g.gameStat}}</td>
+        <td style="width: 60px">{{g.setStat}}</td>
+        <td style="width: 60px">{{g.ballStat}}</td>
+        <td ng-repeat="d in g.detailResult  track by $index">{{d}}</td>
+    </tr>
+
+    </tbody>
+</table>

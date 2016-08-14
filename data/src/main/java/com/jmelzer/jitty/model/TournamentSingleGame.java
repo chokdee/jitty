@@ -40,7 +40,7 @@ public class TournamentSingleGame {
     @Column(nullable = true, name = "table_no")
     Integer tableNo;
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="TOURNAMENT_SINGLE_GAME_SET")
+    @JoinTable(name = "TOURNAMENT_SINGLE_GAME_SET")
     List<GameSet> sets = new ArrayList<>();
 
     @ManyToOne()
@@ -150,6 +150,29 @@ public class TournamentSingleGame {
             return " not played";
         }
         s += "Player " + winner + " won with set statistics (" + printSets() + ")";
+        return s;
+    }
+
+    public String getResultInShort(TournamentPlayer own) {
+        String s = "";
+        if (winner == -1) {
+            return "0:0";
+        }
+        int setsWon = 0;
+        int setsLost = 0;
+        for (GameSet gameSet : sets) {
+            if (gameSet.getPoints1() < gameSet.getPoints2()) {
+                setsLost++;
+            } else {
+                setsWon++;
+            }
+        }
+        if (player1.equals(own)) {
+            s += setsWon + ":" + setsLost;
+        } else {
+            s += setsLost + ":" + setsWon;
+
+        }
         return s;
     }
 

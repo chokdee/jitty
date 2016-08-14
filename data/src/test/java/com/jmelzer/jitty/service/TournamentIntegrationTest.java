@@ -142,7 +142,7 @@ public class TournamentIntegrationTest {
             assertEquals(player.toString(), 3, player.getGames().size());
         }
 
-        tournamentService.markGroupWinner();
+        tournamentService.markGroupWinner(tournamentService.getGroups());
 
         //59 Player , 2 per group are winner 32 K.O
         KOField field = tournamentService.createKOField(RoundType.R32);

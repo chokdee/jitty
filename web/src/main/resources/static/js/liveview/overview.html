@@ -1,0 +1,27 @@
+
+<h3>Laufende Klassen</h3>
+
+<table class="table usertable">
+    <thead>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Startzeit
+        </th>
+        <th>
+            Aktion
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="c in possibleClasses">
+        <td>{{c.name}}</td>
+        <td>{{c.startTime | date:'dd.MM.yyyy hh:mm' }}</td>
+        <td>
+            <a class="btn btn-primary" href="#/liveview/groups/{{c.id}}">Gruppen anzeigen</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
