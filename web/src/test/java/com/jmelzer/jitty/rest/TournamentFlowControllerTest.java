@@ -56,6 +56,9 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
                     createHttpEntity(entity.getBody(), loginHeaders), Void.class);
             assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
 
+            int finishedFromDB = http(HttpMethod.GET, "api/tournamentdirector/finished-games",
+                    createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class).getBody().length;
+
             ResponseEntity<TournamentSingleGameDTO[]> possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
             TournamentSingleGameDTO[] possibleGames = possibleGamesEntity.getBody();
@@ -101,11 +104,11 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
 
             ResponseEntity<TournamentSingleGameDTO[]> finishedGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/finished-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
-            assertThat(finishedGamesEntity.getBody().length, is(3));
+            assertThat(finishedGamesEntity.getBody().length, is(finishedFromDB + runningGames.length));
 
             possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
-            assertThat(possibleGamesEntity.getBody().length, is(3));
+            assertThat(possibleGamesEntity.getBody().length, is(greaterThan(2)));
 
 
 
