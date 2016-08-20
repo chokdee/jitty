@@ -26,7 +26,7 @@
     <modules>
         <module>data</module>
         <module>web</module>
-        <!--<module>tests</module>-->
+        <module>uitests</module>
     </modules>
     <dependencies>
         <dependency>
@@ -84,4 +84,72 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- The Configuration of the development profile -->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!--
+                    Specifies the build.profile.id property that must be equal than the name of
+                    the directory that contains the profile specific configuration file.
+                    Because the name of the directory that contains the configuration file of the
+                    development profile is dev, we must set the value of the build.profile.id
+                    property to dev.
+                -->
+                <build.profile.id>dev</build.profile.id>
+                <!--
+                    Only unit tests are run when the development profile is active
+                -->
+                <skip.integration.tests>true</skip.integration.tests>
+                <skip.unit.tests>false</skip.unit.tests>
+            </properties>
+        </profile>
+        <!-- The Configuration of the integration-test profile -->
+        <profile>
+            <id>integration-test</id>
+            <properties>
+                <!--
+                    Specifies the build.profile.id property that must be equal than the name of
+                    the directory that contains the profile specific configuration file.
+                    Because the name of the directory that contains the configuration file of the
+                    integration-test profile is integration-test, we must set the value of the
+                    build.profile.id property to integration-test.
+                -->
+                <build.profile.id>integration-test</build.profile.id>
+                <!--
+                    Only integration tests are run when the integration-test profile is active
+                -->
+                <skip.integration.tests>false</skip.integration.tests>
+                <skip.unit.tests>true</skip.unit.tests>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <id>add-source</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-test-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/integration-test</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

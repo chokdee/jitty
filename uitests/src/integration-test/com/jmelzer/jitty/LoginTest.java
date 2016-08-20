@@ -1,30 +1,28 @@
 package com.jmelzer.jitty;
 
-import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static com.jmelzer.jitty.Util.webClient;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Created by J. Melzer on 14.08.2016.
  */
 public class LoginTest {
+
     @Test
     public void homePage() throws Exception {
-        final WebClient webClient = new WebClient();
-        webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-        webClient.waitForBackgroundJavaScript(10000);
 
-        final HtmlPage page = webClient.getPage("http://localhost:8080");
+        HtmlPage page = webClient().getPage("http://localhost:8080");
         Assert.assertEquals("Jitty", page.getTitleText());
 
         String pageAsText = page.asText();
         assertTrue(pageAsText.contains("Bitte zunächst einloggen"));
 
-        HtmlPage pageLogin = webClient.getPage("http://localhost:8080/#/login");
+        HtmlPage pageLogin = webClient().getPage("http://localhost:8080/#/login");
         HtmlForm form = pageLogin.getFormByName("loginform");
 
         HtmlButton button = form.getButtonByName("submit");
@@ -37,16 +35,18 @@ public class LoginTest {
         pageLogin = button.click();
         assertTrue(pageLogin.asText().contains("Anmeldung ist fehlgeschlagen"));
 
-        form = pageLogin.getFormByName("loginform");
+        Util.doLogin();
+    }
 
-        button = form.getButtonByName("submit");
-        textField = form.getInputByName("username");
-        textField.setValueAttribute("user");
-        HtmlPasswordInput pwField = form.getInputByName("password");
-        pwField.setValueAttribute("42");
 
-        pageLogin = button.click();
-        assertTrue(pageLogin.asText().contains("Willkommen bei Jitty"));
-//        System.out.println("page2.asText() = " + pageLogin.asText());
+    @Test
+    public void testLogout() throws Exception {
+        HtmlPage page = Util.doLogin();
+
+        HtmlAnchor anchor = page.getAnchorByName("logout");
+        assertNotNull(anchor);
+        HtmlPage pageLogout = anchor.click();
+        System.out.println("pageLogout = " + pageLogout.asText());
+        assertTrue(pageLogout.asText().contains("Bitte zunächst einloggen"));
     }
 }

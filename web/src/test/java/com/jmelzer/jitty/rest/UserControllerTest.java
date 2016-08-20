@@ -5,7 +5,6 @@ import com.jmelzer.jitty.model.User;
 import com.jmelzer.jitty.model.dto.UserDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,11 +14,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
-import javax.sql.DataSource;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertThat;
 
 /**
  * Created by J. Melzer on 19.05.2016.
@@ -47,6 +43,43 @@ public class UserControllerTest extends SecureResourceTest {
             fail();
         }
     }
+
+    @Test
+    public void testNewUser() throws Exception {
+        try {
+            HttpHeaders loginHeaders = doLogin();
+            ResponseEntity<String> okResponse = restTemplate.exchange(
+                    "http://localhost:9999/resource",
+                    HttpMethod.GET,
+                    createHttpEntity(null, loginHeaders),
+                    String.class);
+
+            UserDTO user = new UserDTO();
+            user.setEmail("bla@bla.de");
+            user.setLoginName("bla");
+            user.setName("bla");
+            user.setPassword("blub");
+            ResponseEntity<Void> entity = http(HttpMethod.POST, "api/users",
+                    createHttpEntity(user, okResponse.getHeaders()), Void.class);
+
+            assertTrue(entity.getStatusCode().is2xxSuccessful());
+
+            ResponseEntity<UserDTO[]> entityList = http(HttpMethod.GET, "api/users",
+                    createHttpEntity(null, loginHeaders), UserDTO[].class);
+            boolean found = false;
+            for (UserDTO userDTO : entityList.getBody()) {
+                if (userDTO.getEmail().equals(user.getEmail())) {
+                    found = true;
+                }
+            }
+            assertTrue(found);
+
+        } catch (HttpClientErrorException e) {
+            System.out.println(e.getResponseBodyAsString());
+            fail();
+        }
+    }
+
     @Test
     public void testGetOne() throws Exception {
         try {
@@ -63,6 +96,7 @@ public class UserControllerTest extends SecureResourceTest {
             fail();
         }
     }
+
     @Test
     public void testChangePw() throws Exception {
         try {

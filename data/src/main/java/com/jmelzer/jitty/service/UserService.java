@@ -51,7 +51,13 @@ public class UserService {
 
     @Transactional
     public User save(UserDTO userDTO) {
-        User user = repository.findOne(userDTO.getId());
+        User  user= null;
+
+        if (userDTO.getId() == null) {
+            user = new User();
+        } else {
+            user = repository.findOne(userDTO.getId());
+        }
         BeanUtils.copyProperties(userDTO, user);
         return repository.save(user);
     }
