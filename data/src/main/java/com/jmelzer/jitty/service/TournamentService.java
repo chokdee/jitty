@@ -382,31 +382,23 @@ public class TournamentService {
         List<Tournament> list = repository.findAll();
         List<TournamentDTO> ret = new ArrayList<>(list.size());
         for (Tournament tournament : list) {
-            TournamentDTO dto = createDTO(tournament);
+            TournamentDTO dto = copy(tournament);
             ret.add(dto);
         }
 
         return ret;
     }
 
-    private TournamentDTO createDTO(Tournament tournament) {
-        TournamentDTO dto = new TournamentDTO();
-        BeanUtils.copyProperties(tournament, dto);
-        for (TournamentClass tournamentClass : tournament.getClasses()) {
-            dto.addClass(copy(tournamentClass));
-        }
-        return dto;
-    }
-
-
-    @Transactional
+     @Transactional
     public TournamentDTO findOne(Long id) {
         Tournament tournament = repository.findOne(id);
-        return createDTO(tournament);
+        return copy(tournament);
     }
 
     @Transactional
-    public Tournament create(Tournament tournament) {
+    public Tournament create(TournamentDTO dto) {
+        Tournament tournament = new Tournament();
+        copy(dto, tournament);
         //todo where to config it?
         //todo add double and women and child classes
         tournament.addClass(createTC("A-Klasse", 0, 3000));
@@ -425,11 +417,10 @@ public class TournamentService {
     }
 
     @Transactional
-    public Tournament update(Tournament tournament) {
-//        for (TournamentClass tournamentClass : tournament.getClasses()) {
-//            tcRepository.save(tournamentClass);
-//        }
-        return repository.saveAndFlush(tournament);
+    public Tournament update(TournamentDTO dto) {
+        Tournament t = repository.findOne(dto.getId());
+        copy(dto, t);
+        return repository.saveAndFlush(t);
     }
 
     @Transactional
@@ -533,7 +524,7 @@ public class TournamentService {
     public TournamentClass addTC(Long aLong, TournamentClass tournamentClass) {
         Tournament t = repository.findOne(aLong);
         t.addClass(tournamentClass);
-        update(t);
+        repository.saveAndFlush(t);
         return tournamentClass;
     }
 

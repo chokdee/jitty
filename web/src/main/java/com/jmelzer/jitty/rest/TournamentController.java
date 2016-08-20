@@ -1,7 +1,6 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.dao.UserRepository;
-import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.User;
 import com.jmelzer.jitty.model.dto.TournamentDTO;
 import com.jmelzer.jitty.service.TournamentService;
@@ -62,7 +61,7 @@ public class TournamentController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response saveOrCreate(Tournament tournament) {
+    public Response saveOrCreate(TournamentDTO tournament) {
         if (tournament.getId() == null) {
             service.create(tournament);
         } else {

@@ -35,7 +35,18 @@ public class CopyManager {
             game.getSets().add(copy(gameSet));
         }
     }
-
+    public static TournamentDTO copy(Tournament tournament) {
+        TournamentDTO dto = new TournamentDTO();
+        BeanUtils.copyProperties(tournament, dto, "classes");
+        for (TournamentClass tournamentClass : tournament.getClasses()) {
+            dto.addClass(copyOnly(tournamentClass));
+        }
+        return dto;
+    }
+    public static Tournament copy(TournamentDTO dto, Tournament t) {
+        BeanUtils.copyProperties(dto, t, "classes");
+        return t;
+    }
     public static GameSet copy(GameSetDTO dto) {
         GameSet gameSet = new GameSet();
         BeanUtils.copyProperties(dto, gameSet);
@@ -52,6 +63,11 @@ public class CopyManager {
         return group;
     }
 
+    static public TournamentClassDTO copyOnly(TournamentClass clz) {
+        TournamentClassDTO dto = new TournamentClassDTO();
+        BeanUtils.copyProperties(clz, dto, "groups", "players");
+        return dto;
+    }
     static public TournamentClassDTO copy(TournamentClass clz) {
         TournamentClassDTO dto = new TournamentClassDTO();
         BeanUtils.copyProperties(clz, dto, "groups", "players");

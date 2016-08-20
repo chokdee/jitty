@@ -20,7 +20,7 @@ public class TournamentClass {
     /**
      * Assoc to the player in the class.
      */
-    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(name = "TC_PLAYER")
     List<TournamentPlayer> players = new ArrayList<>();
     /**

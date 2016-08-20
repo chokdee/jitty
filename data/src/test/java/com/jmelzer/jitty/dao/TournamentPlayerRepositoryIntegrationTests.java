@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.Arrays;
@@ -66,6 +67,7 @@ public class TournamentPlayerRepositoryIntegrationTests {
     }
 
     @Test
+    @Transactional
     public void save() {
         TournamentPlayer player = new TournamentPlayer();
         player.setBirthday(new Date(99, 1, 1));
@@ -78,7 +80,7 @@ public class TournamentPlayerRepositoryIntegrationTests {
         player.setTtr(2100);
         player.setAssociation(associationRepository.findOne(1L));
         player.setClub(clubRepository.findOne(1L));
-        repository.save(player);
+        repository.saveAndFlush(player);
 
         assertNotNull(player.getId());
 
@@ -88,7 +90,7 @@ public class TournamentPlayerRepositoryIntegrationTests {
         assertThat(tournamentClassRepository.findAll().size(), is(3));
         assertThat(tournamentClassRepository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(t, 1000, 1000).size(), is(2));
 
-        player.setClasses(Arrays.asList(clz));
+        player.addClass(clz);
         repository.saveAndFlush(player);
 
         assertThat(repository.findOne(player.getId()).getClasses().size(), is(1));

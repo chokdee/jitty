@@ -19,9 +19,7 @@ import java.util.Date;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Created by J. Melzer on 19.05.2016.
@@ -68,7 +66,7 @@ public class TourmentControllerTest extends SecureResourceTest {
 
 
     @Test
-    public void testsave() throws Exception {
+    public void saveNew() throws Exception {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         try {
@@ -101,4 +99,36 @@ public class TourmentControllerTest extends SecureResourceTest {
         }
     }
 
+    @Test
+    public void editTournament() throws Exception {
+        try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+            int tcc = jdbcTemplate.queryForObject("select count(*) from tournament_class where t_id = 2 ", Integer.class);
+
+            HttpHeaders loginHeaders = doLogin();
+
+            ResponseEntity<TournamentDTO> entity = http(HttpMethod.GET, "api/tournaments/2",
+                    createHttpEntity(null, loginHeaders), TournamentDTO.class);
+
+            assertTrue(entity.getStatusCode().is2xxSuccessful());
+            TournamentDTO dto = entity.getBody();
+            assertEquals((Long) 2L, dto.getId());
+            assertThat(dto.getClasses().size(), is(tcc));
+            dto.setName("ControllerTest");
+
+            ResponseEntity<Void> voidEntity = http(HttpMethod.POST, "api/tournaments",
+                    createHttpEntity(dto, entity.getHeaders()), Void.class);
+
+            assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+
+
+            assertThat(jdbcTemplate.queryForObject("select name from tournament where id = 2 ", String.class), is("ControllerTest"));
+            assertThat(jdbcTemplate.queryForObject("select count(*) from tournament_class where t_id = 2 ", Integer.class), is(tcc));
+
+        } catch (HttpClientErrorException e) {
+            System.err.println(e.getResponseBodyAsString());
+            fail();
+        }
+
+    }
 }
