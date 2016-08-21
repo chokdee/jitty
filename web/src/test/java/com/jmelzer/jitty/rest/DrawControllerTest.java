@@ -1,10 +1,8 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.Application;
-import com.jmelzer.jitty.model.dto.GameSetDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
-import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,8 +47,6 @@ public class DrawControllerTest extends SecureResourceTest {
 
             ResponseEntity<TournamentClassDTO> entity = http(HttpMethod.GET, "api/tournament-classes/1",
                     createHttpEntity(null, loginHeaders), TournamentClassDTO.class);
-
-            assertNull(entity.getBody().getGroupCount());
 
             entity = http(HttpMethod.POST, "api/draw/calc-optimal-group-size",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentClassDTO.class);
