@@ -70,7 +70,8 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
 
         $scope.starDate = 'bla';
         $scope.deleteClass = function (cid) {
-            if (popupService.showPopup('Möchten Sie die Turnierklasse wirklich löschen?')) {
+            if (true) {
+            //if (popupService.showPopup('Möchten Sie die Turnierklasse wirklich löschen?')) {
                 $http({
                     method: 'DELETE',
                     url: 'http://localhost:8080/api/tournament-classes/' + cid

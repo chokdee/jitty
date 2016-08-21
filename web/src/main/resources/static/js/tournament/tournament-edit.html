@@ -1,70 +1,71 @@
 <div class="form-style-2">
-    <div class="form-style-2-heading">Turnier eingeben</div>
+        <div class="form-style-2-heading">Turnier eingeben</div>
     <form name="tournamentForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="saveTournament()">
 
-        <div class="control-group">
-            <label for="name"><span>Name <span class="required">*</span></span></label>
-            <input type="text" ng-model="tournament.name" name="name" required id="name"
-                   class="form-control ng-pristine ng-invalid ng-invalid-required"/>
-            <div class="clearfix">
-                <div ng-messages="tournamentForm.name.$error" ng-if="tournamentForm.$submitted || tournamentForm.name.$dirty"
-                     class="error-messages slide-right">
-                    <div ng-message="required" class="message slide-left">Bitte einen Namen eingeben</div>
+            <div class="control-group">
+                <label for="name"><span>Name <span class="required">*</span></span></label>
+                <input type="text" ng-model="tournament.name" name="name" required id="name"
+                       class="form-control ng-pristine ng-invalid ng-invalid-required"/>
+                <div class="clearfix">
+                    <div ng-messages="tournamentForm.name.$error" ng-if="tournamentForm.$submitted || tournamentForm.name.$dirty"
+                         class="error-messages slide-right">
+                        <div ng-message="required" class="message slide-left">Bitte einen Namen eingeben</div>
+                    </div>
                 </div>
             </div>
-        </div>
         <!--<pre>Selected date is: <em>{{startDate | date:'fullDate' }}</em></pre>-->
         <!--<pre>Selected date is: <em>{{endDate | date:'fullDate' }}</em></pre>-->
-        <div class="control-group">
-            <label for="startDate"><span>Start<span class="required">*</span></span></label>
-            <p class="input-group">
+            <div class="control-group">
+                <label for="startDate"><span>Start<span class="required">*</span></span></label>
+                <p class="input-group">
 
-                <input name=startDate" id="startDate" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="startDate" is-open="popup1.opened"
-                       ng-required="true" close-text="Schließen"
-                       datepicker-options="dateOptions" alt-input-formats="altInputFormats"/>
+                    <input name=startDate" id="startDate" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="startDate" is-open="popup1.opened"
+                           ng-required="true" close-text="Schließen"
+                           datepicker-options="dateOptions" alt-input-formats="altInputFormats"/>
                      <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
-            </p>
-        </div>
-        <div class="control-group">
-            <label for="endDate"><span>Ende<span class="required">*</span></span></label>
-            <p class="input-group">
+                </p>
+            </div>
+            <div class="control-group">
+                <label for="endDate"><span>Ende<span class="required">*</span></span></label>
+                <p class="input-group">
 
-                <input name=endDate" id="endDate" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="endDate" is-open="popup1.opened"
-                       ng-required="true" close-text="Schließen"
-                       datepicker-options="dateOptions" alt-input-formats="altInputFormats"/>
+                    <input name=endDate" id="endDate" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="endDate" is-open="popup1.opened"
+                           ng-required="true" close-text="Schließen"
+                           datepicker-options="dateOptions" alt-input-formats="altInputFormats"/>
                      <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
-            </p>
-        </div>
-        <input name="submit" type="submit" value="Speichern"/>
+                </p>
+            </div>
+            <input name="submit" type="submit" value="Speichern"/>
     </form>
     <br/>
     <br/>
-    <a name="newTC" ng-click="createNewTournamentClass()" class="btn-primary btn" style="top:20px;">Neue Turnierklasse anlegen</a>
     <br/>
 
+    <a name="newTC" ng-click="createNewTournamentClass()" class="btn-primary btn" style="top:20px;">Neue Turnierklasse anlegen</a>
     <h4>Turnierklassen</h4>
     <hr/>
     <table class="table">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Start-TTR</th>
-            <th>End-TTR</th>
-        </tr>
-        </thead>
-        <pre ng-if="errorMessage">Fehler: <em>{{errorMessage}}</em></pre>
-        <tr ng-repeat="c in tournament.classes">
-            <td>{{c.name}}</td>
-            <td>{{c.startTTR}}</td>
-            <td>{{c.endTTR}}</td>
-            <td>
-                <a class="btn btn-primary" href="#/tournament/tournament-classes/{{c.id}}">Bearbeiten</a>
-                <a class="btn btn-danger" ng-click="deleteClass(c.id)">Löschen</a>
-            </td>
-        </tr>
-    </table>
-</div>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Start-TTR</th>
+                <th>End-TTR</th>
+            </tr>
+            </thead>
+            <pre ng-if="errorMessage">Fehler: <em>{{errorMessage}}</em></pre>
+            <tr ng-repeat="c in tournament.classes">
+                <td>{{c.name}}</td>
+                <td>{{c.startTTR}}</td>
+                <td>{{c.endTTR}}</td>
+                <td>
+
+                    <a name="{{'edit'+c.id}}" class="btn btn-primary" href="#/tournament/tournament-classes/{{c.id}}">Beaaaarbeiten</a>
+                    <a name="{{'delete'+c.id}}" class="btn btn-danger" ng-click="deleteClass(c.id)">Löschen</a>
+                </td>
+            </tr>
+        </table>
+    </div>
