@@ -1,7 +1,6 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.Application;
-import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,12 +11,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
 
 /**
@@ -62,13 +59,15 @@ public class TourmentClassControllerTest extends SecureResourceTest {
     @Test
     public void getNotRunning() throws Exception {
         try {
+            int c = jdbcTemplate.queryForObject("select count(*) from tournament_class where t_id = 2 and RUNNING = 0", Integer.class);
+
             HttpHeaders loginHeaders = doLogin();
 
             ResponseEntity<TournamentClassDTO[]> entity = http(HttpMethod.GET, "api/tournament-classes/not-running",
                     createHttpEntity(null, loginHeaders), TournamentClassDTO[].class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
-            assertThat(entity.getBody().length, is(greaterThan(2)));
+            assertThat(entity.getBody().length, is(c));
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
             fail();
@@ -78,7 +77,7 @@ public class TourmentClassControllerTest extends SecureResourceTest {
     @Test
     public void testSaveNewTC() throws Exception {
         try {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
             assertThat(jdbcTemplate.queryForObject("select count(*) from tournament_class where t_id = 2", Integer.class), is(5));
 
             HttpHeaders loginHeaders = doLogin();

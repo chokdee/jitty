@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.rest;
 
+import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.boot.test.WebIntegrationTest;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
@@ -19,6 +21,13 @@ import java.util.List;
 public abstract class SecureResourceTest {
     @Autowired
     DataSource dataSource;
+
+    JdbcTemplate jdbcTemplate;
+
+    @Before
+    public void before() {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
 
     static final String SET_COOKIE = "Set-Cookie";
