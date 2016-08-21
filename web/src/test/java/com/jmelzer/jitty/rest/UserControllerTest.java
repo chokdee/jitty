@@ -111,14 +111,14 @@ public class UserControllerTest extends SecureResourceTest {
 
 
             User user = new User();
-            user.setId(1L);
+            user.setId(2L);
             user.setPassword("oooo");
             ResponseEntity<Void> entity = http(HttpMethod.POST, "api/users/change-password",
                     createHttpEntity(user, okResponse.getHeaders()), Void.class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
 
-            String pw = new JdbcTemplate(dataSource).queryForObject("select password from user where id = 1", String.class);
+            String pw = new JdbcTemplate(dataSource).queryForObject("select password from user where id = 2", String.class);
             assertEquals("oooo", pw);
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());

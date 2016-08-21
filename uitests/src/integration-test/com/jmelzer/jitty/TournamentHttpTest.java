@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
  * Created by J. Melzer on 20.08.2016.
  * integration test for user views
  */
-public class TournamentTest {
+public class TournamentHttpTest {
 
     @Test
     public void testList() throws Exception {
@@ -54,11 +54,11 @@ public class TournamentTest {
         HtmlPage page = webClient().getPage("http://localhost:8080/#/tournaments");
         HtmlAnchor anchor = page.getAnchorByHref("#/tournaments/2");
         assertNotNull(anchor);
-        HtmlPage newUserPage = anchor.click();
-        assertTrue(newUserPage.asText().contains("Turnier eingeben"));
-        assertTrue(newUserPage.asText().contains("Jitty Open 2016"));
+        HtmlPage teditPage = anchor.click();
+        assertTrue(teditPage.asText().contains("Turnier eingeben"));
+        assertTrue(teditPage.asText().contains("Jitty Open 2016"));
 
-        HtmlForm form = newUserPage.getFormByName("tournamentForm");
+        HtmlForm form = teditPage.getFormByName("tournamentForm");
         form.getInputByName("name").setValueAttribute("HtmlUnit Open 2016");
         HtmlInput submitInput = form.getInputByName("submit");
         HtmlPage listPage = submitInput.click();
@@ -67,5 +67,16 @@ public class TournamentTest {
         assertTrue("Must contains HtmlUnit Open 2016" , listPage.asText().contains("HtmlUnit Open 2016"));
 
     }
+    @Test
+    public void newtc() throws Exception {
+        doLogin();
 
+        HtmlPage page = webClient().getPage("http://localhost:8080/#/tournaments");
+        HtmlAnchor anchor = page.getAnchorByHref("#/tournaments/2");
+        HtmlPage teditPage = anchor.click();
+
+        anchor = teditPage.getAnchorByName("newTC");
+        HtmlPage tcPage = anchor.click();
+        assertTrue(tcPage.asText().contains("Turnierklasse eingeben"));
+    }
 }

@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
  * Created by J. Melzer on 20.08.2016.
  * integration test for user views
  */
-public class UserTest {
+public class UserHttpTest {
 
     @Test
     public void testList() throws Exception {

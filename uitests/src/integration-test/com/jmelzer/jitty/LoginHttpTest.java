@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by J. Melzer on 14.08.2016.
  */
-public class LoginTest {
+public class LoginHttpTest {
 
     @Test
     public void homePage() throws Exception {

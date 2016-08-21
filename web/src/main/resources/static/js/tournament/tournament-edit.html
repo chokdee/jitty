@@ -43,7 +43,7 @@
     </form>
     <br/>
     <br/>
-    <a ng-click="createNewTournamentClass()" class="btn-primary btn" style="top:20px;">Neue Turnierklasse anlegen</a>
+    <a name="newTC" ng-click="createNewTournamentClass()" class="btn-primary btn" style="top:20px;">Neue Turnierklasse anlegen</a>
     <br/>
 
     <h4>Turnierklassen</h4>
@@ -61,12 +61,6 @@
             <td>{{c.name}}</td>
             <td>{{c.startTTR}}</td>
             <td>{{c.endTTR}}</td>
-            <!--<div class="clearfix">-->
-            <!--<div ng-messages="errorMessage" ng-if="errorMessage"-->
-            <!--class="error-messages slide-right">-->
-            <!--<div class="message slide-left"><em>{errorMessage}</em></div>-->
-            <!--</div>-->
-            <!--</div>-->
             <td>
                 <a class="btn btn-primary" href="#/tournament/tournament-classes/{{c.id}}">Bearbeiten</a>
                 <a class="btn btn-danger" ng-click="deleteClass(c.id)">Löschen</a>
