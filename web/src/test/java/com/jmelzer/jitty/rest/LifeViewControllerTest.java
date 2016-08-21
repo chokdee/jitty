@@ -3,8 +3,6 @@ package com.jmelzer.jitty.rest;
 import com.jmelzer.jitty.Application;
 import com.jmelzer.jitty.model.dto.GroupResultDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
-import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -34,7 +32,7 @@ public class LifeViewControllerTest extends SecureResourceTest {
                     createHttpEntity(null, loginHeaders), TournamentClassDTO[].class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
-            assertThat(entity.getBody().length, is(2));
+            assertThat(entity.getBody().length, is(greaterThan(1)));
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
             fail();
