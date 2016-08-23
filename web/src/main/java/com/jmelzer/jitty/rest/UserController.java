@@ -3,12 +3,14 @@ package com.jmelzer.jitty.rest;
 import com.jmelzer.jitty.model.User;
 import com.jmelzer.jitty.model.dto.UserDTO;
 import com.jmelzer.jitty.service.UserService;
+import org.glassfish.jersey.server.monitoring.MonitoringStatistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

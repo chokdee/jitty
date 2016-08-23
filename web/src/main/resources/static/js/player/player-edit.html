@@ -26,15 +26,21 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label for="birthday">Geburtstag</label>
+                    <label for="birthday"><span>Geburtstag <span class="required">*</span></span></label>
                     <div class="input-group">
                         <input name=birthday" id="birthday" type="text" uib-datepicker-popup="{{format}}" ng-model="birthdate" is-open="popup1.opened"
                                ng-required="true" close-text="Schließen" clear-text="Zurücksetzen" current-text="Heute"
                                datepicker-options="dateOptions" alt-input-formats="altInputFormats" class="form-control"
-                            />
+                        />
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
+                    </div>
+                    <div class="clearfix">
+                        <div ng-messages="playerForm.birthday.$error" ng-if="playerForm.$submitted || playerForm.birthday.$dirty"
+                             class="error-messages slide-right">
+                            <div ng-message="required" class="message slide-left">Bitte einen Wert eingeben</div>
+                        </div>
                     </div>
                 </div>
                 <div class="control-group">
@@ -46,7 +52,7 @@
                     <div class="clearfix">
                         <div ng-messages="playerForm.gender.$error" ng-if="playerForm.$submitted || playerForm.gender.$dirty"
                              class="error-messages slide-right">
-                            <div ng-message="required" class="message slide-left">Bitte einen Wert auswählen eingeben</div>
+                            <div ng-message="required" class="message slide-left">Bitte einen Wert auswählen </div>
                         </div>
                     </div>
                 </div>
@@ -61,6 +67,7 @@
                             <span ng-bind="association.longName"></span>
                         </ui-select-choices>
                     </ui-select>
+
                 </div>
                 <div class="control-group">
                     <!--<p>club {{player.club}}</p>-->
@@ -110,7 +117,7 @@
             <h4>Turnierklassen</h4>
             <br>
 
-            <div class="container" >
+            <div class="container">
                 <!--<p>{{player.classes}}</p>-->
                 <select
                         ng-model="player.classes"
@@ -145,7 +152,7 @@
         <br>
         <br>
         <!--todo add pick list-->
-        <input type="submit" value="Speichern"/>
+        <input name="submit" type="submit" value="Speichern"/>
     </form>
 
 </div>

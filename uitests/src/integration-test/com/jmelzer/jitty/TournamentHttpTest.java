@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 /**
  * Created by J. Melzer on 20.08.2016.
- * integration test for user views
+ * integration test for tournament views
  */
 public class TournamentHttpTest {
 
