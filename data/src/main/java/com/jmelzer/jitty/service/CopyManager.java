@@ -29,7 +29,7 @@ public class CopyManager {
     }
 
     public static void copy(TournamentSingleGameDTO dto, TournamentSingleGame game) {
-        BeanUtils.copyProperties(dto, game, "group", "player1", "player2");
+        BeanUtils.copyProperties(dto, game, "group", "player1", "player2", "sets");
         game.getSets().clear();
         for (GameSetDTO gameSet : dto.getSets()) {
             game.getSets().add(copy(gameSet));
