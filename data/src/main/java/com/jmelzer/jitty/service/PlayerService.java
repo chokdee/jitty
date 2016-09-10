@@ -42,10 +42,10 @@ public class PlayerService {
 
         TournamentPlayer tournamentPlayer = repository.findOne(aLong);
         TournamentPlayerDTO dto = new TournamentPlayerDTO();
-        BeanUtils.copyProperties(tournamentPlayer, dto);
+        BeanUtils.copyProperties(tournamentPlayer, dto, "classes");
         for (TournamentClass tournamentClass : tournamentPlayer.getClasses()) {
             TournamentClassDTO classDTO = new TournamentClassDTO();
-            BeanUtils.copyProperties(tournamentClass, classDTO);
+            BeanUtils.copyProperties(tournamentClass, classDTO, "groups");
             dto.addClass(classDTO);
         }
         return dto;

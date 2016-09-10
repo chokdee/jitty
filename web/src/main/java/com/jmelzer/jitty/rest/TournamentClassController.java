@@ -69,8 +69,6 @@ public class TournamentClassController {
     @DELETE
     public Response delete(@PathParam(value = "id") String id) {
         LOG.info("delete class {}", id);
-//        if (true)
-//            return ControllerUtil.buildErrorResponse("Nicht möglich zu lsöchen");
         try {
             service.deleteClass(Long.valueOf(id));
         } catch (EmptyResultDataAccessException e) {

@@ -1,4 +1,4 @@
-angular.module('jitty.player.controllers', []).controller('PlayerListController', function ($scope, $window, Player, $http, $location) {
+angular.module('jitty.player.controllers', []).controller('PlayerListController', function ($scope, $window, Player) {
 
     $scope.reverse = true;
 

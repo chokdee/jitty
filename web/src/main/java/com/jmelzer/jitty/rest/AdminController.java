@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 public class AdminController {
 
     final static Logger LOG = LoggerFactory.getLogger(AdminController.class);
+
     @Inject
     Provider<MonitoringStatistics> statistics;
 

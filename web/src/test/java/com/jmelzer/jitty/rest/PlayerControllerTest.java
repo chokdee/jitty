@@ -43,6 +43,23 @@ public class PlayerControllerTest extends SecureResourceTest {
     }
 
     @Test
+    public void testGetOne() throws Exception {
+        try {
+            HttpHeaders loginHeaders = doLogin();
+
+            ResponseEntity<TournamentPlayerDTO> entity = http(HttpMethod.GET, "api/players/2",
+                    createHttpEntity(null, loginHeaders), TournamentPlayerDTO.class);
+
+            assertTrue(entity.getStatusCode().is2xxSuccessful());
+            assertThat(entity.getBody().getId(), is(2L));
+
+        } catch (HttpClientErrorException e) {
+            System.out.println(e.getResponseBodyAsString());
+            fail();
+        }
+    }
+
+    @Test
     public void possibleTournaments() throws Exception {
         try {
             HttpHeaders loginHeaders = doLogin();

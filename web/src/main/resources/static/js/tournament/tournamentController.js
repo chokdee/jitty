@@ -68,25 +68,21 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
             }
         };
 
-        $scope.starDate = 'bla';
         $scope.deleteClass = function (cid) {
-            if (true) {
-            //if (popupService.showPopup('Möchten Sie die Turnierklasse wirklich löschen?')) {
-                $http({
-                    method: 'DELETE',
-                    url: 'http://localhost:8080/api/tournament-classes/' + cid
-                }).then(function successCallback(response) {
-                    //refresh data
-                    $scope.getTournament();
+            $http({
+                method: 'DELETE',
+                url: 'http://localhost:8080/api/tournament-classes/' + cid
+            }).then(function successCallback(response) {
+                //refresh data
+                $scope.getTournament();
 
-                }, function errorCallback(response) {
-                    if (response.status == 400) {
-                        $scope.errorMessage = response.data.error;
-                        console.log('got 400 response message = ' + response.data.error);
-                    }
-                });
+            }, function errorCallback(response) {
+                if (response.status == 400) {
+                    $scope.errorMessage = response.data.error;
+                    console.log('got 400 response message = ' + response.data.error);
+                }
+            });
 
-            }
         };
 
         $scope.createNewTournamentClass = function () {
