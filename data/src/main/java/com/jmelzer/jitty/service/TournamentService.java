@@ -644,6 +644,21 @@ public class TournamentService {
     }
 
     @Transactional
+    public void moveGameBackToPossiblegames(Long id) {
+        TournamentSingleGame game= tournamentSingleGameRepository.findOne(id);
+        if (game== null) {
+            throw new IllegalArgumentException();
+        }
+        gameQueue.add(game);
+        busyGames.remove(game);
+        game.setCalled(false);
+        game.setStartTime(null);
+        tournamentSingleGameRepository.save(game);
+        LOG.debug("move game back with id {}", id);
+
+    }
+
+    @Transactional
     public void saveGame(TournamentSingleGameDTO dto) {
         calcWinner(dto);
         TournamentSingleGame game = tournamentSingleGameRepository.findOne(dto.getId());

@@ -20,6 +20,12 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         });
 
     };
+    $scope.backToPossibleGames = function (id) {
+        $http.get('/api/tournamentdirector/move-game-back-to-possiblegames?id=' + id, {}).then(function (response) {
+            $scope.callAll();
+        });
+
+    };
     $scope.printSR = function (id) {
         $http.get('/api/tournamentdirector/get-game-for-printing?id=' + id, {}).then(function (response) {
             printer.print('/js/running/sr.html', {game:response.data});
@@ -59,7 +65,9 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
             name: 'Aktion',
             cellTemplate: '<div class="ui-grid-cell-contents"><a class="btn btn-primary" ng-click="grid.appScope.startGame(row.entity.id)" >Spiel starten</a>' +
             '<a class="btn btn-primary" ng-click="grid.appScope.printSR(row.entity.id)" >Drucken</a></div>',
-            enableCellEdit: false
+            enableCellEdit: false,
+            enableColumnMenu: false,
+            enableSorting: false
         }
     ];
 
@@ -68,7 +76,7 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         rowHeight: 40,
         columnDefs: $scope.columns
     };
-    $scope.open = function (entity) {
+    $scope.enterGameResult = function (entity) {
         $scope.game = entity;
         $scope.gameResult = '';
 
@@ -102,8 +110,13 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         {field: 'player2.fullName', displayName: 'Spieler 2'},
         {
             name: 'Aktion',
-            cellTemplate: '<div class="ui-grid-cell-contents"><a class="btn btn-primary" ng-click="grid.appScope.open(row.entity)" >Ergebnis...</a></div>',
-            enableCellEdit: false
+            cellTemplate: '<div class="ui-grid-cell-contents">' +
+            '<a class="btn btn-primary" ng-click="grid.appScope.enterGameResult(row.entity)" >Ergebnis...</a>' +
+            '<a class="btn btn-primary" ng-click="grid.appScope.backToPossibleGames(row.entity.id)" >Zur&uuml;ck</a>' +
+            '</div>',
+            enableCellEdit: false,
+            enableColumnMenu: false,
+            enableSorting: false
         }
     ];
 
