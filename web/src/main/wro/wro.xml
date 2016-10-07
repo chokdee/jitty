@@ -1,6 +1,7 @@
 <groups xmlns="http://www.isdc.ro/wro">
     <group name="angular-bootstrap">
-        <css>webjar:bootstrap/3.2.0/less/bootstrap.less</css>
+        <css>webjar:bootstrap/3.3.7/css/bootstrap.css</css>
+        <css>webjar:bootstrap/3.3.7/css/bootstrap-theme.css</css>
         <css>file:@project.basedir@/src/main/wro/main.less</css>
         <css>webjar:angular-ui-select/0.17.1/select.css</css>
         <js>webjar:jquery/2.1.1/jquery.js</js>
