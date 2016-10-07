@@ -1,4 +1,4 @@
-angular.module('jitty.running.controllers', []).controller('RunningController', function ($scope, $http, $uibModal, $log, printer) {
+angular.module('jitty.running.controllers', []).controller('RunningController', function ($scope, $http, $uibModal, $log, printer, uiGridConstants) {
     $scope.getPossibleGames = function () {
         $http.get('/api/tournamentdirector/possible-games', {}).then(function (response) {
             $scope.possibleGames = response.data;
@@ -28,17 +28,8 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     };
     $scope.printSR = function (id) {
         $http.get('/api/tournamentdirector/get-game-for-printing?id=' + id, {}).then(function (response) {
-            printer.print('/js/running/sr.html', {game:response.data});
+            printer.print('/js/running/sr.html', {game: response.data});
         });
-
-
-        // var myWindow=window.open('','','width=200,height=100');
-        // var template = $templateCache.get('sr.html');
-        // myWindow.document.write(template);
-        // myWindow.document.close(); //missing code
-        // myWindow.focus();
-        // myWindow.print();
-
     };
 
 
@@ -58,7 +49,10 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     };
 
     $scope.columns = [{field: 'group.tournamentClass.name', displayName: 'Klasse'},
-        {field: 'group.name', displayName: 'Gruppe'},
+        {
+            field: 'group.name',
+            displayName: 'Gruppe'
+        },
         {field: 'player1.fullName', displayName: 'Spieler 1'},
         {field: 'player2.fullName', displayName: 'Spieler 2'},
         {
@@ -73,6 +67,7 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
 
     $scope.gridOptions = {
         enableSorting: true,
+        enableFiltering: true,
         rowHeight: 40,
         columnDefs: $scope.columns
     };
