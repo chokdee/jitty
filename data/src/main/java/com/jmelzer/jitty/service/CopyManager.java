@@ -16,6 +16,7 @@ public class CopyManager {
         dto.setPlayer1(copy(game.getPlayer1()));
         dto.setPlayer2(copy(game.getPlayer2()));
         dto.setGroup(copy(game.getGroup()));
+        dto.setTcName(game.getGroup().getTournamentClass().getName());
         return dto;
 
     }

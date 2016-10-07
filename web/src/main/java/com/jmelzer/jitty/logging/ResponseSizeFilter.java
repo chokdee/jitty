@@ -10,10 +10,11 @@ import java.io.*;
 
 /**
  * Created by J. Melzer on 21.08.2016.
+ * Proof if the size of a rest request os to large and loggin it.
  */
 
 @Component
-public class MyFilter implements Filter {
+public class ResponseSizeFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -32,10 +33,11 @@ public class MyFilter implements Filter {
 
         // Finished.
         out.close();
-        String url = ((HttpServletRequest)request).getRequestURL().toString();
+        String url = ((HttpServletRequest) request).getRequestURL().toString();
         if (url.contains("/api")) {
-            if(responseContent.length > 1000)
-            System.err.println("response too large: " + responseContent.length + " for api call " + url);
+            if (responseContent.length > 1000) {
+                System.err.println("response too large: " + responseContent.length + " for api call " + url);
+            }
         }
     }
 

@@ -820,6 +820,10 @@ public class TournamentService {
         return results;
     }
 
+    public TournamentSingleGameDTO getGame(Long id) {
+        return copy(tournamentSingleGameRepository.findOne(id));
+    }
+
     static public class PS implements Comparable<PS> {
         TournamentPlayer player;
         int win;

@@ -132,8 +132,9 @@
 
 .playerlist {
     overflow: scroll;
-    height:400px;
+    height: 400px;
 }
+
 /**
  * For the correct positioning of the placeholder element, the dnd-list and
  * it's children must have position: relative
@@ -199,7 +200,6 @@ ul[dnd-list] > li {
     color: #3c763d;
 }
 
-
 /***************************** Dropzone Styling *****************************/
 
 /**
@@ -259,6 +259,7 @@ ul[dnd-list] > li {
     width: 150px;
     /*min-height: 450px;*/
 }
+
 /***************************** Element type specific styles *****************************/
 
 .dropzone .itemlist {
@@ -283,16 +284,14 @@ ul[dnd-list] > li {
     margin: 10px;
 }
 
-
 .box {
     margin-bottom: 20px;
     background-color: #fff;
     border: 1px solid transparent;
     border-radius: 4px;
-    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
 }
-
 
 .box > h3 {
     color: #333;
@@ -308,10 +307,10 @@ ul[dnd-list] > li {
     margin-bottom: 0;
 }
 
-
 .box-padding {
     padding: 15px;
 }
+
 .box-blue {
     border-color: #bce8f1;
 }
@@ -320,10 +319,9 @@ ul[dnd-list] > li {
     color: #31708f;
     background-color: #d9edf7;
     border-color: #bce8f1;
-    background-image: -webkit-linear-gradient(top,#d9edf7 0,#c4e3f3 100%);
-    background-image: linear-gradient(to bottom,#d9edf7 0,#c4e3f3 100%);
+    background-image: -webkit-linear-gradient(top, #d9edf7 0, #c4e3f3 100%);
+    background-image: linear-gradient(to bottom, #d9edf7 0, #c4e3f3 100%);
 }
-
 
 .myGrid {
     width: 100%;
@@ -331,5 +329,41 @@ ul[dnd-list] > li {
 }
 
 ul#result li {
-    display:inline;
+    display: inline;
+}
+
+.my-md-5 {
+    width: 45%;
+}
+
+.my-md-6 {
+    width: 51%;
+    float: left;
+}
+
+.my-md-4 {
+    width: 35%;
+    float: left;
+}
+
+.sr-center-block {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.sr-table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.center-modal {
+    position: fixed;
+    top: 10%;
+    left: 18.5%;
+    z-index: 1050;
+    width: 80%;
+    height: 80%;
+    margin-left: -10%;
 }

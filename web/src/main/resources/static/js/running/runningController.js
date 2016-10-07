@@ -1,4 +1,4 @@
-angular.module('jitty.running.controllers', []).controller('RunningController', function ($scope, $http, $uibModal,$log) {
+angular.module('jitty.running.controllers', []).controller('RunningController', function ($scope, $http, $uibModal, $log, printer) {
     $scope.getPossibleGames = function () {
         $http.get('/api/tournamentdirector/possible-games', {}).then(function (response) {
             $scope.possibleGames = response.data;
@@ -20,6 +20,21 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         });
 
     };
+    $scope.printSR = function (id) {
+        $http.get('/api/tournamentdirector/get-game-for-printing?id=' + id, {}).then(function (response) {
+            printer.print('/js/running/sr.html', {game:response.data});
+        });
+
+
+        // var myWindow=window.open('','','width=200,height=100');
+        // var template = $templateCache.get('sr.html');
+        // myWindow.document.write(template);
+        // myWindow.document.close(); //missing code
+        // myWindow.focus();
+        // myWindow.print();
+
+    };
+
 
     $scope.getRunningGames = function () {
         $http.get('/api/tournamentdirector/running-games', {}).then(function (response) {
@@ -42,7 +57,8 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         {field: 'player2.fullName', displayName: 'Spieler 2'},
         {
             name: 'Aktion',
-            cellTemplate: '<div class="ui-grid-cell-contents"><a class="btn btn-primary" ng-click="grid.appScope.startGame(row.entity.id)" >Spiel starten</a></div>',
+            cellTemplate: '<div class="ui-grid-cell-contents"><a class="btn btn-primary" ng-click="grid.appScope.startGame(row.entity.id)" >Spiel starten</a>' +
+            '<a class="btn btn-primary" ng-click="grid.appScope.printSR(row.entity.id)" >Drucken</a></div>',
             enableCellEdit: false
         }
     ];
@@ -72,7 +88,7 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         modalInstance.result.then(function (gameset) {
             $scope.game.sets = gameset;
             $scope.saveGame();
-           //alert(gameset[0].points1);
+            //alert(gameset[0].points1);
             //todo safe the result in the db ab remove the game from the list
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

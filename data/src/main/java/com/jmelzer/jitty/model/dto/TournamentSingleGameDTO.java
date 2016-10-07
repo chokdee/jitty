@@ -16,6 +16,7 @@ public class TournamentSingleGameDTO {
     TournamentPlayerDTO player1;
     TournamentPlayerDTO player2;
     String winnerName;
+    String tcName;
     TournamentGroupDTO group;
     /**
      * Bereits gespielt?
@@ -113,6 +114,14 @@ public class TournamentSingleGameDTO {
 
     public void setGroup(TournamentGroupDTO group) {
         this.group = group;
+    }
+
+    public String getTcName() {
+        return tcName;
+    }
+
+    public void setTcName(String tcName) {
+        this.tcName = tcName;
     }
 
     @Override

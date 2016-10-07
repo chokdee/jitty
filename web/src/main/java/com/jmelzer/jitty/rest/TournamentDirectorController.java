@@ -50,7 +50,12 @@ public class TournamentDirectorController {
         service.startGame(Long.valueOf(id));
         return Response.ok().build();
     }
-
+    @Path("/get-game-for-printing")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public TournamentSingleGameDTO getGame(@QueryParam(value = "id") String id) {
+        return service.getGame(Long.valueOf(id));
+    }
     @Path("/save-result")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
