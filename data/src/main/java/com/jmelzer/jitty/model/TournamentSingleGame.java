@@ -240,4 +240,5 @@ public class TournamentSingleGame {
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
+
 }

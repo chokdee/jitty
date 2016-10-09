@@ -1,8 +1,8 @@
 package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,18 +26,23 @@ public class TournamentPlayer {
     private Club club;
     @ManyToOne(optional = true, cascade = CascadeType.DETACH)
     private Association association;
-    @Column(nullable = true)
+    @Column
     private String email;
     @Column(nullable = true, name = "mobilenumber")
     private String mobileNumber;
     @Column(nullable = true)
     private int qttr;
-    @Column(nullable = true)
+    @Column
     private int ttr;
-    @Column(nullable = true)
+    @Temporal(TemporalType.DATE)
+    @Column
     private Date birthday;
-    @Column(nullable = true, length = 1)
+    @Column(length = 1)
     private String gender;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_game_at")
+    private Date lastGameAt;
+
     @ManyToMany(cascade = CascadeType.DETACH)
     private List<TournamentSingleGame> games = new ArrayList<>();
 
@@ -216,5 +221,13 @@ public class TournamentPlayer {
             aClass.removePlayer(this);
         }
         classes.clear();
+    }
+
+    public Date getLastGameAt() {
+        return lastGameAt;
+    }
+
+    public void setLastGameAt(Date lastGameAt) {
+        this.lastGameAt = lastGameAt;
     }
 }

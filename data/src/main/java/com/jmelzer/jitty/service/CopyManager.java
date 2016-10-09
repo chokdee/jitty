@@ -5,10 +5,19 @@ import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.*;
 import org.springframework.beans.BeanUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+
 /**
  * Created by J. Melzer on 30.07.2016.
+ * copy entities
  */
 public class CopyManager {
+
+    final static DateFormat hourFormatter = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
 
     static public TournamentSingleGameDTO copy(TournamentSingleGame game) {
         TournamentSingleGameDTO dto = new TournamentSingleGameDTO();
@@ -36,6 +45,7 @@ public class CopyManager {
             game.getSets().add(copy(gameSet));
         }
     }
+
     public static TournamentDTO copy(Tournament tournament) {
         TournamentDTO dto = new TournamentDTO();
         BeanUtils.copyProperties(tournament, dto, "classes");
@@ -44,10 +54,12 @@ public class CopyManager {
         }
         return dto;
     }
+
     public static Tournament copy(TournamentDTO dto, Tournament t) {
         BeanUtils.copyProperties(dto, t, "classes");
         return t;
     }
+
     public static GameSet copy(GameSetDTO dto) {
         GameSet gameSet = new GameSet();
         BeanUtils.copyProperties(dto, gameSet);
@@ -69,6 +81,7 @@ public class CopyManager {
         BeanUtils.copyProperties(clz, dto, "groups", "players");
         return dto;
     }
+
     static public TournamentClassDTO copy(TournamentClass clz) {
         TournamentClassDTO dto = new TournamentClassDTO();
         BeanUtils.copyProperties(clz, dto, "groups", "players");
@@ -86,6 +99,16 @@ public class CopyManager {
     private static TournamentPlayerDTO copy(TournamentPlayer player) {
         TournamentPlayerDTO dto = new TournamentPlayerDTO();
         BeanUtils.copyProperties(player, dto);
+        if (player.getLastGameAt() != null) {
+            LocalDateTime time = LocalDateTime.ofInstant(player.getLastGameAt().toInstant(), ZoneId.systemDefault());
+            long h = ChronoUnit.HOURS.between(time, LocalDateTime.now());
+            long m = ChronoUnit.MINUTES.between(time, LocalDateTime.now());
+            dto.setPeriodSinceLastGame(h + "h" + m + "m");
+            dto.setLastGameAt("letztes Spiel um " + hourFormatter.format(player.getLastGameAt()));
+        } else {
+            dto.setPeriodSinceLastGame("--");
+            dto.setLastGameAt("noch nicht gespielt");
+        }
         return dto;
     }
 

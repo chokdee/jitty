@@ -389,7 +389,7 @@ public class TournamentService {
         return ret;
     }
 
-     @Transactional
+    @Transactional
     public TournamentDTO findOne(Long id) {
         Tournament tournament = repository.findOne(id);
         return copy(tournament);
@@ -645,8 +645,8 @@ public class TournamentService {
 
     @Transactional
     public void moveGameBackToPossiblegames(Long id) {
-        TournamentSingleGame game= tournamentSingleGameRepository.findOne(id);
-        if (game== null) {
+        TournamentSingleGame game = tournamentSingleGameRepository.findOne(id);
+        if (game == null) {
             throw new IllegalArgumentException();
         }
         gameQueue.add(game);
@@ -658,14 +658,18 @@ public class TournamentService {
 
     }
 
-    @Transactional
-    public void saveGame(TournamentSingleGameDTO dto) {
+    TournamentSingleGame saveGame(TournamentSingleGameDTO dto) {
         calcWinner(dto);
         TournamentSingleGame game = tournamentSingleGameRepository.findOne(dto.getId());
         copy(dto, game);
         game.setEndTime(new Date());
         game.setPlayed(true);
+        TournamentPlayer p1 = game.getPlayer1();
+        TournamentPlayer p2 = game.getPlayer2();
+        p1.setLastGameAt(new Date());
+        p2.setLastGameAt(new Date());
         tournamentSingleGameRepository.save(game);
+        return game;
     }
 
     TournamentSingleGameDTO calcWinner(TournamentSingleGameDTO dto) {
@@ -684,18 +688,12 @@ public class TournamentService {
         return dto;
     }
 
-    public void finishGame(TournamentSingleGameDTO dto) {
-        TournamentSingleGame foundGame = null;
-        for (TournamentSingleGame busyGame : busyGames) {
-            if (busyGame.getId().equals(dto.getId())) {
-                foundGame = busyGame;
-                break;
-            }
-        }
-        if (foundGame != null) {
-            busyGames.remove(foundGame);
-            addPossibleGroupGamesToQueue(Collections.singletonList(foundGame.getGroup()));
-        }
+    /**
+     * find game from the busy game list and add new possible games to the queue
+     */
+    private void finishGame(TournamentSingleGame game) {
+        busyGames.remove(game);
+        addPossibleGroupGamesToQueue(Collections.singletonList(game.getGroup()));
     }
 
     @Transactional
@@ -837,6 +835,12 @@ public class TournamentService {
 
     public TournamentSingleGameDTO getGame(Long id) {
         return copy(tournamentSingleGameRepository.findOne(id));
+    }
+
+    @Transactional
+    public void saveAndFinishGame(TournamentSingleGameDTO dto) {
+        TournamentSingleGame game = saveGame(dto);
+        finishGame(game);
     }
 
     static public class PS implements Comparable<PS> {

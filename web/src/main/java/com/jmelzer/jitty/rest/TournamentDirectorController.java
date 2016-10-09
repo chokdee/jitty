@@ -70,8 +70,7 @@ public class TournamentDirectorController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response saveResult(TournamentSingleGameDTO dto) {
-        service.saveGame(dto);
-        service.finishGame(dto);
+        service.saveAndFinishGame(dto);
         return Response.ok().build();
     }
 }

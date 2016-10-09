@@ -47,14 +47,20 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         });
 
     };
-
+    // ganes to play table
     $scope.columns = [{field: 'group.tournamentClass.name', displayName: 'Klasse'},
         {
             field: 'group.name',
             displayName: 'Gruppe'
         },
         {field: 'player1.fullName', displayName: 'Spieler 1'},
+        {
+            field: 'player1.periodSinceLastGame',
+            displayName: 'Letztes Spiel',
+            cellTooltip: function (row, col) {return row.entity.player1.lastGameAt}
+        },
         {field: 'player2.fullName', displayName: 'Spieler 2'},
+        {field: 'player2.periodSinceLastGame', displayName: 'Letztes Spiel'},
         {
             name: 'Aktion',
             cellTemplate: '<div class="ui-grid-cell-contents"><a class="btn btn-primary" ng-click="grid.appScope.startGame(row.entity.id)" >Spiel starten</a>' +

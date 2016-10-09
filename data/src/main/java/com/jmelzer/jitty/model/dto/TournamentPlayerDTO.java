@@ -3,8 +3,8 @@ package com.jmelzer.jitty.model.dto;
 import com.jmelzer.jitty.model.Association;
 import com.jmelzer.jitty.model.Club;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +25,8 @@ public class TournamentPlayerDTO {
     private int ttr;
     private Date birthday;
     private String gender;
+    private String periodSinceLastGame;
+    private String lastGameAt;
 
     List<TournamentClassDTO> classes = new ArrayList<>();
 
@@ -132,6 +134,14 @@ public class TournamentPlayerDTO {
         this.fullName = fullName;
     }
 
+    public String getPeriodSinceLastGame() {
+        return periodSinceLastGame;
+    }
+
+    public void setPeriodSinceLastGame(String periodSinceLastGame) {
+        this.periodSinceLastGame = periodSinceLastGame;
+    }
+
     @Override
     public String toString() {
         return "TournamentPlayerDTO{" +
@@ -149,5 +159,14 @@ public class TournamentPlayerDTO {
                 ", gender='" + gender + '\'' +
                 ", classes=" + classes +
                 '}';
+
+    }
+
+    public String getLastGameAt() {
+        return lastGameAt;
+    }
+
+    public void setLastGameAt(String lastGameAt) {
+        this.lastGameAt = lastGameAt;
     }
 }
