@@ -184,8 +184,11 @@ public class TournamentSingleGame {
         return s.trim().substring(0, s.length() - 2);
     }
 
+    public boolean isFinished() {
+        return winner > -1;
+    }
     public boolean isFinishedOrCalled() {
-        return winner > -1 || called;
+        return isFinished() || called;
     }
 
     public TournamentPlayer getWinningPlayer() {

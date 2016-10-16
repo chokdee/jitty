@@ -90,7 +90,7 @@ public class TourmentControllerTest extends SecureResourceTest {
             ResponseEntity<Void> entity = http(HttpMethod.POST, "api/tournaments",
                     createHttpEntity(tournament, okResponse.getHeaders()), Void.class);
 
-            assertThat(entity.getStatusCode(), is(HttpStatus.OK));
+                assertThat(entity.getStatusCode(), is(HttpStatus.OK));
             assertThat(jdbcTemplate.queryForObject("select count(*) from tournament ", Integer.class), is(size + 1));
 
         } catch (HttpClientErrorException e) {

@@ -72,6 +72,10 @@ public class TournamentClass {
     @Column(nullable = false, name = "running")
     Boolean running = false;
 
+    @Column(nullable = true, name = "phase")
+    Integer phase = 0;
+
+
     /**
      * @see GameMode for values
      */
@@ -90,12 +94,22 @@ public class TournamentClass {
     @Column(nullable = true, name = "group_count")
     Integer groupCount;
 
+    @OneToOne
+    KOField koField;
 
     public TournamentClass(String name) {
         this.name = name;
     }
 
     public TournamentClass() {
+    }
+
+    public KOField getKoField() {
+        return koField;
+    }
+
+    public void setKoField(KOField koField) {
+        this.koField = koField;
     }
 
     public Integer getPlayerPerGroup() {
@@ -287,5 +301,13 @@ public class TournamentClass {
     @Transient
     public int getPlayerCount() {
         return players.size();
+    }
+
+    public Integer getPhase() {
+        return phase;
+    }
+
+    public void setPhase(Integer phase) {
+        this.phase = phase;
     }
 }

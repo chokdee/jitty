@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.config.SecurityUtil;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import com.jmelzer.jitty.service.TournamentService;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,9 @@ public class TournamentDirectorController {
 
     @Inject
     TournamentService service;
+    @Inject
+    SecurityUtil securityUtil;
+
 
     @Path("/possible-games")
     @GET
@@ -72,5 +76,18 @@ public class TournamentDirectorController {
     public Response saveResult(TournamentSingleGameDTO dto) {
         service.saveAndFinishGame(dto);
         return Response.ok().build();
+    }
+    @Path("/groups-finished")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean areAllGroupsFinished(@QueryParam(value = "id") String id) {
+        return service.areAllGroupsFinished(Long.valueOf(id));
+    }
+
+    @Path("/any-phase-finished")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Long[] anyPhaseFinished() {
+        return service.anyPhaseFinished(securityUtil.getActualUsername());
     }
 }

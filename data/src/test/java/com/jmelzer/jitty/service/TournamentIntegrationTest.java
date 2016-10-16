@@ -83,6 +83,7 @@ public class TournamentIntegrationTest {
             }
         }
 
+        tournamentService.startClass(classC.getId());
 //        for (TournamentGroup group : groups) {
 //            //System.out.println(group);
 //        }

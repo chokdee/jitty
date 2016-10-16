@@ -13,13 +13,13 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.util.*;
 
 import static com.jmelzer.jitty.service.CopyManager.copy;
@@ -31,8 +31,9 @@ import static com.jmelzer.jitty.service.CopyManager.copy;
 @Component
 public class TournamentService {
     static final Logger LOG = LoggerFactory.getLogger(TournamentService.class);
-
-
+    @Autowired
+    @Qualifier("transactionManager")
+    protected PlatformTransactionManager txManager;
     List<TournamentSingleGame> gameQueue = new ArrayList<>();
     List<TournamentSingleGame> busyGames = new ArrayList<>();
     List<TournamentGroup> groups = new ArrayList<>();
@@ -46,10 +47,6 @@ public class TournamentService {
     TournamentPlayerRepository playerRepository;
     @Resource
     TournamentSingleGameRepository tournamentSingleGameRepository;
-    @Autowired
-    @Qualifier("transactionManager")
-    protected PlatformTransactionManager txManager;
-
     //todo use spring
     private SeedingManager seedingManager = new SeedingManager();
     private KOField field;
@@ -331,6 +328,9 @@ public class TournamentService {
     }
 
     public TournamentSingleGame poll() {
+        if (gameQueue.size() == 0) {
+            return null;
+        }
         TournamentSingleGame game = gameQueue.get(0);
         gameQueue.remove(0);
         return game;
@@ -360,6 +360,7 @@ public class TournamentService {
             if (!playerInQueue(player1, gameQueue) && !playerInQueue(player2, gameQueue) &&
                     !playerInQueue(player1, busyGames) && !playerInQueue(player2, busyGames) &&
                     !game.isFinishedOrCalled()) {
+                System.out.println("game = " + game.getId() + " - " + game);
                 gameQueue.add(game);
             }
         }
@@ -841,6 +842,52 @@ public class TournamentService {
     public void saveAndFinishGame(TournamentSingleGameDTO dto) {
         TournamentSingleGame game = saveGame(dto);
         finishGame(game);
+    }
+
+    public boolean isPhase1FinishedAndPhase2NotStarted(TournamentClass tc) {
+        for (TournamentGroup group : groups) {
+            List<TournamentSingleGame> games = group.getGames();
+            for (TournamentSingleGame game : games) {
+                if (!game.isPlayed()) {
+                    return false;
+                }
+            }
+        }
+        return tc.getKoField() == null;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean areAllGroupsFinished(Long id) {
+        TournamentClass clz = tcRepository.findOne(id);
+        //todo slow and can be done better, query etc...
+        //if phase 2 was started we return something other
+        if (clz.getPhase() != null && clz.getPhase() == 2) {
+            return true;
+        }
+
+        for (TournamentGroup tournamentGroup : clz.getGroups()) {
+            for (TournamentSingleGame game : tournamentGroup.getGames()) {
+                if (!game.isFinished()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    @Transactional(readOnly = true)
+    public Long[] anyPhaseFinished(String userName) {
+        Tournament t = userRepository.findByLoginName(userName).getLastUsedTournament();
+        List<TournamentClass> clzs = tcRepository.findByTournamentAndRunning(t, true);
+        List<Long> ids = new ArrayList<>();
+        for (TournamentClass clz : clzs) {
+            boolean b = areAllGroupsFinished(clz.getId());
+            if (b) {
+                ids.add(clz.getId());
+            }
+        }
+        return ids.toArray(new Long[ids.size()]);
     }
 
     static public class PS implements Comparable<PS> {

@@ -12,6 +12,7 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         $scope.getPossibleGames();
         $scope.getRunningGames();
         $scope.getFinishedGames();
+        $scope.anyPhaseFinished();
     };
 
     $scope.startGame = function (id) {
@@ -37,6 +38,17 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         $http.get('/api/tournamentdirector/running-games', {}).then(function (response) {
             $scope.runningGames = response.data;
             $scope.gridOptionsRunning.data = response.data;
+        });
+
+    };
+
+    $scope.anyPhaseFinished = function () {
+        $http.get('/api/tournamentdirector/any-phase-finished', {}).then(function (response) {
+            if (response.data.length > 0) {
+                $scope.finishedTC = response.data[0];
+            } else {
+                $scope.finishedTC = null;
+            }
         });
 
     };

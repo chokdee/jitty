@@ -59,6 +59,9 @@
         <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
     </div>
 </script>
+<div ng-show="finishedTC">
+    <pr >Es gibt eine Klasse zum Auslosen.  </pr><a href="{{'/#/draw/' + finishedTC}}">Hier klicken</a>
+</div>
 
 <div>
     <div ui-grid="gridOptions" class="myGrid"></div>
