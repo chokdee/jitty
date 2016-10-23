@@ -1,46 +1,50 @@
 <h3>Auslosung</h3>
 <div class="row">
     <div class="col-md-10">
-        <h4>Parameter für die Auslosung einstellen</h4>
-        <p style="font-weight: bold">Erste Phase</p>
-        <p>Es sind {{players.length}} Spieler angemeldet</p>
-        <form name="playerForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="saveTC()">
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="control-group">
-                        <label for="modus1">Modus <span class="required">*</span></label>
-                        <br>
-                        <select name="modus1" id="modus1" ng-model="tournamentClass.gameModePhase1" class="form-control ng-pristine ng-invalid ng-invalid-required">
-                            <!--<option value="">Bitte auswählen</option> &lt;!&ndash; not selected / blank option &ndash;&gt;-->
-                            <option value="g">Gruppe</option> <!-- interpolation -->
-                            <option value="k">KO</option>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="control-group">
-                                <label for="playerPerGroup">Spieler/Gruppe</label>
-                                <input type="number" ng-model="tournamentClass.playerPerGroup" name="playerPerGroup" required id="playerPerGroup"
-                                       class="form-control ng-pristine ng-invalid ng-invalid-required"/>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="control-group">
-                                <label for="groupCount">Gruppenanzahl</label>
-                                <input type="number" ng-model="tournamentClass.groupCount" name="groupCount" required id="groupCount" class="form-control ng-pristine ng-invalid ng-invalid-required"/>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
+        <h4>{{'Parameter für die Auslosung der Klasse \'' + tournamentClass.name + '\' einstellen'}}</h4>
+        <div ng-show="!tournamentClass.running">
+            <p style="font-weight: bold">Erste Phase</p>
+            <p>Es sind {{players.length}} Spieler angemeldet</p>
+            <form name="playerForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="saveTC()">
+                    <br>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="control-group">
+                            <label for="modus1">Modus <span class="required">*</span></label>
                             <br>
-                            <p style="margin-top: 10px">= {{resultSize}}</p>
+                            <select name="modus1" id="modus1"
+                                    ng-options="item as item.label for item in modi track by item.id" ng-model="modus" class="form-control ng-pristine ng-invalid ng-invalid-required"></select>
+                            <div class="row" ng-show="modus.id == 1">
+                                <div class="col-md-4">
+                                    <div class="control-group">
+                                        <label for="playerPerGroup">Spieler/Gruppe</label>
+                                        <input type="number" ng-model="tournamentClass.playerPerGroup" name="playerPerGroup" required id="playerPerGroup"
+                                               class="form-control ng-pristine ng-invalid ng-invalid-required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="control-group">
+                                        <label for="groupCount">Gruppenanzahl</label>
+                                        <input type="number" ng-model="tournamentClass.groupCount" name="groupCount" required id="groupCount"
+                                               class="form-control ng-pristine ng-invalid ng-invalid-required"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <br>
+                                    <p style="margin-top: 10px">= {{resultSize}}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <br>
-        </form>
-        <button ng-click="createDummyPlayer()">Create 20 Player</button>
-        <button ng-click="fillAll()">Mach alles plus Ergebnisse</button>
+            </form>
+            <!--<button ng-click="createDummyPlayer()">Create 20 Player</button>-->
+            <!--<button ng-click="fillAll()">Mach alles plus Ergebnisse</button>-->
+        </div>
+        <div ng-show="tournamentClass.running">
+            <p style="font-weight: bold">Zweite Phase</p>
+            <p>Es sind {{players.length}} Spieler angemeldet</p>
+    </div>
     </div>
 </div>
 <hr/>

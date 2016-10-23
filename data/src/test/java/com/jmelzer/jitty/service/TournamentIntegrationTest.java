@@ -75,13 +75,13 @@ public class TournamentIntegrationTest {
         assertEquals("14*4 groups + 1 with 3 player", 15, classC.getGroups().size());
 
         // test the order of the groups player
-        for (TournamentGroup group : tournamentService.getGroups()) {
-            int last_ttr = 5000;
-            for (TournamentPlayer player : group.getPlayers()) {
-                assertTrue(player.toString(), last_ttr > player.getQttr());
-                last_ttr = player.getQttr();
-            }
-        }
+//        for (TournamentGroup group : tournamentService.getGroups()) {
+//            int last_ttr = 5000;
+//            for (TournamentPlayer player : group.getPlayers()) {
+//                assertTrue(player.toString(), last_ttr > player.getQttr());
+//                last_ttr = player.getQttr();
+//            }
+//        }
 
         tournamentService.startClass(classC.getId());
 //        for (TournamentGroup group : groups) {
@@ -92,14 +92,14 @@ public class TournamentIntegrationTest {
 
         //start the tournament with games
         //calculate possible games
-        tournamentService.calcGroupGames(tournamentService.getGroups());
+//        tournamentService.calcGroupGames(tournamentService.getGroups());
 
         //todo add table manager to get free tables
 
         //start the games, we assume we have 20 table to play
         //algo for find the player who can play
 
-        tournamentService.addPossibleGroupGamesToQueue(tournamentService.getGroups());
+//        tournamentService.addPossibleGroupGamesToQueue(tournamentService.getGroups());
 //        int i = 0;
 //        for (TournamentSingleGame tournamentSingleGame : gameQueue) {
 //            //System.out.println(++i + ": " + tournamentSingleGame);
@@ -115,56 +115,56 @@ public class TournamentIntegrationTest {
 
         //list the busy games in a table on the UI
         int i = 0;
-        int max = 6 * tournamentService.getGroups().size();
-        while (true) {
-
-            List<TournamentSingleGameDTO> busyGames = tournamentService.getBusyGames();
-            if (busyGames.size() == 0) {
-                break;
-            }
-            //get random busy game
-            TournamentSingleGameDTO game = busyGames.get(randomIntFromInterval(0, busyGames.size() - 1));
+//        int max = 6 * tournamentService.getGroups().size();
+//        while (true) {
+//
+//            List<TournamentSingleGameDTO> busyGames = tournamentService.getBusyGames();
+//            if (busyGames.size() == 0) {
+//                break;
+//            }
+//            get random busy game
+//            TournamentSingleGameDTO game = busyGames.get(randomIntFromInterval(0, busyGames.size() - 1));
 
 //            createRandomResult(game);
 //
 //            tournamentService.removeBusyGame(game);
 
             //System.out.println("game " + game + " finished with " + game.printResult());
-            tournamentService.addPossibleGroupGamesToQueue(tournamentService.getGroups());
-            tableManager.setFreeTablesNo(game.getTableNo());
-
-            callPossibleGames(tournamentService, tableManager);
-            i++;
-        }
-        assertEquals(max, i);
+//            tournamentService.addPossibleGroupGamesToQueue(tournamentService.getGroups());
+//            tableManager.setFreeTablesNo(game.getTableNo());
+//
+//            callPossibleGames(tournamentService, tableManager);
+//            i++;
+//        }
+//        assertEquals(max, i);
 
         //todo remove bye games
         for (TournamentPlayer player : allPlayer) {
             assertEquals(player.toString(), 3, player.getGames().size());
         }
 
-        tournamentService.markGroupWinner(tournamentService.getGroups());
+//        tournamentService.markGroupWinner(tournamentService.getGroups());
 
         //59 Player , 2 per group are winner 32 K.O
         KOField field = tournamentService.createKOField(RoundType.R32);
         //System.out.println("field = " + field);
-        List<TournamentSingleGame> games = tournamentService.assignPlayerToKoField(field);
-        printBracket(games);
+//        List<TournamentSingleGame> games = tournamentService.assignPlayerToKoField(field, groups);
+//        printBracket(games);
 
         tournamentService.addPossibleKoGamesToQueue();
 
         callPossibleGames(tournamentService, tableManager);
 
-        for (TournamentSingleGame game : games) {
-            createRandomResult(game);
-            tournamentService.enterResult(game);
-
-        }
-        assertEquals(0, tournamentService.getQueueSize());
-
-
-        tournamentService.addPossibleKoGamesToQueue();
-        assertEquals(0, tournamentService.getQueueSize());
+//        for (TournamentSingleGame game : games) {
+//            createRandomResult(game);
+//            tournamentService.enterResult(game);
+//
+//        }
+//        assertEquals(0, tournamentService.getQueueSize());
+//
+//
+//        tournamentService.addPossibleKoGamesToQueue();
+//        assertEquals(0, tournamentService.getQueueSize());
 
     }
 

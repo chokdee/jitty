@@ -31,22 +31,22 @@ public class TournamentServiceTest {
     public void testAddPossibleGamesToQueue() throws Exception {
 
         TournamentGroup group = prepareGroupWithPlayerAndGames();
-        service.addGroup(group);
-
-        service.addPossibleGroupGamesToQueue(service.getGroups());
+List<TournamentGroup> groups = new ArrayList<>();
+        groups.add(group);
+        service.addPossibleGroupGamesToQueue(groups);
         assertEquals(2, service.getQueueSize());
 
         TournamentSingleGame game = service.poll();
         game.setCalled(true);
         assertEquals(1, service.getQueueSize());
-        service.addPossibleGroupGamesToQueue(service.getGroups());
+        service.addPossibleGroupGamesToQueue(groups);
         assertEquals("player busy no new player can be added", 1, service.getQueueSize());
 
         game = service.poll();
         game.setCalled(true);
         assertEquals(0, service.getQueueSize());
 
-        service.addPossibleGroupGamesToQueue(service.getGroups());
+        service.addPossibleGroupGamesToQueue(groups);
         assertEquals(2, service.getQueueSize());
     }
 
@@ -59,10 +59,10 @@ public class TournamentServiceTest {
     @Test
     public void assignPlayerToKoField32() {
 
-        createPlayerForKOField(30);
+        List<TournamentGroup> groups = createPlayerForKOField(30);
 
         KOField field = service.createKOField(RoundType.R32);
-        List<TournamentSingleGame> games = service.assignPlayerToKoField(field);
+        List<TournamentSingleGame> games = service.assignPlayerToKoField(field, groups);
 
         assertEquals(1, games.get(0).getPlayer1().ranking);
         assertEquals(2, games.get(15).getPlayer2().ranking);
@@ -86,10 +86,10 @@ public class TournamentServiceTest {
     @Test
     public void assignPlayerToKoField16() {
 
-        createPlayerForKOField(16);
+        List<TournamentGroup> groups = createPlayerForKOField(16);
 
         KOField field = service.createKOField(RoundType.R16);
-        List<TournamentSingleGame> games = service.assignPlayerToKoField(field);
+        List<TournamentSingleGame> games = service.assignPlayerToKoField(field, groups);
         assertEquals("Ma", games.get(0).getPlayer1().getFirstName());
         assertEquals("Fan", games.get(7).getPlayer2().getFirstName());
         //todo etc
@@ -104,10 +104,10 @@ public class TournamentServiceTest {
     @Test
     public void assignPlayerToKoField8() {
 
-        createPlayerForKOField(8);
+        List<TournamentGroup> groups = createPlayerForKOField(8);
 
         KOField field = service.createKOField(RoundType.QUARTER);
-        List<TournamentSingleGame> games = service.assignPlayerToKoField(field);
+        List<TournamentSingleGame> games = service.assignPlayerToKoField(field, groups);
 
         assertEquals(1, games.get(0).getPlayer1().ranking);
     }
@@ -115,10 +115,10 @@ public class TournamentServiceTest {
     @Test
     public void assignPlayerToKoField64() {
 
-        createPlayerForKOField(52);
+        List<TournamentGroup> groups = createPlayerForKOField(52);
 
         KOField field = service.createKOField(RoundType.R64);
-        List<TournamentSingleGame> games = service.assignPlayerToKoField(field);
+        List<TournamentSingleGame> games = service.assignPlayerToKoField(field, groups);
 
         assertEquals(1, games.get(0).getPlayer1().ranking);
         assertEquals(32, games.size());
@@ -145,7 +145,8 @@ public class TournamentServiceTest {
         return list;
     }
 
-    private void createPlayerForKOField(int size) {
+    private List<TournamentGroup> createPlayerForKOField(int size) {
+        List<TournamentGroup> groups = new ArrayList<>();
         int ttr = 1500;
         int rank = 1;
         List<String[]> names = names();
@@ -166,9 +167,10 @@ public class TournamentServiceTest {
             ps.player.setQttr(ttr--);
             ranking.add(ps);
             group.setRanking(ranking);
-            service.addGroup(group);
+            groups.add(group);
 
         }
+        return groups;
     }
 
     private TournamentGroup prepareGroupWithPlayerAndGames() {
@@ -257,5 +259,11 @@ public class TournamentServiceTest {
         }
         game.addSet(new GameSetDTO(11, 13));
         assertThat(service.calcWinner(game).getWinner(), is(2));
+    }
+    @Test
+    public void calcKOSize() {
+        TournamentClass tc = new TournamentClass();
+        tc.setGroupCount(4);
+        assertThat(service.calcKOSize(tc), is(RoundType.QUARTER));
     }
 }

@@ -46,6 +46,9 @@ public class TournamentSingleGame {
     @ManyToOne()
     TournamentGroup group;
 
+    @ManyToOne
+    Round round;
+
     //todo add Schiedsrichter
     @Id
     @GeneratedValue
@@ -244,4 +247,11 @@ public class TournamentSingleGame {
         this.endTime = endTime;
     }
 
+    public Round getRound() {
+        return round;
+    }
+
+    public void setRound(Round round) {
+        this.round = round;
+    }
 }

@@ -36,7 +36,6 @@ public class TournamentService {
     protected PlatformTransactionManager txManager;
     List<TournamentSingleGame> gameQueue = new ArrayList<>();
     List<TournamentSingleGame> busyGames = new ArrayList<>();
-    List<TournamentGroup> groups = new ArrayList<>();
     @Resource
     TournamentRepository repository;
     @Resource
@@ -67,7 +66,7 @@ public class TournamentService {
 
         int groupCount = calcOptimalGroupSize(ps, 4);
 
-        groups = createGroups(groupCount);
+        List<TournamentGroup> groups = createGroups(groupCount);
         tournamentClass.setGroups(groups);
 
         List<TournamentPlayer> allPlayer = new ArrayList<>(tournamentClass.getPlayers());
@@ -87,10 +86,6 @@ public class TournamentService {
 //todo change to dtos here
 //        seedingManager.setPlayerRandomAccordingToQTTR(groups, allPlayer);
 
-    }
-
-    public List<TournamentGroup> getGroups() {
-        return Collections.unmodifiableList(groups);
     }
 
     public int getQueueSize() {
@@ -273,8 +268,24 @@ public class TournamentService {
         }
     }
 
-    public void addGroup(TournamentGroup group) {
-        groups.add(group);
+    public RoundType calcKOSize(TournamentClass tournamentClass) {
+        int player = tournamentClass.getGroupCount() * 2;
+        if (player <= 8) {
+            return RoundType.QUARTER;
+        }
+        if (player <= 16) {
+            return RoundType.R16;
+        }
+        if (player <= 32) {
+            return RoundType.R32;
+        }
+        if (player <= 64) {
+            return RoundType.R64;
+        }
+        if (player <= 128) {
+            return RoundType.R128;
+        }
+        throw new IllegalArgumentException("could not calc size for " + player);
     }
 
     public KOField createKOField(RoundType roundType) {
@@ -305,17 +316,17 @@ public class TournamentService {
 
     private void createSubRounds(Round round, int i, int size) {
         Round lastRound = round;
-        lastRound.setSize(size * 2);
+        int n = size;
+        lastRound.setSize(n * 2);
         for (int j = 0; j < i; j++) {
-            lastRound.setNextRound(new Round(size));
-            size = size / 2;
+            lastRound.setNextRound(new Round(n));
+            n = n / 2;
             lastRound = lastRound.getNextRound();
         }
     }
 
-    public List<TournamentSingleGame> assignPlayerToKoField(KOField field) {
-        List<TournamentSingleGame> games = seedingManager.assignPlayerToKoField(field, groups);
-        return games;
+    public List<TournamentSingleGame> assignPlayerToKoField(KOField field, List<TournamentGroup> groups) {
+        return seedingManager.assignPlayerToKoField(field, groups);
     }
 
     @Transactional
@@ -845,7 +856,7 @@ public class TournamentService {
     }
 
     public boolean isPhase1FinishedAndPhase2NotStarted(TournamentClass tc) {
-        for (TournamentGroup group : groups) {
+        for (TournamentGroup group : tc.getGroups()) {
             List<TournamentSingleGame> games = group.getGames();
             for (TournamentSingleGame game : games) {
                 if (!game.isPlayed()) {
@@ -859,21 +870,22 @@ public class TournamentService {
     @Transactional(readOnly = true)
     public boolean areAllGroupsFinished(Long id) {
         TournamentClass clz = tcRepository.findOne(id);
+        return isPhase1FinishedAndPhase2NotStarted(clz);
         //todo slow and can be done better, query etc...
         //if phase 2 was started we return something other
-        if (clz.getPhase() != null && clz.getPhase() == 2) {
-            return true;
-        }
-
-        for (TournamentGroup tournamentGroup : clz.getGroups()) {
-            for (TournamentSingleGame game : tournamentGroup.getGames()) {
-                if (!game.isFinished()) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+//        if (clz.getPhase() != null && clz.getPhase() == 2) {
+//            return true;
+//        }
+//
+//        for (TournamentGroup tournamentGroup : clz.getGroups()) {
+//            for (TournamentSingleGame game : tournamentGroup.getGames()) {
+//                if (!game.isFinished()) {
+//                    return false;
+//                }
+//            }
+//        }
+//
+//        return true;
     }
 
     @Transactional(readOnly = true)
@@ -888,6 +900,27 @@ public class TournamentService {
             }
         }
         return ids.toArray(new Long[ids.size()]);
+    }
+
+    @Transactional
+    public KOFieldDTO startKO(Long tcId) {
+        TournamentClass tc = tcRepository.findOne(tcId);
+        if (tc.getPhase() != null && tc.getPhase() == 2) {
+            throw new IllegalArgumentException("allready starte ko-phase");
+        }
+        for (TournamentGroup tournamentGroup : tc.getGroups()) {
+            calcRankingForGroup(tournamentGroup);
+        }
+        RoundType roundType = calcKOSize(tc);
+        KOField field = createKOField(roundType);
+        tc.setKoField(field);
+        List<TournamentSingleGame> games = assignPlayerToKoField(field, tc.getGroups());
+        for (TournamentSingleGame game : games) {
+            tournamentSingleGameRepository.saveAndFlush(game);
+        }
+        tc.setPhase(2);
+        tcRepository.saveAndFlush(tc);
+        return copy(field);
     }
 
     static public class PS implements Comparable<PS> {

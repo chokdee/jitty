@@ -1,7 +1,9 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.Application;
+import com.jmelzer.jitty.model.TournamentSingleGame;
 import com.jmelzer.jitty.model.dto.GameSetDTO;
+import com.jmelzer.jitty.model.dto.KOFieldDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import org.junit.Test;
@@ -12,6 +14,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
@@ -152,6 +156,12 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
                 }
 
             }
+            //start ko
+            ResponseEntity<KOFieldDTO> koFieldEntity = http(HttpMethod.GET, "api/tournamentdirector/start-ko?id=1",
+                    createHttpEntity(entity.getBody(), loginHeaders), KOFieldDTO.class);
+            printBracket(koFieldEntity.getBody());
+
+
 
 
         } catch (HttpClientErrorException e) {
@@ -159,7 +169,16 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
             fail();
         }
     }
-
+    private void printBracket(KOFieldDTO koFieldDTO) {
+        for (TournamentSingleGameDTO game : koFieldDTO.getRound().getGames()) {
+            System.out.println("------------------");
+            System.out.println(game.getPlayer1().getFullName());
+            System.out.println("                       --------------");
+            System.out.println(game.getPlayer2().getFullName());
+            System.out.println("------------------");
+            System.out.println();
+        }
+    }
     private int addResult(HttpHeaders loginHeaders, TournamentSingleGameDTO[] runningGames) {
         ResponseEntity<Void> voidEntity;
         for (TournamentSingleGameDTO runningGame : runningGames) {

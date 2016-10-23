@@ -64,5 +64,8 @@ public class Round {
 
     public void addAllGames(List<TournamentSingleGame> games) {
         this.games.addAll(games);
+        for (TournamentSingleGame game : games) {
+            game.setRound(this);
+        }
     }
 }

@@ -19,13 +19,27 @@ public class CopyManager {
 
     final static DateFormat hourFormatter = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
 
+    static public KOFieldDTO copy(KOField koField) {
+        KOFieldDTO dto = new KOFieldDTO();
+        BeanUtils.copyProperties(koField, dto, "round");
+        RoundDTO rdto = new RoundDTO();
+        BeanUtils.copyProperties(koField.getRound(), rdto, "games");
+        dto.setRound(rdto);
+        for (TournamentSingleGame game : koField.getRound().getGames()) {
+            rdto.addGame(copy(game));
+        }
+        return dto;
+    }
+
     static public TournamentSingleGameDTO copy(TournamentSingleGame game) {
         TournamentSingleGameDTO dto = new TournamentSingleGameDTO();
         BeanUtils.copyProperties(game, dto, "player1", "player2", "sets");
         dto.setPlayer1(copy(game.getPlayer1()));
         dto.setPlayer2(copy(game.getPlayer2()));
-        dto.setGroup(copy(game.getGroup()));
-        dto.setTcName(game.getGroup().getTournamentClass().getName());
+        if (game.getGroup() != null) {
+            dto.setGroup(copy(game.getGroup()));
+            dto.setTcName(game.getGroup().getTournamentClass().getName());
+        }
         return dto;
 
     }

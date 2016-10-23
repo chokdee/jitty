@@ -1,6 +1,7 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.config.SecurityUtil;
+import com.jmelzer.jitty.model.dto.KOFieldDTO;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import com.jmelzer.jitty.service.TournamentService;
 import org.springframework.stereotype.Component;
@@ -89,5 +90,11 @@ public class TournamentDirectorController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Long[] anyPhaseFinished() {
         return service.anyPhaseFinished(securityUtil.getActualUsername());
+    }
+    @Path("/start-ko")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public KOFieldDTO startKO(@QueryParam(value = "id") String id) {
+        return service.startKO(Long.valueOf(id));
     }
 }

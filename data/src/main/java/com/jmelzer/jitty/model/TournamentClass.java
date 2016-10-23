@@ -94,7 +94,7 @@ public class TournamentClass {
     @Column(nullable = true, name = "group_count")
     Integer groupCount;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     KOField koField;
 
     public TournamentClass(String name) {

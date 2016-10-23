@@ -26,6 +26,7 @@ public class TournamentClassDTO {
     private boolean openForMen;
     private boolean openForWomen;
     Date startTime;
+    boolean running;
     /**
      * @see GameMode for values
      */
@@ -217,5 +218,13 @@ public class TournamentClassDTO {
 
     public void addGroup(TournamentGroupDTO groupDTO) {
         groups.add(groupDTO);
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 }

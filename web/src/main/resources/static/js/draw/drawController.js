@@ -1,6 +1,14 @@
 angular.module('jitty.draw.controllers', []).controller('DrawController', function ($scope, $http, $routeParams, TournamentClass) {
 
     $scope.resultSize = 0;
+    $scope.modus = null;
+    $scope.modi = [{
+        id: 1,
+        label: 'Gruppe',
+    }, {
+        id: 2,
+        label: 'KO',
+    }];
 
     $scope.getPossibleClasses = function () {
         $http.get('/api/tournament-classes/not-running', {}).then(function (response) {
