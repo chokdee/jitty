@@ -1,13 +1,28 @@
 angular.module('jitty.draw.controllers', []).controller('DrawController', function ($scope, $http, $routeParams, TournamentClass) {
 
+    $scope.getTournamentClass = function () {
+        $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
+            console.log('Got TournamentClass successful');
+            if ($scope.tournamentClass.playerPerGroup == null)
+                $scope.tournamentClass.playerPerGroup = 4; //default
+
+        });
+        $scope.groups = $scope.tournamentClass.groups;
+    };
+
+    if ($routeParams.id != null) {
+        $scope.getTournamentClass();
+    }
+
+}).controller('GroupController', function ($scope, $http, $routeParams, TournamentClass) {
     $scope.resultSize = 0;
     $scope.modus = null;
     $scope.modi = [{
         id: 1,
-        label: 'Gruppe',
+        label: 'Gruppe'
     }, {
         id: 2,
-        label: 'KO',
+        label: 'KO'
     }];
 
     $scope.getPossibleClasses = function () {
@@ -19,23 +34,11 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     if ($routeParams.id == null)
         $scope.getPossibleClasses();
 
-    $scope.getTournamentClass = function () {
-        $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
-            console.log('Got TournamentClass successful');
-            if ($scope.tournamentClass.playerPerGroup == null)
-                $scope.tournamentClass.playerPerGroup = 4; //default
-
-        });
-        $scope.groups = $scope.tournamentClass.groups;
-    };
-
 
     $scope.getPlayerForClass = function () {
         $http.get('/api/draw/player-for-class?cid=' + $routeParams.id, {}).then(function (response) {
             $scope.players = response.data;
-
         });
-
     };
     if ($routeParams.id != null) {
         $scope.getTournamentClass();
@@ -52,7 +55,10 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         after(1000, $scope.saveDraw());
         after(1000, $scope.start());
     };
-    function after(ms, fn){ setTimeout(fn, ms); }
+    function after(ms, fn) {
+        setTimeout(fn, ms);
+    }
+
 
     $scope.automaticDraw = function () {
         $http({
@@ -110,10 +116,6 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         if ($scope.tournamentClass.groups == null) {
             for (i = 0; i < $scope.tournamentClass.groupCount; i++) {
                 $scope.groups[i] = {name: 'Gruppe ' + (i + 1), players: {}};
-                //
-                //for (j = 0; j < $scope.tournamentClass.playerPerGroup; j++) {
-                //    $scope.groups[i].players[j] = {firstName: '---Frei--'};
-                //}
             }
         } else {
             $scope.groups = $scope.tournamentClass.groups;
@@ -130,5 +132,52 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     $scope.$watch('tournamentClass.playerPerGroup', function () {
         $scope.refreshGroupSize();
     });
+
+}).controller('KOController', function ($scope, $http, $routeParams, TournamentClass) {
+    $scope.getGroupWinner = function () {
+        $http.get('/api/draw/group-winner-for-class?cid=' + $routeParams.id, {}).then(function (response) {
+            $scope.players = response.data;
+        });
+    };
+    $scope.calcKOSizeInInt = function () {
+        $http.get('/api/draw/calc-ko-size?cid=' + $routeParams.id, {}).then(function (response) {
+            $scope.calcKoSize = response.data;
+        });
+    };
+
+    $scope.getKoField = function () {
+        $http.get('/api/tournamentdirector/start-ko?id=' + $routeParams.id + '&assignPlayer=false', {}).then(function (response) {
+            $scope.koField = response.data;
+            $scope.dummArray = new Array($scope.koField.noOfRounds-1);
+        });
+    };
+
+    $scope.getNumber = function (num) {
+        if (num === undefined)
+            return new Array(0);
+
+        var a = undefined;
+        if (num == 0) {
+            a = new Array($scope.koField.round.size );
+        }
+        else if (num == 1) {
+            a = new Array($scope.koField.round.nextRound.size );
+        }
+        else if (num == 2) {
+            a = new Array($scope.koField.round.nextRound.nextRound.size );
+        }
+        else if (num == 3) {
+            a = new Array($scope.koField.round.nextRound.nextRound.nextRound.size);
+        }
+        else
+            a = new Array(1);
+
+        console.log(num + '=' + a.length);
+        return a;
+    };
+
+    $scope.getGroupWinner();
+    $scope.calcKOSizeInInt();
+    $scope.getKoField();
 });
 

@@ -4,7 +4,7 @@
     <thead>
     <tr>
         <!--todo-->
-        <td colspan="5">Gruppe {{group.groupName}}</td>
+        <td style="font-weight: bolder; font-size: larger" colspan="5">Gruppe {{group.groupName}}</td>
     </tr>
     <tr>
         <th>#</th>
@@ -18,9 +18,10 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="g in group.entries">
-        <td style="width: 15px">{{g.pos}}</td>
-        <td style="width: 150px">{{g.playerName}}</td>
+    <!--todo how many playes must be configured-->
+    <tr ng-repeat="g in group.entries track by $index">
+        <td ng-style="$index < 2 && {'font-weight':'bold'}" style="width: 15px">{{g.pos}}</td>
+        <td ng-style="$index < 2 && {'font-weight':'bold'}" style="width: 150px">{{g.playerName}}</td>
         <td style="width: 150px" title="{{g.club}}">{{ g.club | limitTo: 10 }}{{g.club.length > 10 ? '...' : ''}}</td>
         <td style="width: 60px">{{g.gameStat}}</td>
         <td style="width: 60px">{{g.setStat}}</td>

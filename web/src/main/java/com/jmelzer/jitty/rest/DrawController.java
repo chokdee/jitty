@@ -38,6 +38,24 @@ public class DrawController {
 
     }
 
+    @Path("/group-winner-for-class")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<TournamentPlayerDTO> getGroupWinnerforClass(@QueryParam(value = "cid") String id) {
+        List<TournamentPlayerDTO>  list = service.getGroupWinnerforClass(Long.valueOf(id));
+        LOG.debug("found winner {}", list.size());
+        return list;
+
+    }
+
+    @Path("/calc-ko-size")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public int calcKOSizeInInt(@QueryParam(value = "cid") String id) {
+        return service.calcKOSizeInInt(Long.valueOf(id));
+
+    }
+
     @Path("/start")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)

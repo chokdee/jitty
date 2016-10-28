@@ -37,6 +37,7 @@ public class TournamentGroup {
     @JoinColumn(name="TC_ID")
     TournamentClass tournamentClass;
 
+    //todo we have to store it somewhere after group phase
     transient private List<TournamentService.PS> ranking;
 
 

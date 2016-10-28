@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @DirtiesContext
-public class LifeViewControllerTest extends SecureResourceTest {
+public class LiveViewControllerTest extends SecureResourceTest {
     @Test
     public void getStartedClasses() throws Exception {
         try {

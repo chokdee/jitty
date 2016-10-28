@@ -3,6 +3,15 @@ package com.jmelzer.jitty.model.dto;
 public class KOFieldDTO {
     RoundDTO round;
     private Long id;
+    int noOfRounds;
+
+    public int getNoOfRounds() {
+        return noOfRounds;
+    }
+
+    public void setNoOfRounds(int noOfRounds) {
+        this.noOfRounds = noOfRounds;
+    }
 
     public Long getId() {
         return id;

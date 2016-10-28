@@ -22,12 +22,22 @@ public class CopyManager {
     static public KOFieldDTO copy(KOField koField) {
         KOFieldDTO dto = new KOFieldDTO();
         BeanUtils.copyProperties(koField, dto, "round");
-        RoundDTO rdto = new RoundDTO();
-        BeanUtils.copyProperties(koField.getRound(), rdto, "games");
-        dto.setRound(rdto);
-        for (TournamentSingleGame game : koField.getRound().getGames()) {
-            rdto.addGame(copy(game));
-        }
+        Round round = koField.getRound();
+        RoundDTO lastRoundDto = null;
+        do {
+            RoundDTO rdto = new RoundDTO();
+            BeanUtils.copyProperties(round, rdto, "games");
+            if ( lastRoundDto == null) {
+                dto.setRound(rdto);
+            } else {
+                lastRoundDto.setNextRound(rdto);
+            }
+            lastRoundDto = rdto;
+            for (TournamentSingleGame game : koField.getRound().getGames()) {
+                rdto.addGame(copy(game));
+            }
+            round = round.getNextRound();
+        } while (round != null);
         return dto;
     }
 
@@ -110,7 +120,7 @@ public class CopyManager {
         return dto;
     }
 
-    private static TournamentPlayerDTO copy(TournamentPlayer player) {
+    public static TournamentPlayerDTO copy(TournamentPlayer player) {
         TournamentPlayerDTO dto = new TournamentPlayerDTO();
         BeanUtils.copyProperties(player, dto);
         if (player.getLastGameAt() != null) {

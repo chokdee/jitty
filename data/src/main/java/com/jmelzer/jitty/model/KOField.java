@@ -13,6 +13,8 @@ public class KOField {
     @Id
     @GeneratedValue
     private Long id;
+    @Column
+    private int noOfRounds;
 
     public Long getId() {
         return id;
@@ -26,4 +28,11 @@ public class KOField {
         this.round = round;
     }
 
+    public void setNoOfRounds(int noOfRounds) {
+        this.noOfRounds = noOfRounds;
+    }
+
+    public int getNoOfRounds() {
+        return noOfRounds;
+    }
 }

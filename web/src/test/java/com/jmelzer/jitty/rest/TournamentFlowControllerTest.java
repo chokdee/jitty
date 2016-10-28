@@ -157,10 +157,12 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
 
             }
             //start ko
-            ResponseEntity<KOFieldDTO> koFieldEntity = http(HttpMethod.GET, "api/tournamentdirector/start-ko?id=1",
+            ResponseEntity<KOFieldDTO> koFieldEntity = http(HttpMethod.GET, "api/tournamentdirector/start-ko?id=1&assignPlayer=false",
                     createHttpEntity(entity.getBody(), loginHeaders), KOFieldDTO.class);
             printBracket(koFieldEntity.getBody());
-
+            koFieldEntity = http(HttpMethod.GET, "api/tournamentdirector/start-ko?id=1&assignPlayer=true",
+                    createHttpEntity(entity.getBody(), loginHeaders), KOFieldDTO.class);
+            printBracket(koFieldEntity.getBody());
 
 
 
@@ -170,6 +172,7 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
         }
     }
     private void printBracket(KOFieldDTO koFieldDTO) {
+        System.out.println("-------- bracket -----------");
         for (TournamentSingleGameDTO game : koFieldDTO.getRound().getGames()) {
             System.out.println("------------------");
             System.out.println(game.getPlayer1().getFullName());
@@ -178,6 +181,7 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
             System.out.println("------------------");
             System.out.println();
         }
+        System.out.println("-------- bracket -----------");
     }
     private int addResult(HttpHeaders loginHeaders, TournamentSingleGameDTO[] runningGames) {
         ResponseEntity<Void> voidEntity;

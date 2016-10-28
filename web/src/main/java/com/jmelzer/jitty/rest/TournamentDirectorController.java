@@ -78,6 +78,7 @@ public class TournamentDirectorController {
         service.saveAndFinishGame(dto);
         return Response.ok().build();
     }
+
     @Path("/groups-finished")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -91,10 +92,11 @@ public class TournamentDirectorController {
     public Long[] anyPhaseFinished() {
         return service.anyPhaseFinished(securityUtil.getActualUsername());
     }
+
     @Path("/start-ko")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
-    public KOFieldDTO startKO(@QueryParam(value = "id") String id) {
-        return service.startKO(Long.valueOf(id));
+    public KOFieldDTO startKO(@QueryParam(value = "id") String id, @QueryParam(value = "assignPlayer") Boolean assignPlayer) {
+        return service.startKO(Long.valueOf(id), assignPlayer);
     }
 }

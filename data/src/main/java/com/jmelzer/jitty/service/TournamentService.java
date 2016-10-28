@@ -268,8 +268,15 @@ public class TournamentService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public int calcKOSizeInInt(long cId) {
+        TournamentClass tc = tcRepository.findOne(cId);
+        return calcKOSize(tc).getValue();
+
+    }
+
     public RoundType calcKOSize(TournamentClass tournamentClass) {
-        int player = tournamentClass.getGroupCount() * 2;
+        int player = tournamentClass.getGroups().size() * 2;
         if (player <= 8) {
             return RoundType.QUARTER;
         }
@@ -288,39 +295,38 @@ public class TournamentService {
         throw new IllegalArgumentException("could not calc size for " + player);
     }
 
+    private int calcRounds(RoundType roundType) {
+        switch (roundType) {
+            case QUARTER:
+                return 4;
+            case R16:
+                return 5;
+            case R32:
+                return 6;
+            case R64:
+                return 7;
+            case R128:
+                return 8;
+        }
+        throw new RuntimeException("not yet implemented");
+    }
+
     public KOField createKOField(RoundType roundType) {
         field = new KOField();
         field.setRound(new Round(roundType));
-        switch (roundType) {
-            case R128:
-                createSubRounds(field.getRound(), 6, 64);
-                break;
-            case R64:
-                createSubRounds(field.getRound(), 5, 32);
-                break;
-            case R32:
-                createSubRounds(field.getRound(), 4, 16);
-                break;
-            case R16:
-                createSubRounds(field.getRound(), 3, 8);
-                break;
-            case QUARTER:
-                createSubRounds(field.getRound(), 2, 4);
-                break;
-            default:
-                throw new RuntimeException("not yet implemented");
-        }
-        //todo persist it
+        createSubRounds(field.getRound(), calcRounds(roundType) -1 , roundType.getValue() / 2);
+        int nrOdRounds = calcRounds(roundType);
+        field.setNoOfRounds(nrOdRounds);
         return field;
     }
 
     private void createSubRounds(Round round, int i, int size) {
         Round lastRound = round;
         int n = size;
-        lastRound.setSize(n * 2);
+        lastRound.setSize(n);
         for (int j = 0; j < i; j++) {
-            lastRound.setNextRound(new Round(n));
             n = n / 2;
+            lastRound.setNextRound(new Round(n));
             lastRound = lastRound.getNextRound();
         }
     }
@@ -819,8 +825,8 @@ public class TournamentService {
     }
 
     @Transactional
-    public List<GroupResultDTO> getGroupResults(Long id) {
-        TournamentClass tournamentClass = tcRepository.findOne(id);
+    public List<GroupResultDTO> getGroupResults(Long classId) {
+        TournamentClass tournamentClass = tcRepository.findOne(classId);
 
         markGroupWinner(tournamentClass.getGroups());
 
@@ -903,7 +909,7 @@ public class TournamentService {
     }
 
     @Transactional
-    public KOFieldDTO startKO(Long tcId) {
+    public KOFieldDTO startKO(Long tcId, boolean assignPlayer) {
         TournamentClass tc = tcRepository.findOne(tcId);
         if (tc.getPhase() != null && tc.getPhase() == 2) {
             throw new IllegalArgumentException("allready starte ko-phase");
@@ -914,13 +920,29 @@ public class TournamentService {
         RoundType roundType = calcKOSize(tc);
         KOField field = createKOField(roundType);
         tc.setKoField(field);
-        List<TournamentSingleGame> games = assignPlayerToKoField(field, tc.getGroups());
-        for (TournamentSingleGame game : games) {
-            tournamentSingleGameRepository.saveAndFlush(game);
+        if (assignPlayer) {
+            List<TournamentSingleGame> games = assignPlayerToKoField(field, tc.getGroups());
+            for (TournamentSingleGame game : games) {
+                tournamentSingleGameRepository.saveAndFlush(game);
+            }
+            tc.setPhase(2);
         }
-        tc.setPhase(2);
         tcRepository.saveAndFlush(tc);
         return copy(field);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TournamentPlayerDTO> getGroupWinnerforClass(Long cid) {
+        TournamentClass tc = tcRepository.findOne(cid);
+        List<TournamentGroup> groups = tc.getGroups();
+        List<TournamentPlayerDTO> winner = new ArrayList<>();
+        for (TournamentGroup group : groups) {
+            calcRankingForGroup(group);
+            //todo config winner count
+            winner.add(copy(group.getRanking().get(0).player));
+            winner.add(copy(group.getRanking().get(1).player));
+        }
+        return winner;
     }
 
     static public class PS implements Comparable<PS> {

@@ -27,6 +27,7 @@
         group_id bigint,
         player1_id bigint,
         player2_id bigint,
+        round_id bigint,
         primary key (id)
     );
 
@@ -87,11 +88,13 @@
         name varchar(255) not null,
         open_for_men boolean not null,
         open_for_women boolean not null,
+        phase integer,
         player_per_group integer,
         running boolean not null,
         start_ttr integer,
         start_time timestamp,
         type varchar(255),
+        koField_id bigint,
         T_ID bigint,
         primary key (id)
     );
@@ -109,6 +112,7 @@
         email varchar(255),
         firstname varchar(255) not null,
         gender varchar(1),
+        last_game_at timestamp,
         lastname varchar(255) not null,
         mobilenumber varchar(255),
         qttr integer,
@@ -190,6 +194,11 @@
         foreign key (player2_id) 
         references tournament_player;
 
+    alter table TOURNAMENT_SINGLE_GAME 
+        add constraint FK_60r5pcov4bqv6l1neb9d7twab 
+        foreign key (round_id) 
+        references round;
+
     alter table TOURNAMENT_SINGLE_GAME_SET 
         add constraint FK_qsllp7dkc2v1b8k3vdmi6tb7i 
         foreign key (sets_id) 
@@ -224,6 +233,11 @@
         add constraint FK_ruvww624nattqggrhi1kjvuw0 
         foreign key (round_id) 
         references round;
+
+    alter table tournament_class 
+        add constraint FK_cxh6osuiy4a61gxw6329271ey 
+        foreign key (koField_id) 
+        references ko_field;
 
     alter table tournament_class 
         add constraint FK_61kldru8t8vxyffj5ign0v0ka 
