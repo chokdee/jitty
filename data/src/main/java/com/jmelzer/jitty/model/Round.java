@@ -19,7 +19,7 @@ public class Round {
     @GeneratedValue
     private Long id;
     @Column
-    private int size;
+    private int gameSize;
     @Column
     private RoundType roundType;
 
@@ -30,9 +30,9 @@ public class Round {
         this.roundType = roundType;
     }
 
-    public Round(int size) {
-        this.size = size;
-        roundType = RoundType.fromValue(size*2);
+    public Round(int gameSize) {
+        this.gameSize = gameSize;
+        roundType = RoundType.fromValue(gameSize *2);
     }
 
     public void addGame(TournamentSingleGame tournamentSingleGame) {
@@ -51,12 +51,14 @@ public class Round {
         this.nextRound = nextRound;
     }
 
-    public int getSize() {
-        return size;
+    public int getGameSize() {
+        return gameSize;
     }
-
-    public void setSize(int size) {
-        this.size = size;
+    public int playerSize() {
+        return gameSize * 2;
+    }
+    public void setGameSize(int gameSize) {
+        this.gameSize = gameSize;
     }
 
     public List<TournamentSingleGame> getGames() {

@@ -323,7 +323,7 @@ public class TournamentService {
     private void createSubRounds(Round round, int i, int size) {
         Round lastRound = round;
         int n = size;
-        lastRound.setSize(n);
+        lastRound.setGameSize(n);
         for (int j = 0; j < i; j++) {
             n = n / 2;
             lastRound.setNextRound(new Round(n));

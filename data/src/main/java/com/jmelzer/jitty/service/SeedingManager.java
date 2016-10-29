@@ -37,8 +37,8 @@ public class SeedingManager {
         Collections.sort(winner, (o1, o2) -> Integer.compare(o1.getQttr(), o2.getQttr()) * -1);
         Collections.sort(second, (o1, o2) -> Integer.compare(o1.getQttr(), o2.getQttr()) * -1);
         Round round = field.getRound();
-        int fieldSize = round.getSize();
-        TournamentPlayer[] players = new TournamentPlayer[round.getSize() + 1];
+        int fieldSize = round.playerSize();
+        TournamentPlayer[] players = new TournamentPlayer[fieldSize + 1];
 
         List<TournamentPlayer> rest = new ArrayList<>(winner);
         List<Integer> positionOfSeededPlayers = new ArrayList<>();
