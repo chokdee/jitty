@@ -1,7 +1,5 @@
 package com.jmelzer.jitty.model.dto;
 
-import com.jmelzer.jitty.model.RoundType;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +10,7 @@ public class RoundDTO {
     RoundDTO nextRound;
     List<TournamentSingleGameDTO> games = new ArrayList<>();
     private Long id;
-    private int size;
+    private int gameSize;
     private RoundTypeDTO roundType;
 
     public RoundDTO() {
@@ -22,8 +20,8 @@ public class RoundDTO {
         this.roundType = roundType;
     }
 
-    public RoundDTO(int size) {
-        this.size = size;
+    public RoundDTO(int gameSize) {
+        this.gameSize = gameSize;
     }
 
 
@@ -43,12 +41,12 @@ public class RoundDTO {
         this.nextRound = nextRound;
     }
 
-    public int getSize() {
-        return size;
+    public int getGameSize() {
+        return gameSize;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void setGameSize(int gameSize) {
+        this.gameSize = gameSize;
     }
 
     public RoundTypeDTO getRoundType() {

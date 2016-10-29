@@ -31,7 +31,7 @@ public class TournamentServiceTest {
     public void testAddPossibleGamesToQueue() throws Exception {
 
         TournamentGroup group = prepareGroupWithPlayerAndGames();
-List<TournamentGroup> groups = new ArrayList<>();
+        List<TournamentGroup> groups = new ArrayList<>();
         groups.add(group);
         service.addPossibleGroupGamesToQueue(groups);
         assertEquals(2, service.getQueueSize());
@@ -98,6 +98,7 @@ List<TournamentGroup> groups = new ArrayList<>();
             assertNotNull("all player must be filled", game.getPlayer1());
             assertNotNull("all player must be filled", game.getPlayer2());
         }
+        assertThat(field.getRound().getNextRound().getGames().size(), is(0));
 
     }
 
@@ -260,6 +261,7 @@ List<TournamentGroup> groups = new ArrayList<>();
         game.addSet(new GameSetDTO(11, 13));
         assertThat(service.calcWinner(game).getWinner(), is(2));
     }
+
     @Test
     public void calcKOSize() {
         TournamentClass tc = new TournamentClass();

@@ -145,8 +145,8 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         });
     };
 
-    $scope.getKoField = function () {
-        $http.get('/api/tournamentdirector/start-ko?id=' + $routeParams.id + '&assignPlayer=false', {}).then(function (response) {
+    $scope.getKoField = function (assignPlayer) {
+        $http.get('/api/tournamentdirector/start-ko?id=' + $routeParams.id + '&assignPlayer=' + assignPlayer, {}).then(function (response) {
             $scope.koField = response.data;
             $scope.dummArray = new Array($scope.koField.noOfRounds - 1);
             $scope.rounds = new Array($scope.koField.noOfRounds - 1);
@@ -159,32 +159,12 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         });
     };
 
-    $scope.getNumber = function (num) {
-        if (num === undefined)
-            return new Array(0);
-
-        var a = undefined;
-        if (num == 0) {
-            a = new Array($scope.koField.round.size);
-        }
-        else if (num == 1) {
-            a = new Array($scope.koField.round.nextRound.size);
-        }
-        else if (num == 2) {
-            a = new Array($scope.koField.round.nextRound.nextRound.size);
-        }
-        else if (num == 3) {
-            a = new Array($scope.koField.round.nextRound.nextRound.nextRound.size);
-        }
-        else
-            a = new Array(1);
-
-        console.log(num + '=' + a.length);
-        return a;
+    $scope.getNumber2 = function (num) {
+        return new Array(num);
     };
 
     $scope.getGroupWinner();
     $scope.calcKOSizeInInt();
-    $scope.getKoField();
+    $scope.getKoField(false);
 });
 

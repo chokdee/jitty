@@ -914,7 +914,8 @@ public class TournamentService {
     public KOFieldDTO startKO(Long tcId, boolean assignPlayer) {
         TournamentClass tc = tcRepository.findOne(tcId);
         if (tc.getPhase() != null && tc.getPhase() == 2) {
-            throw new IllegalArgumentException("allready starte ko-phase");
+            return copy(tc.getKoField());
+//            throw new IllegalArgumentException("allready starte ko-phase");
         }
         for (TournamentGroup tournamentGroup : tc.getGroups()) {
             calcRankingForGroup(tournamentGroup);

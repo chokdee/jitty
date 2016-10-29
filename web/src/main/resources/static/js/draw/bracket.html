@@ -24,7 +24,7 @@
 
     <div class="col-md-7">
         <div>
-            <button ng-click="automaticDraw()">Autom. Auslosung</button>
+            <button ng-click="getKoField(true)">Autom. Auslosung</button>
             <button ng-click="saveDraw()">Speichern</button>
             <button ng-click="start()">Starten...</button>
         </div>
@@ -33,11 +33,11 @@
             <div class="group4" id="b0">
                 <div class="{{'r' + ($index + 1) }}" ng-repeat="r in rounds track by $index" ng-init="rowIndex = $index">
                     <span>{{r.roundType.name}}</span>
-                    <div ng-repeat="i in getNumber(rowIndex) track by $index" ng-init="columnIndex = $index">
+                    <div ng-repeat="i in getNumber2(r.gameSize) track by $index" ng-init="columnIndex = $index">
                         <div class="bracketbox">
                             <span class="info">{{columnIndex+1}}</span>
-                            <span class="teama"></span>
-                            <span class="teamb"></span>
+                            <span class="teama">{{r.games[columnIndex].player1.fullName}}</span>
+                            <span class="teamb">{{r.games[columnIndex].player2.fullName}}</span>
                         </div>
                     </div>
                 </div>
@@ -51,6 +51,4 @@
 
         </div>
     </div>
-</div>
-</div>
 </div>

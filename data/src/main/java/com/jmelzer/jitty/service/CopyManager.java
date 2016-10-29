@@ -34,7 +34,7 @@ public class CopyManager {
                 lastRoundDto.setNextRound(rdto);
             }
             lastRoundDto = rdto;
-            for (TournamentSingleGame game : koField.getRound().getGames()) {
+            for (TournamentSingleGame game : round.getGames()) {
                 rdto.addGame(copy(game));
             }
             round = round.getNextRound();
