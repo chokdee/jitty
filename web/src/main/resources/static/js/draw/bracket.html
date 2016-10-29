@@ -31,17 +31,26 @@
         <div class="brackets" id="brackets">
 
             <div class="group4" id="b0">
-                <div class="{{'r' + ($index + 1) }}" ng-repeat="r in dummArray track by $index" ng-init="rowIndex = $index">
-                    <span>{{rowIndex + 1}}. Runde</span>
-                    <div>
-                        <div class="bracketbox" ng-repeat="i in getNumber(rowIndex) track by $index" ng-init="columnIndex = $index">
-                            <span class="info">{{rowIndex+1}} - {{columnIndex+1}}</span>
-                            <span class="teama">AAAA</span>
-                            <span class="teamb">BBBB</span>
+                <div class="{{'r' + ($index + 1) }}" ng-repeat="r in rounds track by $index" ng-init="rowIndex = $index">
+                    <span>{{r.roundType.name}}</span>
+                    <div ng-repeat="i in getNumber(rowIndex) track by $index" ng-init="columnIndex = $index">
+                        <div class="bracketbox">
+                            <span class="info">{{columnIndex+1}}</span>
+                            <span class="teama"></span>
+                            <span class="teamb"></span>
                         </div>
                     </div>
                 </div>
+                <div class="r4">
+                    <span>Gewinner</span>
+                    <div class="final">
+                        <div class="bracketbox"><span class="teamc"></span></div>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
+</div>
+</div>
 </div>

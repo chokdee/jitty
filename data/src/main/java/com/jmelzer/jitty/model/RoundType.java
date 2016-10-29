@@ -12,7 +12,35 @@ public enum RoundType {
         this.value = value;
     }
 
+    public static RoundType fromValue(int i) {
+        for (RoundType roundType : RoundType.values()) {
+            if (roundType.getValue() == i)
+                return roundType;
+        }
+        return null;
+    }
+
     public int getValue() {
         return value;
+    }
+
+    public String getName() {
+        switch (this) {
+            case R128:
+                return "Letzte 128";
+            case R64:
+                return "Letzte 64";
+            case R32:
+                return "Letzte 32";
+            case R16:
+                return "Achtelfinale";
+            case QUARTER:
+                return "Viertelfinale";
+            case HALF:
+                return "Halbfinale";
+            case FINAL:
+                return "Finale";
+        }
+        return "unkown";
     }
 }

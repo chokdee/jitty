@@ -314,7 +314,7 @@ public class TournamentService {
     public KOField createKOField(RoundType roundType) {
         field = new KOField();
         field.setRound(new Round(roundType));
-        createSubRounds(field.getRound(), calcRounds(roundType) -1 , roundType.getValue() / 2);
+        createSubRounds(field.getRound(), calcRounds(roundType) - 2, roundType.getValue() / 2);
         int nrOdRounds = calcRounds(roundType);
         field.setNoOfRounds(nrOdRounds);
         return field;
@@ -328,6 +328,8 @@ public class TournamentService {
             n = n / 2;
             lastRound.setNextRound(new Round(n));
             lastRound = lastRound.getNextRound();
+            if (lastRound.getRoundType() == RoundType.FINAL)
+                break;
         }
     }
 

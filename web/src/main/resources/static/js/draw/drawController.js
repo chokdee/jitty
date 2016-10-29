@@ -148,7 +148,14 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     $scope.getKoField = function () {
         $http.get('/api/tournamentdirector/start-ko?id=' + $routeParams.id + '&assignPlayer=false', {}).then(function (response) {
             $scope.koField = response.data;
-            $scope.dummArray = new Array($scope.koField.noOfRounds-1);
+            $scope.dummArray = new Array($scope.koField.noOfRounds - 1);
+            $scope.rounds = new Array($scope.koField.noOfRounds - 1);
+            lastRound = $scope.koField.round;
+            $scope.rounds [0] = lastRound;
+            for (i = 0; i < $scope.rounds.length; i++) {
+                $scope.rounds [i] = lastRound;
+                lastRound = lastRound.nextRound;
+            }
         });
     };
 
@@ -158,13 +165,13 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
         var a = undefined;
         if (num == 0) {
-            a = new Array($scope.koField.round.size );
+            a = new Array($scope.koField.round.size);
         }
         else if (num == 1) {
-            a = new Array($scope.koField.round.nextRound.size );
+            a = new Array($scope.koField.round.nextRound.size);
         }
         else if (num == 2) {
-            a = new Array($scope.koField.round.nextRound.nextRound.size );
+            a = new Array($scope.koField.round.nextRound.nextRound.size);
         }
         else if (num == 3) {
             a = new Array($scope.koField.round.nextRound.nextRound.nextRound.size);

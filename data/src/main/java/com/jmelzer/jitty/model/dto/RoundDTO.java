@@ -13,12 +13,12 @@ public class RoundDTO {
     List<TournamentSingleGameDTO> games = new ArrayList<>();
     private Long id;
     private int size;
-    private RoundType roundType;
+    private RoundTypeDTO roundType;
 
     public RoundDTO() {
     }
 
-    public RoundDTO(RoundType roundType) {
+    public RoundDTO(RoundTypeDTO roundType) {
         this.roundType = roundType;
     }
 
@@ -51,11 +51,11 @@ public class RoundDTO {
         this.size = size;
     }
 
-    public RoundType getRoundType() {
+    public RoundTypeDTO getRoundType() {
         return roundType;
     }
 
-    public void setRoundType(RoundType roundType) {
+    public void setRoundType(RoundTypeDTO roundType) {
         this.roundType = roundType;
     }
 

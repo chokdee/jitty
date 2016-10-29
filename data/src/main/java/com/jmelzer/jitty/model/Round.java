@@ -32,6 +32,7 @@ public class Round {
 
     public Round(int size) {
         this.size = size;
+        roundType = RoundType.fromValue(size*2);
     }
 
     public void addGame(TournamentSingleGame tournamentSingleGame) {
@@ -67,5 +68,13 @@ public class Round {
         for (TournamentSingleGame game : games) {
             game.setRound(this);
         }
+    }
+
+    public RoundType getRoundType() {
+        return roundType;
+    }
+
+    public void setRoundType(RoundType roundType) {
+        this.roundType = roundType;
     }
 }

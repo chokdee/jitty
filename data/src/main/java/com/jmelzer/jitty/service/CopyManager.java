@@ -27,6 +27,7 @@ public class CopyManager {
         do {
             RoundDTO rdto = new RoundDTO();
             BeanUtils.copyProperties(round, rdto, "games");
+            rdto.setRoundType(copy(round.getRoundType()));
             if ( lastRoundDto == null) {
                 dto.setRound(rdto);
             } else {
@@ -38,6 +39,13 @@ public class CopyManager {
             }
             round = round.getNextRound();
         } while (round != null);
+        return dto;
+    }
+
+    private static RoundTypeDTO copy(RoundType roundType) {
+        RoundTypeDTO dto = new RoundTypeDTO();
+        dto.setValue(roundType.getValue());
+        dto.setName(roundType.getName());
         return dto;
     }
 
