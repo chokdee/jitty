@@ -4,6 +4,7 @@ import com.jmelzer.jitty.dao.*;
 import com.jmelzer.jitty.exceptions.IntegrationViolation;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.*;
+import com.jmelzer.jitty.utl.ListUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -563,14 +564,16 @@ public class TournamentService {
         return ret;
     }
 
+    //todo rename getNotRunningOrStartPhase2
     @Transactional
     public List<TournamentClassDTO> getNotRunning(String userName) {
         Tournament t = userRepository.findByLoginName(userName).getLastUsedTournament();
         List<TournamentClassDTO> ret = new ArrayList<>();
         //todo write correct find method
-        List<TournamentClass> classes = tcRepository.findByTournamentAndRunning(t, false);
+        List<TournamentClass> classes = tcRepository.findByTournament(t);
         for (TournamentClass aClass : classes) {
-            ret.add(copy(aClass));
+            if (!aClass.getRunning() || (aClass.getRunning() && areAllGroupsFinished(aClass.getId())))
+                ret.add(copy(aClass));
         }
 
         return ret;
@@ -872,7 +875,8 @@ public class TournamentService {
                 }
             }
         }
-        return tc.getKoField() == null;
+        boolean finishedP1 =  !(tc.getPhase() != null && tc.getPhase() > 1);
+        return finishedP1;
     }
 
     @Transactional(readOnly = true)
@@ -930,12 +934,13 @@ public class TournamentService {
             }
             tc.setPhase(2);
         }
-        tcRepository.saveAndFlush(tc);
+        if (assignPlayer)
+            tcRepository.saveAndFlush(tc);
         return copy(field);
     }
 
     @Transactional(readOnly = true)
-    public List<TournamentPlayerDTO> getGroupWinnerforClass(Long cid) {
+    public List<TournamentPlayerDTO> getPossiblePlayerForKOField(Long cid) {
         TournamentClass tc = tcRepository.findOne(cid);
         List<TournamentGroup> groups = tc.getGroups();
         List<TournamentPlayerDTO> winner = new ArrayList<>();
@@ -945,7 +950,18 @@ public class TournamentService {
             winner.add(copy(group.getRanking().get(0).player));
             winner.add(copy(group.getRanking().get(1).player));
         }
+        filterAlreadyAssignKOPlayer(tc, winner);
         return winner;
+    }
+
+    private void filterAlreadyAssignKOPlayer(TournamentClass tc, List<TournamentPlayerDTO> winner) {
+        if (tc.getKoField() == null) return;
+
+        Round round = tc.getKoField().getRound();
+        for (TournamentSingleGame game : round.getGames()) {
+            ListUtil.removeIfContains(winner, game.getPlayer1());
+            ListUtil.removeIfContains(winner, game.getPlayer2());
+        }
     }
 
     static public class PS implements Comparable<PS> {

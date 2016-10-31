@@ -207,6 +207,8 @@ public class TournamentClass {
     }
 
     public Boolean getRunning() {
+        if (running == null)
+            return false;
         return running;
     }
 

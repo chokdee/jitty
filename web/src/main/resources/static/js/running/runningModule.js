@@ -2,6 +2,7 @@ angular.module('jitty.running', ['ngRoute', 'ngResource', 'ngMessages', 'ui.sele
     'jitty.running.controllers', 'jitty.running.services', 'ui.bootstrap', 'ui.grid', 'jitty.util.services']).config(function ($routeProvider, $httpProvider, $provide) {
 
     $routeProvider.when('/tournamentdirector/overview', {
+        title: 'Turnierleitung Übersicht',
         templateUrl: '/js/running/overview.html',
         controller: 'RunningController'
     }).otherwise('/');

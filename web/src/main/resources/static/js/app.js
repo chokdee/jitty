@@ -1,28 +1,32 @@
-angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 'frapontillo.bootstrap-duallistbox', 'dndLists',
+angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 'frapontillo.bootstrap-duallistbox', 'dndLists', ,
     'jitty.controllers', 'jitty.services', 'jitty.directives',
     'jitty.tournament', 'jitty.player', 'jitty.draw', 'jitty.running', 'jitty.liveview', 'jitty.util']).config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.when('/', {
+        title: 'Startseite',
         templateUrl: 'home.html',
         controller: 'home'
     }).when('/login', {
+        title: 'Login',
         templateUrl: 'login.html',
         controller: 'navigation'
     }).when('/users', {
+        title: 'Benutzerübersicht',
         templateUrl: 'users.html',
         controller: 'UserListController'
     }).when('/users/:id', {
+        title: 'Benutzer bearbeiten',
         templateUrl: 'user-edit.html',
         controller: 'UserEditController'
     }).when('/users-add', {
+        title: 'Benutzer hinzufügen',
         templateUrl: 'user-new.html',
         controller: 'UserCreateController'
     }).when('/user-pw-change/:id', {
-            templateUrl: 'user-pw-change.html',
-            controller: 'UserEditController'
-        })
-
-        .otherwise('/');
+        title: 'Passwort ändern',
+        templateUrl: 'user-pw-change.html',
+        controller: 'UserEditController'
+    }).otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -92,12 +96,13 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 
     $http.get('/resource/').success(function (data) {
         $scope.greeting = data;
     })
-}).run(function ($rootScope, $location) {
+}).run(function ($rootScope, $route, $location) {
 
     var history = [];
 
-    $rootScope.$on('$routeChangeSuccess', function() {
+    $rootScope.$on('$routeChangeSuccess', function () {
         history.push($location.$$path);
+        document.title = 'Jitty - ' + $route.current.title;
     });
 
     $rootScope.back = function () {

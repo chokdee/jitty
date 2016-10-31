@@ -1,5 +1,4 @@
 angular.module('jitty.draw.controllers', []).controller('DrawController', function ($scope, $http, $routeParams, TournamentClass) {
-
     $scope.getTournamentClass = function () {
         $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
             console.log('Got TournamentClass successful');
@@ -14,6 +13,16 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         $scope.getTournamentClass();
     }
 
+    $scope.getPossibleClasses = function () {
+        $http.get('/api/tournament-classes/not-running', {}).then(function (response) {
+            $scope.possibleClasses = response.data;
+        });
+
+    };
+    if ($routeParams.id == null)
+        $scope.getPossibleClasses();
+
+
 }).controller('GroupController', function ($scope, $http, $routeParams, TournamentClass) {
     $scope.resultSize = 0;
     $scope.modus = null;
@@ -25,14 +34,6 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         label: 'KO'
     }];
 
-    $scope.getPossibleClasses = function () {
-        $http.get('/api/tournament-classes/not-running', {}).then(function (response) {
-            $scope.possibleClasses = response.data;
-        });
-
-    };
-    if ($routeParams.id == null)
-        $scope.getPossibleClasses();
 
 
     $scope.getPlayerForClass = function () {
@@ -135,7 +136,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
 }).controller('KOController', function ($scope, $http, $routeParams, TournamentClass) {
     $scope.getGroupWinner = function () {
-        $http.get('/api/draw/group-winner-for-class?cid=' + $routeParams.id, {}).then(function (response) {
+        $http.get('/api/draw/possible-player-for-kofield?cid=' + $routeParams.id, {}).then(function (response) {
             $scope.players = response.data;
         });
     };
@@ -157,6 +158,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 lastRound = lastRound.nextRound;
             }
         });
+        $scope.getGroupWinner();
     };
 
     $scope.getNumber2 = function (num) {

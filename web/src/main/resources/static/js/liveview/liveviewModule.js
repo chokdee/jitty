@@ -2,9 +2,11 @@ angular.module('jitty.liveview', ['ngRoute', 'ngResource', 'ngMessages', 'ui.sel
     'jitty.liveview.controllers', 'jitty.liveview.services', 'ui.bootstrap', 'ui.grid']).config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.when('/liveview/overview', {
+        title: 'Klasse auswählen',
         templateUrl: '/js/liveview/overview.html',
         controller: 'LiveviewController'
     }).when('/liveview/groups/:id', {
+        title: 'Liveview - Gruppen',
         templateUrl: '/js/liveview/groups.html',
         controller: 'LiveviewController'
     }).otherwise('/');

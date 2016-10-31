@@ -2,10 +2,7 @@ package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.Application;
 import com.jmelzer.jitty.model.TournamentSingleGame;
-import com.jmelzer.jitty.model.dto.GameSetDTO;
-import com.jmelzer.jitty.model.dto.KOFieldDTO;
-import com.jmelzer.jitty.model.dto.TournamentClassDTO;
-import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
+import com.jmelzer.jitty.model.dto.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -156,6 +153,13 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
                 }
 
             }
+//            possible-player-for-kofield
+            ResponseEntity<TournamentPlayerDTO[]> avaiPlayerEntity = http(HttpMethod.GET, "api/draw/possible-player-for-kofield?cid=1",
+                    createHttpEntity(entity.getBody(), loginHeaders), TournamentPlayerDTO[].class);
+            assertTrue(avaiPlayerEntity.getStatusCode().is2xxSuccessful());
+            //8 player must be avaiable for seeding
+            assertThat(avaiPlayerEntity.getBody().length , is (8));
+
             //start ko
             ResponseEntity<KOFieldDTO> koFieldEntity = http(HttpMethod.GET, "api/tournamentdirector/start-ko?id=1&assignPlayer=false",
                     createHttpEntity(entity.getBody(), loginHeaders), KOFieldDTO.class);
@@ -163,6 +167,12 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
             koFieldEntity = http(HttpMethod.GET, "api/tournamentdirector/start-ko?id=1&assignPlayer=true",
                     createHttpEntity(entity.getBody(), loginHeaders), KOFieldDTO.class);
             printBracket(koFieldEntity.getBody());
+
+            //no more player must be avaiable for seeding
+            avaiPlayerEntity = http(HttpMethod.GET, "api/draw/possible-player-for-kofield?cid=1",
+                    createHttpEntity(entity.getBody(), loginHeaders), TournamentPlayerDTO[].class);
+            assertTrue(avaiPlayerEntity.getStatusCode().is2xxSuccessful());
+            assertThat(avaiPlayerEntity.getBody().length , is (0));
 
 
 

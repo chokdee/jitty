@@ -1,9 +1,7 @@
 package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.model.TournamentSingleGame;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
-import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import com.jmelzer.jitty.service.TournamentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +35,11 @@ public class DrawController {
         return list;
 
     }
-
-    @Path("/group-winner-for-class")
+    @Path("/possible-player-for-kofield")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<TournamentPlayerDTO> getGroupWinnerforClass(@QueryParam(value = "cid") String id) {
-        List<TournamentPlayerDTO>  list = service.getGroupWinnerforClass(Long.valueOf(id));
-        LOG.debug("found winner {}", list.size());
+    public List<TournamentPlayerDTO> getPossiblePlayerForKOField(@QueryParam(value = "cid") String id) {
+        List<TournamentPlayerDTO>  list = service.getPossiblePlayerForKOField(Long.valueOf(id));
         return list;
 
     }
