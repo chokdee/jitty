@@ -93,10 +93,5 @@ public class TournamentDirectorController {
         return service.anyPhaseFinished(securityUtil.getActualUsername());
     }
 
-    @Path("/start-ko")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    public KOFieldDTO startKO(@QueryParam(value = "id") String id, @QueryParam(value = "assignPlayer") Boolean assignPlayer) {
-        return service.startKO(Long.valueOf(id), assignPlayer);
-    }
+
 }

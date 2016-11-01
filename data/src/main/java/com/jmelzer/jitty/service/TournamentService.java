@@ -4,7 +4,6 @@ import com.jmelzer.jitty.dao.*;
 import com.jmelzer.jitty.exceptions.IntegrationViolation;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.*;
-import com.jmelzer.jitty.utl.ListUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -51,43 +50,7 @@ public class TournamentService {
     private SeedingManager seedingManager = new SeedingManager();
     private KOField field;
 
-    public void caluculateGroups(TournamentClass tournamentClass) {
-        //first calc the field size , 16 / 32 etc
-        //todo smallest possible size calucation
-        int ps = tournamentClass.getPlayers().size();
-        int fieldSize = 0;
-        for (int i = 4; i < 8; i++) {
-            fieldSize = (int) Math.pow(2, i);
-            if (fieldSize > ps) {
-                System.out.println("found field size " + (int) Math.pow(2, i) + " for player size " + ps);
-                break;
-            }
-        }
 
-
-        int groupCount = calcOptimalGroupSize(ps, 4);
-
-        List<TournamentGroup> groups = createGroups(groupCount);
-        tournamentClass.setGroups(groups);
-
-        List<TournamentPlayer> allPlayer = new ArrayList<>(tournamentClass.getPlayers());
-
-
-        //sort all player by qttr
-        Collections.sort(allPlayer, (o1, o2) -> {
-            if (o1.getQttr() < o2.getQttr()) {
-                return 1;
-            }
-            if (o1.getQttr() > o2.getQttr()) {
-                return -1;
-            }
-            return 0;
-        });
-
-//todo change to dtos here
-//        seedingManager.setPlayerRandomAccordingToQTTR(groups, allPlayer);
-
-    }
 
     public int getQueueSize() {
         return gameQueue.size();
@@ -114,129 +77,6 @@ public class TournamentService {
         return false;
     }
 
-    @Transactional
-    public TournamentClassDTO calcOptimalGroupSize(TournamentClassDTO tournamentClassDTO) {
-        TournamentClass tournamentClass = tcRepository.findOne(tournamentClassDTO.getId());
-        int ppg = tournamentClassDTO.getPlayerPerGroup() == null ? 4 : tournamentClassDTO.getPlayerPerGroup();
-        int optGroupSize = calcOptimalGroupSize(tournamentClass.getPlayerCount(), ppg);
-        tournamentClassDTO.setGroupCount(optGroupSize);
-        return tournamentClassDTO;
-    }
-
-    private int calcOptimalGroupSize(int playerSize, int groupSize) {
-        //how many groups?
-        int groupCount = playerSize / groupSize;
-        int rest = (playerSize % groupSize);
-
-        if (rest > 0) {
-            groupCount++;
-        }
-
-        return groupCount;
-    }
-
-    private List<TournamentGroup> createGroups(int groupCount) {
-        List<TournamentGroup> groups = new ArrayList<>(groupCount);
-        char name = 'A';
-        for (int i = 0; i < groupCount; i++) {
-            TournamentGroup group = new TournamentGroup("" + name);
-            groups.add(group);
-            name++;
-        }
-        return groups;
-    }
-
-    private List<TournamentGroupDTO> createDTOGroups(int groupCount) {
-        List<TournamentGroupDTO> groups = new ArrayList<>(groupCount);
-        //todo must be configured maybe 1, 2 better
-        char name = 'A';
-        for (int i = 0; i < groupCount; i++) {
-            TournamentGroupDTO group = new TournamentGroupDTO();
-            group.setName("" + name);
-            groups.add(group);
-            name++;
-        }
-        return groups;
-    }
-
-    /**
-     * calculate the order of the possible games in the correct order
-     */
-    @Transactional
-    public void calcGroupGames(List<TournamentGroup> groups) {
-        for (TournamentGroup group : groups) {
-            System.out.println(group);
-//                List<TournamentPlayer> players = group.getPlayers();
-            List<TournamentPlayer> list = new ArrayList<>(group.getPlayers());
-            if (list.size() % 2 == 1) {
-                // Number of player uneven ->  add the bye player.
-                list.add(TournamentPlayer.BYE);
-            }
-            for (int i = 1; i < list.size(); i++) {
-
-
-                System.out.println("---- games round " + i + " ----");
-                //first 1 against last
-
-                group.addGames(createOneRound(i, list));
-
-                list.add(1, list.get(list.size() - 1));
-                list.remove(list.size() - 1);
-
-                System.out.println("-----------------");
-            }
-
-            group.removeByePlayer();
-        }
-
-    }
-
-    /**
-     * Creates one round, i.e. a set of matches where each team plays once.
-     *
-     * @param round   Round number.
-     * @param players List of players
-     */
-    private List<TournamentSingleGame> createOneRound(int round, List<TournamentPlayer> players) {
-        int mid = players.size() / 2;
-        // Split list into two
-
-        List<TournamentPlayer> l1 = new ArrayList<>();
-        // Can't use sublist (can't cast it to ArrayList - how stupid is that)??
-        for (int j = 0; j < mid; j++) {
-            l1.add(players.get(j));
-        }
-
-        List<TournamentPlayer> l2 = new ArrayList<>();
-        // We need to reverse the other list
-        for (int j = players.size() - 1; j >= mid; j--) {
-            l2.add(players.get(j));
-        }
-        List<TournamentSingleGame> games = new ArrayList<>();
-        for (int tId = 0; tId < l1.size(); tId++) {
-            TournamentPlayer t1;
-            TournamentPlayer t2;
-            // Switch sides after each round
-            if (round % 2 == 1) {
-                t1 = l1.get(tId);
-                t2 = l2.get(tId);
-            } else {
-                t1 = l2.get(tId);
-                t2 = l1.get(tId);
-            }
-            if (!TournamentPlayer.BYE.equals(t1) && !TournamentPlayer.BYE.equals(t2)) {
-                TournamentSingleGame game = new TournamentSingleGame();
-                game.setPlayer1(t1);
-                game.setPlayer2(t2);
-                tournamentSingleGameRepository.save(game);
-                games.add(game);
-            }
-            System.out.println(t1.getFullName() + " --> " + t2.getFullName());
-//            System.out.println("" + round + ":" +  ((round-1)*l1.size())+(tId+1) + " " + t1.getLastName() + " -->" + t2.getLastName());
-//            matches.addNew(round, ((round-1)*l1.size())+(tId+1), (String)t1.get("name"), (String)t2.get("name"));
-        }
-        return games;
-    }
 
     public void addBusyGame(TournamentSingleGame game) {
         busyGames.add(game);
@@ -269,74 +109,6 @@ public class TournamentService {
         }
     }
 
-    @Transactional(readOnly = true)
-    public int calcKOSizeInInt(long cId) {
-        TournamentClass tc = tcRepository.findOne(cId);
-        return calcKOSize(tc).getValue();
-
-    }
-
-    public RoundType calcKOSize(TournamentClass tournamentClass) {
-        int player = tournamentClass.getGroups().size() * 2;
-        if (player <= 8) {
-            return RoundType.QUARTER;
-        }
-        if (player <= 16) {
-            return RoundType.R16;
-        }
-        if (player <= 32) {
-            return RoundType.R32;
-        }
-        if (player <= 64) {
-            return RoundType.R64;
-        }
-        if (player <= 128) {
-            return RoundType.R128;
-        }
-        throw new IllegalArgumentException("could not calc size for " + player);
-    }
-
-    private int calcRounds(RoundType roundType) {
-        switch (roundType) {
-            case QUARTER:
-                return 4;
-            case R16:
-                return 5;
-            case R32:
-                return 6;
-            case R64:
-                return 7;
-            case R128:
-                return 8;
-        }
-        throw new RuntimeException("not yet implemented");
-    }
-
-    public KOField createKOField(RoundType roundType) {
-        field = new KOField();
-        field.setRound(new Round(roundType));
-        createSubRounds(field.getRound(), calcRounds(roundType) - 2, roundType.getValue() / 2);
-        int nrOdRounds = calcRounds(roundType);
-        field.setNoOfRounds(nrOdRounds);
-        return field;
-    }
-
-    private void createSubRounds(Round round, int i, int size) {
-        Round lastRound = round;
-        int n = size;
-        lastRound.setGameSize(n);
-        for (int j = 0; j < i; j++) {
-            n = n / 2;
-            lastRound.setNextRound(new Round(n));
-            lastRound = lastRound.getNextRound();
-            if (lastRound.getRoundType() == RoundType.FINAL)
-                break;
-        }
-    }
-
-    public List<TournamentSingleGame> assignPlayerToKoField(KOField field, List<TournamentGroup> groups) {
-        return seedingManager.assignPlayerToKoField(field, groups);
-    }
 
     @Transactional
     public List<TournamentSingleGameDTO> listQueue() {
@@ -611,39 +383,6 @@ public class TournamentService {
         return (int) Math.floor(Math.random() * (max - min + 1) + min);
     }
 
-    @Transactional
-    public TournamentClassDTO automaticDraw(TournamentClassDTO dto) {
-        List<TournamentGroupDTO> groups = createDTOGroups(dto.getGroupCount());
-        dto.setGroups(groups);
-
-        List<TournamentPlayerDTO> players = getPlayerforClass(dto.getId());
-
-        //sort all player by qttr
-        Collections.sort(players, (o1, o2) -> {
-            if (o1.getQttr() < o2.getQttr()) {
-                return 1;
-            }
-            if (o1.getQttr() > o2.getQttr()) {
-                return -1;
-            }
-            return 0;
-        });
-
-
-        seedingManager.setPlayerRandomAccordingToQTTR(groups, players);
-
-        return dto;
-    }
-
-    @Transactional
-    public void startClass(Long id) {
-        TournamentClass clz = tcRepository.findOne(id);
-        calcGroupGames(clz.getGroups());
-        clz.setStartTime(new Date());
-        clz.setRunning(true);
-        tcRepository.saveAndFlush(clz);
-        addPossibleGroupGamesToQueue(clz.getGroups());
-    }
 
     @Transactional
     public void startGame(Long id) {
@@ -915,53 +654,8 @@ public class TournamentService {
     }
 
     @Transactional
-    public KOFieldDTO startKO(Long tcId, boolean assignPlayer) {
-        TournamentClass tc = tcRepository.findOne(tcId);
-        if (tc.getPhase() != null && tc.getPhase() == 2) {
-            return copy(tc.getKoField());
-//            throw new IllegalArgumentException("allready starte ko-phase");
-        }
-        for (TournamentGroup tournamentGroup : tc.getGroups()) {
-            calcRankingForGroup(tournamentGroup);
-        }
-        RoundType roundType = calcKOSize(tc);
-        KOField field = createKOField(roundType);
-        tc.setKoField(field);
-        if (assignPlayer) {
-            List<TournamentSingleGame> games = assignPlayerToKoField(field, tc.getGroups());
-            for (TournamentSingleGame game : games) {
-                tournamentSingleGameRepository.saveAndFlush(game);
-            }
-            tc.setPhase(2);
-        }
-        if (assignPlayer)
-            tcRepository.saveAndFlush(tc);
-        return copy(field);
-    }
-
-    @Transactional(readOnly = true)
-    public List<TournamentPlayerDTO> getPossiblePlayerForKOField(Long cid) {
-        TournamentClass tc = tcRepository.findOne(cid);
-        List<TournamentGroup> groups = tc.getGroups();
-        List<TournamentPlayerDTO> winner = new ArrayList<>();
-        for (TournamentGroup group : groups) {
-            calcRankingForGroup(group);
-            //todo config winner count
-            winner.add(copy(group.getRanking().get(0).player));
-            winner.add(copy(group.getRanking().get(1).player));
-        }
-        filterAlreadyAssignKOPlayer(tc, winner);
-        return winner;
-    }
-
-    private void filterAlreadyAssignKOPlayer(TournamentClass tc, List<TournamentPlayerDTO> winner) {
-        if (tc.getKoField() == null) return;
-
-        Round round = tc.getKoField().getRound();
-        for (TournamentSingleGame game : round.getGames()) {
-            ListUtil.removeIfContains(winner, game.getPlayer1());
-            ListUtil.removeIfContains(winner, game.getPlayer2());
-        }
+    public void save(TournamentSingleGame game) {
+        tournamentSingleGameRepository.saveAndFlush(game);
     }
 
     static public class PS implements Comparable<PS> {

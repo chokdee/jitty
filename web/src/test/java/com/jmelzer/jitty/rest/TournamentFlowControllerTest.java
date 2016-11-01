@@ -161,10 +161,10 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
             assertThat(avaiPlayerEntity.getBody().length , is (8));
 
             //start ko
-            ResponseEntity<KOFieldDTO> koFieldEntity = http(HttpMethod.GET, "api/tournamentdirector/start-ko?id=1&assignPlayer=false",
+            ResponseEntity<KOFieldDTO> koFieldEntity = http(HttpMethod.GET, "api/draw/start-ko?id=1&assignPlayer=false",
                     createHttpEntity(entity.getBody(), loginHeaders), KOFieldDTO.class);
             printBracket(koFieldEntity.getBody());
-            koFieldEntity = http(HttpMethod.GET, "api/tournamentdirector/start-ko?id=1&assignPlayer=true",
+            koFieldEntity = http(HttpMethod.GET, "api/draw/start-ko?id=1&assignPlayer=true",
                     createHttpEntity(entity.getBody(), loginHeaders), KOFieldDTO.class);
             printBracket(koFieldEntity.getBody());
 

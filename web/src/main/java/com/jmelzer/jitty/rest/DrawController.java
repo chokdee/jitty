@@ -1,7 +1,10 @@
 package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.model.dto.KOFieldDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
+import com.jmelzer.jitty.service.DrawGroupManager;
+import com.jmelzer.jitty.service.DrawKoFieldManager;
 import com.jmelzer.jitty.service.TournamentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +27,18 @@ public class DrawController {
     final static Logger LOG = LoggerFactory.getLogger(DrawController.class);
 
     @Inject
-    TournamentService service;
+    DrawKoFieldManager drawKoFieldManager;
+    @Inject
+    DrawGroupManager drawGroupManager;
+
+    @Inject
+    TournamentService tournamentService;
 
     @Path("/player-for-class")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TournamentPlayerDTO> getPlayerforClass(@QueryParam(value = "cid") String id) {
-        List<TournamentPlayerDTO>  list = service.getPlayerforClass(Long.valueOf(id));
+        List<TournamentPlayerDTO>  list = tournamentService.getPlayerforClass(Long.valueOf(id));
         LOG.debug("found player {}", list.size());
         return list;
 
@@ -39,8 +47,7 @@ public class DrawController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TournamentPlayerDTO> getPossiblePlayerForKOField(@QueryParam(value = "cid") String id) {
-        List<TournamentPlayerDTO>  list = service.getPossiblePlayerForKOField(Long.valueOf(id));
-        return list;
+        return drawKoFieldManager.getPossiblePlayerForKOField(Long.valueOf(id));
 
     }
 
@@ -48,7 +55,7 @@ public class DrawController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public int calcKOSizeInInt(@QueryParam(value = "cid") String id) {
-        return service.calcKOSizeInInt(Long.valueOf(id));
+        return drawKoFieldManager.calcKOSizeInInt(Long.valueOf(id));
 
     }
 
@@ -56,7 +63,7 @@ public class DrawController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public Response start(@QueryParam(value = "cid") String id) {
-        service.startClass(Long.valueOf(id));
+        drawGroupManager.startClass(Long.valueOf(id));
         return Response.ok().build();
     }
 
@@ -65,24 +72,21 @@ public class DrawController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public TournamentClassDTO calcOptimalGroupSize(TournamentClassDTO dto) {
-        dto = service.calcOptimalGroupSize(dto);
-        return dto;
+        return drawGroupManager.calcOptimalGroupSize(dto);
     }
 
     @Path("/automatic-draw")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public TournamentClassDTO automaticDraw(TournamentClassDTO dto) {
-        dto = service.automaticDraw(dto);
-        return dto;
+        return drawGroupManager.automaticDraw(dto);
     }
 
     @Path("/save")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response save(TournamentClassDTO dto) {
-        service.updateClass(dto);
-        dto = service.findOneClass(dto.getId());
+        tournamentService.updateClass(dto);
         return Response.ok().build();
     }
 
@@ -90,8 +94,13 @@ public class DrawController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public Response dummyPlayer(@QueryParam(value = "cid") String id) {
-        service.createDummyPlayer(Long.valueOf(id));
+        tournamentService.createDummyPlayer(Long.valueOf(id));
         return Response.ok().build();
     }
-
+    @Path("/start-ko")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public KOFieldDTO startKO(@QueryParam(value = "id") String id, @QueryParam(value = "assignPlayer") Boolean assignPlayer) {
+        return drawKoFieldManager.startKO(Long.valueOf(id), assignPlayer);
+    }
 }

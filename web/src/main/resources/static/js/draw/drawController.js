@@ -147,7 +147,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     };
 
     $scope.getKoField = function (assignPlayer) {
-        $http.get('/api/tournamentdirector/start-ko?id=' + $routeParams.id + '&assignPlayer=' + assignPlayer, {}).then(function (response) {
+        $http.get('/api/draw/start-ko?id=' + $routeParams.id + '&assignPlayer=' + assignPlayer, {}).then(function (response) {
             $scope.koField = response.data;
             $scope.dummArray = new Array($scope.koField.noOfRounds - 1);
             $scope.rounds = new Array($scope.koField.noOfRounds - 1);

@@ -4,6 +4,7 @@ import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.TournamentGroupDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.utl.RandomUtil;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +15,7 @@ import java.util.Random;
  * Created by J. Melzer on 17.06.2016.
  * Seeding operations for KO and Group fields
  */
+@Component
 public class SeedingManager {
     /**
      * calculate the first round of a KO field
