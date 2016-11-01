@@ -51,10 +51,10 @@ public class TournamentClassController {
     @Path("{tid}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response saveOrCreate(@PathParam(value = "tid") String tid,
-                                 TournamentClass tournamentClass) {
-        service.addTC(Long.valueOf(tid), tournamentClass);
-        return Response.ok().build();
+    public Long saveOrCreate(@PathParam(value = "tid") String tid,
+                             TournamentClass tournamentClass) {
+        TournamentClass clz = service.addTC(Long.valueOf(tid), tournamentClass);
+        return clz.getId();
 
     }
 

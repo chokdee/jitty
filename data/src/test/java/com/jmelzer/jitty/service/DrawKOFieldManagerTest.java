@@ -126,8 +126,8 @@ public class DrawKOFieldManagerTest {
         List<String[]> names = names();
         for (int i = 0; i < size / 2; i++) {
             TournamentGroup group = new TournamentGroup();
-            List<TournamentService.PS> ranking = new ArrayList<>();
-            TournamentService.PS ps = new TournamentService.PS();
+            List<PlayerStatistic> ranking = new ArrayList<>();
+            PlayerStatistic ps = new PlayerStatistic();
             if (i < names.size()) {
                 ps.player = new TournamentPlayer(1L, names.get(i)[0], names.get(i)[1]);
             } else {
@@ -136,7 +136,7 @@ public class DrawKOFieldManagerTest {
             ps.player.setQttr(ttr--);
             ps.player.ranking = rank++;
             ranking.add(ps);
-            ps = new TournamentService.PS();
+            ps = new PlayerStatistic();
             ps.player = new TournamentPlayer(1L, i + "2", i + "2");
             ps.player.setQttr(ttr--);
             ranking.add(ps);

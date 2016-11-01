@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.TournamentGroupDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import org.junit.Test;
@@ -20,6 +21,35 @@ import static org.hamcrest.Matchers.lessThan;
 public class SeedingManagerTest {
     SeedingManager seedingManager = new SeedingManager();
 
+    @Test
+    public void assignPlayerToKoField() {
+        KOField koField = new KOField();
+        koField.setRound(new Round());
+        koField.getRound().setGameSize(4);
+        List<TournamentGroup> groups = new ArrayList<>(4);
+        for (int i = 0; i < 4; i++) {
+            TournamentGroup group = new TournamentGroup();
+            groups.add(group);
+            List<PlayerStatistic> ranking = new ArrayList<>();
+            for (int j = 0; j < 4; j++) {
+                PlayerStatistic ps = new PlayerStatistic();
+                ps.player = new TournamentPlayer((long)i*j, "" + i + j, "" + i + j);
+                ps.player.setQttr(1000 + i + j + i*j);
+                group.addPlayer(ps.player);
+                ranking.add(ps);
+            }
+            group.setRanking(ranking);
+            System.out.println("----------------- ranking -----------");
+            for (PlayerStatistic playerStatistic : ranking) {
+                System.out.println(playerStatistic.player.getQttr());
+            }
+            System.out.println("----------------- ranking -----------");
+        }
+        List<TournamentSingleGame> games = seedingManager.assignPlayerToKoField(koField, groups);
+        for (TournamentSingleGame game : games) {
+            System.out.println("game = " + game);
+        }
+    }
     @Test
     public void setPlayerRandomAccordingToQTTR() {
         Random random = new Random();

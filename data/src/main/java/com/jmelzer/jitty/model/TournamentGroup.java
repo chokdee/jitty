@@ -1,7 +1,5 @@
 package com.jmelzer.jitty.model;
 
-import com.jmelzer.jitty.service.TournamentService;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +36,7 @@ public class TournamentGroup {
     TournamentClass tournamentClass;
 
     //todo we have to store it somewhere after group phase
-    transient private List<TournamentService.PS> ranking;
+    transient private List<PlayerStatistic> ranking;
 
 
     public TournamentGroup() {
@@ -101,11 +99,11 @@ public class TournamentGroup {
         return s;
     }
 
-    public List<TournamentService.PS> getRanking() {
+    public List<PlayerStatistic> getRanking() {
         return ranking;
     }
 
-    public void setRanking(List<TournamentService.PS> ranking) {
+    public void setRanking(List<PlayerStatistic> ranking) {
         this.ranking = ranking;
     }
 

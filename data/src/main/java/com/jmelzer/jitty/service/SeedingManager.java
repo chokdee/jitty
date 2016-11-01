@@ -17,6 +17,27 @@ import java.util.Random;
  */
 @Component
 public class SeedingManager {
+
+    List<TournamentPlayer> prepareRunnerupList(List<TournamentGroup> groups) {
+        List<TournamentPlayer> second = new ArrayList<>();
+        int r = groups.size()+1;
+        for (TournamentGroup group : groups) {
+            second.add(group.getRanking().get(1).player);
+            group.getRanking().get(1).player.ranking = r++;
+        }
+        //sort with qttr
+        Collections.sort(second, (o1, o2) -> Integer.compare(o1.getQttr(), o2.getQttr()) * -1);
+        return second;
+    }
+    List<TournamentPlayer> prepareWinnerList(List<TournamentGroup> groups) {
+        List<TournamentPlayer> winner = new ArrayList<>();
+        for (TournamentGroup group : groups) {
+            winner.add(group.getRanking().get(0).player);
+        }
+        //sort with qttr
+        Collections.sort(winner, (o1, o2) -> Integer.compare(o1.getQttr(), o2.getQttr()) * -1);
+        return winner;
+    }
     /**
      * calculate the first round of a KO field
      *
@@ -25,25 +46,16 @@ public class SeedingManager {
      * @return list of games
      */
     public List<TournamentSingleGame> assignPlayerToKoField(KOField field, List<TournamentGroup> groups) {
-        List<TournamentPlayer> winner = new ArrayList<>();
-        for (TournamentGroup group : groups) {
-            winner.add(group.getRanking().get(0).player);
-        }
-        List<TournamentPlayer> second = new ArrayList<>();
-        int r = winner.size() + 1;
-        for (TournamentGroup group : groups) {
-            second.add(group.getRanking().get(1).player);
-            group.getRanking().get(1).player.ranking = r++;
-        }
-        //sort with qttr
-        Collections.sort(winner, (o1, o2) -> Integer.compare(o1.getQttr(), o2.getQttr()) * -1);
-        Collections.sort(second, (o1, o2) -> Integer.compare(o1.getQttr(), o2.getQttr()) * -1);
+        List<TournamentPlayer> winner = prepareWinnerList(groups);
+        List<TournamentPlayer> second = prepareRunnerupList(groups);
+
         Round round = field.getRound();
         int fieldSize = round.playerSize();
         TournamentPlayer[] players = new TournamentPlayer[fieldSize + 1];
 
         List<TournamentPlayer> rest = new ArrayList<>(winner);
         List<Integer> positionOfSeededPlayers = new ArrayList<>();
+
         for (int i = 0; i < winner.size() && i < fieldSize; i++) {
             TournamentPlayer player = winner.get(i);
             if (i < 16) {

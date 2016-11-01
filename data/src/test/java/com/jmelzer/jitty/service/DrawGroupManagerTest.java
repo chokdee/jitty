@@ -24,28 +24,6 @@ public class DrawGroupManagerTest {
         drawGroupManager.seedingManager = new SeedingManager();
     }
 
-    List<String[]> names() {
-        List<String[]> list = new ArrayList<>();
-        list.add(new String[]{"Ma", "Long (1)"});
-        list.add(new String[]{"Fan", "Zhedong (2)"});
-        list.add(new String[]{"Xu", "Xin (3)"});
-        list.add(new String[]{"Zhang", "Jike (4)"});
-        list.add(new String[]{"Jun", "Mizutani (5)"});
-        list.add(new String[]{"Chih-Yua", "Chuang (6)"});
-        list.add(new String[]{"Chun Ting", "Wong (7)"});
-        list.add(new String[]{"Vladimir", "Samsonov (8)"});
-        list.add(new String[]{"Fang", "Bo (9)"});
-        list.add(new String[]{"Marcos", "Freitas (10)"});
-        list.add(new String[]{"Tang", "Peng (11)"});
-        list.add(new String[]{"Sangsu", "Lee (12)"});
-        list.add(new String[]{"Maharu", "Yoshimura (13)"});
-        list.add(new String[]{"Youngsik", "Jeoung (14)"});
-        list.add(new String[]{"Koki", "Niwa (15)"});
-        list.add(new String[]{"Tiago", "Apolonia (16)"});
-        return list;
-    }
-
-
     @Test
     public void testcalcGroupGames() {
         TournamentService ts = Mockito.mock(TournamentService.class);

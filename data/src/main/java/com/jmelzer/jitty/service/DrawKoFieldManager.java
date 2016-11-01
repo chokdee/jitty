@@ -3,8 +3,6 @@ package com.jmelzer.jitty.service;
 import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.KOFieldDTO;
-import com.jmelzer.jitty.model.dto.TournamentClassDTO;
-import com.jmelzer.jitty.model.dto.TournamentGroupDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.utl.ListUtil;
 import org.slf4j.Logger;
@@ -15,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import static com.jmelzer.jitty.service.CopyManager.copy;
@@ -34,7 +30,6 @@ public class DrawKoFieldManager {
     TournamentClassRepository tcRepository;
     @Resource
     SeedingManager seedingManager;
-
 
 
     @Transactional(readOnly = true)
@@ -107,8 +102,14 @@ public class DrawKoFieldManager {
         return seedingManager.assignPlayerToKoField(field, groups);
     }
 
+    /**
+     * draw a ko field but still not started
+     *
+     * @param assignPlayer automatic assignment
+     * @return new field
+     */
     @Transactional
-    public KOFieldDTO startKO(Long tcId, boolean assignPlayer) {
+    public KOFieldDTO drawKO(Long tcId, boolean assignPlayer) {
         TournamentClass tc = tcRepository.findOne(tcId);
         if (tc.getPhase() != null && tc.getPhase() == 2) {
             return copy(tc.getKoField());
@@ -124,12 +125,22 @@ public class DrawKoFieldManager {
             for (TournamentSingleGame game : games) {
                 tournamentService.save(game);
             }
-            tc.setPhase(2);
+//            tc.setPhase(2);
         }
-        if (assignPlayer) {
-            tcRepository.saveAndFlush(tc);
-        }
+        tcRepository.saveAndFlush(tc);
         return copy(field);
+    }
+
+    @Transactional
+    public void startKOField(Long tcId) {
+        TournamentClass tc = tcRepository.findOne(tcId);
+        if (tc.getPhase() != null && tc.getPhase() == 2) {
+            return;
+        }
+        tc.setPhase(2);
+        tournamentService.addPossibleKoGamesToQueue(tc);
+        tcRepository.saveAndFlush(tc);
+
     }
 
     @Transactional(readOnly = true)
@@ -159,5 +170,13 @@ public class DrawKoFieldManager {
         }
     }
 
-
+    @Transactional
+    public void resetKO(Long tcId) {
+        TournamentClass tc = tcRepository.findOne(tcId);
+        RoundType roundType = calcKOSize(tc);
+        KOField field = createKOField(roundType);
+        tc.setKoField(field);
+        tc.setPhase(1);
+        tcRepository.saveAndFlush(tc);
+    }
 }

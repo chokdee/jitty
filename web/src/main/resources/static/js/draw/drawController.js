@@ -35,7 +35,6 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     }];
 
 
-
     $scope.getPlayerForClass = function () {
         $http.get('/api/draw/player-for-class?cid=' + $routeParams.id, {}).then(function (response) {
             $scope.players = response.data;
@@ -146,8 +145,14 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         });
     };
 
+    $scope.startKO = function () {
+        $http.get('/api/draw/start-ko?cid=' + $routeParams.id, {}).then(function (response) {
+        });
+    };
+
+
     $scope.getKoField = function (assignPlayer) {
-        $http.get('/api/draw/start-ko?id=' + $routeParams.id + '&assignPlayer=' + assignPlayer, {}).then(function (response) {
+        $http.get('/api/draw/draw-ko?id=' + $routeParams.id + '&assignPlayer=' + assignPlayer, {}).then(function (response) {
             $scope.koField = response.data;
             $scope.dummArray = new Array($scope.koField.noOfRounds - 1);
             $scope.rounds = new Array($scope.koField.noOfRounds - 1);
@@ -157,10 +162,20 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 $scope.rounds [i] = lastRound;
                 lastRound = lastRound.nextRound;
             }
+            $scope.getGroupWinner();
         });
-        $scope.getGroupWinner();
+
     };
 
+    $scope.reset = function () {
+        $http.get('/api/draw/reset-ko?id=' + $routeParams.id, {}).then(function (response) {
+            $scope.koField = null;
+            $scope.rounds = null;
+            $scope.getKoField(false);
+            $scope.getGroupWinner();
+        });
+
+    };
     $scope.getNumber2 = function (num) {
         return new Array(num);
     };

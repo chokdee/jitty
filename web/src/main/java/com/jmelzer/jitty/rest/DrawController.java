@@ -97,10 +97,19 @@ public class DrawController {
         tournamentService.createDummyPlayer(Long.valueOf(id));
         return Response.ok().build();
     }
-    @Path("/start-ko")
+
+    @Path("/draw-ko")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public KOFieldDTO startKO(@QueryParam(value = "id") String id, @QueryParam(value = "assignPlayer") Boolean assignPlayer) {
-        return drawKoFieldManager.startKO(Long.valueOf(id), assignPlayer);
+        return drawKoFieldManager.drawKO(Long.valueOf(id), assignPlayer);
+    }
+
+    @Path("/start-ko")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response startKO(@QueryParam(value = "cid") String id) {
+        drawKoFieldManager.startKOField(Long.valueOf(id));
+        return Response.ok().build();
     }
 }

@@ -48,8 +48,6 @@ public class TournamentService {
     TournamentSingleGameRepository tournamentSingleGameRepository;
     //todo use spring
     private SeedingManager seedingManager = new SeedingManager();
-    private KOField field;
-
 
 
     public int getQueueSize() {
@@ -99,9 +97,9 @@ public class TournamentService {
             System.out.println("----------------------------------");
             System.out.println("#\tSpieler\t\t\t\t\tSpiele\tSätze");
             calcRankingForGroup(group);
-            List<TournamentService.PS> pss = group.getRanking();
+            List<PlayerStatistic> pss = group.getRanking();
             int i = 1;
-            for (PS ps : pss) {
+            for (PlayerStatistic ps : pss) {
                 System.out.println("" + i + "\t" + ps.player.getFullName() + "\t" + ps.win + ":" + ps.lose + "\t\t" + ps.setsWon + ":" + ps.setsLost);
                 i++;
             }
@@ -128,12 +126,12 @@ public class TournamentService {
         return game;
     }
 
-    public void addPossibleKoGamesToQueue() {
-        if (field != null) {
+    public void addPossibleKoGamesToQueue(TournamentClass tournamentClass) {
+        if (tournamentClass.getKoField() != null) {
 
-            List<TournamentSingleGame> games = field.getRound().getGames();
+            List<TournamentSingleGame> games = tournamentClass.getKoField().getRound().getGames();
             addGamesToQueueInternally(games);
-            Round r = field.getRound();
+            Round r = tournamentClass.getKoField().getRound();
             while (r != null) {
                 if (r.getNextRound() != null) {
                     r = r.getNextRound();
@@ -158,13 +156,13 @@ public class TournamentService {
         }
     }
 
-    @Transactional
-    public void enterResult(TournamentSingleGame game) {
-        if (field != null) {
-            moveWinnerToNextRound(game);
-        }
-        removeBusyGame(game);
-    }
+//    @Transactional
+//    public void enterResult(TournamentSingleGame game) {
+//        if (field != null) {
+//            moveWinnerToNextRound(game);
+//        }
+//        removeBusyGame(game);
+//    }
 
     private void moveWinnerToNextRound(TournamentSingleGame game) {
         TournamentPlayer player = game.getWinningPlayer();
@@ -247,9 +245,9 @@ public class TournamentService {
 
     //todo change to DTO object
     void calcRankingForGroup(TournamentGroup group) {
-        List<PS> list = new ArrayList<>(4);
+        List<PlayerStatistic> list = new ArrayList<>(4);
         for (TournamentPlayer player : group.getPlayers()) {
-            PS ps = new PS();
+            PlayerStatistic ps = new PlayerStatistic();
             ps.player = player;
             for (TournamentSingleGame singleGame : group.getGames()) {
                 if (singleGame.getPlayer1().equals(player)) {
@@ -286,7 +284,7 @@ public class TournamentService {
         Collections.sort(list);
         Collections.reverse(list);
         int n = 0;
-        for (PS ps : list) {
+        for (PlayerStatistic ps : list) {
             TournamentPlayer own = ps.player;
             //find games and add entries
             for (int i = 0; i < list.size(); i++) {
@@ -317,6 +315,7 @@ public class TournamentService {
     public TournamentClass addTC(Long aLong, TournamentClass tournamentClass) {
         Tournament t = repository.findOne(aLong);
         t.addClass(tournamentClass);
+        tcRepository.saveAndFlush(tournamentClass);
         repository.saveAndFlush(t);
         return tournamentClass;
     }
@@ -341,11 +340,11 @@ public class TournamentService {
     public List<TournamentClassDTO> getNotRunning(String userName) {
         Tournament t = userRepository.findByLoginName(userName).getLastUsedTournament();
         List<TournamentClassDTO> ret = new ArrayList<>();
-        //todo write correct find method
-        List<TournamentClass> classes = tcRepository.findByTournament(t);
+        List<TournamentClass> classes = t.getClasses();
         for (TournamentClass aClass : classes) {
-            if (!aClass.getRunning() || (aClass.getRunning() && areAllGroupsFinished(aClass.getId())))
+            if (!aClass.getRunning() || (aClass.getRunning() && isPhase1FinishedAndPhase2NotStarted(aClass))) {
                 ret.add(copy(aClass));
+            }
         }
 
         return ret;
@@ -455,7 +454,9 @@ public class TournamentService {
      */
     private void finishGame(TournamentSingleGame game) {
         busyGames.remove(game);
-        addPossibleGroupGamesToQueue(Collections.singletonList(game.getGroup()));
+        if (game.getGroup() != null) {
+            addPossibleGroupGamesToQueue(Collections.singletonList(game.getGroup()));
+        }
     }
 
     @Transactional
@@ -580,7 +581,7 @@ public class TournamentService {
             groupResultDTO.setGroupName(group.getName());
             results.add(groupResultDTO);
             int pos = 1;
-            for (PS ps : group.getRanking()) {
+            for (PlayerStatistic ps : group.getRanking()) {
                 GroupResultEntryDTO entry = new GroupResultEntryDTO();
                 entry.setPos(pos++);
                 entry.setClub(ps.player.getClub().getName());
@@ -614,7 +615,7 @@ public class TournamentService {
                 }
             }
         }
-        boolean finishedP1 =  !(tc.getPhase() != null && tc.getPhase() > 1);
+        boolean finishedP1 = !(tc.getPhase() != null && tc.getPhase() > 1);
         return finishedP1;
     }
 
@@ -645,7 +646,7 @@ public class TournamentService {
         List<TournamentClass> clzs = tcRepository.findByTournamentAndRunning(t, true);
         List<Long> ids = new ArrayList<>();
         for (TournamentClass clz : clzs) {
-            boolean b = areAllGroupsFinished(clz.getId());
+            boolean b = isPhase1FinishedAndPhase2NotStarted(clz);
             if (b) {
                 ids.add(clz.getId());
             }
@@ -658,50 +659,4 @@ public class TournamentService {
         tournamentSingleGameRepository.saveAndFlush(game);
     }
 
-    static public class PS implements Comparable<PS> {
-        TournamentPlayer player;
-        int win;
-        int lose;
-        int setsWon;
-        int setsLost;
-        List<String> detailResult = new ArrayList<>();
-
-        //todo points
-
-        //todo C 8.5.2 Punkt- und Satzgleichheit bei mehr als 2 Spielern
-//        Bei Punkt- und Satzgleichheit von mehr als zwei Spielern einer Gruppe werden nur die Ergeb-
-//        nisse dieser Spieler untereinander verglichen. Kommt man bei diesem Punkt- und Satzdiffe-
-//        renzvergleichen Spielern immer  noch nicht zu einem Ergebnis, so entscheidet die größere Dif-
-//        ferenz zwischen gewonnenen und verlorenen Bällen. Die Spiele gegen die anderen Spieler die-
-//        ser Gruppe werden beim direkten Vergleich nicht berücksichtigt.
-
-        @Override
-        public int compareTo(PS o) {
-            int w = Integer.compare(win, o.win);
-            if (w != 0) {
-                return w;
-            }
-            int l = Integer.compare(lose, o.lose);
-            if (l != 0) {
-                return l;
-            }
-            return Integer.compare(setsRatio(), o.setsRatio());
-            //todo compare balls or make it generic
-        }
-
-        int setsRatio() {
-            return setsWon - setsLost;
-        }
-
-        @Override
-        public String toString() {
-            return "PS{" +
-                    "player=" + player.getFullName() +
-                    ", win=" + win +
-                    ", lose=" + lose +
-                    ", setsWon=" + setsWon +
-                    ", setsLost=" + setsLost +
-                    '}';
-        }
-    }
 }
