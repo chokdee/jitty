@@ -41,6 +41,7 @@ public class DrawGroupManager {
         int ppg = tournamentClassDTO.getPlayerPerGroup() == null ? 4 : tournamentClassDTO.getPlayerPerGroup();
         int optGroupSize = calcOptimalGroupSize(tournamentClass.getPlayerCount(), ppg);
         tournamentClassDTO.setGroupCount(optGroupSize);
+        tournamentClassDTO.setPlayerPerGroup(ppg);
         return tournamentClassDTO;
     }
 

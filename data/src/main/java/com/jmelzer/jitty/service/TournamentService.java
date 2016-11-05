@@ -224,7 +224,15 @@ public class TournamentService {
     public void updateClass(TournamentClassDTO dto) {
         TournamentClass tc = tcRepository.findOne(dto.getId());
         copy(dto, tc, playerRepository);
+        assertSize(tc);
         tcRepository.saveAndFlush(tc);
+        assertSize(tc);
+    }
+
+    private void assertSize(TournamentClass tc) {
+        if (tc.getGroups().size() > 5) {
+            throw new RuntimeException(tc.toString());
+        }
     }
 
     @Transactional
@@ -607,6 +615,7 @@ public class TournamentService {
     }
 
     public boolean isPhase1FinishedAndPhase2NotStarted(TournamentClass tc) {
+        assertSize(tc);
         for (TournamentGroup group : tc.getGroups()) {
             List<TournamentSingleGame> games = group.getGames();
             for (TournamentSingleGame game : games) {

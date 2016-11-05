@@ -1,7 +1,6 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.Application;
-import com.jmelzer.jitty.model.TournamentSingleGame;
 import com.jmelzer.jitty.model.dto.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,11 +26,22 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class TournamentFlowControllerTest extends SecureResourceTest {
+    HttpHeaders loginHeaders;
 
     @Test
     public void flow() throws Exception {
         try {
-            HttpHeaders loginHeaders = doLogin();
+            loginHeaders = doLogin();
+
+            ResponseEntity<TournamentSingleGameDTO[]> possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
+                    createHttpEntity(null, loginHeaders), TournamentSingleGameDTO[].class);
+            int possibleGamesBeforeStartTest = possibleGamesEntity.getBody().length;
+            ResponseEntity<TournamentSingleGameDTO[]> runningGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/running-games",
+                    createHttpEntity(null, loginHeaders), TournamentSingleGameDTO[].class);
+            int runningGamesBeforeStartTest = runningGamesEntity.getBody().length;
+            //Turnier laeuft, es gibt in der db aber bereits ein paar moegliche und beendete Spiele, die zaehlen wir hier
+            int finishedGamesBeforeStartTest = http(HttpMethod.GET, "api/tournamentdirector/finished-games",
+                    createHttpEntity(null, loginHeaders), TournamentSingleGameDTO[].class).getBody().length;
 
             //create a tournament
             TournamentDTO tournament = new TournamentDTO();
@@ -41,6 +52,8 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
                     createHttpEntity(tournament, loginHeaders), Long.class);
             assertTrue(longEntitiy.getStatusCode().is2xxSuccessful());
             Long tId = longEntitiy.getBody();
+
+            http(HttpMethod.GET, "api/tournaments/actual/" + tId, createHttpEntity(tournament, loginHeaders), Void.class);
 
             //create a class
             TournamentClassDTO tournamentClass = new TournamentClassDTO();
@@ -59,68 +72,71 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
             tournamentClass = entity.getBody();
             assertNull("still not drawed", tournamentClass.getGroupCount());
 
-            //now todo adding players to the class
+            for (int i = 0; i < 14; i++) {
+                createPlayer(i, tournamentClass);
+            }
 
             entity = http(HttpMethod.POST, "api/draw/calc-optimal-group-size",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentClassDTO.class);
             assertTrue(entity.getStatusCode().is2xxSuccessful());
+            assertThat(entity.getBody().getPlayerPerGroup(), is(4));
+            assertThat(entity.getBody().getGroupCount(), is(4));
 
-
+            //auslosung
             entity = http(HttpMethod.POST, "api/draw/automatic-draw",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentClassDTO.class);
             assertTrue(entity.getStatusCode().is2xxSuccessful());
 
+            //speichern
             ResponseEntity<Void> voidEntity = http(HttpMethod.POST, "api/draw/save",
                     createHttpEntity(entity.getBody(), loginHeaders), Void.class);
             assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
 
-            voidEntity = http(HttpMethod.GET, "api/draw/start?cid=1",
+            //starten
+            voidEntity = http(HttpMethod.GET, "api/draw/start?cid=" + tClassId,
                     createHttpEntity(entity.getBody(), loginHeaders), Void.class);
             assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
 
-            int finishedFromDB = http(HttpMethod.GET, "api/tournamentdirector/finished-games",
-                    createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class).getBody().length;
 
-            ResponseEntity<TournamentSingleGameDTO[]> possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
+            possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
             TournamentSingleGameDTO[] possibleGames = possibleGamesEntity.getBody();
             assertTrue(possibleGamesEntity.getStatusCode().is2xxSuccessful());
-            //1 B Klasse and 3 A Klasse
-            assertThat(possibleGames.length, is(4));
+
+            //2 3er Gruppen & 2 4er Gruppen == 2 + 4 = 6 moegliche Spiele
+            assertThat(possibleGames.length, is(6 + possibleGamesBeforeStartTest));
+            List<TournamentSingleGameDTO> gamesForTestClz = new ArrayList<>();
             for (TournamentSingleGameDTO dto : possibleGames) {
                 assertNotNull(dto.getPlayer1());
                 assertNotNull(dto.getPlayer2());
                 assertNotNull(dto.getGroup());
                 assertNotNull(dto.getGroup().getClass());
+                if (dto.getTcName().equals("dummy")) {
+                    gamesForTestClz.add(dto);
+                }
             }
 
-            voidEntity = http(HttpMethod.GET, "api/tournamentdirector/start-game?id=" + possibleGames[1].getId(),
-                    createHttpEntity(entity.getBody(), loginHeaders), Void.class);
-            assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
-            voidEntity = http(HttpMethod.GET, "api/tournamentdirector/start-game?id=" + possibleGames[2].getId(),
-                    createHttpEntity(entity.getBody(), loginHeaders), Void.class);
-            assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
-            voidEntity = http(HttpMethod.GET, "api/tournamentdirector/start-game?id=" + possibleGames[3].getId(),
-                    createHttpEntity(entity.getBody(), loginHeaders), Void.class);
-            assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+            for (TournamentSingleGameDTO tournamentSingleGameDTO : gamesForTestClz) {
+                startGame(tournamentSingleGameDTO.getId());
+            }
 
-            ResponseEntity<TournamentSingleGameDTO[]> runningGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/running-games",
+            runningGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/running-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
             assertTrue(runningGamesEntity.getStatusCode().is2xxSuccessful());
-            assertThat(runningGamesEntity.getBody().length, is(3));
+            assertThat(runningGamesEntity.getBody().length, is(gamesForTestClz.size() + runningGamesBeforeStartTest));
 
 //no more possible games, all are running
             possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
-            assertThat(possibleGamesEntity.getBody().length, is(1));
+            assertThat(possibleGamesEntity.getBody().length, is(possibleGamesBeforeStartTest));
 
 
             TournamentSingleGameDTO[] runningGames = runningGamesEntity.getBody();
-            addResult(loginHeaders, runningGames);
+            addAndSaveResult(loginHeaders, runningGames);
 
             ResponseEntity<TournamentSingleGameDTO[]> finishedGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/finished-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
-            assertThat(finishedGamesEntity.getBody().length, is(finishedFromDB + runningGames.length));
+            assertThat(finishedGamesEntity.getBody().length, is(finishedGamesBeforeStartTest + runningGames.length));
 
             possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
@@ -128,84 +144,88 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
             possibleGames = possibleGamesEntity.getBody();
 
             //do all games now
-            int posGames = possibleGamesEntity.getBody().length;
-            int maxGames = 18 - 3; //allready played above
+            int possibleGamesCounter = possibleGamesEntity.getBody().length;
+            //2x 3er = 2x*3 + 2x 4er = 2x*6
+            int maxGames = 18 - 6; //allready played above
             int counter = 0;
-            while (posGames > 1) {
+            while (possibleGamesCounter - possibleGamesBeforeStartTest > 0) {
 
                 int started = 0;
-                for (int i = 0; i < posGames; i++) {
-                    if (possibleGames[i].getTcName().equals("A-Klasse")) {
-                        voidEntity = http(HttpMethod.GET, "api/tournamentdirector/start-game?id=" + possibleGames[i].getId(),
-                                createHttpEntity(entity.getBody(), loginHeaders), Void.class);
-                        assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+                for (int i = 0; i < possibleGamesCounter; i++) {
+                    if (possibleGames[i].getTcName().equals("dummy")) {
+                        startGame(possibleGames[i].getId());
                         started++;
                     }
-
                 }
 
                 runningGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/running-games",
-                        createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
+                        createHttpEntity(null, loginHeaders), TournamentSingleGameDTO[].class);
                 assertTrue(runningGamesEntity.getStatusCode().is2xxSuccessful());
                 assertThat(runningGamesEntity.getBody().length, is(started));
 
                 runningGames = runningGamesEntity.getBody();
-                counter += addResult(loginHeaders, runningGames);
+                counter += addAndSaveResult(loginHeaders, runningGames);
                 assertTrue("must be smaller or equals" + counter, counter <= maxGames);
 
 
                 possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
-                        createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
-                posGames = possibleGamesEntity.getBody().length;
+                        createHttpEntity(null, loginHeaders), TournamentSingleGameDTO[].class);
+                possibleGamesCounter = possibleGamesEntity.getBody().length;
                 possibleGames = possibleGamesEntity.getBody();
 
-                ResponseEntity<Boolean> finished = http(HttpMethod.GET, "api/tournamentdirector/groups-finished?id=1",
+                ResponseEntity<Boolean> finished = http(HttpMethod.GET, "api/tournamentdirector/groups-finished?id=" + tClassId,
                         createHttpEntity(entity.getBody(), loginHeaders), Boolean.class);
+
                 if (maxGames == counter) {
+                    finished = http(HttpMethod.GET, "api/tournamentdirector/groups-finished?id=" + tClassId,
+                            createHttpEntity(entity.getBody(), loginHeaders), Boolean.class);
                     assertTrue(finished.getBody());
                     ResponseEntity<Long[]> finishedClzs = http(HttpMethod.GET, "api/tournamentdirector/any-phase-finished",
                             createHttpEntity(entity.getBody(), loginHeaders), Long[].class);
                     assertTrue(finishedClzs.getBody().length == 1);
-                    assertTrue(finishedClzs.getBody()[0]== 1L);
+                    assertThat(finishedClzs.getBody()[0] , is(tClassId));
 
                 } else {
                     assertFalse(finished.getBody());
                     ResponseEntity<Long[]> finishedClzs = http(HttpMethod.GET, "api/tournamentdirector/any-phase-finished",
-                            createHttpEntity(entity.getBody(), loginHeaders), Long[].class);
+                            createHttpEntity(tournamentClass, loginHeaders), Long[].class);
                     assertTrue(finishedClzs.getBody().length == 0);
                 }
+                System.out.println("running " + runningGames.length);
+                System.out.println("finished " + counter);
+                System.out.println("possible " + possibleGamesCounter);
 
             }
 //            possible-player-for-kofield
-            ResponseEntity<TournamentPlayerDTO[]> avaiPlayerEntity = http(HttpMethod.GET, "api/draw/possible-player-for-kofield?cid=1",
+            ResponseEntity<TournamentPlayerDTO[]> avaiPlayerEntity = http(HttpMethod.GET, "api/draw/possible-player-for-kofield?cid=" + tClassId,
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentPlayerDTO[].class);
             assertTrue(avaiPlayerEntity.getStatusCode().is2xxSuccessful());
             //8 player must be avaiable for seeding
-            assertThat(avaiPlayerEntity.getBody().length , is (8));
+            assertThat(avaiPlayerEntity.getBody().length, is(8));
 
             //start ko
-            ResponseEntity<KOFieldDTO> koFieldEntity = http(HttpMethod.GET, "api/draw/draw-ko?id=1&assignPlayer=false",
+            ResponseEntity<KOFieldDTO> koFieldEntity = http(HttpMethod.GET, "api/draw/draw-ko?id=" + tClassId + "&assignPlayer=false",
                     createHttpEntity(entity.getBody(), loginHeaders), KOFieldDTO.class);
             printBracket(koFieldEntity.getBody());
-            koFieldEntity = http(HttpMethod.GET, "api/draw/draw-ko?id=1&assignPlayer=true",
+            koFieldEntity = http(HttpMethod.GET, "api/draw/draw-ko?id=" + tClassId + "&assignPlayer=true",
                     createHttpEntity(entity.getBody(), loginHeaders), KOFieldDTO.class);
             printBracket(koFieldEntity.getBody());
 
             //no more player must be avaiable for seeding
-            avaiPlayerEntity = http(HttpMethod.GET, "api/draw/possible-player-for-kofield?cid=1",
+            avaiPlayerEntity = http(HttpMethod.GET, "api/draw/possible-player-for-kofield?cid=" + tClassId,
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentPlayerDTO[].class);
             assertTrue(avaiPlayerEntity.getStatusCode().is2xxSuccessful());
-            assertThat(avaiPlayerEntity.getBody().length , is (0));
+            assertThat(avaiPlayerEntity.getBody().length, is(0));
 
             //start the ko round now
-            voidEntity = http(HttpMethod.GET, "api/draw/start-ko?cid=1",
+            voidEntity = http(HttpMethod.GET, "api/draw/start-ko?cid=" + tClassId,
                     createHttpEntity(entity.getBody(), loginHeaders), Void.class);
             assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
 
             //4 games must be possible now (one is from B-Klasse
             possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
-            assertThat(possibleGamesEntity.getBody().length, is(4));
+            assertThat(possibleGamesEntity.getBody().length, is(4 + possibleGamesBeforeStartTest));
 
 
         } catch (HttpClientErrorException e) {
@@ -213,6 +233,24 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
             fail();
         }
     }
+
+    private void startGame(Long gameId) {
+        ResponseEntity voidEntity = http(HttpMethod.GET, "api/tournamentdirector/start-game?id=" + gameId,
+                createHttpEntity(null, loginHeaders), Void.class);
+        assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+    }
+
+    private void createPlayer(int i, TournamentClassDTO tournamentClass) {
+        TournamentPlayerDTO player = new TournamentPlayerDTO();
+        player.setFirstName(i + " aaaa");
+        player.setLastName(i + " bbbb");
+        player.setQttr(1660 + i);
+        player.addClass(tournamentClass);
+        ResponseEntity<Void> longEntitiy = http(HttpMethod.POST, "api/players",
+                createHttpEntity(player, loginHeaders), Void.class);
+        assertTrue(longEntitiy.getStatusCode().is2xxSuccessful());
+    }
+
     private void printBracket(KOFieldDTO koFieldDTO) {
         System.out.println("-------- bracket -----------");
         for (TournamentSingleGameDTO game : koFieldDTO.getRound().getGames()) {
@@ -225,7 +263,8 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
         }
         System.out.println("-------- bracket -----------");
     }
-    private int addResult(HttpHeaders loginHeaders, TournamentSingleGameDTO[] runningGames) {
+
+    private int addAndSaveResult(HttpHeaders loginHeaders, TournamentSingleGameDTO[] runningGames) {
         ResponseEntity<Void> voidEntity;
         for (TournamentSingleGameDTO runningGame : runningGames) {
             runningGame.addSet(new GameSetDTO(11, 9));
