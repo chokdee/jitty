@@ -138,7 +138,6 @@ public class DrawGroupManager {
                 game.setPlayer1(t1);
                 game.setPlayer2(t2);
                 game.setTcName(tcName);
-                game.setTcId(tcId);
                 tournamentService.save(game);
                 games.add(game);
             }

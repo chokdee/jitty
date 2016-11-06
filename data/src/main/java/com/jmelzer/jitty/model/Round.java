@@ -11,8 +11,12 @@ import java.util.List;
 @Entity
 @Table(name = "round")
 public class Round {
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "prevRound")
     Round nextRound;
+    @OneToOne(cascade = CascadeType.DETACH)
+    Round prevRound;
+    @OneToOne(cascade = CascadeType.DETACH, mappedBy = "round")
+    KOField koField;
     @OneToMany(cascade = CascadeType.ALL)
     List<TournamentSingleGame> games = new ArrayList<>();
     @Id
@@ -32,7 +36,7 @@ public class Round {
 
     public Round(int gameSize) {
         this.gameSize = gameSize;
-        roundType = RoundType.fromValue(gameSize *2);
+        roundType = RoundType.fromValue(gameSize * 2);
     }
 
     public void addGame(TournamentSingleGame tournamentSingleGame) {
@@ -49,16 +53,19 @@ public class Round {
 
     public void setNextRound(Round nextRound) {
         this.nextRound = nextRound;
+        nextRound.prevRound = this;
     }
 
     public int getGameSize() {
         return gameSize;
     }
-    public int playerSize() {
-        return gameSize * 2;
-    }
+
     public void setGameSize(int gameSize) {
         this.gameSize = gameSize;
+    }
+
+    public int playerSize() {
+        return gameSize * 2;
     }
 
     public List<TournamentSingleGame> getGames() {
@@ -78,5 +85,31 @@ public class Round {
 
     public void setRoundType(RoundType roundType) {
         this.roundType = roundType;
+    }
+
+    public Round getPrevRound() {
+        return prevRound;
+    }
+
+    public void setPrevRound(Round prevRound) {
+        this.prevRound = prevRound;
+    }
+
+    public KOField getKoField() {
+        return koField;
+    }
+
+    public void setKoField(KOField koField) {
+        this.koField = koField;
+    }
+
+    public KOField findKOField() {
+        if (koField != null) {
+            return koField;
+        }
+        if (prevRound != null) {
+            return prevRound.findKOField();
+        }
+        throw new IllegalArgumentException("wether kofield or preRound must be set");
     }
 }

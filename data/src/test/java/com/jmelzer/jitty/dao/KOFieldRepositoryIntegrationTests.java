@@ -46,7 +46,7 @@ public class KOFieldRepositoryIntegrationTests {
         Round round1 = new Round();
         field.setRound(round1);
         for (int i = 0; i < 16; i++) {
-            round1.addGame(new TournamentSingleGame());
+            round1.addGame(new TournamentSingleGame("A"));
         }
         Round round2 = new Round();
         round1.setNextRound(round2);

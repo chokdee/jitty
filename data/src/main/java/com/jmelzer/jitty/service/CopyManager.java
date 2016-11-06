@@ -28,7 +28,7 @@ public class CopyManager {
             RoundDTO rdto = new RoundDTO();
             BeanUtils.copyProperties(round, rdto, "games");
             rdto.setRoundType(copy(round.getRoundType()));
-            if ( lastRoundDto == null) {
+            if (lastRoundDto == null) {
                 dto.setRound(rdto);
             } else {
                 lastRoundDto.setNextRound(rdto);
@@ -52,8 +52,12 @@ public class CopyManager {
     static public TournamentSingleGameDTO copy(TournamentSingleGame game) {
         TournamentSingleGameDTO dto = new TournamentSingleGameDTO();
         BeanUtils.copyProperties(game, dto, "player1", "player2", "sets");
-        dto.setPlayer1(copy(game.getPlayer1()));
-        dto.setPlayer2(copy(game.getPlayer2()));
+        if (game.getPlayer1() != null) {
+            dto.setPlayer1(copy(game.getPlayer1()));
+        }
+        if (game.getPlayer2() != null) {
+            dto.setPlayer2(copy(game.getPlayer2()));
+        }
         if (game.getGroup() != null) {
             dto.setGroup(copy(game.getGroup()));
         }

@@ -12,13 +12,12 @@ import java.util.List;
 @Entity
 @Table(name = "TOURNAMENT_SINGLE_GAME")
 public class TournamentSingleGame {
-    @OneToOne(cascade = CascadeType.DETACH)
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE} )
     @JoinColumn(name = "player1_id")
     TournamentPlayer player1;
     @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "player2_id")
     TournamentPlayer player2;
-
 
     /**
      * Bereits gespielt?
@@ -55,15 +54,25 @@ public class TournamentSingleGame {
     @Id
     @GeneratedValue
     private Long id;
+
     private int winner = -1;
 
     //TC Name
     @Column(nullable = false, name = "tournament_class_name")
     String tcName;
 
-    //TC Name
-    @Column(nullable = false, name = "tc_id")
-    Long tcId;
+    @OneToOne(cascade = CascadeType.ALL)
+    private TournamentSingleGame nextGame;
+
+    @Column
+    String gameName;
+
+    public TournamentSingleGame() {
+    }
+
+    public TournamentSingleGame(String tcName) {
+        this.tcName = tcName;
+    }
 
     public Long getId() {
         return id;
@@ -266,25 +275,31 @@ public class TournamentSingleGame {
         this.tcName = tcName;
     }
 
-    public Long getTcId() {
-        return tcId;
-    }
-
-    public void setTcId(Long tcId) {
-        this.tcId = tcId;
-    }
-
     @Override
     public String toString() {
         return "TournamentSingleGame{" +
-                "tcName='" + tcName + '\'' +
-                ", played=" + played +
-                ", called=" + called +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", tableNo=" + tableNo +
-                ", id=" + id +
-                ", winner=" + winner +
+                "id='" + id + '\'' +
+                ", p1=" + (player1 != null ? player1.getId() : "null") +
+                ", p2=" + (player2 != null ? player2.getId() : "null") +
                 '}';
+    }
+
+    public void setNextGame(TournamentSingleGame nextGame) {
+        this.nextGame = nextGame;
+    }
+
+    public TournamentSingleGame getNextGame() {
+        return nextGame;
+    }
+
+    public String getGameName() {
+        return gameName;
+    }
+
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
+    }
+    public boolean isEmpty() {
+        return player1 == null || player2 == null;
     }
 }

@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentGroup;
 import com.jmelzer.jitty.model.TournamentPlayer;
 import org.junit.Before;
@@ -28,24 +29,29 @@ public class DrawGroupManagerTest {
     public void testcalcGroupGames() {
         TournamentService ts = Mockito.mock(TournamentService.class);
         drawGroupManager.tournamentService = ts;
+        TournamentClass tc = new TournamentClass("ccc");
         TournamentGroup group = new TournamentGroup("A");
+        group.setTournamentClass(tc);
         group.addPlayer(new TournamentPlayer(11L, "11", ""));
         group.addPlayer(new TournamentPlayer(12L, "12", ""));
         group.addPlayer(new TournamentPlayer(13L, "13", ""));
         group.addPlayer(new TournamentPlayer(14L, "14", ""));
 
         TournamentGroup group2 = new TournamentGroup("B");
+        group2.setTournamentClass(tc);
         group2.addPlayer(new TournamentPlayer(15L, "15", ""));
         group2.addPlayer(new TournamentPlayer(16L, "16", ""));
         group2.addPlayer(new TournamentPlayer(17L, "17", ""));
         group2.addPlayer(new TournamentPlayer(18L, "18", ""));
 
         TournamentGroup group3 = new TournamentGroup("C");
+        group3.setTournamentClass(tc);
         group3.addPlayer(new TournamentPlayer(19L, "19", ""));
         group3.addPlayer(new TournamentPlayer(20L, "20", ""));
         group3.addPlayer(new TournamentPlayer(21L, "21", ""));
 
         TournamentGroup group4 = new TournamentGroup("C");
+        group4.setTournamentClass(tc);
         group4.addPlayer(new TournamentPlayer(22L, "22", ""));
         group4.addPlayer(new TournamentPlayer(23L, "23", ""));
         group4.addPlayer(new TournamentPlayer(24L, "24", ""));

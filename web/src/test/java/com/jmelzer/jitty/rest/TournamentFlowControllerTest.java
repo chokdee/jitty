@@ -271,9 +271,9 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
         System.out.println("-------- bracket -----------");
         for (TournamentSingleGameDTO game : koFieldDTO.getRound().getGames()) {
             System.out.println("------------------");
-            System.out.println(game.getPlayer1().getFullName());
+            System.out.println(game.getPlayer1() != null ? game.getPlayer1().getFullName() : game.getGameName());
             System.out.println("                       --------------");
-            System.out.println(game.getPlayer2().getFullName());
+            System.out.println(game.getPlayer2() != null ? game.getPlayer2().getFullName() : "");
             System.out.println("------------------");
             System.out.println();
         }

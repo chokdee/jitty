@@ -124,15 +124,34 @@ public class DrawKoFieldManager {
             List<TournamentSingleGame> games = assignPlayerToKoField(field, tc.getGroups());
             for (TournamentSingleGame game : games) {
                 game.setTcName(tc.getName());
-                game.setTcId(tc.getId());
+                tournamentService.save(game);
             }
-            for (TournamentSingleGame game : games) {
+            Round nextRound = field.getRound().getNextRound();
+            List<TournamentSingleGame> nextGames = createEmptyGamesForRound(nextRound, games);
+            for (TournamentSingleGame game : nextGames) {
+                game.setTcName(tc.getName());
                 tournamentService.save(game);
             }
 //            tc.setPhase(2);
         }
         tcRepository.saveAndFlush(tc);
         return copy(field, tc);
+    }
+
+    private List<TournamentSingleGame> createEmptyGamesForRound(Round nextRound, List<TournamentSingleGame> gamesLastRound) {
+        List<TournamentSingleGame> nextGames = new ArrayList<>(gamesLastRound.size() / 2);
+
+        for (int i = 0; i < gamesLastRound.size(); i++) {
+            TournamentSingleGame nextGame = new TournamentSingleGame();
+            nextGame.setGameName(gamesLastRound.get(i).getGameName() + " - " + gamesLastRound.get(i+1).getGameName());
+            gamesLastRound.get(i).setNextGame(nextGame);
+            gamesLastRound.get(i+1).setNextGame(nextGame);
+
+            nextGames.add(nextGame);
+            nextRound.addGame(nextGame);
+            i++;
+        }
+        return nextGames;
     }
 
     @Transactional

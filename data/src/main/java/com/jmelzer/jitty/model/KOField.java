@@ -10,6 +10,9 @@ import javax.persistence.*;
 public class KOField {
     @OneToOne(cascade = CascadeType.ALL)
     Round round;
+    @OneToOne(cascade = CascadeType.DETACH)
+    TournamentClass tournamentClass;
+
     @Id
     @GeneratedValue
     private Long id;
@@ -26,6 +29,7 @@ public class KOField {
 
     public void setRound(Round round) {
         this.round = round;
+        round.setKoField(this);
     }
 
     public void setNoOfRounds(int noOfRounds) {
@@ -34,5 +38,13 @@ public class KOField {
 
     public int getNoOfRounds() {
         return noOfRounds;
+    }
+
+    public TournamentClass getTournamentClass() {
+        return tournamentClass;
+    }
+
+    public void setTournamentClass(TournamentClass tournamentClass) {
+        this.tournamentClass = tournamentClass;
     }
 }

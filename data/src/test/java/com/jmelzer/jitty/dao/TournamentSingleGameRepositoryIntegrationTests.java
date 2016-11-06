@@ -80,13 +80,24 @@ public class TournamentSingleGameRepositoryIntegrationTests {
         TournamentSingleGame game = new TournamentSingleGame();
         game.setPlayer1(playerRepository.findOne(1L));
         game.setPlayer2(playerRepository.findOne(2L));
-
+        game.setTcName("aaa");
         repository.save(game);
         assertNotNull(game.getId());
 
         group.addGame(game);
         tournamentClassRepository.save(tournamentClass);
 
+
+        TournamentSingleGame nextGame = new TournamentSingleGame();
+        nextGame.setTcName("aaa");
+        game.setNextGame(nextGame);
+        repository.save(nextGame);
+        repository.save(game);
+        game = repository.findOne(game.getId());
+        game.getNextGame().setPlayer1(playerRepository.findOne(1L));
+        repository.save(game.getNextGame());
+        game = repository.findOne(game.getId());
+        assertNotNull(game.getNextGame().getPlayer1());
 
 
     }
@@ -101,7 +112,7 @@ public class TournamentSingleGameRepositoryIntegrationTests {
         tournamentClassRepository.save(clz);
 
 //        calcGroupGames(clz.getGroups());
-        TournamentSingleGame game = new TournamentSingleGame();
+        TournamentSingleGame game = new TournamentSingleGame("222");
         game.setPlayer1(playerRepository.findOne(1L));
         game.setPlayer2(playerRepository.findOne(2L));
 
@@ -116,7 +127,7 @@ public class TournamentSingleGameRepositoryIntegrationTests {
     public void finishedGames() {
 
 //        calcGroupGames(clz.getGroups());
-        TournamentSingleGame game = new TournamentSingleGame();
+        TournamentSingleGame game = new TournamentSingleGame("11");
         game.setPlayer1(playerRepository.findOne(1L));
         game.setPlayer2(playerRepository.findOne(2L));
         game.setEndTime(new Date());
@@ -125,7 +136,7 @@ public class TournamentSingleGameRepositoryIntegrationTests {
 
         assertThat(repository.findByPlayedOrderByEndTimeDesc(true).size(), is(1));
 
-        TournamentSingleGame game2 = new TournamentSingleGame();
+        TournamentSingleGame game2 = new TournamentSingleGame("222");
         game2.setPlayer1(playerRepository.findOne(1L));
         game2.setPlayer2(playerRepository.findOne(2L));
         repository.save(game2);

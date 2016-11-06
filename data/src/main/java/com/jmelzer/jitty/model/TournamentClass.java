@@ -14,9 +14,6 @@ import java.util.List;
 @Entity
 @Table(name = "tournament_class")
 public class TournamentClass {
-    @Id
-    @GeneratedValue
-    private Long id;
     /**
      * Assoc to the player in the class.
      */
@@ -28,16 +25,42 @@ public class TournamentClass {
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tournamentClass")
     List<TournamentGroup> groups = new ArrayList<>();
-
-    @Column(nullable = false, name = "name")
-    private String name;
-
     @ManyToOne(targetEntity = Tournament.class)
     @JoinColumn(name = "T_ID")
     Tournament tournament;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = true, name = "start_time")
+    Date startTime;
+    @Column(nullable = true)
+    String type;
 
     //type (Einzel / Doppem / Mixed)
     //trostrunden?
+    @Column(nullable = false, name = "running")
+    Boolean running = false;
+    @Column(nullable = true, name = "phase")
+    Integer phase = 0;
+    /**
+     * @see GameMode for values
+     */
+    @Column(nullable = true, name = "game_mode_phase_1", length = 1)
+    String gameModePhase1;
+    /**
+     * @see GameMode for values
+     */
+    @Column(nullable = true, name = "game_mode_phase_2", length = 1)
+    String gameModePhase2;
+    @Column(nullable = true, name = "player_per_group")
+    Integer playerPerGroup;
+    @Column(nullable = true, name = "group_count")
+    Integer groupCount;
+    @OneToOne(cascade = CascadeType.ALL)
+    KOField koField;
+    @Id
+    @GeneratedValue
+    private Long id;
+    @Column(nullable = false, name = "name")
+    private String name;
     /**
      * Min TTR Wert.
      */
@@ -48,54 +71,16 @@ public class TournamentClass {
      */
     @Column(nullable = true, name = "end_ttr")
     private int endTTR = 0;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = true, name = "start_time")
-    Date startTime;
-
-    @Column(nullable = true)
-    String type;
-
     @Temporal(TemporalType.DATE)
     @Column(nullable = true, name = "min_age")
     private Date minAge;
-
     @Temporal(TemporalType.DATE)
     @Column(nullable = true, name = "max_age")
     private Date maxAge;
-
     @Column(nullable = false, name = "open_for_men")
     private boolean openForMen;
     @Column(nullable = false, name = "open_for_women")
     private boolean openForWomen;
-
-    @Column(nullable = false, name = "running")
-    Boolean running = false;
-
-    @Column(nullable = true, name = "phase")
-    Integer phase = 0;
-
-
-    /**
-     * @see GameMode for values
-     */
-    @Column(nullable = true, name = "game_mode_phase_1", length = 1)
-    String gameModePhase1;
-
-    /**
-     * @see GameMode for values
-     */
-    @Column(nullable = true, name = "game_mode_phase_2", length = 1)
-    String gameModePhase2;
-
-    @Column(nullable = true, name = "player_per_group")
-    Integer playerPerGroup;
-
-    @Column(nullable = true, name = "group_count")
-    Integer groupCount;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    KOField koField;
 
     public TournamentClass(String name) {
         this.name = name;
@@ -110,6 +95,7 @@ public class TournamentClass {
 
     public void setKoField(KOField koField) {
         this.koField = koField;
+        koField.setTournamentClass(this);
     }
 
     public Integer getPlayerPerGroup() {
@@ -207,8 +193,9 @@ public class TournamentClass {
     }
 
     public Boolean getRunning() {
-        if (running == null)
+        if (running == null) {
             return false;
+        }
         return running;
     }
 

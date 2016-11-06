@@ -125,6 +125,7 @@ public class SeedingManager {
         List<TournamentSingleGame> games = new ArrayList<>();
         for (int i = 1; i <= fieldSize; i++) {
             TournamentSingleGame game = new TournamentSingleGame();
+            game.setGameName(""+i);
             TournamentPlayer player1 = players[i];
             TournamentPlayer player2 = players[++i];
             game.setPlayer1(player1);
@@ -139,6 +140,7 @@ public class SeedingManager {
 
         fillupWithOtherPlayer(rest, games);
         field.getRound().addAllGames(games);
+
         return games;
     }
 

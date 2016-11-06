@@ -66,7 +66,8 @@ public class TournamentService {
 
     private boolean playerInQueue(TournamentPlayer player, Collection<TournamentSingleGame> gameCollection) {
         for (TournamentSingleGame game : gameCollection) {
-            if (game.getPlayer1().equals(player) || game.getPlayer2().equals(player)) {
+            if ((game.getPlayer1() != null && game.getPlayer1().equals(player)) ||
+                    (game.getPlayer2() != null && game.getPlayer2().equals(player))) {
                 return true;
             }
         }
@@ -143,6 +144,10 @@ public class TournamentService {
 
     private void addGamesToQueueInternally(List<TournamentSingleGame> games) {
         for (TournamentSingleGame game : games) {
+            if (game.isEmpty()) {
+                continue;
+            }
+
             TournamentPlayer player1 = game.getPlayer1();
             TournamentPlayer player2 = game.getPlayer2();
             if (!playerInQueue(player1, gameQueue) && !playerInQueue(player2, gameQueue) &&
@@ -154,16 +159,16 @@ public class TournamentService {
         }
     }
 
-//    @Transactional
-//    public void enterResult(TournamentSingleGame game) {
-//        if (field != null) {
-//            moveWinnerToNextRound(game);
-//        }
-//        removeBusyGame(game);
-//    }
-
     private void moveWinnerToNextRound(TournamentSingleGame game) {
         TournamentPlayer player = game.getWinningPlayer();
+        TournamentSingleGame nextGame = game.getNextGame();
+        if (nextGame.getPlayer1() == null) {
+            nextGame.setPlayer1(player);
+        } else {
+            nextGame.setPlayer2(player);
+        }
+        playerRepository.saveAndFlush(player);
+        tournamentSingleGameRepository.saveAndFlush(nextGame);
     }
 
     @Transactional
@@ -391,6 +396,7 @@ public class TournamentService {
 
     @Transactional
     public void startGame(Long id) {
+        //todo in a method an refresh the object
         TournamentSingleGame foundGame = null;
         for (TournamentSingleGame game : gameQueue) {
             if (game.getId().equals(id)) {
@@ -402,12 +408,13 @@ public class TournamentService {
         if (foundGame == null) {
             throw new IllegalArgumentException();
         }
+        //refresh
+        foundGame = tournamentSingleGameRepository.findOne(foundGame.getId());
         foundGame.setCalled(true);
         foundGame.setStartTime(new Date());
         addBusyGame(foundGame);
         tournamentSingleGameRepository.save(foundGame);
         LOG.debug("started game with id {}", id);
-
     }
 
     @Transactional
@@ -463,7 +470,8 @@ public class TournamentService {
         if (game.getGroup() != null) {
             addPossibleGroupGamesToQueue(Collections.singletonList(game.getGroup()));
         } else {
-            TournamentClass tc = tcRepository.findOne(game.getTcId());
+            Round gr = game.getRound();
+            TournamentClass tc = gr.findKOField().getTournamentClass();
             moveWinnerToNextRound(game);
             addPossibleKoGamesToQueue(tc);
         }
@@ -652,7 +660,7 @@ public class TournamentService {
 
     @Transactional
     public void save(TournamentSingleGame game) {
-        tournamentSingleGameRepository.saveAndFlush(game);
+        tournamentSingleGameRepository.save(game);
     }
 
 }
