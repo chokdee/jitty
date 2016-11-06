@@ -2,11 +2,9 @@ package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.model.*;
-import com.jmelzer.jitty.model.dto.KOFieldDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentGroupDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
-import com.jmelzer.jitty.utl.ListUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +87,7 @@ public class DrawGroupManager {
                 System.out.println("---- games round " + i + " ----");
                 //first 1 against last
 
-                group.addGames(createOneRound(i, list));
+                group.addGames(createOneRound(i, list, group.getTournamentClass().getName(), group.getTournamentClass().getId()));
 
                 list.add(1, list.get(list.size() - 1));
                 list.remove(list.size() - 1);
@@ -104,11 +102,11 @@ public class DrawGroupManager {
 
     /**
      * Creates one round, i.e. a set of matches where each team plays once.
-     *
-     * @param round   Round number.
+     *  @param round   Round number.
      * @param players List of players
+     * @param tcName
      */
-    private List<TournamentSingleGame> createOneRound(int round, List<TournamentPlayer> players) {
+    private List<TournamentSingleGame> createOneRound(int round, List<TournamentPlayer> players, String tcName, Long tcId) {
         int mid = players.size() / 2;
         // Split list into two
 
@@ -139,6 +137,8 @@ public class DrawGroupManager {
                 TournamentSingleGame game = new TournamentSingleGame();
                 game.setPlayer1(t1);
                 game.setPlayer2(t2);
+                game.setTcName(tcName);
+                game.setTcId(tcId);
                 tournamentService.save(game);
                 games.add(game);
             }
@@ -148,51 +148,6 @@ public class DrawGroupManager {
         }
         return games;
     }
-
-
-    @Transactional(readOnly = true)
-    public int calcKOSizeInInt(long cId) {
-        TournamentClass tc = tcRepository.findOne(cId);
-        return calcKOSize(tc).getValue();
-
-    }
-
-    public RoundType calcKOSize(TournamentClass tournamentClass) {
-        int player = tournamentClass.getGroups().size() * 2;
-        if (player <= 8) {
-            return RoundType.QUARTER;
-        }
-        if (player <= 16) {
-            return RoundType.R16;
-        }
-        if (player <= 32) {
-            return RoundType.R32;
-        }
-        if (player <= 64) {
-            return RoundType.R64;
-        }
-        if (player <= 128) {
-            return RoundType.R128;
-        }
-        throw new IllegalArgumentException("could not calc size for " + player);
-    }
-
-    private int calcRounds(RoundType roundType) {
-        switch (roundType) {
-            case QUARTER:
-                return 4;
-            case R16:
-                return 5;
-            case R32:
-                return 6;
-            case R64:
-                return 7;
-            case R128:
-                return 8;
-        }
-        throw new RuntimeException("not yet implemented");
-    }
-
 
 
     @Transactional

@@ -226,6 +226,22 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
             possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
             assertThat(possibleGamesEntity.getBody().length, is(4 + possibleGamesBeforeStartTest));
+            possibleGames = possibleGamesEntity.getBody();
+
+            for (TournamentSingleGameDTO dto : possibleGames) {
+                assertNotNull(dto.getPlayer1());
+                assertNotNull(dto.getPlayer2());
+                if (dto.getTcName().equals("dummy")) {
+                    assertNull(dto.getGroup());
+                    startGame(dto.getId());
+                    addAndSaveResult(loginHeaders, new TournamentSingleGameDTO[] {dto});
+                }
+            }
+
+            possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
+                    createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
+            assertThat(possibleGamesEntity.getBody().length, is(2 + possibleGamesBeforeStartTest));
+
 
 
         } catch (HttpClientErrorException e) {

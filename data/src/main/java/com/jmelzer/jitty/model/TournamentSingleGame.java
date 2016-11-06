@@ -18,6 +18,8 @@ public class TournamentSingleGame {
     @OneToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "player2_id")
     TournamentPlayer player2;
+
+
     /**
      * Bereits gespielt?
      */
@@ -54,6 +56,14 @@ public class TournamentSingleGame {
     @GeneratedValue
     private Long id;
     private int winner = -1;
+
+    //TC Name
+    @Column(nullable = false, name = "tournament_class_name")
+    String tcName;
+
+    //TC Name
+    @Column(nullable = false, name = "tc_id")
+    Long tcId;
 
     public Long getId() {
         return id;
@@ -134,13 +144,6 @@ public class TournamentSingleGame {
 
     public void setTableNo(Integer tableNo) {
         this.tableNo = tableNo;
-    }
-
-    @Override
-    public String toString() {
-        return "  " +
-                (player1 != null ? player1.getFullName() : "undefined") +
-                " ---> " + (player2 != null ? player2.getFullName() : "undefined");
     }
 
     public void addSet(GameSet gameSet) {
@@ -253,5 +256,35 @@ public class TournamentSingleGame {
 
     public void setRound(Round round) {
         this.round = round;
+    }
+
+    public String getTcName() {
+        return tcName;
+    }
+
+    public void setTcName(String tcName) {
+        this.tcName = tcName;
+    }
+
+    public Long getTcId() {
+        return tcId;
+    }
+
+    public void setTcId(Long tcId) {
+        this.tcId = tcId;
+    }
+
+    @Override
+    public String toString() {
+        return "TournamentSingleGame{" +
+                "tcName='" + tcName + '\'' +
+                ", played=" + played +
+                ", called=" + called +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", tableNo=" + tableNo +
+                ", id=" + id +
+                ", winner=" + winner +
+                '}';
     }
 }

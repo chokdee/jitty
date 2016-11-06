@@ -46,8 +46,6 @@ public class TournamentService {
     TournamentPlayerRepository playerRepository;
     @Resource
     TournamentSingleGameRepository tournamentSingleGameRepository;
-    //todo use spring
-    private SeedingManager seedingManager = new SeedingManager();
 
 
     public int getQueueSize() {
@@ -437,7 +435,7 @@ public class TournamentService {
         TournamentPlayer p2 = game.getPlayer2();
         p1.setLastGameAt(new Date());
         p2.setLastGameAt(new Date());
-        tournamentSingleGameRepository.save(game);
+        save(game);
         return game;
     }
 
@@ -464,6 +462,10 @@ public class TournamentService {
         busyGames.remove(game);
         if (game.getGroup() != null) {
             addPossibleGroupGamesToQueue(Collections.singletonList(game.getGroup()));
+        } else {
+            TournamentClass tc = tcRepository.findOne(game.getTcId());
+            moveWinnerToNextRound(game);
+            addPossibleKoGamesToQueue(tc);
         }
     }
 
@@ -632,21 +634,6 @@ public class TournamentService {
     public boolean areAllGroupsFinished(Long id) {
         TournamentClass clz = tcRepository.findOne(id);
         return isPhase1FinishedAndPhase2NotStarted(clz);
-        //todo slow and can be done better, query etc...
-        //if phase 2 was started we return something other
-//        if (clz.getPhase() != null && clz.getPhase() == 2) {
-//            return true;
-//        }
-//
-//        for (TournamentGroup tournamentGroup : clz.getGroups()) {
-//            for (TournamentSingleGame game : tournamentGroup.getGames()) {
-//                if (!game.isFinished()) {
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        return true;
     }
 
     @Transactional(readOnly = true)
