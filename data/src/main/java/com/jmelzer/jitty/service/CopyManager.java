@@ -19,7 +19,13 @@ public class CopyManager {
 
     final static DateFormat hourFormatter = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
 
-    static public KOFieldDTO copy(KOField koField, TournamentClass tc) {
+    static public KOFieldDTO copyForBracket(KOField koField) {
+        return copy(koField, true);
+    }
+    static public KOFieldDTO copy(KOField koField) {
+        return copy(koField, false);
+    }
+    static public KOFieldDTO copy(KOField koField, boolean withSets) {
         KOFieldDTO dto = new KOFieldDTO();
         BeanUtils.copyProperties(koField, dto, "round");
         Round round = koField.getRound();
@@ -35,7 +41,7 @@ public class CopyManager {
             }
             lastRoundDto = rdto;
             for (TournamentSingleGame game : round.getGames()) {
-                rdto.addGame(copy(game));
+                rdto.addGame(copy(game, withSets));
             }
             round = round.getNextRound();
         } while (round != null);
@@ -49,7 +55,7 @@ public class CopyManager {
         return dto;
     }
 
-    static public TournamentSingleGameDTO copy(TournamentSingleGame game) {
+    static public TournamentSingleGameDTO copy(TournamentSingleGame game, boolean withSets) {
         TournamentSingleGameDTO dto = new TournamentSingleGameDTO();
         BeanUtils.copyProperties(game, dto, "player1", "player2", "sets", "round");
         if (game.getPlayer1() != null) {
@@ -60,6 +66,11 @@ public class CopyManager {
         }
         if (game.getGroup() != null) {
             dto.setGroup(copy(game.getGroup()));
+        }
+        if (withSets && game.getSets() != null && !game.getSets().isEmpty()) {
+            for (GameSet gameSet : game.getSets()) {
+                dto.addSet(copy(gameSet));
+            }
         }
         if (game.getRound() != null) {
             RoundDTO rdto = new RoundDTO();
@@ -105,6 +116,12 @@ public class CopyManager {
         GameSet gameSet = new GameSet();
         BeanUtils.copyProperties(dto, gameSet);
         return gameSet;
+    }
+
+    public static GameSetDTO copy(GameSet set) {
+        GameSetDTO dto = new GameSetDTO();
+        BeanUtils.copyProperties(set, dto);
+        return dto;
     }
 
     public static TournamentGroup copy(TournamentGroupDTO dto, TournamentPlayerRepository playerRepository) {

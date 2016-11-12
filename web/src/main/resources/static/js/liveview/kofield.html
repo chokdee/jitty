@@ -1,0 +1,21 @@
+<div class="brackets" id="brackets">
+
+    <div class="group4" id="b0">
+        <div class="{{'r' + ($index + 1) }}" ng-repeat="r in rounds track by $index" ng-init="rowIndex = $index">
+            <span>{{r.roundType.name}}</span>
+            <div ng-repeat="i in getNumber2(r.gameSize) track by $index" ng-init="columnIndex = $index">
+                <div class="bracketbox">
+                    <span class="teama">{{r.games[columnIndex].player1.fullName + ' ' + setsAsString(r.setsArray[columnIndex*2])}}</span>
+                    <span class="teamb">{{r.games[columnIndex].player2.fullName + ' ' + setsAsString(r.setsArray[columnIndex*2+1])}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="r4">
+            <span>Gewinner</span>
+            <div class="final">
+                <div class="bracketbox"><span class="teamc">{{winner.fullName+ ' ' + setsAsString(winnerSets)}}</span></div>
+            </div>
+        </div>
+    </div>
+
+</div>

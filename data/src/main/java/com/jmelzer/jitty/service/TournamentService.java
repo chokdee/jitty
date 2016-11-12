@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 import static com.jmelzer.jitty.service.CopyManager.copy;
+import static com.jmelzer.jitty.service.CopyManager.copyForBracket;
 
 /**
  * Created by J. Melzer on 01.06.2016.
@@ -82,7 +83,7 @@ public class TournamentService {
     public List<TournamentSingleGameDTO> getBusyGames() {
         List<TournamentSingleGameDTO> list = new ArrayList<>(busyGames.size());
         for (TournamentSingleGame game : busyGames) {
-            list.add(copy(game));
+            list.add(copy(game, false));
         }
         return list;
     }
@@ -111,7 +112,7 @@ public class TournamentService {
     public List<TournamentSingleGameDTO> listQueue() {
         List<TournamentSingleGameDTO> list = new ArrayList<>(gameQueue.size());
         for (TournamentSingleGame game : gameQueue) {
-            list.add(copy(game));
+            list.add(copy(game, false));
         }
         return list;
     }
@@ -485,7 +486,7 @@ public class TournamentService {
 
         List<TournamentSingleGameDTO> list = new ArrayList<>(busyGames.size());
         for (TournamentSingleGame game : dblist) {
-            list.add(copy(game));
+            list.add(copy(game, false));
         }
         for (TournamentSingleGameDTO singleGameDTO : list) {
             if (singleGameDTO.getWinner() == 1) {
@@ -561,7 +562,7 @@ public class TournamentService {
     }
 
     public TournamentSingleGameDTO getGame(Long id) {
-        return copy(tournamentSingleGameRepository.findOne(id));
+        return copy(tournamentSingleGameRepository.findOne(id), false);
     }
 
     @Transactional
@@ -611,6 +612,6 @@ public class TournamentService {
     @Transactional(readOnly = true)
     public KOFieldDTO getKOForClz(Long tcId) {
         TournamentClass tc = tcRepository.findOne(tcId);
-        return copy(tc.getKoField(), tc);
+        return copyForBracket(tc.getKoField());
     }
 }

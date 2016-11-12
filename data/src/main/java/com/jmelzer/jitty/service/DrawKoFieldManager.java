@@ -112,7 +112,7 @@ public class DrawKoFieldManager {
     public KOFieldDTO drawKO(Long tcId, boolean assignPlayer) {
         TournamentClass tc = tcRepository.findOne(tcId);
         if (tc.getPhase() != null && tc.getPhase() == 2) {
-            return copy(tc.getKoField(), tc);
+            return copy(tc.getKoField());
         }
         for (TournamentGroup tournamentGroup : tc.getGroups()) {
             tournamentService.calcRankingForGroup(tournamentGroup);
@@ -141,7 +141,7 @@ public class DrawKoFieldManager {
 //            tc.setPhase(2);
         }
         tc = tcRepository.saveAndFlush(tc);
-        return copy(tc.getKoField(), tc);
+        return copy(tc.getKoField());
     }
 
     private List<TournamentSingleGame> createEmptyGamesForRound(Round nextRound) {

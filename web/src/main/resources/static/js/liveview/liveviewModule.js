@@ -9,6 +9,10 @@ angular.module('jitty.liveview', ['ngRoute', 'ngResource', 'ngMessages', 'ui.sel
         title: 'Liveview - Gruppen',
         templateUrl: '/js/liveview/groups.html',
         controller: 'LiveviewController'
+    }).when('/liveview/kofield/:id', {
+        title: 'Liveview - KO Feld',
+        templateUrl: '/js/liveview/kofield.html',
+        controller: 'LiveviewKOController'
     }).otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

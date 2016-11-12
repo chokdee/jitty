@@ -415,7 +415,7 @@ ul#result li {
     top: -20px;
 }
 .brackets div.bracketbox > span.teamb {
-    bottom: -20px;
+    bottom: -0px;
 }
 .brackets div.bracketbox > span.teamc {
     bottom: 1px;

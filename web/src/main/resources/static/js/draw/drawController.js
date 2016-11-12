@@ -156,11 +156,11 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
             $scope.koField = response.data;
             $scope.dummArray = new Array($scope.koField.noOfRounds - 1);
             $scope.rounds = new Array($scope.koField.noOfRounds - 1);
-            lastRound = $scope.koField.round;
-            $scope.rounds [0] = lastRound;
+            round = $scope.koField.round;
+            $scope.rounds [0] = round;
             for (i = 0; i < $scope.rounds.length; i++) {
-                $scope.rounds [i] = lastRound;
-                lastRound = lastRound.nextRound;
+                $scope.rounds [i] = round;
+                round = round.nextRound;
             }
             $scope.getGroupWinner();
         });
