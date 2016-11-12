@@ -112,4 +112,11 @@ public class DrawController {
         drawKoFieldManager.startKOField(Long.valueOf(id));
         return Response.ok().build();
     }
+
+    @Path("/get-ko")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public KOFieldDTO getKOForClz(@QueryParam(value = "cid") String id) {
+        return tournamentService.getKOForClz(Long.valueOf(id));
+    }
 }

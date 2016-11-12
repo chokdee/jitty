@@ -139,21 +139,21 @@ public class TournamentServiceTest {
 
         when(userRepository.findByLoginName(anyString())).thenReturn(user);
 
-        assertThat(service.getNotRunning("bla").size(), is(1));
+        assertThat(service.getNotRunningOrStartPhase2("bla").size(), is(1));
 
         tournamentClass.setPhase(1);
-        assertThat(service.getNotRunning("bla").size(), is(1));
+        assertThat(service.getNotRunningOrStartPhase2("bla").size(), is(1));
         TournamentSingleGame game = new TournamentSingleGame();
         TournamentGroup group = new TournamentGroup();
         group.addGame(game);
         tournamentClass.addGroup(group);
 
         tournamentClass.setRunning(true);
-        assertThat(service.getNotRunning("bla").size(), is(0));
+        assertThat(service.getNotRunningOrStartPhase2("bla").size(), is(0));
 
         //all games were played
         game.setPlayed(true);
-        assertThat(service.getNotRunning("bla").size(), is(1));
+        assertThat(service.getNotRunningOrStartPhase2("bla").size(), is(1));
 
     }
 }

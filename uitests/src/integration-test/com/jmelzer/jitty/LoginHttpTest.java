@@ -17,7 +17,7 @@ public class LoginHttpTest {
     public void homePage() throws Exception {
 
         HtmlPage page = webClient().getPage("http://localhost:8080");
-        Assert.assertEquals("Jitty", page.getTitleText());
+        Assert.assertEquals("Jitty - Startseite", page.getTitleText());
 
         String pageAsText = page.asText();
         assertTrue(pageAsText.contains("Bitte zunächst einloggen"));

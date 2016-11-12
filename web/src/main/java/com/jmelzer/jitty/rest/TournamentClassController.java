@@ -35,7 +35,7 @@ public class TournamentClassController {
     @Path("/not-running")
     @GET
     public List<TournamentClassDTO> getNotRunning() {
-        return service.getNotRunning(securityUtil.getActualUsername());
+        return service.getNotRunningOrStartPhase2(securityUtil.getActualUsername());
     }
 
     @Path("{id}")

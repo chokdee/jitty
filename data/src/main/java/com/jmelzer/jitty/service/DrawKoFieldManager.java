@@ -105,7 +105,7 @@ public class DrawKoFieldManager {
     /**
      * draw a ko field but still not started
      *
-     * @param assignPlayer automatic assignment
+     * @param assignPlayer automatic assignment of the players, trigger creating empty games
      * @return new field
      */
     @Transactional
@@ -118,27 +118,34 @@ public class DrawKoFieldManager {
             tournamentService.calcRankingForGroup(tournamentGroup);
         }
         RoundType roundType = calcKOSize(tc);
-        KOField field = createKOField(roundType);
-        tc.setKoField(field);
+        tc.setKoField(createKOField(roundType));
+        tc = tcRepository.saveAndFlush(tc);
         if (assignPlayer) {
-            List<TournamentSingleGame> games = assignPlayerToKoField(field, tc.getGroups());
+            List<TournamentSingleGame> games = assignPlayerToKoField(tc.getKoField(), tc.getGroups());
             for (TournamentSingleGame game : games) {
                 game.setTcName(tc.getName());
+                game.setRound(tc.getKoField().getRound());
                 tournamentService.save(game);
             }
-            Round nextRound = field.getRound().getNextRound();
-            List<TournamentSingleGame> nextGames = createEmptyGamesForRound(nextRound, games);
-            for (TournamentSingleGame game : nextGames) {
-                game.setTcName(tc.getName());
-                tournamentService.save(game);
+            Round nextRound = tc.getKoField().getRound().getNextRound();
+            while (nextRound != null) {
+                List<TournamentSingleGame> nextGames = createEmptyGamesForRound(nextRound);
+                for (TournamentSingleGame game : nextGames) {
+                    game.setTcName(tc.getName());
+                    game.setRound(nextRound);
+                    tournamentService.save(game);
+                }
+                nextRound = nextRound.getNextRound();
+                games = nextGames;
             }
 //            tc.setPhase(2);
         }
-        tcRepository.saveAndFlush(tc);
-        return copy(field, tc);
+        tc = tcRepository.saveAndFlush(tc);
+        return copy(tc.getKoField(), tc);
     }
 
-    private List<TournamentSingleGame> createEmptyGamesForRound(Round nextRound, List<TournamentSingleGame> gamesLastRound) {
+    private List<TournamentSingleGame> createEmptyGamesForRound(Round nextRound) {
+        List<TournamentSingleGame> gamesLastRound = nextRound.getPrevRound().getGames();
         List<TournamentSingleGame> nextGames = new ArrayList<>(gamesLastRound.size() / 2);
 
         for (int i = 0; i < gamesLastRound.size(); i++) {

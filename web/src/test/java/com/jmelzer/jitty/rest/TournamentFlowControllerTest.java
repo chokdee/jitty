@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
  * Created by J. Melzer on 26.07.2016.
  * Test draw controller
  */
+@SuppressWarnings("OverlyComplexMethod")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class TournamentFlowControllerTest extends SecureResourceTest {
@@ -183,7 +184,7 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
                     ResponseEntity<Long[]> finishedClzs = http(HttpMethod.GET, "api/tournamentdirector/any-phase-finished",
                             createHttpEntity(entity.getBody(), loginHeaders), Long[].class);
                     assertTrue(finishedClzs.getBody().length == 1);
-                    assertThat(finishedClzs.getBody()[0] , is(tClassId));
+                    assertThat(finishedClzs.getBody()[0], is(tClassId));
 
                 } else {
                     assertFalse(finished.getBody());
@@ -234,7 +235,7 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
                 if (dto.getTcName().equals("dummy")) {
                     assertNull(dto.getGroup());
                     startGame(dto.getId());
-                    addAndSaveResult(loginHeaders, new TournamentSingleGameDTO[] {dto});
+                    addAndSaveResult(loginHeaders, new TournamentSingleGameDTO[]{dto});
                 }
             }
 
@@ -242,6 +243,40 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
             assertThat(possibleGamesEntity.getBody().length, is(2 + possibleGamesBeforeStartTest));
 
+            possibleGames = possibleGamesEntity.getBody();
+
+            for (TournamentSingleGameDTO dto : possibleGames) {
+                assertNotNull(dto.getPlayer1());
+                assertNotNull(dto.getPlayer2());
+                if (dto.getTcName().equals("dummy")) {
+                    assertNull(dto.getGroup());
+                    startGame(dto.getId());
+                    addAndSaveResult(loginHeaders, new TournamentSingleGameDTO[]{dto});
+                }
+            }
+            //final
+            possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
+                    createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
+            assertThat(possibleGamesEntity.getBody().length, is(1 + possibleGamesBeforeStartTest));
+
+            possibleGames = possibleGamesEntity.getBody();
+
+            for (TournamentSingleGameDTO dto : possibleGames) {
+                assertNotNull(dto.getPlayer1());
+                assertNotNull(dto.getPlayer2());
+                if (dto.getTcName().equals("dummy")) {
+                    assertNull(dto.getGroup());
+                    startGame(dto.getId());
+                    addAndSaveResult(loginHeaders, new TournamentSingleGameDTO[]{dto});
+                }
+            }
+            //final completed
+            possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
+                    createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
+            assertThat(possibleGamesEntity.getBody().length, is(possibleGamesBeforeStartTest));
+
+            koFieldEntity = http(HttpMethod.GET, "api/draw/get-ko?cid=" + tClassId, createHttpEntity(null, loginHeaders), KOFieldDTO.class);
+            printBracket(koFieldEntity.getBody());
 
 
         } catch (HttpClientErrorException e) {
@@ -268,14 +303,18 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
     }
 
     private void printBracket(KOFieldDTO koFieldDTO) {
+        RoundDTO round = koFieldDTO.getRound();
         System.out.println("-------- bracket -----------");
-        for (TournamentSingleGameDTO game : koFieldDTO.getRound().getGames()) {
-            System.out.println("------------------");
-            System.out.println(game.getPlayer1() != null ? game.getPlayer1().getFullName() : game.getGameName());
-            System.out.println("                       --------------");
-            System.out.println(game.getPlayer2() != null ? game.getPlayer2().getFullName() : "");
-            System.out.println("------------------");
-            System.out.println();
+        while (round != null) {
+            for (TournamentSingleGameDTO game : round.getGames()) {
+                System.out.println("------------------");
+                System.out.println(game.getPlayer1() != null ? game.getPlayer1().getFullName() : game.getGameName());
+                System.out.println("                       --------------");
+                System.out.println(game.getPlayer2() != null ? game.getPlayer2().getFullName() : "");
+                System.out.println("------------------");
+                System.out.println();
+            }
+            round = round.getNextRound();
         }
         System.out.println("-------- bracket -----------");
     }

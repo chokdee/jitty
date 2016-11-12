@@ -62,14 +62,16 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     // ganes to play table
     $scope.columns = [{field: 'group.tournamentClass.name', displayName: 'Klasse'},
         {
-            field: 'group.name',
-            displayName: 'Gruppe'
+            field: 'roundOrGroupName',
+            displayName: 'Gruppe/Runde'
         },
         {field: 'player1.fullName', displayName: 'Spieler 1'},
         {
             field: 'player1.periodSinceLastGame',
             displayName: 'Letztes Spiel',
-            cellTooltip: function (row, col) {return row.entity.player1.lastGameAt}
+            cellTooltip: function (row, col) {
+                return row.entity.player1.lastGameAt
+            }
         },
         {field: 'player2.fullName', displayName: 'Spieler 2'},
         {field: 'player2.periodSinceLastGame', displayName: 'Letztes Spiel'},
@@ -118,7 +120,10 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
 
 
     $scope.columnsRunning = [{field: 'group.tournamentClass.name', displayName: 'Klasse'},
-        {field: 'group.name', displayName: 'Gruppe'},
+        {
+            field: 'roundOrGroupName',
+            displayName: 'Gruppe/Runde'
+        },
         {field: 'player1.fullName', displayName: 'Spieler 1'},
         {field: 'player2.fullName', displayName: 'Spieler 2'},
         {
@@ -140,7 +145,10 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     };
 
     $scope.columnsFinished = [{field: 'group.tournamentClass.name', displayName: 'Klasse'},
-        {field: 'group.name', displayName: 'Gruppe'},
+        {
+            field: 'roundOrGroupName',
+            displayName: 'Gruppe/Runde'
+        },
         {field: 'player1.fullName', displayName: 'Spieler 1'},
         {field: 'player2.fullName', displayName: 'Spieler 2'},
         {field: 'winnerName', displayName: 'Gewinner'}

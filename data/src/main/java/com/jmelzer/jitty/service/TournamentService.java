@@ -162,6 +162,9 @@ public class TournamentService {
     private void moveWinnerToNextRound(TournamentSingleGame game) {
         TournamentPlayer player = game.getWinningPlayer();
         TournamentSingleGame nextGame = game.getNextGame();
+        if (nextGame == null) {
+            return;
+        }
         if (nextGame.getPlayer1() == null) {
             nextGame.setPlayer1(player);
         } else {
@@ -346,9 +349,8 @@ public class TournamentService {
         return ret;
     }
 
-    //todo rename getNotRunningOrStartPhase2
     @Transactional
-    public List<TournamentClassDTO> getNotRunning(String userName) {
+    public List<TournamentClassDTO> getNotRunningOrStartPhase2(String userName) {
         Tournament t = userRepository.findByLoginName(userName).getLastUsedTournament();
         List<TournamentClassDTO> ret = new ArrayList<>();
         List<TournamentClass> classes = t.getClasses();
@@ -362,7 +364,7 @@ public class TournamentService {
     }
 
     public List<TournamentPlayerDTO> getPlayerforClass(Long id) {
-        List<TournamentPlayer> players = playerRepository.findByClasses(Arrays.asList(tcRepository.findOne(id)));
+        List<TournamentPlayer> players = playerRepository.findByClasses(Collections.singletonList(tcRepository.findOne(id)));
         List<TournamentPlayerDTO> ret = new ArrayList<>();
         for (TournamentPlayer player : players) {
             TournamentPlayerDTO dto = new TournamentPlayerDTO();
@@ -508,69 +510,13 @@ public class TournamentService {
                 for (Tournament tournament : tournaments) {
                     List<TournamentClass> tcs = tcRepository.findByTournamentAndRunning(tournament, true);
                     for (TournamentClass tc : tcs) {
-                        //todo remove later
-//                        calcGroupGames(tc.getGroups());
-//                        if (tc.getGroups().size() > 1) {
-//                            int n = 1;
-//                            int s = 1;
-//                            for (TournamentGroup group : tc.getGroups()) {
-//                                for (TournamentSingleGame game : group.getGames()) {
-//                                    createRandomResult(game);
-//                                    System.out.println("INSERT INTO TOURNAMENT_SINGLE_GAME (ID, CALLED, PLAYED, START_TIME, " +
-//                                            "WINNER, GROUP_ID, PLAYER1_ID, PLAYER2_ID) VALUES(" +
-//                                            n++ + ",1, 1, NOW(), " + game.getWinner() +  ", " + group.getId() + ", " +
-//                                            game.getPlayer1().getId() + ", " + game.getPlayer2().getId() + ");");
-//
-//                                    for (GameSet gameSet : game.getSets()) {
-//                                        System.out.println("INSERT INTO GAME_SET (ID, POINTS1, POINTS2) VALUES (" + s + "," + gameSet.getPoints1() + "," + gameSet.getPoints2() + ");");
-//                                        System.out.println("INSERT INTO TOURNAMENT_SINGLE_GAME_SET ( TOURNAMENT_SINGLE_GAME_ID, SETS_ID) VALUES (" + + game.getId() + "," + s + ");");
-//                                        s++;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        tcRepository.saveAndFlush(tc);
                         addPossibleGroupGamesToQueue(tc.getGroups());
-
                     }
                 }
             }
         });
         for (TournamentSingleGame game : gameQueue) {
             System.out.println("game = " + game);
-        }
-
-    }
-
-    private void createRandomResult(TournamentSingleGame game) {
-        int playedSets = randomIntFromInterval(3, 5);
-        int winner = randomIntFromInterval(1, 2);
-        int loser = 0;
-        if (winner == 1) {
-            loser = 2;
-        } else {
-            loser = 1;
-        }
-        game.setWinner(winner);
-        for (int i = 1; i <= playedSets; i++) {
-            if (i < 3) {
-                addSetFor(winner, game);
-            } else {
-                if (playedSets == i) {
-                    addSetFor(winner, game);
-                } else {
-                    addSetFor(loser, game);
-                }
-            }
-        }
-    }
-
-
-    private void addSetFor(int winner, TournamentSingleGame game) {
-        if (winner == 1) {
-            game.addSet(new GameSet(11, randomIntFromInterval(0, 9)));
-        } else {
-            game.addSet(new GameSet(randomIntFromInterval(0, 9), 11));
         }
 
     }
@@ -634,8 +580,7 @@ public class TournamentService {
                 }
             }
         }
-        boolean finishedP1 = !(tc.getPhase() != null && tc.getPhase() > 1);
-        return finishedP1;
+        return !(tc.getPhase() != null && tc.getPhase() > 1);
     }
 
     @Transactional(readOnly = true)
@@ -663,4 +608,9 @@ public class TournamentService {
         tournamentSingleGameRepository.save(game);
     }
 
+    @Transactional(readOnly = true)
+    public KOFieldDTO getKOForClz(Long tcId) {
+        TournamentClass tc = tcRepository.findOne(tcId);
+        return copy(tc.getKoField(), tc);
+    }
 }

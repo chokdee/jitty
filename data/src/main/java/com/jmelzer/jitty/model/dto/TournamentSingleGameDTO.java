@@ -1,9 +1,5 @@
 package com.jmelzer.jitty.model.dto;
 
-import com.jmelzer.jitty.model.GameSet;
-import com.jmelzer.jitty.model.TournamentGroup;
-import com.jmelzer.jitty.model.TournamentPlayer;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +14,9 @@ public class TournamentSingleGameDTO {
     String winnerName;
     String tcName;
     String gameName;
+    String roundOrGroupName;
     TournamentGroupDTO group;
+    RoundDTO round;
     /**
      * Bereits gespielt?
      */
@@ -115,6 +113,9 @@ public class TournamentSingleGameDTO {
 
     public void setGroup(TournamentGroupDTO group) {
         this.group = group;
+        if (group != null) {
+            roundOrGroupName = group.getName();
+        }
     }
 
     public String getTcName() {
@@ -149,6 +150,10 @@ public class TournamentSingleGameDTO {
         return winnerName;
     }
 
+    public void setWinnerName(String winnerName) {
+        this.winnerName = winnerName;
+    }
+
     public String getGameName() {
         return gameName;
     }
@@ -157,7 +162,22 @@ public class TournamentSingleGameDTO {
         this.gameName = gameName;
     }
 
-    public void setWinnerName(String winnerName) {
-        this.winnerName = winnerName;
+    public RoundDTO getRound() {
+        return round;
+    }
+
+    public void setRound(RoundDTO round) {
+        this.round = round;
+        if (round != null) {
+            roundOrGroupName = round.getRoundType().getName();
+        }
+    }
+
+    public String getRoundOrGroupName() {
+        return roundOrGroupName;
+    }
+
+    public void setRoundOrGroupName(String roundOrGroupName) {
+        this.roundOrGroupName = roundOrGroupName;
     }
 }
