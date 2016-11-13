@@ -85,9 +85,8 @@ public class DrawController {
     @Path("/save")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response save(TournamentClassDTO dto) {
-        tournamentService.updateClass(dto);
-        return Response.ok().build();
+    public TournamentClassDTO save(TournamentClassDTO dto) {
+        return tournamentService.updateClass(dto);
     }
 
     @Path("/dummy-player")

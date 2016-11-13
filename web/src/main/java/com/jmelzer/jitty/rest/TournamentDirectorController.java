@@ -74,9 +74,8 @@ public class TournamentDirectorController {
     @Path("/save-result")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response saveResult(TournamentSingleGameDTO dto) {
-        service.saveAndFinishGame(dto);
-        return Response.ok().build();
+    public long saveResult(TournamentSingleGameDTO dto) {
+        return service.saveAndFinishGame(dto);
     }
 
     @Path("/groups-finished")

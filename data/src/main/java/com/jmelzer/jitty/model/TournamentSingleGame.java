@@ -13,10 +13,10 @@ import java.util.List;
 @Table(name = "TOURNAMENT_SINGLE_GAME")
 public class TournamentSingleGame {
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE} )
-    @JoinColumn(name = "player1_id")
+    @JoinColumn(name = "player1_id", foreignKey = @ForeignKey(name = "FK_P1"))
     TournamentPlayer player1;
     @OneToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "player2_id")
+    @JoinColumn(name = "player2_id", foreignKey = @ForeignKey(name = "FK_P2"))
     TournamentPlayer player2;
 
     /**
@@ -42,6 +42,7 @@ public class TournamentSingleGame {
     Integer tableNo;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "TOURNAMENT_SINGLE_GAME_SET")
+    @OrderBy("id")
     List<GameSet> sets = new ArrayList<>();
 
     @ManyToOne()
@@ -87,6 +88,9 @@ public class TournamentSingleGame {
     }
 
     public void setPlayer1(TournamentPlayer player1) {
+        if (player1 != null && player1.equals(TournamentPlayer.BYE)) {
+            return;
+        }
         this.player1 = player1;
         if (player1 != null) {
             player1.addGame(this);
@@ -98,6 +102,10 @@ public class TournamentSingleGame {
     }
 
     public void setPlayer2(TournamentPlayer player2) {
+
+        if (player2 != null && player2.equals(TournamentPlayer.BYE)) {
+            return;
+        }
         this.player2 = player2;
         if (player2 != null) {
             player2.addGame(this);

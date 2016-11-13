@@ -195,12 +195,12 @@
         references TOURNAMENT_SINGLE_GAME;
 
     alter table TOURNAMENT_SINGLE_GAME 
-        add constraint FK_7311pslygn6nsmqe2k4so5fab 
+        add constraint FK_P1 
         foreign key (player1_id) 
         references tournament_player;
 
     alter table TOURNAMENT_SINGLE_GAME 
-        add constraint FK_41j0oaw2grp8rtgebta861m47 
+        add constraint FK_P2 
         foreign key (player2_id) 
         references tournament_player;
 

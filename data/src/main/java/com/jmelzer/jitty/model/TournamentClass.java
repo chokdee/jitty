@@ -23,7 +23,7 @@ public class TournamentClass {
     /**
      * Assoc to the groups in the class.
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tournamentClass")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "tournamentClass")
     List<TournamentGroup> groups = new ArrayList<>();
     @ManyToOne(targetEntity = Tournament.class)
     @JoinColumn(name = "T_ID")
@@ -154,6 +154,9 @@ public class TournamentClass {
         players.add(player);
     }
 
+    public void clearGroups() {
+        groups.clear();
+    }
     public List<TournamentGroup> getGroups() {
         return groups;
     }

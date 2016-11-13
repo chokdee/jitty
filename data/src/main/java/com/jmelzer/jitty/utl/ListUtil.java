@@ -12,7 +12,7 @@ public class ListUtil {
     public static void removeIfContains(List<TournamentPlayerDTO> list, TournamentPlayer p) {
         TournamentPlayerDTO found = null;
         for (TournamentPlayerDTO tournamentPlayerDTO : list) {
-            if (tournamentPlayerDTO.getId().equals(p.getId())) {
+            if (p != null && tournamentPlayerDTO.getId().equals(p.getId())) {
                 found = tournamentPlayerDTO;
                 break;
             }

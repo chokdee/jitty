@@ -129,6 +129,8 @@ public class SeedingManager {
             TournamentPlayer player1 = players[i];
             TournamentPlayer player2 = players[++i];
             game.setPlayer1(player1);
+//            if (player2 == null)
+//                break;
             game.setPlayer2(player2);
             games.add(game);
         }

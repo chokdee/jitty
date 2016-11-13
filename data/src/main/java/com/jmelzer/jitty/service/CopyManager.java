@@ -84,7 +84,7 @@ public class CopyManager {
 
     static public void copy(TournamentClassDTO dto, TournamentClass clz, TournamentPlayerRepository playerRepository) {
         BeanUtils.copyProperties(dto, clz, "groups", "players");
-        clz.getGroups().clear();
+
         for (TournamentGroupDTO group : dto.getGroups()) {
             clz.addGroup(copy(group, playerRepository));
         }

@@ -228,18 +228,23 @@ public class TournamentService {
     }
 
     @Transactional
-    public void updateClass(TournamentClassDTO dto) {
+    public TournamentClassDTO updateClass(TournamentClassDTO dto) {
         TournamentClass tc = tcRepository.findOne(dto.getId());
-        copy(dto, tc, playerRepository);
-        assertSize(tc);
-        tcRepository.saveAndFlush(tc);
-        assertSize(tc);
-    }
-
-    private void assertSize(TournamentClass tc) {
-        if (tc.getGroups().size() > 5) {
-            throw new RuntimeException(tc.toString());
+        int groupSize = dto.getGroups().size();
+        tc.clearGroups();
+        tc = tcRepository.saveAndFlush(tc);
+        if (0 != tc.getGroups().size()) {
+            System.err.println(tc);
         }
+        copy(dto, tc, playerRepository);
+        if (groupSize != tc.getGroups().size()) {
+            System.err.println(tc);
+        }
+        tc = tcRepository.saveAndFlush(tc);
+        if (groupSize != tc.getGroups().size()) {
+            System.err.println(tc);
+        }
+        return copy(tc);
     }
 
     @Transactional
@@ -549,7 +554,7 @@ public class TournamentService {
             for (PlayerStatistic ps : group.getRanking()) {
                 GroupResultEntryDTO entry = new GroupResultEntryDTO();
                 entry.setPos(pos++);
-                entry.setClub(ps.player.getClub().getName());
+                entry.setClub(ps.player.getClub() != null ? ps.player.getClub().getName() : "");
                 entry.setPlayerName(ps.player.getFullName());
                 entry.setGameStat(ps.win + ":" + ps.lose);
                 entry.setSetStat(ps.setsWon + ":" + ps.setsLost);
@@ -566,13 +571,13 @@ public class TournamentService {
     }
 
     @Transactional
-    public void saveAndFinishGame(TournamentSingleGameDTO dto) {
+    public long saveAndFinishGame(TournamentSingleGameDTO dto) {
         TournamentSingleGame game = saveGame(dto);
         finishGame(game);
+        return game.getId();
     }
 
     public boolean isPhase1FinishedAndPhase2NotStarted(TournamentClass tc) {
-        assertSize(tc);
         for (TournamentGroup group : tc.getGroups()) {
             List<TournamentSingleGame> games = group.getGames();
             for (TournamentSingleGame game : games) {
