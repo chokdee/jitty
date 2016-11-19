@@ -62,15 +62,15 @@ public class DrawKoFieldManager {
     private int calcRounds(RoundType roundType) {
         switch (roundType) {
             case QUARTER:
-                return 4;
+                return 3;
             case R16:
-                return 5;
+                return 4;
             case R32:
-                return 6;
+                return 5;
             case R64:
-                return 7;
+                return 6;
             case R128:
-                return 8;
+                return 7;
         }
         throw new RuntimeException("not yet implemented");
     }
@@ -78,15 +78,15 @@ public class DrawKoFieldManager {
     public KOField createKOField(RoundType roundType) {
         KOField field = new KOField();
         field.setRound(new Round(roundType));
-        createSubRounds(field.getRound(), calcRounds(roundType) - 2, roundType.getValue() / 2);
+        createSubRounds(field.getRound(), calcRounds(roundType) - 1, roundType.getValue() / 2);
         int nrOdRounds = calcRounds(roundType);
         field.setNoOfRounds(nrOdRounds);
         return field;
     }
 
-    private void createSubRounds(Round round, int i, int size) {
+    private void createSubRounds(Round round, int i, int noOfGames) {
         Round lastRound = round;
-        int n = size;
+        int n = noOfGames;
         lastRound.setGameSize(n);
         for (int j = 0; j < i; j++) {
             n = n / 2;

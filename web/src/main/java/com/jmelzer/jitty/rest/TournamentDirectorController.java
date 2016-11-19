@@ -1,7 +1,6 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.config.SecurityUtil;
-import com.jmelzer.jitty.model.dto.KOFieldDTO;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import com.jmelzer.jitty.service.TournamentService;
 import org.springframework.stereotype.Component;
