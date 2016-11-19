@@ -16,7 +16,7 @@ public class Tournament {
     /**
      * Assoc to the tournament classes.
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "tournament")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tournament")
     List<TournamentClass> classes = new ArrayList<>();
     @Id
     @GeneratedValue

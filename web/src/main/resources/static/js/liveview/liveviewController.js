@@ -37,8 +37,8 @@ angular.module('jitty.liveview.controllers', []).controller('LiveviewController'
     $scope.getKoField = function () {
         $http.get('/api/draw/get-ko?cid=' + $routeParams.id, {}).then(function (response) {
             $scope.koField = response.data;
-            $scope.dummArray = new Array($scope.koField.noOfRounds - 1);
-            $scope.rounds = new Array($scope.koField.noOfRounds - 1);
+            $scope.dummArray = new Array($scope.koField.noOfRounds );
+            $scope.rounds = new Array($scope.koField.noOfRounds );
             round = $scope.koField.round;
             $scope.rounds [0] = round;
             for (i = 0; i < $scope.rounds.length; i++) {
