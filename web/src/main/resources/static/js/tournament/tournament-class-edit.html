@@ -1,11 +1,14 @@
 <div class="form-style-2">
     <div class="form-style-2-heading">Turnierklasse bearbeiten</div>
-    <form name="tournamentClassForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="saveTournamentClass()">
+    <div ng-show="!canEdit" class="alert alert-danger">
+        <span>Die Turnierklasse läuft bereits und kann nicht mehr bearbeitet werden.</span>
+    </div>
+    <form name="tournamentClassForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required"  novalidate="" ng-submit="saveTournamentClass()">
         <div class="row">
             <div class="col-md-5">
                 <div class="control-group">
                     <label for="name"><span>Name <span class="required">*</span></span></label>
-                    <input type="text" ng-model="tournamentClass.name" name="name" required id="name"
+                    <input type="text" ng-model="tournamentClass.name" name="name" required id="name" ng-disabled="!canEdit"
                            class="form-control ng-pristine ng-invalid ng-invalid-required"/>
                     <div class="clearfix">
                         <div ng-messages="tournamentClassForm.name.$error" ng-if="tournamentClassForm.$submitted || tournamentClassForm.name.$dirty"
@@ -16,7 +19,7 @@
                 </div>
                 <div class="control-group">
                     <label for="startTTR"><span>Von TTR (0 für offen) <span class="required">*</span></span></label>
-                    <input type="text" ng-model="tournamentClass.startTTR" name="startTTR" required id="startTTR"
+                    <input type="text" ng-model="tournamentClass.startTTR" name="startTTR" required id="startTTR" ng-disabled="!canEdit"
                            class="form-control ng-pristine ng-invalid ng-invalid-required"/>
                     <div class="clearfix">
                         <div ng-messages="tournamentClassForm.startTTR.$error" ng-if="tournamentClassForm.$submitted || tournamentClassForm.startTTR.$dirty"
@@ -27,7 +30,7 @@
                 </div>
                 <div class="control-group">
                     <label for="endTTR"><span>Bis TTR (3000 für offen) <span class="required">*</span></span></label>
-                    <input type="text" ng-model="tournamentClass.endTTR" name="endTTR" required id="endTTR"
+                    <input type="text" ng-model="tournamentClass.endTTR" name="endTTR" required id="endTTR" ng-disabled="!canEdit"
                            class="form-control ng-pristine ng-invalid ng-invalid-required"/>
                     <div class="clearfix">
                         <div ng-messages="tournamentClassForm.endTTR.$error" ng-if="tournamentClassForm.$submitted || tournamentClassForm.endTTR.$dirty"
@@ -40,12 +43,12 @@
             <div class="col-md-5">
                 <div class="control-group">
                     <label for="open">Startberechtigung für</label>
-                     <input type="checkbox" ng-model="tournamentClass.openForMen" name="open-w"/>  Herren
-                    <input type="checkbox" ng-model="tournamentClass.openForWomen" name="open-m"/>  Damen
+                    <input type="checkbox" ng-model="tournamentClass.openForMen" name="open-w" ng-disabled="!canEdit"/> Herren
+                    <input type="checkbox" ng-model="tournamentClass.openForWomen" name="open-m" ng-disabled="!canEdit"/> Damen
                 </div>
             </div>
         </div>
-        <input name="submit" type="submit" value="Speichern"/>
+        <input name="submit" type="submit" value="Speichern" ng-disabled="!canEdit"/>
     </form>
 
 

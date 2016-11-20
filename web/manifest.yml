@@ -1,0 +1,7 @@
+---
+applications:
+  - name: jitty
+    buildpack: java_buildpack
+    path: target/jitty.war
+    services:
+      - mysql

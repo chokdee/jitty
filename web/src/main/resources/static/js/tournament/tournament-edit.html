@@ -62,9 +62,8 @@
                 <td>{{c.startTTR}}</td>
                 <td>{{c.endTTR}}</td>
                 <td>
-
-                    <a name="{{'edit'+c.id}}" class="btn btn-primary" href="#/tournament/tournament-classes/{{c.id}}">Bearbeiten</a>
-                    <a name="{{'delete'+c.id}}" class="btn btn-danger" ng-click="deleteClass(c.id)">Löschen</a>
+                    <a ng-show="!c.running" name="{{'edit'+c.id}}" class="btn btn-primary" href="#/tournament/tournament-classes/{{c.id}}" >Bearbeiten</a>
+                    <a ng-show="!c.running" name="{{'delete'+c.id}}" class="btn btn-danger" ng-click="deleteClass(c.id)">Löschen</a>
                 </td>
             </tr>
         </table>

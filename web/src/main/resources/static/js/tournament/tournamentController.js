@@ -16,7 +16,7 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
     };
 
     $scope.selectTournament = function (tid) {
-        $http.get('http://localhost:8080/api/tournaments/actual/' + tid).success(function (data) {
+        $http.get('/api/tournaments/actual/' + tid).success(function (data) {
             console.log('successful selected tournament ');
             $scope.tournamentname = data.name;
             $window.location.href = '/';
@@ -71,7 +71,7 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
         $scope.deleteClass = function (cid) {
             $http({
                 method: 'DELETE',
-                url: 'http://localhost:8080/api/tournament-classes/' + cid
+                url: '/api/tournament-classes/' + cid
             }).then(function successCallback(response) {
                 //refresh data
                 $scope.getTournament();
@@ -142,7 +142,7 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
 
             $http({
                 method: 'POST',
-                url: 'http://localhost:8080/api/tournament-classes/' + $routeParams.id,
+                url: '/api/tournament-classes/' + $routeParams.id,
                 data: $scope.tournamentClass
             }).then(function successCallback(response) {
                 //refresh data
@@ -159,11 +159,15 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
 }).controller('TournamentClassEditController', function ($scope, $routeParams, TournamentClass, $location, $http, popupService, $window) {
         $scope.tournamentClass = {};
 
+        $scope.canEdit = true;
 
         $scope.getTournamentClass = function () {
             $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
                 console.log('Got TournamentClass successful');
-            })
+
+            });
+            if ($scope.tournamentClass.running == true)
+                $scope.canEdit = false;
         };
         $scope.getTournamentClass();
 
