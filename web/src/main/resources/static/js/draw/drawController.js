@@ -1,12 +1,18 @@
 angular.module('jitty.draw.controllers', []).controller('DrawController', function ($scope, $http, $routeParams, TournamentClass) {
+
     $scope.getTournamentClass = function () {
         $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
             console.log('Got TournamentClass successful');
             if ($scope.tournamentClass.playerPerGroup == null)
                 $scope.tournamentClass.playerPerGroup = 4; //default
 
+
         });
         $scope.groups = $scope.tournamentClass.groups;
+        if (!$scope.tournamentClass.running)
+            $scope.templateurl = 'js/draw/groups.html';
+        else
+            $scope.templateurl = 'js/draw/bracket.html';
     };
 
     if ($routeParams.id != null) {
@@ -23,7 +29,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         $scope.getPossibleClasses();
 
 
-}).controller('GroupController', function ($scope, $http, $routeParams, TournamentClass) {
+}).controller('GroupController', function ($scope, $http, $routeParams,  $window, TournamentClass, Flash) {
     $scope.resultSize = 0;
     $scope.modus = null;
     $scope.modi = [{
@@ -34,6 +40,17 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         label: 'KO'
     }];
 
+
+    $scope.displaySaveMessage = function () {
+        var message = 'Die Gruppenauslosung wurde erfolgreich gespeichert';
+        var id = Flash.create('success', message, 4000, {container: 'flash-status'});
+        // First argument (string) is the type of the flash alert.
+        // Second argument (string) is the message displays in the flash alert (HTML is ok).
+        // Third argument (number, optional) is the duration of showing the flash. 0 to not automatically hide flash (user needs to click the cross on top-right corner).
+        // Fourth argument (object, optional) is the custom class and id to be added for the flash message created.
+        // Fifth argument (boolean, optional) is the visibility of close button for this flash.
+        // Returns the unique id of flash message that can be used to call Flash.dismiss(id); to dismiss the flash message.
+    };
 
     $scope.getPlayerForClass = function () {
         $http.get('/api/draw/player-for-class?cid=' + $routeParams.id, {}).then(function (response) {
@@ -82,7 +99,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
             url: '/api/draw/save',
             data: $scope.tournamentClass
         }).then(function successCallback(response) {
-
+            $scope.displaySaveMessage();
         }, function errorCallback(response) {
             $scope.errorMessage = response.data.error;
         });
@@ -90,6 +107,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     };
     $scope.start = function () {
         $http.get('/api/draw/start?cid=' + $routeParams.id, {}).then(function (response) {
+            $window.location.href = '/#/tournamentdirector/overview';
         });
 
     };
@@ -122,11 +140,11 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         }
     };
     $scope.refreshGroupSize = function () {
-        if ($scope.tournamentClass != null && $scope.tournamentClass.gameModePhase1 == 'g')
+        if ($scope.tournamentClass != null && $scope.modus.id == 1)
             if ($scope.tournamentClass != null && $scope.tournamentClass.id != null)
                 $scope.calcGroupSize();
     };
-    $scope.$watch('tournamentClass.gameModePhase1', function () {
+    $scope.$watch('modus', function () {
         $scope.refreshGroupSize();
     });
     $scope.$watch('tournamentClass.playerPerGroup', function () {

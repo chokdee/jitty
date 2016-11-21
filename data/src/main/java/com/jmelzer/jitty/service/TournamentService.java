@@ -231,7 +231,8 @@ public class TournamentService {
     public TournamentClassDTO updateClass(TournamentClassDTO dto) {
         TournamentClass tc = tcRepository.findOne(dto.getId());
         int groupSize = dto.getGroups().size();
-        tc.clearGroups();
+        tc.getGroups().clear();//fetch lazy
+//        tc.clearGroups();
         tc = tcRepository.saveAndFlush(tc);
         if (0 != tc.getGroups().size()) {
             System.err.println(tc);
