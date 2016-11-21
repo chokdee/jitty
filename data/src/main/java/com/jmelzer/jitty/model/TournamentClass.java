@@ -55,6 +55,7 @@ public class TournamentClass {
     @Column(nullable = true, name = "group_count")
     Integer groupCount;
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="KOFIELD_ID")
     KOField koField;
     @Id
     @GeneratedValue

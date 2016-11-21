@@ -10,13 +10,13 @@ import javax.persistence.*;
 public class KOField {
     @OneToOne(cascade = CascadeType.ALL)
     Round round;
-    @OneToOne(cascade = CascadeType.DETACH)
+    @OneToOne(cascade = CascadeType.DETACH, mappedBy = "koField")
     TournamentClass tournamentClass;
 
     @Id
     @GeneratedValue
     private Long id;
-    @Column
+    @Column(name = "NO_OF_ROUNDS")
     private int noOfRounds;
 
     public Long getId() {

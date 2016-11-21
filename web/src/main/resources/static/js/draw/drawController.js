@@ -6,13 +6,13 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
             if ($scope.tournamentClass.playerPerGroup == null)
                 $scope.tournamentClass.playerPerGroup = 4; //default
 
-
+            $scope.groups = $scope.tournamentClass.groups;
+            if (!$scope.tournamentClass.running)
+                $scope.templateurl = 'js/draw/groups.html';
+            else
+                $scope.templateurl = 'js/draw/bracket.html';
         });
-        $scope.groups = $scope.tournamentClass.groups;
-        if (!$scope.tournamentClass.running)
-            $scope.templateurl = 'js/draw/groups.html';
-        else
-            $scope.templateurl = 'js/draw/bracket.html';
+
     };
 
     if ($routeParams.id != null) {

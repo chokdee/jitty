@@ -12,8 +12,10 @@ import java.util.List;
 @Table(name = "round")
 public class Round {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "prevRound")
+    @JoinColumn(name = "NEXT_ROUND_ID")
     Round nextRound;
     @OneToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "PREV_ROUND_ID")
     Round prevRound;
     @OneToOne(cascade = CascadeType.DETACH, mappedBy = "round")
     KOField koField;
@@ -22,9 +24,9 @@ public class Round {
     @Id
     @GeneratedValue
     private Long id;
-    @Column
+    @Column(name = "GAME_SIZE")
     private int gameSize;
-    @Column
+    @Column(name = "ROUND_TYPE")
     private RoundType roundType;
 
     public Round() {

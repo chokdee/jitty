@@ -44,6 +44,9 @@ public class TournamentPlayer {
     private Date lastGameAt;
 
     @ManyToMany(cascade = CascadeType.DETACH)
+    @JoinTable(name="GAME_TO_PLAYER",
+            joinColumns=@JoinColumn(name="GAME_ID", referencedColumnName="ID"),
+            inverseJoinColumns=@JoinColumn(name="PLAYER_ID", referencedColumnName="ID"))
     private List<TournamentSingleGame> games = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, mappedBy = "players")

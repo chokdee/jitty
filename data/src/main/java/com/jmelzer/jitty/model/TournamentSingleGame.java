@@ -63,9 +63,10 @@ public class TournamentSingleGame {
     String tcName;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "NEXT_GAME_ID")
     private TournamentSingleGame nextGame;
 
-    @Column
+    @Column(name = "NAME")
     String gameName;
 
     public TournamentSingleGame() {
