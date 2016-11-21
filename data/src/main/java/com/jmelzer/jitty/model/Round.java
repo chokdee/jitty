@@ -19,7 +19,7 @@ public class Round {
     Round prevRound;
     @OneToOne(cascade = CascadeType.DETACH, mappedBy = "round")
     KOField koField;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "round")
     List<TournamentSingleGame> games = new ArrayList<>();
     @Id
     @GeneratedValue

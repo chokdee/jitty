@@ -138,8 +138,8 @@ public class SchemaExporter {
         export.setDelimiter(";");
         final String workingDir = System.getProperty("user.dir");
 
-        String filename = workingDir + "/src/main/resources/sql/" + dialect.name().toLowerCase() + "/" + prefix
-                + "ddl.sql";
+//        String filename = workingDir + "/src/main/resources/sql/" + dialect.name().toLowerCase() + "/" + prefix + "ddl.sql";
+        String filename = workingDir + "/src/main/resources/db/migration/V1__ddl.sql";
         export.setOutputFile(filename);
 
         export.execute(true, false, false, true);

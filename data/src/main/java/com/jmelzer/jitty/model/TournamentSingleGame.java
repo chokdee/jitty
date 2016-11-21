@@ -49,6 +49,7 @@ public class TournamentSingleGame {
     TournamentGroup group;
 
     @ManyToOne
+    @JoinColumn(name = "ROUND_ID")
     Round round;
 
     //todo add Schiedsrichter

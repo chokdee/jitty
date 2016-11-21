@@ -35,7 +35,7 @@
         NEXT_GAME_ID bigint,
         player1_id bigint,
         player2_id bigint,
-        round_id bigint,
+        ROUND_ID bigint,
         primary key (id)
     );
 
@@ -71,11 +71,6 @@
         ROUND_TYPE integer,
         PREV_ROUND_ID bigint,
         primary key (id)
-    );
-
-    create table round_TOURNAMENT_SINGLE_GAME (
-        round_id bigint not null,
-        games_id bigint not null
     );
 
     create table tournament (
@@ -151,131 +146,118 @@
         primary key (id)
     );
 
-    alter table TOURNAMENT_SINGLE_GAME_SET
+    alter table TOURNAMENT_SINGLE_GAME_SET 
         add constraint UK_qsllp7dkc2v1b8k3vdmi6tb7i unique (sets_id);
 
-    alter table association
+    alter table association 
         add constraint UK_ogdrfbju5finu018l8mvhdvug unique (longname);
 
-    alter table association
+    alter table association 
         add constraint UK_oqsncgu633nvys2yo9ehj7j14 unique (shortname);
 
-    alter table round_TOURNAMENT_SINGLE_GAME
-        add constraint UK_89n7wd9f6kjoseclgje2jc3xg unique (games_id);
-
-    alter table GAME_TO_PLAYER
-        add constraint FK_7ib8ce8wd79s2px5w8j9kwymo
-        foreign key (PLAYER_ID)
+    alter table GAME_TO_PLAYER 
+        add constraint FK_7ib8ce8wd79s2px5w8j9kwymo 
+        foreign key (PLAYER_ID) 
         references TOURNAMENT_SINGLE_GAME;
 
-    alter table GAME_TO_PLAYER
-        add constraint FK_1beglyxll8orfa0arhrpg8ref
-        foreign key (GAME_ID)
+    alter table GAME_TO_PLAYER 
+        add constraint FK_1beglyxll8orfa0arhrpg8ref 
+        foreign key (GAME_ID) 
         references tournament_player;
 
-    alter table TC_PLAYER
-        add constraint FK_j1gkvwc7o55bxst5rs8ymsbgk
-        foreign key (players_id)
+    alter table TC_PLAYER 
+        add constraint FK_j1gkvwc7o55bxst5rs8ymsbgk 
+        foreign key (players_id) 
         references tournament_player;
 
-    alter table TC_PLAYER
-        add constraint FK_qxf2qn0ihgjq7p82fo462o82c
-        foreign key (classes_id)
+    alter table TC_PLAYER 
+        add constraint FK_qxf2qn0ihgjq7p82fo462o82c 
+        foreign key (classes_id) 
         references tournament_class;
 
-    alter table TG_PLAYER
-        add constraint FK_qf0eotnnolfs141a49sdse92l
-        foreign key (players_id)
+    alter table TG_PLAYER 
+        add constraint FK_qf0eotnnolfs141a49sdse92l 
+        foreign key (players_id) 
         references tournament_player;
 
-    alter table TG_PLAYER
-        add constraint FK_ipidk7vloonp421slacf3fuil
-        foreign key (tournament_group_id)
+    alter table TG_PLAYER 
+        add constraint FK_ipidk7vloonp421slacf3fuil 
+        foreign key (tournament_group_id) 
         references tournament_group;
 
-    alter table TOURNAMENT_SINGLE_GAME
-        add constraint FK_ea0mkvq89t9u7fktbfhrol0e
-        foreign key (group_id)
+    alter table TOURNAMENT_SINGLE_GAME 
+        add constraint FK_ea0mkvq89t9u7fktbfhrol0e 
+        foreign key (group_id) 
         references tournament_group;
 
-    alter table TOURNAMENT_SINGLE_GAME
-        add constraint FK_k3le5pcjb03nnotlq3cc1sy5a
-        foreign key (NEXT_GAME_ID)
+    alter table TOURNAMENT_SINGLE_GAME 
+        add constraint FK_k3le5pcjb03nnotlq3cc1sy5a 
+        foreign key (NEXT_GAME_ID) 
         references TOURNAMENT_SINGLE_GAME;
 
-    alter table TOURNAMENT_SINGLE_GAME
-        add constraint FK_P1
-        foreign key (player1_id)
+    alter table TOURNAMENT_SINGLE_GAME 
+        add constraint FK_P1 
+        foreign key (player1_id) 
         references tournament_player;
 
-    alter table TOURNAMENT_SINGLE_GAME
-        add constraint FK_P2
-        foreign key (player2_id)
+    alter table TOURNAMENT_SINGLE_GAME 
+        add constraint FK_P2 
+        foreign key (player2_id) 
         references tournament_player;
 
-    alter table TOURNAMENT_SINGLE_GAME
-        add constraint FK_60r5pcov4bqv6l1neb9d7twab
-        foreign key (round_id)
+    alter table TOURNAMENT_SINGLE_GAME 
+        add constraint FK_qva0r23wy13oo9xcqfxt5edqy 
+        foreign key (ROUND_ID) 
         references round;
 
-    alter table TOURNAMENT_SINGLE_GAME_SET
-        add constraint FK_qsllp7dkc2v1b8k3vdmi6tb7i
-        foreign key (sets_id)
+    alter table TOURNAMENT_SINGLE_GAME_SET 
+        add constraint FK_qsllp7dkc2v1b8k3vdmi6tb7i 
+        foreign key (sets_id) 
         references GAME_SET;
 
-    alter table TOURNAMENT_SINGLE_GAME_SET
-        add constraint FK_i34ho4dv460fg16yj12yybeuh
-        foreign key (TOURNAMENT_SINGLE_GAME_id)
+    alter table TOURNAMENT_SINGLE_GAME_SET 
+        add constraint FK_i34ho4dv460fg16yj12yybeuh 
+        foreign key (TOURNAMENT_SINGLE_GAME_id) 
         references TOURNAMENT_SINGLE_GAME;
 
-    alter table club
-        add constraint FK_lksuditej44rp3dc99p39397k
-        foreign key (association_id)
+    alter table club 
+        add constraint FK_lksuditej44rp3dc99p39397k 
+        foreign key (association_id) 
         references association;
 
-    alter table ko_field
-        add constraint FK_ml5ekxtc0vjbduphe0lv0lbqs
-        foreign key (round_id)
+    alter table ko_field 
+        add constraint FK_ml5ekxtc0vjbduphe0lv0lbqs 
+        foreign key (round_id) 
         references round;
 
-    alter table round
-        add constraint FK_gl0u9qmkh4bg96kommsxv22uh
-        foreign key (PREV_ROUND_ID)
+    alter table round 
+        add constraint FK_gl0u9qmkh4bg96kommsxv22uh 
+        foreign key (PREV_ROUND_ID) 
         references round;
 
-    alter table round_TOURNAMENT_SINGLE_GAME
-        add constraint FK_89n7wd9f6kjoseclgje2jc3xg
-        foreign key (games_id)
-        references TOURNAMENT_SINGLE_GAME;
-
-    alter table round_TOURNAMENT_SINGLE_GAME
-        add constraint FK_ruvww624nattqggrhi1kjvuw0
-        foreign key (round_id)
-        references round;
-
-    alter table tournament_class
-        add constraint FK_36pr8q59wyph7eroro6wm1xm2
-        foreign key (KOFIELD_ID)
+    alter table tournament_class 
+        add constraint FK_36pr8q59wyph7eroro6wm1xm2 
+        foreign key (KOFIELD_ID) 
         references ko_field;
 
-    alter table tournament_class
-        add constraint FK_61kldru8t8vxyffj5ign0v0ka
-        foreign key (T_ID)
+    alter table tournament_class 
+        add constraint FK_61kldru8t8vxyffj5ign0v0ka 
+        foreign key (T_ID) 
         references tournament;
 
-    alter table tournament_group
-        add constraint FK_dv15p88njdcf4vr8ot8wiajs0
-        foreign key (TC_ID)
+    alter table tournament_group 
+        add constraint FK_dv15p88njdcf4vr8ot8wiajs0 
+        foreign key (TC_ID) 
         references tournament_class;
 
-    alter table tournament_player
-        add constraint FK_j5mtotffj08ony0ypv9nwoi3p
-        foreign key (association_id)
+    alter table tournament_player 
+        add constraint FK_j5mtotffj08ony0ypv9nwoi3p 
+        foreign key (association_id) 
         references association;
 
-    alter table tournament_player
-        add constraint FK_h4pwv9pqf0fhmajr8rx8ueq6k
-        foreign key (club_id)
+    alter table tournament_player 
+        add constraint FK_h4pwv9pqf0fhmajr8rx8ueq6k 
+        foreign key (club_id) 
         references club;
 
     alter table user 
