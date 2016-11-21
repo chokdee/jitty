@@ -116,7 +116,7 @@ public class TournamentSingleGameRepositoryIntegrationTests {
         game.setPlayer1(playerRepository.findOne(1L));
         game.setPlayer2(playerRepository.findOne(2L));
 
-        repository.save(game);
+        game = repository.saveAndFlush(game);
 
         clz.getGroups().get(0).addGame(game);
         tournamentClassRepository.saveAndFlush(clz);
