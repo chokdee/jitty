@@ -60,28 +60,35 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
 
     };
     // ganes to play table
-    $scope.columns = [{field: 'group.tournamentClass.name', displayName: 'Klasse'},
+    $scope.columns = [{
+        field: 'group.tournamentClass.name',
+        maxWidth: 80,
+        displayName: 'Klasse'
+    },
         {
             field: 'roundOrGroupName',
+            maxWidth: 85,
             displayName: 'Gruppe/Runde'
         },
         {field: 'player1.fullName', displayName: 'Spieler 1'},
         {
             field: 'player1.periodSinceLastGame',
+
             displayName: 'Letztes Spiel',
             cellTooltip: function (row, col) {
                 return row.entity.player1.lastGameAt
             }
         },
         {field: 'player2.fullName', displayName: 'Spieler 2'},
-        {field: 'player2.periodSinceLastGame', displayName: 'Letztes Spiel'},
+        {field: 'player2.periodSinceLastGame', maxWidth: 70, displayName: 'Wartezeit'},
         {
             name: 'Aktion',
-            cellTemplate: '<div class="ui-grid-cell-contents"><a class="btn btn-primary" ng-click="grid.appScope.startGame(row.entity.id)" >Spiel starten</a>' +
-            '<a class="btn btn-primary" ng-click="grid.appScope.printSR(row.entity.id)" >Drucken</a></div>',
+            cellTemplate: '<div class="ui-grid-cell-contents"><a class="btn btn-primary btn-sm" ng-click="grid.appScope.startGame(row.entity.id)" >Starten</a>' +
+            '<a class="btn btn-primary btn-sm" ng-click="grid.appScope.printSR(row.entity.id)" >Drucken</a></div>',
             enableCellEdit: false,
             enableColumnMenu: false,
-            enableSorting: false
+            enableSorting: false,
+
         }
     ];
 
@@ -174,6 +181,15 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     };
 
     $scope.callAll();
+
+    $scope.range = function (min, max, step) {
+        step = step || 1;
+        var input = [];
+        for (var i = min; i <= max; i += step) {
+            input.push(i);
+        }
+        return input;
+    };
 
 }).controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
 
