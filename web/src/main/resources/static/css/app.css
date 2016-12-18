@@ -567,3 +567,7 @@ ul#result li {
     border-left: 1px solid white;
     z-index: 7;
 }
+
+.mycontainer {
+    margin-left: 5%;
+}

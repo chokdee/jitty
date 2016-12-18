@@ -17,6 +17,7 @@ import java.util.List;
     private String name;
     private Date startDate;
     private Date endDate;
+    private int tableCount = 8;
     List<TournamentClassDTO> classes = new ArrayList<>();
 
     public Long getId() {
@@ -57,5 +58,13 @@ import java.util.List;
 
     public void addClass(TournamentClassDTO classDTO) {
         classes.add(classDTO);
+    }
+
+    public int getTableCount() {
+        return tableCount;
+    }
+
+    public void setTableCount(int tableCount) {
+        this.tableCount = tableCount;
     }
 }

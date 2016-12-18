@@ -1,7 +1,7 @@
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.*;
-import com.jmelzer.jitty.exceptions.IntegrationViolation;
+import com.jmelzer.jitty.exceptions.IntegrityViolation;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.*;
 import org.slf4j.Logger;
@@ -35,6 +35,7 @@ public class TournamentService {
     @Autowired
     @Qualifier("transactionManager")
     protected PlatformTransactionManager txManager;
+    //todo make persistent
     List<TournamentSingleGame> gameQueue = new ArrayList<>();
     List<TournamentSingleGame> busyGames = new ArrayList<>();
     @Resource
@@ -47,6 +48,8 @@ public class TournamentService {
     TournamentPlayerRepository playerRepository;
     @Resource
     TournamentSingleGameRepository tournamentSingleGameRepository;
+    @Resource
+    TableManager tableManager;
 
 
     public int getQueueSize() {
@@ -77,6 +80,9 @@ public class TournamentService {
 
 
     public void addBusyGame(TournamentSingleGame game) {
+        if (game.getTableNo() == null) {
+            throw new IllegalArgumentException("game must have a table");
+        }
         busyGames.add(game);
     }
 
@@ -204,6 +210,7 @@ public class TournamentService {
         tournament.addClass(createTC("C-Klasse", 0, 1600));
         tournament.addClass(createTC("D-Klasse", 0, 1400));
         tournament.addClass(createTC("E-Klasse", 0, 1200));
+        tableManager.setTableCount(tournament.getTableCount());
         return repository.saveAndFlush(tournament);
     }
 
@@ -249,13 +256,13 @@ public class TournamentService {
     }
 
     @Transactional
-    public void deleteClass(Long aLong) throws IntegrationViolation {
+    public void deleteClass(Long aLong) throws IntegrityViolation {
         TournamentClass tc = tcRepository.findOne(aLong);
         if (tc == null) {
             throw new EmptyResultDataAccessException(1);
         }
         if (tc.getGroups().size() > 0) {
-            throw new IntegrationViolation("Es wurden bereits Gruppen angelegt, die Klasse kann nicht mehr gelöscht werden");
+            throw new IntegrityViolation("Es wurden bereits Gruppen angelegt, die Klasse kann nicht mehr gelöscht werden");
         }
         Tournament t = tc.getTournament();
         t.removeClass(tc);
@@ -404,7 +411,7 @@ public class TournamentService {
 
 
     @Transactional
-    public void startGame(Long id) {
+    public TournamentSingleGameDTO startGame(Long id) throws IntegrityViolation {
         //todo in a method an refresh the object
         TournamentSingleGame foundGame = null;
         for (TournamentSingleGame game : gameQueue) {
@@ -419,11 +426,18 @@ public class TournamentService {
         }
         //refresh
         foundGame = tournamentSingleGameRepository.findOne(foundGame.getId());
+        int no = tableManager.pollFreeTableNo(foundGame);
+        if (no == -1) {
+            throw new IntegrityViolation("Es gibt keinen freien Tisch mehr");
+        } else {
+            System.out.println("start game + " + foundGame.getId() + " at table #" + no);
+        }
         foundGame.setCalled(true);
         foundGame.setStartTime(new Date());
         addBusyGame(foundGame);
         tournamentSingleGameRepository.save(foundGame);
         LOG.debug("started game with id {}", id);
+        return copy(foundGame, false);
     }
 
     @Transactional
@@ -475,6 +489,7 @@ public class TournamentService {
      * find game from the busy game list and add new possible games to the queue
      */
     private void finishGame(TournamentSingleGame game) {
+        LOG.info("finish game #" + game.getId());
         busyGames.remove(game);
         if (game.getGroup() != null) {
             addPossibleGroupGamesToQueue(Collections.singletonList(game.getGroup()));
@@ -484,6 +499,7 @@ public class TournamentService {
             moveWinnerToNextRound(game);
             addPossibleKoGamesToQueue(tc);
         }
+        tableManager.pushFreeTable(game);
     }
 
     @Transactional
@@ -513,8 +529,10 @@ public class TournamentService {
 
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
-                List<Tournament> tournaments = repository.findAll();
+                List<Tournament> tournaments = repository.findByRunning(true);
+                //todo what about multiple tournaments and tablemanager?
                 for (Tournament tournament : tournaments) {
+                    tableManager.setTableCount(tournament.getTableCount());
                     List<TournamentClass> tcs = tcRepository.findByTournamentAndRunning(tournament, true);
                     for (TournamentClass tc : tcs) {
                         addPossibleGroupGamesToQueue(tc.getGroups());
@@ -522,9 +540,6 @@ public class TournamentService {
                 }
             }
         });
-        for (TournamentSingleGame game : gameQueue) {
-            System.out.println("game = " + game);
-        }
 
     }
 
@@ -619,5 +634,27 @@ public class TournamentService {
     public KOFieldDTO getKOForClz(Long tcId) {
         TournamentClass tc = tcRepository.findOne(tcId);
         return copyForBracket(tc.getKoField());
+    }
+
+    public void saveTableCount(String actualUsername, int tablecount) throws IntegrityViolation {
+        Tournament t = userRepository.findByLoginName(actualUsername).getLastUsedTournament();
+        if (tablecount < t.getTableCount()) {
+            throw new IntegrityViolation("Die Tischanzahl kann nicht reduziert werden, da bereits an den Tischen gespielt wird.");
+        }
+        t.setTableCount(tablecount);
+
+    }
+
+    @Transactional
+    public void startPossibleGames() throws IntegrityViolation {
+        int n = tableManager.getFreeTableCount();
+        for (int i = 0; i < n; i++) {
+            if (gameQueue.isEmpty()) {
+                break;
+            }
+
+            TournamentSingleGame game = gameQueue.get(0);
+            startGame(game.getId());
+        }
     }
 }

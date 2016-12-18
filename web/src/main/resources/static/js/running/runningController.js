@@ -7,12 +7,19 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
 
     };
 
+    $scope.getTables = function () {
+        $http.get('/api/tournamentdirector/tables', {}).then(function (response) {
+            $scope.tables = response.data;
+        });
+
+    };
 
     $scope.callAll = function () {
         $scope.getPossibleGames();
         $scope.getRunningGames();
         $scope.getFinishedGames();
         $scope.anyPhaseFinished();
+        $scope.getTables();
     };
 
     $scope.startGame = function (id) {
@@ -172,6 +179,29 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
             method: 'POST',
             url: '/api/tournamentdirector/save-result',
             data: $scope.game
+        }).then(function successCallback(response) {
+            $scope.callAll();
+        }, function errorCallback(response) {
+            $scope.errorMessage = response.data.error;
+        });
+
+    };
+    $scope.startPossibleGames = function () {
+        $http({
+            method: 'GET',
+            url: '/api/tournamentdirector/start-possible-games'
+        }).then(function successCallback(response) {
+            $scope.callAll();
+        }, function errorCallback(response) {
+            $scope.errorMessage = response.data.error;
+        });
+    };
+
+    $scope.saveTableCount = function () {
+        $http({
+            method: 'POST',
+            url: '/api/tournamentdirector/save-table-count',
+            data: $scope.tablecount
         }).then(function successCallback(response) {
             $scope.callAll();
         }, function errorCallback(response) {

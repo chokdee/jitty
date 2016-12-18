@@ -234,7 +234,7 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
                     assertNotNull(dto.getPlayer2());
                     if (dto.getTcName().equals("dummy")) {
                         assertNull(dto.getGroup());
-                        startGame(dto.getId());
+                        dto = startGame(dto.getId());
                         addAndSaveResult(loginHeaders, new TournamentSingleGameDTO[]{dto});
                     }
                 }
@@ -251,6 +251,7 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
 
 
         } catch (HttpClientErrorException e) {
+            e.printStackTrace();
             System.out.println(e.getResponseBodyAsString());
             fail();
         }
@@ -304,6 +305,7 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
         //create a tournament
         TournamentDTO tournament = new TournamentDTO();
         tournament.setName("Flowtest");
+        tournament.setTableCount(24);
         tournament.setStartDate(new Date());
         tournament.setEndDate(new Date());
         ResponseEntity<Long> longEntitiy = http(HttpMethod.POST, "api/tournaments",
@@ -315,10 +317,11 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
         return tId;
     }
 
-    private void startGame(Long gameId) {
-        ResponseEntity voidEntity = http(HttpMethod.GET, "api/tournamentdirector/start-game?id=" + gameId,
-                createHttpEntity(null, loginHeaders), Void.class);
-        assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+    private TournamentSingleGameDTO startGame(Long gameId) {
+        ResponseEntity<TournamentSingleGameDTO> re = http(HttpMethod.GET, "api/tournamentdirector/start-game?id=" + gameId,
+                createHttpEntity(null, loginHeaders), TournamentSingleGameDTO.class);
+        assertTrue(re.getStatusCode().is2xxSuccessful());
+        return re.getBody();
     }
 
     private void createPlayer(int i, TournamentClassDTO tournamentClass) {
@@ -355,6 +358,7 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
         for (TournamentSingleGameDTO runningGame : runningGames) {
+            System.out.println("runningGame.getTableNo() = " + runningGame.getTableNo());
             runningGame.addSet(new GameSetDTO(11, 2));
             runningGame.addSet(new GameSetDTO(11, 2));
             runningGame.addSet(new GameSetDTO(11, 2));

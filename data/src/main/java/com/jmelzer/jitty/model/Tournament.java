@@ -30,6 +30,12 @@ public class Tournament {
     @Column(nullable = false, name = "end_date")
     private Date endDate;
 
+    @Column(nullable = false, name = "table_count")
+    private int tableCount = 8;
+
+    @Column(nullable = false, name = "running")
+    private boolean running = true;
+
     public Long getId() {
         return id;
     }
@@ -84,5 +90,13 @@ public class Tournament {
 
     public void removeClass(TournamentClass tc) {
         classes.remove(tc);
+    }
+
+    public int getTableCount() {
+        return tableCount;
+    }
+
+    public void setTableCount(int tableCount) {
+        this.tableCount = tableCount;
     }
 }

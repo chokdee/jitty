@@ -58,92 +58,58 @@
         <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
     </div>
 </script>
-<div class="row" id="overview-lists">
-    <div class="col-md-6">
-        <h4>Mögliche Begegnungen</h4>
-        <div ng-show="finishedTC">
-            <pr>Es gibt eine Klasse zum Auslosen.</pr>
-            <a href="{{'/#/draw/' + finishedTC}}">Hier klicken</a>
-        </div>
-        <div>
-            <div ui-grid="gridOptions" class="myGrid"></div>
-        </div>
-        <h4>Laufende Begegnungen</h4>
-        <div>
-            <div ui-grid="gridOptionsRunning" class="myGrid"></div>
-        </div>
-        <h4>Beendet</h4>
-        <div>
-            <div ui-grid="gridOptionsFinished" class="myGrid"></div>
-        </div>
-
+<br/>
+<div class="col-md-6" id="overview-lists">
+    <div class="row">
+        <h4 style="float:left">Mögliche Begegnungen</h4>
+        <!--<input name="submit" type="submit" value="Freie Tische belegen"/>-->
+        <a style="float:right" class="btn btn-primary btn-sm" ng-click="startPossibleGames()">Freie Tische belegen</a>
     </div>
-    <div class="col-md-5">
+    <div class="row" ng-show="finishedTC">
+        <pr>Es gibt eine Klasse zum Auslosen.</pr>
+        <a href="{{'/#/draw/' + finishedTC}}">Hier klicken</a>
+    </div>
+    <div class="row">
+        <div ui-grid="gridOptions" class="myGrid"></div>
+    </div>
+    <div class="row">
+        <h4>Laufende Begegnungen</h4>
+    </div>
+    <div class="row">
+        <div ui-grid="gridOptionsRunning" class="myGrid"></div>
+    </div>
+    <div class="row">
+        <h4>Beendet</h4>
+    </div>
+    <div class="row">
+        <div ui-grid="gridOptionsFinished" class="myGrid"></div>
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="col-md-12">
         <div class="row">
             <h4>Tische</h4>
         </div>
-        <div class="row" style="font-size: large">
+        <div class="row" >
             <label for="tablecount">Anzahl der Tische<span class="required">*</span></label>
-            <input type="text" ng-model="tablecount" name="tablecount" required id="tablecount"
-                   style="width: 30%" ng-init="24"/>
+            <form name="tableCountForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="saveTableCount()">
+                <input type="text" ng-model="tables.length" name="tablecount" required id="tablecount" style="width: 30%" ng-init="24"/>
+                <input name="submit" type="submit" value="Ändern"/>
+            </form>
         </div>
-        <div class="row2" ng-repeat="items in range(1,tablecount) track by $index" ng-init="tableIndex = $index">
-            <div class="col-md-4">
-                <div class="tt-table">
-                    <div class="table-nr" >{{tableIndex+1}}</div>
-                    <div class="table-n1">Marcus Butter</div>
-                    <hr  size="1"/>
-                    <div class="table-n2">Karl Heinz Giesser</div>
+        <br/>
+        <div class="row" style="font-size: large">
+            <div ng-repeat="items in range(1,tables.length) track by $index" ng-init="tableIndex = $index">
+                <div class="col-md-4">
+                    <div class="tt-table">
+                        <div class="table-nr">{{tableIndex+1}}</div>
+                        <div class="table-n1">{{tables[tableIndex].game.player1.fullName == null ? '&nbsp;' : tables[tableIndex].game.player1.fullName}}</div>
+                        <!--<div class="table-n1">&nbsp;&nbsp;</div>-->
+                        <hr size="1"/>
+                        <div class="table-n1">{{tables[tableIndex].game.player2.fullName == null ? '&nbsp;' : tables[tableIndex].game.player2.fullName}}</div>
+                    </div>
                 </div>
             </div>
-            <!--<div class="col-md-4">-->
-                <!--<div class="tt-table">-->
-                    <!--<div class="table-nr" >2</div>-->
-                    <!--<div class="table-n1">Marcus Butter</div>-->
-                    <!--<hr  size="1"/>-->
-                    <!--<div class="table-n2">Karl Heinz Giesser</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="col-md-4">-->
-                <!--<div class="tt-table">-->
-                    <!--<div class="table-nr" >3</div>-->
-                    <!--<div class="table-n1">Marcus Butter</div>-->
-                    <!--<hr  size="1"/>-->
-                    <!--<div class="table-n2">Karl Heinz Giesser</div>-->
-                <!--</div>-->
-            <!--</div>-->
-
-        </div><!--/row-->
-        <!--<div class="tt-table"><div class="vr" /> <div class="table-nr" >1</div><div class="table-n1">Marcus Butter </div><div class="table-n2">Karl Heinz Giesser</div></div>-->
-        <!--<div class="tt-table"> <div class="vr" /><h3>2</h3> </div>-->
-        <!--<div class="panel panel-default">-->
-        <!--<div class="panel-body">A Basic Panel</div>-->
-        <!--</div>-->
-        <!--<div class="tt-table"> <div class="vr" /> </div>-->
-        <!--<div class="tt-table"> <div class="table-nr" >4</div></div>-->
-        <!--<div class="tt-table"> <h3>5</h3> </div>-->
-        <!--<div class="tt-table"> <h3>6</h3> </div>-->
-        <!--<div class="tt-table"> <h3>7</h3> </div>-->
-        <!--<div class="tt-table"> <h3>8</h3> </div>-->
-        <!--<div class="tt-table"> <h3>9</h3> </div>-->
-        <!--<div class="tt-table"> <h3>10</h3> </div>-->
-        <!--<div class="tt-table"> <h3>11</h3> </div>-->
-        <!--<div class="tt-table"> <h3>12</h3> </div>-->
-        <!--<div class="tt-table"> <h3>13</h3> </div>-->
-        <!--<div class="dropzone">-->
-        <!--<ul dnd-list="containers"-->
-        <!--class="group-list"-->
-        <!--dnd-external-sources="true">-->
-        <!--<li ng-repeat="items in range(1,5)"-->
-        <!--dnd-draggable="items"-->
-        <!--dnd-effect-allowed="copyMove"-->
-        <!--dnd-moved="containers.splice($index, 1)">-->
-        <!--<div class="container-element tt-table">-->
-        <!--<h3>{{$index}}</h3>-->
-
-        <!--</div>-->
-        <!--</li>-->
-        <!--</ul>-->
-        <!--</div>-->
+        </div>
     </div>
 </div>

@@ -3,7 +3,7 @@ package com.jmelzer.jitty.rest;
 import com.jmelzer.jitty.config.SecurityUtil;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
-import com.jmelzer.jitty.exceptions.IntegrationViolation;
+import com.jmelzer.jitty.exceptions.IntegrityViolation;
 import com.jmelzer.jitty.service.TournamentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,11 +75,11 @@ public class TournamentClassController {
             LOG.warn("tc with id {} not found ", id);
             return null;
         } catch (NumberFormatException e) {
-            LOG.warn("id not a number ", id);
+            LOG.warn("id is not a number ", id);
             return null;
-        } catch (IntegrationViolation integrationViolation) {
-            LOG.warn("not possible to delete the class {} error message is '{}'" , id, integrationViolation.getMessage());
-            return ControllerUtil.buildErrorResponse(integrationViolation.getMessage());
+        } catch (IntegrityViolation integrityViolation) {
+            LOG.warn("not possible to delete the class {} error message is '{}'" , id, integrityViolation.getMessage());
+            return ControllerUtil.buildErrorResponse(integrityViolation.getMessage());
         }
         return Response.ok().build();
 
