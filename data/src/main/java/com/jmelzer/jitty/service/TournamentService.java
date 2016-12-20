@@ -35,7 +35,7 @@ public class TournamentService {
     @Autowired
     @Qualifier("transactionManager")
     protected PlatformTransactionManager txManager;
-    //todo make persistent
+    //todo make persistent and get it from db
     List<TournamentSingleGame> gameQueue = new ArrayList<>();
     List<TournamentSingleGame> busyGames = new ArrayList<>();
     @Resource
@@ -417,7 +417,6 @@ public class TournamentService {
         for (TournamentSingleGame game : gameQueue) {
             if (game.getId().equals(id)) {
                 foundGame = game;
-                gameQueue.remove(game);
                 break;
             }
         }
@@ -429,12 +428,12 @@ public class TournamentService {
         int no = tableManager.pollFreeTableNo(foundGame);
         if (no == -1) {
             throw new IntegrityViolation("Es gibt keinen freien Tisch mehr");
-        } else {
-            System.out.println("start game + " + foundGame.getId() + " at table #" + no);
         }
+
         foundGame.setCalled(true);
         foundGame.setStartTime(new Date());
         addBusyGame(foundGame);
+        gameQueue.remove(foundGame);
         tournamentSingleGameRepository.save(foundGame);
         LOG.debug("started game with id {}", id);
         return copy(foundGame, false);

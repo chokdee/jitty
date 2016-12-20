@@ -23,9 +23,22 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     };
 
     $scope.startGame = function (id) {
-        $http.get('/api/tournamentdirector/start-game?id=' + id, {}).then(function (response) {
+        $http({
+            method: 'GET',
+            url: '/api/tournamentdirector/start-game?id=' + id
+        }).then(function successCallback(response) {
+            //refresh data
             $scope.callAll();
+
+        }, function errorCallback(response) {
+            if (response.status == 400) {
+                $scope.errorMessage = response.data.error;
+                console.log('got 400 response message = ' + response.data.error);
+            }
         });
+        // $http.get('/api/tournamentdirector/start-game?id=' + id, {}).then(function (response) {
+        //     $scope.callAll();
+        // });
 
     };
     $scope.backToPossibleGames = function (id) {
@@ -77,16 +90,24 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
             maxWidth: 85,
             displayName: 'Gruppe/Runde'
         },
-        {field: 'player1.fullName', displayName: 'Spieler 1'},
+        {
+            field: 'player1.fullName',
+            maxWidth: 100,
+            displayName: 'Spieler 1'
+        },
         {
             field: 'player1.periodSinceLastGame',
-
             displayName: 'Letztes Spiel',
+            maxWidth: 60,
             cellTooltip: function (row, col) {
                 return row.entity.player1.lastGameAt
             }
         },
-        {field: 'player2.fullName', displayName: 'Spieler 2'},
+        {
+            field: 'player2.fullName',
+            displayName: 'Spieler 2',
+            maxWidth: 100
+        },
         {field: 'player2.periodSinceLastGame', maxWidth: 70, displayName: 'Wartezeit'},
         {
             name: 'Aktion',
@@ -94,7 +115,7 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
             '<a class="btn btn-primary btn-sm" ng-click="grid.appScope.printSR(row.entity.id)" >Drucken</a></div>',
             enableCellEdit: false,
             enableColumnMenu: false,
-            enableSorting: false,
+            enableSorting: false
 
         }
     ];
@@ -136,15 +157,24 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     $scope.columnsRunning = [{field: 'group.tournamentClass.name', displayName: 'Klasse'},
         {
             field: 'roundOrGroupName',
-            displayName: 'Gruppe/Runde'
+            displayName: 'Gruppe/Runde',
+            maxWidth: 85
         },
-        {field: 'player1.fullName', displayName: 'Spieler 1'},
-        {field: 'player2.fullName', displayName: 'Spieler 2'},
+        {
+            field: 'player1.fullName',
+            maxWidth: 100,
+            displayName: 'Spieler 1'
+        },
+        {
+            field: 'player2.fullName',
+            maxWidth: 100,
+            displayName: 'Spieler 2'
+        },
         {
             name: 'Aktion',
             cellTemplate: '<div class="ui-grid-cell-contents">' +
-            '<a class="btn btn-primary" ng-click="grid.appScope.enterGameResult(row.entity)" >Ergebnis...</a>' +
-            '<a class="btn btn-primary" ng-click="grid.appScope.backToPossibleGames(row.entity.id)" >Zur&uuml;ck</a>' +
+            '<a class="btn btn-primary btn-sm" ng-click="grid.appScope.enterGameResult(row.entity)" >Ergebnis...</a>' +
+            '<a class="btn btn-primary btn-sm" ng-click="grid.appScope.backToPossibleGames(row.entity.id)" >Zur&uuml;ck</a>' +
             '</div>',
             enableCellEdit: false,
             enableColumnMenu: false,

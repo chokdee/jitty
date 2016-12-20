@@ -59,6 +59,10 @@
     </div>
 </script>
 <br/>
+<div ng-if="errorMessage" class="alert alert-danger">
+    <span>Fehler: <em>{{errorMessage}}</em></span>
+</div>
+<!--<pre ng-if="errorMessage">Fehler: <em>{{errorMessage}}</em></pre>-->
 <div class="col-md-6" id="overview-lists">
     <div class="row">
         <h4 style="float:left">Mögliche Begegnungen</h4>

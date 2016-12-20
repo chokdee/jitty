@@ -548,7 +548,7 @@ ul#result li {
 .table-nr {
     z-index: 2;
     overflow: hidden;
-    font-size: 500%;
+    font-size: 300%;
     position: absolute;
 
     color: darkgray;
