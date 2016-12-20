@@ -18,7 +18,6 @@
             <div class="control-group">
                 <label for="startDate"><span>Start<span class="required">*</span></span></label>
                 <p class="input-group">
-
                     <input name=startDate" id="startDate" type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="startDate" is-open="popup1.opened"
                            ng-required="true" close-text="Schließen"
                            datepicker-options="dateOptions" alt-input-formats="altInputFormats"/>
@@ -39,6 +38,17 @@
                     </span>
                 </p>
             </div>
+        <div class="control-group">
+            <label for="tableCount"><span>Anzahl der Tische<span class="required">*</span></span></label>
+            <input type="text" ng-model="tournament.tableCount" name="tableCount" required id="tableCount"
+                   class="form-control ng-pristine ng-invalid ng-invalid-required"/>
+            <div class="clearfix">
+                <div ng-messages="tournamentForm.tableCount.$error" ng-if="tournamentForm.$submitted || tournamentForm.tableCount.$dirty"
+                     class="error-messages slide-right">
+                    <div ng-message="required" class="message slide-left">Bitte die Anzahl der Tische angeben</div>
+                </div>
+            </div>
+        </div>
             <input name="submit" type="submit" value="Speichern"/>
     </form>
     <br/>
