@@ -61,13 +61,30 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
             opened: false
         };
 
-
         $scope.getPossibleClasses = function () {
-            $http.get('/api/players/possible-tournaments-classes', {params: {id: $routeParams.id}}).then(function (response) {
+            $http({
+                method: 'POST',
+                url: '/api/players/possible-tournaments-classes',
+                data: $scope.player
+            }).then(function successCallback(response) {
                 $scope.possibleClasses = response.data;
+            }, function errorCallback(response) {
+                $scope.errorMessage = response.data.error;
             });
 
         };
+
+        $scope.$watch('player.qttr', function () {
+                $scope.getPossibleClasses();
+            }
+        );
+        // $scope.getPossibleClasses = function () {
+        //     $http.get('/api/players/possible-tournaments-classes', {params: {id: $routeParams.id}}).then(function (response) {
+        //         $scope.possibleClasses = response.data;
+        //     });
+        //
+        // };
+
 
         $scope.getPossibleClasses();
 

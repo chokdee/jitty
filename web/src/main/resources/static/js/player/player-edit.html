@@ -120,23 +120,20 @@
             <div class="container">
                 <!--<p>{{player.classes}}</p>-->
                 <select
+                        id="player-classes"
                         ng-model="player.classes"
                         ng-options='cp as (cp.name + " - " + cp.startTTR + " -> " + cp.endTTR) for cp in possibleClasses track by cp.id'
                         multiple
                         bs-duallistbox
                         bootstrap2="{{ settings.bootstrap2 }}"
-
                         move-on-select="{{ settings.moveOnSelect }}"
                         preserve-selection="{{ settings.preserveSelection }}"
-
                         move-selected-label="{{ settings.moveSelectedLabel }}"
                         move-all-label="{{ settings.moveAllLabel }}"
                         remove-selected-label="{{ settings.removeSelectedLabel }}"
                         remove-all-label="{{ settings.removeAllLabel }}"
-
                         non-selected-list-label="{{ settings.nonSelectedListLabel }}"
                         selected-list-label="{{ settings.selectedListLabel }}"
-
                         postfix="{{ settings.postfix }}"
                         select-min-height="{{ settings.selectMinHeight }}"
 

@@ -356,7 +356,11 @@ public class TournamentService {
         if (t == null) {
             return ret;
         }
-        List<TournamentClass> classes = tcRepository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(t, player.getQttr(), player.getQttr());
+        int qttr = player.getQttr();
+        if (qttr == 0) {
+            qttr = 1;
+        }
+        List<TournamentClass> classes = tcRepository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(t, qttr, qttr);
         for (TournamentClass aClass : classes) {
             ret.add(copy(aClass));
         }

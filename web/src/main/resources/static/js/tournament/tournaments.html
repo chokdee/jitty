@@ -18,12 +18,12 @@
         <td><input type="text" ng-model="search.name"/></td>
     </tr>
     <tr ng-repeat="t in tournaments| orderBy:predicate:reverse | filter:paginate| filter:search">
-        <td>{{t.name}}</td>
+        <td><a href="#/tournaments/{{t.id}}">{{t.name}}</a></td>
         <td>{{t.startDate}}</td>
         <td>{{t.endDate}}</td>
         <td>
             <a class="btn btn-primary" href="#/tournaments/{{t.id}}">Bearbeiten</a>
-            <a class="btn btn-primary" ng-click="selectTournament(t.id)">Auswählen</a>
+            <a id="{{'select-'+t.id}}" class="btn btn-primary" ng-click="selectTournament(t.id)">Auswählen</a>
         </td>
     </tr>
 </table>

@@ -56,15 +56,16 @@ public class PlayerController {
     }
 
     //todo change to qttr value
-    @GET
+    @POST
     @Path("/possible-tournaments-classes")
-    public List<TournamentClassDTO> possibleTournaments(@QueryParam("id") String playerId) {
+    public List<TournamentClassDTO> possibleTournaments(TournamentPlayerDTO playerDTO) {
 
-        LOG.info("possible tournaments for player with id {}", playerId);
-        if (playerId == null) {
+        LOG.info("possible tournaments for player {}", playerDTO);
+
+        if (playerDTO == null) {
             return new ArrayList<>();
         }
-        TournamentPlayerDTO player = service.findOne(Long.valueOf(playerId));
-        return tournamentService.getAllClasses(player, securityUtil.getActualUsername());
+//        TournamentPlayerDTO player = service.findOne(Long.valueOf(playerId));
+        return tournamentService.getAllClasses(playerDTO, securityUtil.getActualUsername());
     }
 }
