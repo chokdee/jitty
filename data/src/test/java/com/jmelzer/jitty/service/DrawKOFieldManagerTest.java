@@ -151,6 +151,15 @@ public class DrawKOFieldManagerTest {
     public void calcKOSize() {
         TournamentClass tc = new TournamentClass();
         tc.setGroupCount(4);
+        List<TournamentGroup> groups = new ArrayList<>(4);
+        tc.setGroups(groups);
+        for (int i = 0; i < 4; i++) {
+            groups.add(new TournamentGroup());
+            for (int j = 0; j < 4; j++) {
+                tc.getGroups().get(i).addGame(new TournamentSingleGame());
+
+            }
+        }
         assertThat(drawKoFieldManager.calcKOSize(tc), is(RoundType.QUARTER));
     }
 }

@@ -65,8 +65,9 @@ public class PlayerControllerTest extends SecureResourceTest {
         try {
             HttpHeaders loginHeaders = doLogin();
 
-            ResponseEntity<TournamentClassDTO[]> entity = http(HttpMethod.GET, "api/players/possible-tournaments-classes?id=4",
-                    createHttpEntity(null, loginHeaders), TournamentClassDTO[].class);
+            TournamentPlayerDTO playerDTO = new TournamentPlayerDTO();
+            ResponseEntity<TournamentClassDTO[]> entity = http(HttpMethod.POST, "api/players/possible-tournaments-classes?id=4",
+                    createHttpEntity(playerDTO, loginHeaders), TournamentClassDTO[].class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
             assertThat(entity.getBody().length, is(greaterThan(3)));

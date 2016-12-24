@@ -39,7 +39,7 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
 
             ResponseEntity<TournamentSingleGameDTO[]> possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
                     createHttpEntity(null, loginHeaders), TournamentSingleGameDTO[].class);
-            int possibleGamesBeforeStartTest = possibleGamesEntity.getBody().length;
+            int possibleGamesBeforeStartTest = 0;
             ResponseEntity<TournamentSingleGameDTO[]> runningGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/running-games",
                     createHttpEntity(null, loginHeaders), TournamentSingleGameDTO[].class);
             int runningGamesBeforeStartTest = runningGamesEntity.getBody().length;
@@ -122,7 +122,7 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
 //no more possible games, all are running
             possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
-            assertThat(possibleGamesEntity.getBody().length, is(possibleGamesBeforeStartTest));
+            assertThat(possibleGamesEntity.getBody().length, is(0));
 
 
             TournamentSingleGameDTO[] runningGames = runningGamesEntity.getBody();
