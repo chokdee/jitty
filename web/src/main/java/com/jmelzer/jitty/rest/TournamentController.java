@@ -57,6 +57,7 @@ public class TournamentController {
         //todo get the right one from spring security
         User user = userRepository.findOne(1L);
         userService.selectTournamentForUser(user, id);
+        service.selectTournament(Long.valueOf(id));
         return Response.ok().build();
     }
 

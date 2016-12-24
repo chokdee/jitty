@@ -24,10 +24,11 @@
 
     <div class="col-md-7">
         <div>
-            <button ng-click="getKoField(true)">Autom. Auslosung</button>
-            <button ng-click="reset()">Zurücksetzen</button>
-            <button ng-click="startKO()">Starten...</button>
+            <button id="automaticDraw" ng-click="getKoField(true)">Autom. Auslosung</button>
+            <button id="reset" ng-click="reset()">Zurücksetzen</button>
+            <button id="startKO" ng-click="startKO()">Starten...</button>
         </div>
+        <br/>
         <div class="brackets" id="brackets">
 
             <div class="group4" id="b0">
@@ -41,12 +42,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="r4">
+                <div class="{{'r' +  (rounds.length+1)}}">
                     <span>Gewinner</span>
                     <div class="final">
                         <div class="bracketbox"><span class="teamc"></span></div>
                     </div>
                 </div>
+              <!--  <div class="r4">
+                    <span>Gewinner</span>
+                    <div class="final">
+                        <div class="bracketbox"><span class="teamc"></span></div>
+                    </div>
+                </div>-->
             </div>
 
         </div>

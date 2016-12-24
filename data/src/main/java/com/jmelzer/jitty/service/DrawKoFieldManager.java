@@ -41,6 +41,9 @@ public class DrawKoFieldManager {
 
     public RoundType calcKOSize(TournamentClass tournamentClass) {
         int player = tournamentClass.getGroups().size() * 2;
+        if (player <= 4) {
+            return RoundType.HALF;
+        }
         if (player <= 8) {
             return RoundType.QUARTER;
         }
@@ -60,7 +63,10 @@ public class DrawKoFieldManager {
     }
 
     private int calcRounds(RoundType roundType) {
+
         switch (roundType) {
+            case HALF:
+                return 2;
             case QUARTER:
                 return 3;
             case R16:

@@ -10,7 +10,6 @@ import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static com.jmelzer.jitty.SeleniumUtil.DriverType.CHROME;
 import static com.jmelzer.jitty.SeleniumUtil.DriverType.FF;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -70,17 +69,27 @@ public class SeleniumUtil {
         return driver().getPageSource();
     }
 
-    enum DriverType {
-        CHROME, FF, IE
-    }
-
     public static String navigate(String urlpart, String waitForTitle) {
         driver().navigate().to("http://localhost:8080/" + urlpart);
-        (new WebDriverWait(driver, 2)).until(new ExpectedCondition<Boolean>() {
+        waitForTitle(2, waitForTitle);
+        return driver().getPageSource();
+    }
+
+    public static void waitForText(int timeout, String text) {
+        (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
-                return d.getTitle().contains(waitForTitle);
+                return d.getPageSource().contains(text);
             }
         });
-        return driver().getPageSource();
+    }
+    public static void waitForTitle(int timeout, String text) {
+        (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver d) {
+                return d.getTitle().contains(text);
+            }
+        });
+    }
+    enum DriverType {
+        CHROME, FF, IE
     }
 }

@@ -151,7 +151,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         $scope.refreshGroupSize();
     });
 
-}).controller('KOController', function ($scope, $http, $routeParams, TournamentClass) {
+}).controller('KOController', function ($scope, $http, $routeParams, $window) {
     $scope.getGroupWinner = function () {
         $http.get('/api/draw/possible-player-for-kofield?cid=' + $routeParams.id, {}).then(function (response) {
             $scope.players = response.data;
@@ -165,6 +165,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
     $scope.startKO = function () {
         $http.get('/api/draw/start-ko?cid=' + $routeParams.id, {}).then(function (response) {
+            $window.location.href = '/#/tournamentdirector/overview';
         });
     };
 
@@ -172,8 +173,8 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     $scope.getKoField = function (assignPlayer) {
         $http.get('/api/draw/draw-ko?id=' + $routeParams.id + '&assignPlayer=' + assignPlayer, {}).then(function (response) {
             $scope.koField = response.data;
-            $scope.dummArray = new Array($scope.koField.noOfRounds - 1);
-            $scope.rounds = new Array($scope.koField.noOfRounds - 1);
+            $scope.dummArray = new Array($scope.koField.noOfRounds);
+            $scope.rounds = new Array($scope.koField.noOfRounds);
             round = $scope.koField.round;
             $scope.rounds [0] = round;
             for (i = 0; i < $scope.rounds.length; i++) {
@@ -186,12 +187,12 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     };
 
     $scope.reset = function () {
-        $http.get('/api/draw/reset-ko?id=' + $routeParams.id, {}).then(function (response) {
+        // $http.get('/api/draw/reset-ko?id=' + $routeParams.id, {}).then(function (response) {
             $scope.koField = null;
             $scope.rounds = null;
             $scope.getKoField(false);
             $scope.getGroupWinner();
-        });
+        // });
 
     };
     $scope.getNumber2 = function (num) {

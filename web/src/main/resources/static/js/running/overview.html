@@ -45,16 +45,16 @@
                 </div>
                 <div class="col-md-4">
                     <div class="control-group">
-                        <label for="open"></label>
+                        <label for="winbydefault"></label>
                         <br>
-                        <input type="checkbox" ng-model="game.winbydefault" name="winbydefault"/> Kampflos
+                        <input id="winbydefault" type="checkbox" ng-model="game.winbydefault" name="winbydefault"/> Kampflos
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        <button id="btnOk" class="btn btn-primary" type="button" ng-click="ok()">OK</button>
         <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
     </div>
 </script>
@@ -62,16 +62,15 @@
 <div ng-if="errorMessage" class="alert alert-danger">
     <span>Fehler: <em>{{errorMessage}}</em></span>
 </div>
-<!--<pre ng-if="errorMessage">Fehler: <em>{{errorMessage}}</em></pre>-->
 <div class="col-md-6" id="overview-lists">
     <div class="row">
         <h4 style="float:left">Mögliche Begegnungen</h4>
-        <!--<input name="submit" type="submit" value="Freie Tische belegen"/>-->
-        <a style="float:right" class="btn btn-primary btn-sm" ng-click="startPossibleGames()">Freie Tische belegen</a>
+        <a style="float:right" class="btn btn-primary btn-sm" id="assignFreeTables"  ng-click="startPossibleGames()">Freie Tische belegen</a>
     </div>
-    <div class="row" ng-show="finishedTC">
+    <div class="row" ng-show="finishedTC" style="font-size: medium">
         <pr>Es gibt eine Klasse zum Auslosen.</pr>
         <a href="{{'/#/draw/' + finishedTC}}">Hier klicken</a>
+        <br/>
     </div>
     <div class="row">
         <div ui-grid="gridOptions" class="myGrid"></div>

@@ -660,4 +660,14 @@ public class TournamentService {
             startGame(game.getId());
         }
     }
+
+    @Transactional(readOnly = true)
+    public void selectTournament(long id) {
+        gameQueue.clear();
+        Tournament tournament = repository.findOne(id);
+        List<TournamentClass> tcs = tcRepository.findByTournamentAndRunning(tournament, true);
+        for (TournamentClass tc : tcs) {
+            addPossibleGroupGamesToQueue(tc.getGroups());
+        }
+    }
 }
