@@ -67,20 +67,13 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
             assertThat(entity.getBody().getPlayerPerGroup(), is(4));
             assertThat(entity.getBody().getGroupCount(), is(GROUP_COUNT));
 
-            //auslosung
+            //auslosung und speichern
             entity = http(HttpMethod.POST, "api/draw/automatic-draw",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentClassDTO.class);
             assertTrue(entity.getStatusCode().is2xxSuccessful());
             assertThat(entity.getBody().getGroups().size(), is(GROUP_COUNT));
             assertThat(entity.getBody().getGroupCount(), is(GROUP_COUNT));
 
-            assertThat(jdbcTemplate.queryForObject("select count(*) from tournament_group where tc_id = " + tClassId, Integer.class), is(0));
-            //speichern
-            entity = http(HttpMethod.POST, "api/draw/save",
-                    createHttpEntity(entity.getBody(), loginHeaders), TournamentClassDTO.class);
-            assertTrue(entity.getStatusCode().is2xxSuccessful());
-            assertThat(entity.getBody().getGroups().size(), is(GROUP_COUNT));
-            assertThat(entity.getBody().getGroupCount(), is(GROUP_COUNT));
             assertThat(jdbcTemplate.queryForObject("select count(*) from tournament_group where tc_id = " + tClassId, Integer.class), is(GROUP_COUNT));
 
             //starten
