@@ -43,6 +43,13 @@ public class DrawController {
         return list;
 
     }
+    @Path("/possible-player-for-groups")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<TournamentPlayerDTO> getPossiblePlayerForGroups(@QueryParam(value = "cid") String id) {
+        return drawGroupManager.getPossiblePlayerForGroups(Long.valueOf(id));
+
+    }
     @Path("/possible-player-for-kofield")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -79,7 +86,8 @@ public class DrawController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public TournamentClassDTO automaticDraw(TournamentClassDTO dto) {
-        return drawGroupManager.automaticDraw(dto);
+        TournamentClassDTO  dto2 = drawGroupManager.automaticDraw(dto);
+        return tournamentService.updateClass(dto2);
     }
 
     @Path("/save")

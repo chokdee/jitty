@@ -133,6 +133,7 @@
 .playerlist {
     overflow: scroll;
     height: 400px;
+    border: 1px solid;
 }
 
 /**
@@ -267,17 +268,17 @@ ul[dnd-list] > li {
 }
 
 .dropzone .itemlist > li {
-    background-color: #337ab7;
-    border: none;
+    background-color: white;
+    border: black;
     border-radius: .25em;
-    color: #fff;
+    color: black;
     float: left;
-    font-weight: 700;
+    font-weight: 500;
     height: 50px;
-    margin: 5px;
+    margin: 6px;
     padding: 3px;
     text-align: center;
-    width: 100%;
+    width: 90%;
 }
 
 .dropzone .container-element {
@@ -286,7 +287,7 @@ ul[dnd-list] > li {
 
 .box {
     margin-bottom: 20px;
-    background-color: #fff;
+    background-color: lightgrey;
     border: 1px solid transparent;
     border-radius: 4px;
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
@@ -312,15 +313,15 @@ ul[dnd-list] > li {
 }
 
 .box-blue {
-    border-color: #bce8f1;
+    border-color: black;
 }
 
 .box-blue > h3 {
     color: #31708f;
-    background-color: #d9edf7;
-    border-color: #bce8f1;
-    background-image: -webkit-linear-gradient(top, #d9edf7 0, #c4e3f3 100%);
-    background-image: linear-gradient(to bottom, #d9edf7 0, #c4e3f3 100%);
+    background-color: lightgray;
+    border-color: black;
+    background-image: -webkit-linear-gradient(top, lightgray 0, #c4e3f3 100%);
+    background-image: linear-gradient(to bottom, lightgray 0, #c4e3f3 100%);
 }
 
 .myGrid {

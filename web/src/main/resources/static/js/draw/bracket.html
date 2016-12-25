@@ -1,4 +1,6 @@
-<h3>KO Feld</h3>
+<div class="row">
+    <h3>KO Feld</h3>
+</div>
 <div class="row" ng-controller="KOController">
     <div class="col-md-3">
         <div style="height: 20px"/>
@@ -24,9 +26,9 @@
 
     <div class="col-md-7">
         <div>
-            <button id="automaticDraw" ng-click="getKoField(true)">Autom. Auslosung</button>
-            <button id="reset" ng-click="reset()">Zurücksetzen</button>
-            <button id="startKO" ng-click="startKO()">Starten...</button>
+            <a id="automaticDraw" class="btn btn-primary" ng-click="getKoField(true)">Auslosung</a>
+            <a id="reset" class="btn btn-primary" ng-click="reset()">Zurücksetzen</a>
+            <a id="startKO" class="btn btn-primary" ng-click="startKO()">Starten...</a>
         </div>
         <br/>
         <div class="brackets" id="brackets">
@@ -48,12 +50,12 @@
                         <div class="bracketbox"><span class="teamc"></span></div>
                     </div>
                 </div>
-              <!--  <div class="r4">
-                    <span>Gewinner</span>
-                    <div class="final">
-                        <div class="bracketbox"><span class="teamc"></span></div>
-                    </div>
-                </div>-->
+                <!--  <div class="r4">
+                      <span>Gewinner</span>
+                      <div class="final">
+                          <div class="bracketbox"><span class="teamc"></span></div>
+                      </div>
+                  </div>-->
             </div>
 
         </div>

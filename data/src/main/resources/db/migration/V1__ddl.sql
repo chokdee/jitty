@@ -96,6 +96,7 @@
         open_for_women boolean not null,
         phase integer,
         player_per_group integer,
+        quali_group_count integer not null,
         running boolean not null,
         start_ttr integer,
         start_time timestamp,

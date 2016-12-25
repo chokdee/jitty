@@ -29,11 +29,8 @@ public class FullTournamentSeleniumTest {
         }
 
         createDrawForBKlasse();
-
         enterResultsForGroup();
-
         createDrawForKO();
-
         enterResultsForKO();
     }
 
@@ -92,14 +89,14 @@ public class FullTournamentSeleniumTest {
         navigate("#/draw-select-class", "Auslosung: Klasse auswählen");
         waitForText(2,  "B-Klasse");
         driver().findElement(By.linkText("B-Klasse")).click();
-        waitForText(2,  "Parameter für die Auslosung");
+        waitForText(2,  "Auslosung der Klasse");
         Select select = new Select(driver().findElement(By.id("modus1")));
         select.selectByIndex(1);
 
         driver().findElement(By.id("automaticDraw")).click();
         Thread.sleep(100);
-        driver().findElement(By.id("saveDraw")).click();
-        Thread.sleep(100);
+//        driver().findElement(By.id("saveDraw")).click();
+//        Thread.sleep(100);
         driver().findElement(By.id("start")).click();
 
         waitForText(2,  "Mögliche Begegnungen");

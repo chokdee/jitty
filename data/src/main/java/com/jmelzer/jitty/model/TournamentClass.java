@@ -55,7 +55,7 @@ public class TournamentClass {
     @Column(nullable = true, name = "group_count")
     Integer groupCount;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="KOFIELD_ID")
+    @JoinColumn(name = "KOFIELD_ID")
     KOField koField;
     @Id
     @GeneratedValue
@@ -82,6 +82,12 @@ public class TournamentClass {
     private boolean openForMen;
     @Column(nullable = false, name = "open_for_women")
     private boolean openForWomen;
+    /**
+     * how many places will be qulified agter group.
+     */
+    @Column(nullable = false, name = "quali_group_count")
+    private int qualiGroupCount = 2;
+
 
     public TournamentClass(String name) {
         this.name = name;
@@ -158,6 +164,7 @@ public class TournamentClass {
     public void clearGroups() {
         groups.clear();
     }
+
     public List<TournamentGroup> getGroups() {
         return groups;
     }
@@ -302,5 +309,13 @@ public class TournamentClass {
 
     public void setPhase(Integer phase) {
         this.phase = phase;
+    }
+
+    public int getQualiGroupCount() {
+        return qualiGroupCount;
+    }
+
+    public void setQualiGroupCount(int qualiGroupCount) {
+        this.qualiGroupCount = qualiGroupCount;
     }
 }

@@ -1,9 +1,14 @@
-<h3>Auslosung</h3>
-
-<!--<div ng-show="showBracket" >-->
-    <!--<ng-include src="'js/draw/bracket.html'"></ng-include>-->
-<!--</div>-->
-<!--<div ng-show="showGroups">-->
-    <!--<ng-include src="'js/draw/groups.html'"></ng-include>-->
-<!--</div>-->
+<h3>{{'Auslosung der Klasse \'' + tournamentClass.name + '\' '}}</h3>
+<div class="row" ng-show="!tournamentClass.running">
+    <div class="col-md-7">
+        <div class="form-group">
+            <label for="modus1" class="col-md-2 control-label" style="font-size: larger">System</label>
+            <div class="col-md-5">
+                <select name="modus1" id="modus1"
+                        ng-options="item as item.label for item in modi track by item.id" ng-model="modus" class="form-control"></select>
+            </div>
+        </div>
+    </div>
+</div>
+<hr style="width:60%; background-color:#a1a1a1 !important; height:1px;float: left"/>
 <ng-include src="templateurl"></ng-include>

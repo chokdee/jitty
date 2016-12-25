@@ -1,23 +1,23 @@
 <div ng-controller="GroupController">
     <div class="row">
-        <flash-message name="flash-status" ></flash-message>
+        <flash-message name="flash-status"></flash-message>
     </div>
 
-    <div class="row">
         <div class="col-md-10">
-            <h4>{{'Parameter für die Auslosung der Klasse \'' + tournamentClass.name + '\' einstellen'}}</h4>
-            <p style="font-weight: bold">Erste Phase</p>
-            <p>Es sind {{players.length}} Spieler angemeldet</p>
-            <form name="playerForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="saveTC()">
-                <br>
+            <p style="font-weight: bold">Gruppenphase.</p>
+            <!--<form name="playerForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="saveTC()">-->
                 <div class="row">
+                    <div class="col-md-2">
+                        <div class="control-group">
+                            <label for="qualiCount">Anzahl der Qualiplätze</label>
+                            <input type="number" ng-model="tournamentClass.qualiGroupCount" name="qualiCount" required id="qualiCount"
+                                   class="form-control ng-pristine ng-invalid ng-invalid-required"/>
+                        </div>
+                    </div>
+
                     <div class="col-md-5">
                         <div class="control-group">
-                            <label for="modus1">Modus <span class="required">*</span></label>
-                            <br>
-                            <select name="modus1" id="modus1"
-                                    ng-options="item as item.label for item in modi track by item.id" ng-model="modus" class="form-control ng-pristine ng-invalid ng-invalid-required"></select>
-                            <div class="row" ng-show="modus.id == 1">
+                            <div class="row">
                                 <div class="col-md-4">
                                     <div class="control-group">
                                         <label for="playerPerGroup">Spieler/Gruppe</label>
@@ -32,15 +32,15 @@
                                                class="form-control ng-pristine ng-invalid ng-invalid-required"/>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <br>
-                                    <p style="margin-top: 10px">= {{resultSize}}</p>
+                                    <p style="margin-top: 10px">= {{resultSize + ' Spieler'}}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
+            <!--</form>-->
             <!--<button ng-click="createDummyPlayer()">Create 20 Player</button>-->
             <!--<button ng-click="fillAll()">Mach alles plus Ergebnisse</button>-->
         </div>
@@ -52,7 +52,7 @@
 
             <div class="col-md-3">
 
-                <h4>Spieler</h4>
+                <h4>Nicht zugewiesene Spieler</h4>
                 <div class="playerlist">
                     <ul dnd-list="list">
                         <!-- The dnd-draggable directive makes an element draggable and will
@@ -72,10 +72,9 @@
                 </div>
             </div>
             <div class="col-md-7">
-                <div>
-                    <button id="automaticDraw" ng-click="automaticDraw()">Autom. Auslosung</button>
-                    <button id="saveDraw" ng-click="saveDraw()">Speichern</button>
-                    <button id="start" ng-click="start()">Starten...</button>
+                <div style="margin-left: 10px">
+                    <a id="automaticDraw" class="btn btn-primary" ng-click="automaticDraw()">Auslosung</a>
+                    <a id="start" class="btn btn-primary" ng-click="start()">Starten...</a>
                 </div>
                 <br>
                 <div class="dropzone">
@@ -87,7 +86,7 @@
                             dnd-effect-allowed="copyMove"
                             dnd-moved="containers.splice($index, 1)">
                             <div class="container-element box box-blue">
-                                <h3>{{items.name}}</h3>
+                                <h3>{{'Gruppe ' + items.name}}</h3>
                                 <ul dnd-list="items"
                                     dnd-horizontal-list="true"
                                     dnd-external-sources="true"
@@ -102,7 +101,14 @@
                                         dnd-copied="logEvent('Item copied', event)"
                                         dnd-canceled="logEvent('Drag operation canceled', event)"
                                         dnd-dragend="logEvent('Drag operation ended', event)">
-                                        <div>{{item.firstName + ' ' + item.lastName}}</div>
+                                        <div>
+                                            <div>
+                                            {{item.firstName + ' ' + item.lastName}}
+                                            </div>
+                                            <div>
+                                                {{item.qttr}}
+                                            </div>
+                                        </div>
 
                                     </li>
                                 </ul>
@@ -114,4 +120,3 @@
             </div>
         </div>
     </div>
-</div>

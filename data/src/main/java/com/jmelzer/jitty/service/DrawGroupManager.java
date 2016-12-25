@@ -1,7 +1,10 @@
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TournamentClassRepository;
-import com.jmelzer.jitty.model.*;
+import com.jmelzer.jitty.model.TournamentClass;
+import com.jmelzer.jitty.model.TournamentGroup;
+import com.jmelzer.jitty.model.TournamentPlayer;
+import com.jmelzer.jitty.model.TournamentSingleGame;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentGroupDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
@@ -16,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import static com.jmelzer.jitty.service.CopyManager.copy;
 
 /**
  * Created by J. Melzer on 01.06.2016.
@@ -102,7 +103,8 @@ public class DrawGroupManager {
 
     /**
      * Creates one round, i.e. a set of matches where each team plays once.
-     *  @param round   Round number.
+     *
+     * @param round   Round number.
      * @param players List of players
      * @param tcName
      */
@@ -183,6 +185,25 @@ public class DrawGroupManager {
         tournamentService.addPossibleGroupGamesToQueue(clz.getGroups());
     }
 
+    @Transactional(readOnly = true)
+    public List<TournamentPlayerDTO> getPossiblePlayerForGroups(Long cid) {
+        TournamentClass tc = tcRepository.findOne(cid);
+        List<TournamentPlayerDTO> allPlayer = tournamentService.getPlayerforClass(cid);
 
-
+        List<TournamentGroup> groups = tc.getGroups();
+        List<TournamentPlayerDTO> foundPlayer = new ArrayList<>();
+        for (TournamentPlayerDTO playerDTO : allPlayer) {
+            boolean found = false;
+            for (TournamentGroup group : groups) {
+                if (group.containsPlayer(playerDTO.getId())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                foundPlayer.add(playerDTO);
+            }
+        }
+        return foundPlayer;
+    }
 }

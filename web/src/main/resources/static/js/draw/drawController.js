@@ -1,19 +1,46 @@
 angular.module('jitty.draw.controllers', []).controller('DrawController', function ($scope, $http, $routeParams, TournamentClass) {
 
+    $scope.modi = [{
+        id: 0,
+        label: ''
+        }, {
+        id: 1,
+        label: 'VR Gruppe, ER KO-Runde'
+        },
+        // {
+        // id: 2,
+        // label: 'KO-Runde'}
+        ];
+    $scope.modus = $scope.modi[1];
+
+    $scope.$watch('modus', function () {
+        // $scope.refreshGroupSize();
+        if ($scope.modus.id == 1) {
+            $scope.templateurl = 'js/draw/groups.html';
+        }
+        else if ($scope.modus.id == 2) {
+            $scope.templateurl = 'js/draw/bracket.html';
+        } else {
+            $scope.templateurl = '';
+        }
+    });
     $scope.getTournamentClass = function () {
         $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
             console.log('Got TournamentClass successful');
             if ($scope.tournamentClass.playerPerGroup == null)
                 $scope.tournamentClass.playerPerGroup = 4; //default
-
             $scope.groups = $scope.tournamentClass.groups;
-            if (!$scope.tournamentClass.running)
-                $scope.templateurl = 'js/draw/groups.html';
-            else
+            if ($scope.tournamentClass.running) {
                 $scope.templateurl = 'js/draw/bracket.html';
+            }
+
+                // $scope.templateurl = 'js/draw/groups.html';
+            // else
+            //     $scope.templateurl = 'js/draw/bracket.html';
         });
 
     };
+
 
     if ($routeParams.id != null) {
         $scope.getTournamentClass();
@@ -29,17 +56,12 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         $scope.getPossibleClasses();
 
 
-}).controller('GroupController', function ($scope, $http, $routeParams,  $window, TournamentClass, Flash) {
+}).controller('GroupController', function ($scope, $http, $routeParams, $window, TournamentClass, Flash) {
     $scope.resultSize = 0;
-    $scope.modus = null;
-    $scope.modi = [{
-        id: 1,
-        label: 'Gruppe'
-    }, {
-        id: 2,
-        label: 'KO'
-    }];
 
+    $scope.$watch('tournamentClass.groupCount', function() {
+        $scope.createGroups();
+    });
 
     $scope.displaySaveMessage = function () {
         var message = 'Die Gruppenauslosung wurde erfolgreich gespeichert';
@@ -52,14 +74,15 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         // Returns the unique id of flash message that can be used to call Flash.dismiss(id); to dismiss the flash message.
     };
 
-    $scope.getPlayerForClass = function () {
-        $http.get('/api/draw/player-for-class?cid=' + $routeParams.id, {}).then(function (response) {
+
+    $scope.getPossiblePlayerForGroups = function () {
+        $http.get('/api/draw/possible-player-for-groups?cid=' + $routeParams.id, {}).then(function (response) {
             $scope.players = response.data;
         });
     };
     if ($routeParams.id != null) {
         $scope.getTournamentClass();
-        $scope.getPlayerForClass();
+        $scope.getPossiblePlayerForGroups();
     }
 
     $scope.createDummyPlayer = function () {
@@ -86,6 +109,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
             $scope.tournamentClass = response.data;
 
             $scope.createGroups();
+            $scope.getPossiblePlayerForGroups();
 
         }, function errorCallback(response) {
             $scope.errorMessage = response.data.error;
@@ -128,12 +152,10 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         });
     };
 
-    $scope.groups = {};
-
     $scope.createGroups = function () {
-        if ($scope.tournamentClass.groups == null) {
+        if ($scope.tournamentClass.groups == null || $scope.tournamentClass.groups.length == 0) {
             for (i = 0; i < $scope.tournamentClass.groupCount; i++) {
-                $scope.groups[i] = {name: 'Gruppe ' + (i + 1), players: {}};
+                $scope.groups[i] = {name: '' + (i + 1), players: {}};
             }
         } else {
             $scope.groups = $scope.tournamentClass.groups;
@@ -141,12 +163,10 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     };
     $scope.refreshGroupSize = function () {
         if ($scope.tournamentClass != null && $scope.modus.id == 1)
-            if ($scope.tournamentClass != null && $scope.tournamentClass.id != null)
+            // if ($scope.tournamentClass != null && $scope.tournamentClass.id != null)
                 $scope.calcGroupSize();
     };
-    $scope.$watch('modus', function () {
-        $scope.refreshGroupSize();
-    });
+
     $scope.$watch('tournamentClass.playerPerGroup', function () {
         $scope.refreshGroupSize();
     });
@@ -188,10 +208,10 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
     $scope.reset = function () {
         // $http.get('/api/draw/reset-ko?id=' + $routeParams.id, {}).then(function (response) {
-            $scope.koField = null;
-            $scope.rounds = null;
-            $scope.getKoField(false);
-            $scope.getGroupWinner();
+        $scope.koField = null;
+        $scope.rounds = null;
+        $scope.getKoField(false);
+        $scope.getGroupWinner();
         // });
 
     };

@@ -27,6 +27,7 @@ public class TournamentClassDTO {
     private boolean openForWomen;
     Date startTime;
     boolean running;
+    private int qualiGroupCount;
     /**
      * @see GameMode for values
      */
@@ -226,5 +227,13 @@ public class TournamentClassDTO {
 
     public void setRunning(boolean running) {
         this.running = running;
+    }
+
+    public int getQualiGroupCount() {
+        return qualiGroupCount;
+    }
+
+    public void setQualiGroupCount(int qualiGroupCount) {
+        this.qualiGroupCount = qualiGroupCount;
     }
 }

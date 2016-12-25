@@ -13,9 +13,6 @@ import java.util.List;
 @Table(name = "tournament_group")
 public class TournamentGroup {
 
-    @Id
-    @GeneratedValue
-    private Long id;
     /**
      * Assoc to the player in the group.
      */
@@ -27,14 +24,14 @@ public class TournamentGroup {
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "group")
     List<TournamentSingleGame> games = new ArrayList<>();
-
+    @ManyToOne
+    @JoinColumn(name = "TC_ID")
+    TournamentClass tournamentClass;
+    @Id
+    @GeneratedValue
+    private Long id;
     @Column(nullable = false, name = "name", length = 10)
     private String name;
-
-    @ManyToOne
-    @JoinColumn(name="TC_ID")
-    TournamentClass tournamentClass;
-
     //todo we have to store it somewhere after group phase
     transient private List<PlayerStatistic> ranking;
 
@@ -78,6 +75,10 @@ public class TournamentGroup {
         return Collections.unmodifiableList(games);
     }
 
+    public void setGames(List<TournamentSingleGame> games) {
+        this.games = games;
+    }
+
     public void addGames(List<TournamentSingleGame> games) {
         for (TournamentSingleGame game : games) {
             addGame(game);
@@ -107,10 +108,6 @@ public class TournamentGroup {
         this.ranking = ranking;
     }
 
-    public void setGames(List<TournamentSingleGame> games) {
-        this.games = games;
-    }
-
     public void removeByePlayer() {
         players.remove(TournamentPlayer.BYE);
     }
@@ -121,5 +118,14 @@ public class TournamentGroup {
 
     public void setTournamentClass(TournamentClass tournamentClass) {
         this.tournamentClass = tournamentClass;
+    }
+
+    public boolean containsPlayer(Long id) {
+        for (TournamentPlayer player : players) {
+            if (player.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
