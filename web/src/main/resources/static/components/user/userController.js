@@ -1,4 +1,4 @@
-angular.module('jitty.controllers', []).controller('UserListController', function ($scope, popupService, $window, User) {
+angular.module('jitty.user.controllers', []).controller('UserListController', function ($scope, popupService, $window, User) {
 
     $scope.predicate = 'name';
     $scope.reverse = true;
