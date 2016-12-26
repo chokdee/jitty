@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Jitty</title>
-    <link href="css/angular-bootstrap.css" rel="stylesheet">
-    <link href="css/app.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/angular-bootstrap.css" >
+    <link rel="stylesheet" href="css/app.css" >
     <link rel="stylesheet" href="css/bootstrap-duallistbox.css">
-    <link rel="stylesheet" href="external/ui-grid/ui-grid.css">
-    <link rel="stylesheet" href="external/flash/angular-flash.min.css">
+    <link rel="stylesheet" href="js/ui-grid/ui-grid.css">
+    <link rel="stylesheet" href="js/flash/angular-flash.min.css">
     <link rel="shortcut icon" href="images/favicon.ico">
     <style type="text/css">
         [ng\:cloak], [ng-cloak], .ng-cloak {
@@ -23,7 +23,7 @@
 <div ng-controller="LoginController as nav" class="container-fluid mycontainer">
     <ul class="nav nav-pills" role="tablist">
         <li class="active"><a href="#/">home</a></li>
-        <li ng-show="!nav.authenticated()"><a href="#/login">login</a></li>
+        <li ng-show="!nav.authenticated()"><a href="/#/login">login</a></li>
 
         <li ng-show="nav.authenticated()"><a href="/#/users">Benutzer</a></li>
         <li ng-show="nav.authenticated()"><a href="/#/tournaments">Turnierdaten</a></li>
@@ -49,38 +49,38 @@
         Copyright © 2017 J. Melzer. All rights reserved.
     </p>
 </footer>
-<!--<div ng-view class="container"></div>-->
 <script src="js/angular-bootstrap.js" type="text/javascript"></script>
 <script src="js/ui-bootstrap.js" type="text/javascript"></script>
 <script src="js/jquery.bootstrap-duallistbox.js"></script>
 <script src="js/angular-bootstrap-duallistbox.js" type="text/javascript"></script>
 <script src="js/angular-drag-and-drop-lists.js" type="text/javascript"></script>
-<script src="external/ui-grid/ui-grid.min.js"></script>
+<script src="js/ui-grid/ui-grid.min.js"></script>
+<script src="js/flash/angular-flash.min.js"></script>
 <!--<script src="js/external/angular-dragdrop.js"></script>-->
 
-<script src="js/auth/auth.js" type="text/javascript"></script>
-<script src="js/navigation/navigation.js" type="text/javascript"></script>
-<script src="js/app.js"></script>
-<script src="js/controllers.js"></script>
-<script src="js/services.js"></script>
-<script src="js/directives.js"></script>
-<script src="js/tournament/tournamentModule.js"></script>
-<script src="js/tournament/tournamentController.js"></script>
-<script src="js/tournament/tournamentService.js"></script>
-<script src="js/player/playerModule.js"></script>
-<script src="js/player/playerController.js"></script>
-<script src="js/player/playerService.js"></script>
-<script src="js/draw/drawModule.js"></script>
-<script src="js/draw/drawController.js"></script>
-<script src="js/draw/drawService.js"></script>
-<script src="js/running/runningModule.js"></script>
-<script src="js/running/runningController.js"></script>
-<script src="js/running/runningService.js"></script>
-<script src="js/liveview/liveviewModule.js"></script>
-<script src="js/liveview/liveviewService.js"></script>
-<script src="js/liveview/liveviewController.js"></script>
-<script src="js/util/utilModule.js"></script>
-<script src="js/util/print.js"></script>
-<script src="external/flash/angular-flash.min.js"></script>
+<script src="components/login/auth.js" ></script>
+<script src="components/login/login.js" ></script>
+<script src="components/app.js"></script>
+<script src="components/controllers.js"></script>
+<script src="components/services.js"></script>
+<script src="components/directives.js"></script>
+<script src="components/tournament/tournamentModule.js"></script>
+<script src="components/tournament/tournamentController.js"></script>
+<script src="components/tournament/tournamentService.js"></script>
+<script src="components/player/playerModule.js"></script>
+<script src="components/player/playerController.js"></script>
+<script src="components/player/playerService.js"></script>
+<script src="components/draw/drawModule.js"></script>
+<script src="components/draw/drawController.js"></script>
+<script src="components/draw/drawService.js"></script>
+<script src="components/running/runningModule.js"></script>
+<script src="components/running/runningController.js"></script>
+<script src="components/running/runningService.js"></script>
+<script src="components/liveview/liveviewModule.js"></script>
+<script src="components/liveview/liveviewService.js"></script>
+<script src="components/liveview/liveviewController.js"></script>
+<script src="components/util/utilModule.js"></script>
+<script src="components/util/print.js"></script>
+
 </body>
 </html>

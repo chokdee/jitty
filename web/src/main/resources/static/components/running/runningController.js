@@ -49,7 +49,7 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     };
     $scope.printSR = function (id) {
         $http.get('/api/tournamentdirector/get-game-for-printing?id=' + id, {}).then(function (response) {
-            printer.print('/js/running/sr.html', {game: response.data});
+            printer.print('/components/running/sr.html', {game: response.data});
         });
     };
 

@@ -1,4 +1,4 @@
-angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'auth', 'ui.bootstrap', 'frapontillo.bootstrap-duallistbox', 'dndLists', 'ngFlash',
+angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'jitty.auth', 'ui.bootstrap', 'frapontillo.bootstrap-duallistbox', 'dndLists', 'ngFlash',
     'jitty.controllers', 'jitty.services', 'jitty.directives', 'jitty.login',
     'jitty.tournament', 'jitty.player', 'jitty.draw', 'jitty.running', 'jitty.liveview', 'jitty.util']).config(function ($routeProvider, $httpProvider, $locationProvider) {
 
@@ -8,28 +8,28 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'auth', 'ui.boot
 
     $routeProvider.when('/', {
         title: 'Startseite',
-        templateUrl: 'home.html',
+        templateUrl: '/components/home/home.html',
         controller: 'home'
     }).when('/login', {
         title: 'Login',
-        templateUrl: '/js/navigation/login.html',
+        templateUrl: '/components/login/login.html',
         controller: 'LoginController',
         controllerAs : 'controller'
     }).when('/users', {
         title: 'Benutzerübersicht',
-        templateUrl: 'users.html',
+        templateUrl: '/components/user/users.html',
         controller: 'UserListController'
     }).when('/users/:id', {
         title: 'Benutzer bearbeiten',
-        templateUrl: 'user-edit.html',
+        templateUrl: '/components/user/user-edit.html',
         controller: 'UserEditController'
     }).when('/users-add', {
         title: 'Benutzer hinzufügen',
-        templateUrl: 'user-new.html',
+        templateUrl: '/components/user/user-new.html',
         controller: 'UserCreateController'
     }).when('/user-pw-change/:id', {
         title: 'Passwort ändern',
-        templateUrl: 'user-pw-change.html',
+        templateUrl: '/components/user/user-pw-change.html',
         controller: 'UserEditController'
     }).otherwise('/');
 
@@ -37,18 +37,7 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'auth', 'ui.boot
 
     $httpProvider.interceptors.push('authInterceptor');
 
-}).controller(
-    'navigation',
-
-    function ($rootScope, $scope, $http, $location, $route) {
-
-        $scope.tab = function (route) {
-            return $route.current && route === $route.current.controller;
-        };
-
-
-
-    }).controller('home', function ($scope, $http, auth) {
+}).controller('home', function ($scope, $http, auth) {
 
     $http.get('/resource/').success(function (data) {
         $scope.greeting = data;

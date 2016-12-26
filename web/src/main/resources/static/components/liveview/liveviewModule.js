@@ -3,15 +3,15 @@ angular.module('jitty.liveview', ['ngRoute', 'ngResource', 'ngMessages', 'ui.sel
 
     $routeProvider.when('/liveview/overview', {
         title: 'Klasse auswählen',
-        templateUrl: '/js/liveview/overview.html',
+        templateUrl: '/components/liveview/overview.html',
         controller: 'LiveviewController'
     }).when('/liveview/groups/:id', {
         title: 'Liveview - Gruppen',
-        templateUrl: '/js/liveview/groups.html',
+        templateUrl: '/components/liveview/groups.html',
         controller: 'LiveviewController'
     }).when('/liveview/kofield/:id', {
         title: 'Liveview - KO Feld',
-        templateUrl: '/js/liveview/kofield.html',
+        templateUrl: '/components/liveview/kofield.html',
         controller: 'LiveviewKOController'
     }).otherwise('/');
 

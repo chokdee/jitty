@@ -1,5 +1,4 @@
-angular.module('auth', []).factory(
-		'auth',
+angular.module('jitty.auth', []).factory('auth',
 
 		function($rootScope, $http, $location) {
 

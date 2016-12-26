@@ -3,23 +3,23 @@ config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.when('/tournaments', {
         title: 'Turniere',
-        templateUrl: '/js/tournament/tournaments.html',
+        templateUrl: '/components/tournament/tournaments.html',
         controller: 'TournamentListController'
     }).when('/tournaments/:id', {
         title: 'Turnier bearbeiten',
-        templateUrl: '/js/tournament/tournament-edit.html',
+        templateUrl: '/components/tournament/tournament-edit.html',
         controller: 'TournamentEditController'
     }).when('/tournament-add', {
         title: 'Turnier anlegen',
-        templateUrl: '/js/tournament/tournament-new.html',
+        templateUrl: '/components/tournament/tournament-new.html',
         controller: 'TournamentCreateController'
     }).when('/tournament/:id/tournament-classes-add', {
         title: 'Turnierklasse anlegen',
-        templateUrl: '/js/tournament/tournament-class-new.html',
+        templateUrl: '/components/tournament/tournament-class-new.html',
         controller: 'TournamentClassCreateController'
     }).when('/tournament/tournament-classes/:id', {
         title: 'Turnierklasse bearbeiten',
-        templateUrl: '/js/tournament/tournament-class-edit.html',
+        templateUrl: '/components/tournament/tournament-class-edit.html',
         controller: 'TournamentClassEditController'
     }).otherwise('/');
 

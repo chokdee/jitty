@@ -1,7 +1,4 @@
-angular.module('jitty.login', ['ngRoute', 'auth']).controller(
-		'LoginController',
-
-		function($route, auth) {
+angular.module('jitty.login', ['ngRoute', 'jitty.auth']).controller('LoginController', function($route, auth) {
 
 			var self = this;
 			self.credentials = {};

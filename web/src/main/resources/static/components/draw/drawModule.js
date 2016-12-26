@@ -3,11 +3,11 @@ angular.module('jitty.draw', ['ngRoute', 'ngResource', 'ngMessages', 'ui.select'
 
     $routeProvider.when('/draw-select-class', {
         title: 'Auslosung: Klasse auswählen',
-        templateUrl: '/js/draw/draw-select-class.html',
+        templateUrl: '/components/draw/draw-select-class.html',
         controller: 'DrawController'
     }).when('/draw/:id', {
         title: 'Auslosung',
-        templateUrl: '/js/draw/draw.html',
+        templateUrl: '/components/draw/draw.html',
         controller: 'DrawController'
     }).otherwise('/');
 

@@ -3,15 +3,15 @@ angular.module('jitty.player', ['ngRoute', 'ngResource', 'ngMessages', 'ui.selec
 
     $routeProvider.when('/players', {
         title: 'Spieler anzeigen',
-        templateUrl: '/js/player/players.html',
+        templateUrl: '/components/player/players.html',
         controller: 'PlayerListController'
     }).when('/players/:id', {
         title: 'Spieler bearbeiten',
-        templateUrl: '/js/player/player-edit.html',
+        templateUrl: '/components/player/player-edit.html',
         controller: 'PlayerEditController'
     }).when('/player-add', {
         title: 'Spieler anlegen',
-        templateUrl: '/js/player/player-edit.html',
+        templateUrl: '/components/player/player-edit.html',
         controller: 'PlayerEditController'
     }).otherwise('/');
 
