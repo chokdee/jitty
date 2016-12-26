@@ -7,10 +7,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.internal.ProfilesIni;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import static com.jmelzer.jitty.SeleniumUtil.DriverType.CHROME;
 import static com.jmelzer.jitty.SeleniumUtil.DriverType.FF;
+import static com.jmelzer.jitty.SeleniumUtil.DriverType.HTMLUNIT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
@@ -19,7 +22,7 @@ import static org.hamcrest.Matchers.containsString;
  */
 public class SeleniumUtil {
     static WebDriver driver;
-    static DriverType driverType = FF;
+    static DriverType driverType = CHROME;
 
     public static void quit() {
         driver.quit();
@@ -35,6 +38,7 @@ public class SeleniumUtil {
                     ProfilesIni profile = new ProfilesIni();
                     FirefoxProfile myprofile = profile.getProfile("selenium");
                     myprofile.setPreference("browser.startup.homepage", "about:blank");
+                    myprofile.setPreference("xpinstall.signatures.required", false);
                     driver = new FirefoxDriver(myprofile);
                     break;
 
@@ -43,13 +47,16 @@ public class SeleniumUtil {
                     System.setProperty("webdriver.chrome.driver", pathToChromeDriver);
                     driver = new ChromeDriver();
                     break;
+                case HTMLUNIT:
+                    driver = new HtmlUnitDriver();
+                    break;
             }
         }
         return driver;
     }
 
     public static String doLogin() throws java.io.IOException {
-        driver().navigate().to("http://localhost:8080/#/login");
+        navigate("#/login", "Login");
         String pageLogin = driver().getPageSource();
 
         WebElement usernameField = driver.findElement(By.name("username"));
@@ -70,8 +77,9 @@ public class SeleniumUtil {
     }
 
     public static String navigate(String urlpart, String waitForTitle) {
+        System.out.println("calling " + "http://localhost:8080/" + urlpart);
         driver().navigate().to("http://localhost:8080/" + urlpart);
-        waitForTitle(2, waitForTitle);
+        waitForTitle(10, waitForTitle);
         return driver().getPageSource();
     }
 
@@ -85,11 +93,13 @@ public class SeleniumUtil {
     public static void waitForTitle(int timeout, String text) {
         (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
+//                System.out.println(d.getTitle());
+//                System.out.println(d.getPageSource());
                 return d.getTitle().contains(text);
             }
         });
     }
     enum DriverType {
-        CHROME, FF, IE
+        CHROME, FF, IE, HTMLUNIT
     }
 }

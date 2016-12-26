@@ -1,6 +1,10 @@
-angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 'frapontillo.bootstrap-duallistbox', 'dndLists', 'ngFlash',
-    'jitty.controllers', 'jitty.services', 'jitty.directives',
-    'jitty.tournament', 'jitty.player', 'jitty.draw', 'jitty.running', 'jitty.liveview', 'jitty.util']).config(function ($routeProvider, $httpProvider) {
+angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'auth', 'ui.bootstrap', 'frapontillo.bootstrap-duallistbox', 'dndLists', 'ngFlash',
+    'jitty.controllers', 'jitty.services', 'jitty.directives', 'jitty.login',
+    'jitty.tournament', 'jitty.player', 'jitty.draw', 'jitty.running', 'jitty.liveview', 'jitty.util']).config(function ($routeProvider, $httpProvider, $locationProvider) {
+
+    // $locationProvider.html5Mode({
+    //     enabled: false,
+    // });
 
     $routeProvider.when('/', {
         title: 'Startseite',
@@ -8,8 +12,9 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 
         controller: 'home'
     }).when('/login', {
         title: 'Login',
-        templateUrl: 'login.html',
-        controller: 'navigation'
+        templateUrl: '/js/navigation/login.html',
+        controller: 'LoginController',
+        controllerAs : 'controller'
     }).when('/users', {
         title: 'Benutzerübersicht',
         templateUrl: 'users.html',
@@ -30,6 +35,8 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+    $httpProvider.interceptors.push('authInterceptor');
+
 }).controller(
     'navigation',
 
@@ -39,64 +46,20 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 
             return $route.current && route === $route.current.controller;
         };
 
-        var authenticate = function (credentials, callback) {
 
-            var headers = credentials ? {
-                authorization: "Basic "
-                + btoa(credentials.username + ":"
-                    + credentials.password)
-            } : {};
 
-            $http.get('user', {
-                headers: headers
-            }).success(function (data) {
-                if (data.name) {
-                    $rootScope.authenticated = true;
-                } else {
-                    $rootScope.authenticated = false;
-                }
-                callback && callback($rootScope.authenticated);
-            }).error(function () {
-                $rootScope.authenticated = false;
-                callback && callback(false);
-            });
+    }).controller('home', function ($scope, $http, auth) {
 
-        };
-
-        authenticate();
-
-        $scope.credentials = {};
-        $scope.login = function () {
-            authenticate($scope.credentials, function (authenticated) {
-                if (authenticated) {
-                    console.log("Login succeeded")
-                    $location.path("/");
-                    $scope.error = false;
-                    $rootScope.authenticated = true;
-                } else {
-                    console.log("Login failed")
-                    $location.path("/login");
-                    $scope.error = true;
-                    $rootScope.authenticated = false;
-                }
-            })
-        };
-
-        $scope.logout = function () {
-            $http.post('logout', {}).success(function () {
-                $rootScope.authenticated = false;
-                $location.path("/");
-            }).error(function (data) {
-                console.log("Logout failed")
-                $rootScope.authenticated = false;
-            });
-        }
-
-    }).controller('home', function ($scope, $http) {
     $http.get('/resource/').success(function (data) {
         $scope.greeting = data;
-    })
-}).run(function ($rootScope, $route, $location) {
+    });
+
+    $scope.authenticated = function() {
+        return auth.authenticated;
+    };
+
+
+}).run(function ($rootScope, $route, $location, auth) {
 
     var history = [];
 
@@ -114,4 +77,6 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'ui.bootstrap', 
     $rootScope.altInputFormats = ['d!/M!/yyyy'];
 
     $rootScope.tournament = {};
+
+    auth.init('/', '/login', '/logout');
 });

@@ -17,10 +17,7 @@ public class LoginHttpTest {
     public void homePage() throws Exception {
 
         HtmlPage page = webClient().getPage("http://localhost:8080");
-        Assert.assertEquals("Jitty - Startseite", page.getTitleText());
-
-        String pageAsText = page.asText();
-        assertTrue(pageAsText.contains("Bitte zunächst einloggen"));
+        Assert.assertEquals("Jitty - Login", page.getTitleText());
 
         HtmlPage pageLogin = webClient().getPage("http://localhost:8080/#/login");
         HtmlForm form = pageLogin.getFormByName("loginform");
@@ -46,7 +43,6 @@ public class LoginHttpTest {
         HtmlAnchor anchor = page.getAnchorByName("logout");
         assertNotNull(anchor);
         HtmlPage pageLogout = anchor.click();
-        System.out.println("pageLogout = " + pageLogout.asText());
-        assertTrue(pageLogout.asText().contains("Bitte zunächst einloggen"));
+        assertTrue(pageLogout.asText().contains("Jitty - Login"));
     }
 }

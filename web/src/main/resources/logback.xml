@@ -12,7 +12,7 @@
     <!--<logger name="org.springframework.security" level="DEBUG" />-->
     <!--<logger name="org.glassfish.jersey" level="DEBUG" />-->
     <logger name="com.jmelzer.jitty" level="DEBUG"/>
-    <logger name="org.flywaydb.core" level="DEBUG"/>
+    <!--<logger name="org.flywaydb.core" level="DEBUG"/>-->
 
     <root level="INFO">
         <appender-ref ref="stdout"/>

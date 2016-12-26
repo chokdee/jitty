@@ -50,7 +50,7 @@ public class TourmentClassControllerTest extends SecureResourceTest {
         HttpHeaders loginHeaders = doLogin();
 
         thrown.expect(HttpClientErrorException.class);
-        thrown.expectMessage("400 Bad Request");
+        thrown.expectMessage("400");
 
         http(HttpMethod.DELETE, "api/tournament-classes/5",
                 createHttpEntity(null, loginHeaders), ErrorMessage.class);

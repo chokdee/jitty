@@ -27,6 +27,7 @@ public class JerseyConfig extends ResourceConfig {
                 register(LiveViewController.class).
                 register(DrawController.class).
                 register(AdminController.class).
+                register(ErrorController.class).
                 register(TournamentController.class);
 //        property(ServerProperties.TRACING, "ALL");
         property(ServerProperties.MONITORING_STATISTICS_ENABLED , true);

@@ -1,0 +1,14 @@
+<div class="alert alert-danger" ng-show="controller.error">
+    Anmeldung ist fehlgeschlagen. Bitte noch einmal versuchen.
+</div>
+<form role="form" name="loginform" ng-submit="controller.login()">
+    <div class="form-group">
+        <label for="username">Benutzername:</label> <input type="text"
+                                                       class="form-control" id="username" name="username" ng-model="controller.credentials.username"/>
+    </div>
+    <div class="form-group">
+        <label for="password">Passwort:</label> <input type="password"
+                                                       class="form-control" id="password" name="password" ng-model="controller.credentials.password"/>
+    </div>
+    <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+</form>

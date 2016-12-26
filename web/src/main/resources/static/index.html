@@ -20,17 +20,18 @@
 </head>
 
 <body ng-app="jitty" ng-cloak class="ng-cloak">
-<div ng-controller="navigation" class="container-fluid mycontainer">
+<div ng-controller="LoginController as nav" class="container-fluid mycontainer">
     <ul class="nav nav-pills" role="tablist">
         <li class="active"><a href="#/">home</a></li>
-        <li ng-show="!authenticated"><a href="#/login">login</a></li>
-        <li ng-show="authenticated"><a name="logout" href="" ng-click="logout()">logout</a></li>
-        <li ng-show="authenticated"><a href="#/users">Benutzer</a></li>
-        <li ng-show="authenticated"><a href="#/tournaments">Turnierdaten</a></li>
-        <li ng-show="authenticated"><a href="#/players">Spieler</a></li>
-        <li ng-show="authenticated"><a href="#/draw-select-class">Auslosung</a></li>
-        <li ng-show="authenticated"><a href="#/tournamentdirector/overview">Begegnungen</a></li>
-        <li ng-show="authenticated"><a href="#/liveview/overview">Liveview</a></li>
+        <li ng-show="!nav.authenticated()"><a href="#/login">login</a></li>
+
+        <li ng-show="nav.authenticated()"><a href="/#/users">Benutzer</a></li>
+        <li ng-show="nav.authenticated()"><a href="/#/tournaments">Turnierdaten</a></li>
+        <li ng-show="nav.authenticated()"><a href="/#/players">Spieler</a></li>
+        <li ng-show="nav.authenticated()"><a href="/#/draw-select-class">Auslosung</a></li>
+        <li ng-show="nav.authenticated()"><a href="/#/tournamentdirector/overview">Begegnungen</a></li>
+        <li ng-show="nav.authenticated()"><a href="/#/liveview/overview">Liveview</a></li>
+        <li ng-show="nav.authenticated()" style="float: right"><a name="logout" href="" ng-click="nav.logout()">logout</a></li>
     </ul>
 </div>
 
@@ -57,6 +58,8 @@
 <script src="external/ui-grid/ui-grid.min.js"></script>
 <!--<script src="js/external/angular-dragdrop.js"></script>-->
 
+<script src="js/auth/auth.js" type="text/javascript"></script>
+<script src="js/navigation/navigation.js" type="text/javascript"></script>
 <script src="js/app.js"></script>
 <script src="js/controllers.js"></script>
 <script src="js/services.js"></script>

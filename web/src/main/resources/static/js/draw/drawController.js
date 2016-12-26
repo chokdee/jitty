@@ -162,9 +162,8 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         }
     };
     $scope.refreshGroupSize = function () {
-        if ($scope.tournamentClass != null && $scope.modus.id == 1)
-            // if ($scope.tournamentClass != null && $scope.tournamentClass.id != null)
-                $scope.calcGroupSize();
+        if ($scope.tournamentClass != null && $scope.modus.id == 1 && $scope.tournamentClass.id != null)
+            $scope.calcGroupSize();
     };
 
     $scope.$watch('tournamentClass.playerPerGroup', function () {

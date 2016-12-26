@@ -41,7 +41,7 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider {
         if (!password.equals(person.getPassword())) {
             throw new BadCredentialsException("Wrong password.");
         }
-        logger.info("user {} logged in", person.getLoginName());
+        logger.info("user {} logged in", username);
         // we have to store password
         return new UsernamePasswordAuthenticationToken(username, password, Collections.<GrantedAuthority>emptyList());
     }

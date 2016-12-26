@@ -1,8 +1,10 @@
 <h1>Willkommen bei Jitty. Die neue TT Turniersoftware</h1>
-<div ng-show="authenticated">
-    <p>Du bearbeitest das Turnier "{{greeting.tname}}"</p>
+<div >
+    <div ng-show="authenticated()">
+        <p>Du bearbeitest das Turnier "{{greeting.tname}}"</p>
+    </div>
+    <div ng-show="!authenticated">
+        <p>Bitte zunächst einloggen</p>
+    </div>
 </div>
-<div ng-show="!authenticated">
-    <p>Bitte zunächst einloggen</p>
-</div>
-<img height="" src="images/logo.jpg" class="img-responsive"  />
+<img height="" src="images/logo.jpg" class="img-responsive"/>

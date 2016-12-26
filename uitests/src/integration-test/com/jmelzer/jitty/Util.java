@@ -39,7 +39,7 @@ public class Util {
         pwField.setValueAttribute("42");
 
         pageLogin = button.click();
-        assertTrue(pageLogin.asText().contains("Willkommen bei Jitty"));
+        assertTrue(pageLogin.asText(), pageLogin.asText().contains("Willkommen bei Jitty"));
         assertFalse(pageLogin.asText().contains("Bitte zunächst einloggen"));
 
         return webClient().getPage("http://localhost:8080/#/");
