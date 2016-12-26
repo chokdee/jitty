@@ -1,4 +1,4 @@
-angular.module('jitty.user.controllers', []).controller('UserListController', function ($scope, popupService, $window, User) {
+angular.module('jitty.user.controllers', []).controller('UserListController', function ($scope, popupService, $window, User, Flash) {
 
     $scope.predicate = 'name';
     $scope.reverse = true;
@@ -9,6 +9,7 @@ angular.module('jitty.user.controllers', []).controller('UserListController', fu
         if (popupService.showPopup('Möchten Sie den Benutzer wirklich löschen?')) {
             User.delete({id: userId}, function () {
                 console.log('successful deleted user with id ' + userId);
+                Flash.create('success', 'Der Benutzer wurde erfolgreich gelöscht', 4000, {container: 'flash-status'});
                 $scope.users = User.query();
                 console.log('queried all user');
             });
@@ -24,7 +25,7 @@ angular.module('jitty.user.controllers', []).controller('UserListController', fu
         $scope.predicate = predicate;
     };
 
-}).controller('UserEditController', function ($scope, $routeParams, User, $location, $http) {
+}).controller('UserEditController', function ($scope, $routeParams, User, $location, $http, Flash) {
 
     $scope.user = User.get({id: $routeParams.id});
 
@@ -32,6 +33,7 @@ angular.module('jitty.user.controllers', []).controller('UserListController', fu
         if ($scope.userForm.$valid) {
             User.save($scope.user, function () {
                 console.log('user saved successful');
+                var id = Flash.create('success', 'Der Benutzer wurde erfolgreich gespeichert', 4000, {container: 'flash-status'});
                 $scope.users = User.query();
                 $location.path('/users');
             });
@@ -50,6 +52,7 @@ angular.module('jitty.user.controllers', []).controller('UserListController', fu
 
             }).then(function successCallback(response) {
                 console.log('password saved successful');
+                Flash.create('success', 'Das Passwort wurde erfolgreich gespeichert', 4000, {container: 'flash-status'});
                 $location.path('/users');
 
             }, function errorCallback(response) {
@@ -58,12 +61,13 @@ angular.module('jitty.user.controllers', []).controller('UserListController', fu
         }
     };
 
-}).controller('UserCreateController', function ($scope, User, $location) {
+}).controller('UserCreateController', function ($scope, User, $location, Flash) {
 
     $scope.saveNewUser = function () {
         if ($scope.userForm.$valid) {
             User.save($scope.user, function () {
                 console.log('user created successful');
+                Flash.create('success', 'Der Benutzer wurde erfolgreich gespeichert', 4000, {container: 'flash-status'});
                 $scope.users = User.query();
                 $location.path('/users');
             });

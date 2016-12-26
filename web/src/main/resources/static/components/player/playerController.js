@@ -14,7 +14,7 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
         $scope.predicate = predicate;
     };
 
-}).controller('PlayerEditController', function ($scope, $routeParams, Player, $location, $http, Club, Association, TournamentClass) {
+}).controller('PlayerEditController', function ($scope, $routeParams, Player, $location, $http, Club, Association, Flash) {
         $scope.id = $routeParams.id;
 
         $scope.player = {};
@@ -38,6 +38,7 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
                 $scope.player.birthday = $scope.birthdate;
                 Player.save($scope.player, function () {
                     console.log('Player saved successful');
+                    Flash.create('success', 'Der Spieler wurde erfolgreich gespeichert.', 4000, {container: 'flash-status'});
                     //$scope.players = Player.query();
                     $location.path('/players');
                     //$scope.back();
@@ -78,13 +79,6 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
                 $scope.getPossibleClasses();
             }
         );
-        // $scope.getPossibleClasses = function () {
-        //     $http.get('/api/players/possible-tournaments-classes', {params: {id: $routeParams.id}}).then(function (response) {
-        //         $scope.possibleClasses = response.data;
-        //     });
-        //
-        // };
-
 
         $scope.getPossibleClasses();
 
@@ -146,6 +140,7 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
         if ($scope.playerForm.$valid) {
             Player.save($scope.player, function () {
                 console.log('Player saved successful');
+                Flash.create('success', 'Der Spieler wurde erfolgreich gespeichert.', 4000, {container: 'flash-status'});
                 $scope.players = Player.query();
                 $location.path('/players');
             });

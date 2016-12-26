@@ -100,16 +100,7 @@ public class TournamentService {
 
     public void markGroupWinner(List<TournamentGroup> groups) {
         for (TournamentGroup group : groups) {
-            System.out.println("----------------------------------");
-            System.out.println("#\tSpieler\t\t\t\t\tSpiele\tSätze");
             calcRankingForGroup(group);
-            List<PlayerStatistic> pss = group.getRanking();
-            int i = 1;
-            for (PlayerStatistic ps : pss) {
-                System.out.println("" + i + "\t" + ps.player.getFullName() + "\t" + ps.win + ":" + ps.lose + "\t\t" + ps.setsWon + ":" + ps.setsLost);
-                i++;
-            }
-            System.out.println("----------------------------------  ");
         }
     }
 
@@ -160,7 +151,7 @@ public class TournamentService {
             if (!playerInQueue(player1, gameQueue) && !playerInQueue(player2, gameQueue) &&
                     !playerInQueue(player1, busyGames) && !playerInQueue(player2, busyGames) &&
                     !game.isFinishedOrCalled()) {
-                System.out.println("game = " + game.getId() + " - " + game);
+//                System.out.println("game = " + game.getId() + " - " + game);
                 gameQueue.add(game);
             }
         }

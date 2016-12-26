@@ -23,7 +23,7 @@
         <td>{{t.endDate}}</td>
         <td>
             <a class="btn btn-primary" href="#/tournaments/{{t.id}}">Bearbeiten</a>
-            <a id="{{'select-'+t.id}}" class="btn btn-primary" ng-click="selectTournament(t.id)">Auswählen</a>
+            <a id="{{'select-'+t.id}}" class="btn btn-primary" ng-click="selectTournament(t.id, t.name)">Auswählen</a>
         </td>
     </tr>
 </table>

@@ -45,7 +45,6 @@ public class Application {
                 //when Anonymous Authentication is enabled
                 !(context.getAuthentication() instanceof AnonymousAuthenticationToken)) {
 
-            System.out.println("    context.getAuthentication().getPrincipal() = " + context.getAuthentication().getPrincipal());
             String user = (String) context.getAuthentication().getPrincipal();
             UserDTO userFromDB = userService.findByLoginName(user);
             model.put("tname", userFromDB.getLastUsedTournamentName());

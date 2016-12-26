@@ -75,8 +75,7 @@ public class DrawGroupManager {
     @Transactional
     public void calcGroupGames(List<TournamentGroup> groups) {
         for (TournamentGroup group : groups) {
-            System.out.println(group);
-//                List<TournamentPlayer> players = group.getPlayers();
+//            System.out.println(group);
             List<TournamentPlayer> list = new ArrayList<>(group.getPlayers());
             if (list.size() % 2 == 1) {
                 // Number of player uneven ->  add the bye player.
@@ -85,7 +84,7 @@ public class DrawGroupManager {
             for (int i = 1; i < list.size(); i++) {
 
 
-                System.out.println("---- games round " + i + " ----");
+//                System.out.println("---- games round " + i + " ----");
                 //first 1 against last
 
                 group.addGames(createOneRound(i, list, group.getTournamentClass().getName(), group.getTournamentClass().getId()));
@@ -93,7 +92,7 @@ public class DrawGroupManager {
                 list.add(1, list.get(list.size() - 1));
                 list.remove(list.size() - 1);
 
-                System.out.println("-----------------");
+//                System.out.println("-----------------");
             }
 
             group.removeByePlayer();
@@ -143,9 +142,8 @@ public class DrawGroupManager {
                 tournamentService.save(game);
                 games.add(game);
             }
-            System.out.println(t1.getFullName() + " --> " + t2.getFullName());
+//            System.out.println(t1.getFullName() + " --> " + t2.getFullName());
 //            System.out.println("" + round + ":" +  ((round-1)*l1.size())+(tId+1) + " " + t1.getLastName() + " -->" + t2.getLastName());
-//            matches.addNew(round, ((round-1)*l1.size())+(tId+1), (String)t1.get("name"), (String)t2.get("name"));
         }
         return games;
     }

@@ -22,7 +22,6 @@ public class SecurityUtil {
                 //when Anonymous Authentication is enabled
                 !(context.getAuthentication() instanceof AnonymousAuthenticationToken)) {
 
-            System.out.println("    context.getAuthentication().getPrincipal() = " + context.getAuthentication().getPrincipal());
             return (String) context.getAuthentication().getPrincipal();
 
         }

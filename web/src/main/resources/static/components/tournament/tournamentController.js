@@ -1,4 +1,4 @@
-angular.module('jitty.tournament.controllers', []).controller('TournamentListController', function ($scope, $window, Tournament, $http, $location) {
+angular.module('jitty.tournament.controllers', []).controller('TournamentListController', function ($scope, $window, Flash, Tournament, $http, $location) {
 
     $scope.predicate = 'startDate';
     $scope.reverse = true;
@@ -15,11 +15,12 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
         $scope.predicate = predicate;
     };
 
-    $scope.selectTournament = function (tid) {
-        $http.get('/api/tournaments/actual/' + tid).success(function (data) {
+    $scope.selectTournament = function (tid, name) {
+        $http.get('/api/tournaments/actual/' + tid).success(function () {
             console.log('successful selected tournament ');
-            $scope.tournamentname = data.name;
-            $window.location.href = '/';
+            Flash.create('success', 'Das Turnier ' + name + ' wurde als aktuelles Turnier festgelegt.', 4000, {container: 'flash-status'});
+            $scope.tournamentname = name;
+            $window.location.href = '/#/';
         });
 
     };
