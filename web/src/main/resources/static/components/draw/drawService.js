@@ -2,4 +2,6 @@ angular.module('jitty.draw.services', []).factory('TournamentClass', function ($
     return $resource('/api/tournament-classes/:id', {id: '@_id'}, {
 
     });
+
+
 });

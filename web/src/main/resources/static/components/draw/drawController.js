@@ -3,14 +3,14 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     $scope.modi = [{
         id: 0,
         label: ''
-        }, {
+    }, {
         id: 1,
         label: 'VR Gruppe, ER KO-Runde'
-        },
+    },
         // {
         // id: 2,
         // label: 'KO-Runde'}
-        ];
+    ];
     $scope.modus = $scope.modi[1];
 
     $scope.$watch('modus', function () {
@@ -34,7 +34,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 $scope.templateurl = 'components/draw/bracket.html';
             }
 
-                // $scope.templateurl = 'components/draw/groups.html';
+            // $scope.templateurl = 'components/draw/groups.html';
             // else
             //     $scope.templateurl = 'components/draw/bracket.html';
         });
@@ -59,7 +59,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 }).controller('GroupController', function ($scope, $http, $routeParams, $window, TournamentClass, Flash) {
     $scope.resultSize = 0;
 
-    $scope.$watch('tournamentClass.groupCount', function() {
+    $scope.$watch('tournamentClass.groupCount', function () {
         $scope.createGroups();
     });
 
@@ -81,7 +81,9 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         });
     };
     if ($routeParams.id != null) {
-        $scope.getTournamentClass();
+        if ($scope.tournamentClass == null)
+            $scope.getTournamentClass();
+
         $scope.getPossiblePlayerForGroups();
     }
 
