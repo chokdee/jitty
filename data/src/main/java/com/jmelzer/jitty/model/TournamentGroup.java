@@ -17,7 +17,9 @@ public class TournamentGroup {
      * Assoc to the player in the group.
      */
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinTable(name = "TG_PLAYER")
+    @JoinTable(name = "TG_PLAYER",
+            joinColumns = @JoinColumn(name = "TOURNAMENT_GROUP_ID"),
+            inverseJoinColumns = @JoinColumn(name = "PLAYER_ID"))
     List<TournamentPlayer> players = new ArrayList<>();
     /**
      * Assoc to the groups in the class.
@@ -28,7 +30,7 @@ public class TournamentGroup {
     @JoinColumn(name = "TC_ID")
     TournamentClass tournamentClass;
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, name = "name", length = 10)
     private String name;

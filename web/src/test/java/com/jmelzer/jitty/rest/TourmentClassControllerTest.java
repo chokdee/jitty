@@ -1,17 +1,13 @@
 package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.Application;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -22,8 +18,6 @@ import static org.junit.Assert.*;
  * Created by J. Melzer on 19.05.2016.
  * Test TourmentClassController
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
 public class TourmentClassControllerTest extends SecureResourceTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -69,7 +63,7 @@ public class TourmentClassControllerTest extends SecureResourceTest {
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
             //fixme sometime if other test were running before we got exception here
-            assertThat(entity.getBody().length, is(greaterThan(c-1)));
+            assertThat(entity.getBody().length, is(greaterThan(c - 1)));
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
             fail();

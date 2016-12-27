@@ -16,7 +16,7 @@ public class TournamentPlayer {
     public static TournamentPlayer BYE = new TournamentPlayer(0L, "FREI", "LOS");
     public transient int ranking = 0;
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, name = "firstname")
     private String firstName;

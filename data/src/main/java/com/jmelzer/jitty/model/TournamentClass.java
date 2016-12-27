@@ -58,7 +58,7 @@ public class TournamentClass {
     @JoinColumn(name = "KOFIELD_ID")
     KOField koField;
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, name = "name")
     private String name;

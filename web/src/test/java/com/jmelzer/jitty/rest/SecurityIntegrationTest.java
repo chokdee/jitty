@@ -1,14 +1,8 @@
 package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.Application;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.TestRestTemplate;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,15 +11,11 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-@IntegrationTest
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
 public class SecurityIntegrationTest extends SecureResourceTest {
 
-    private static final RestTemplate anonymous = new TestRestTemplate();
+    private static final TestRestTemplate anonymous = new TestRestTemplate();
 
     @Test
-    @Ignore
     public void thatSecuredIsNotAccessible() {
         ResponseEntity<String> response = anonymous.getForEntity("http://localhost:9999/resource", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
@@ -39,14 +29,12 @@ public class SecurityIntegrationTest extends SecureResourceTest {
 
     // https://jira.spring.io/browse/SPR-9367
     @Test(expected = HttpClientErrorException.class)
-    @Ignore
     public void thatLoginNeedsBasicAuthentication() {
         http(HttpMethod.GET, "user", new HttpEntity<>(""), String.class);
     }
 
     // https://jira.spring.io/browse/SPR-9367
     @Test(expected = HttpClientErrorException.class)
-    @Ignore
     public void thatCredentialsAreChecked() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Basic " + "a:a");
@@ -55,7 +43,6 @@ public class SecurityIntegrationTest extends SecureResourceTest {
 
 
     @Test
-    @Ignore
     public void thatCsrfTokenAndSessionIsReturned() {
         ResponseEntity<String> response = http(HttpMethod.GET, "user", new HttpEntity<>(getAuthHeaders()), String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -67,7 +54,6 @@ public class SecurityIntegrationTest extends SecureResourceTest {
     }
 
     @Test
-    @Ignore
     public void thatSessionIsNeededToAccessSecuredResource() {
         ResponseEntity<String> response = http(HttpMethod.GET, "user", new HttpEntity<>(getAuthHeaders()), String.class);
         String token = response.getHeaders().get(SET_COOKIE).get(1);
@@ -88,7 +74,6 @@ public class SecurityIntegrationTest extends SecureResourceTest {
     }
 
     @Test
-    @Ignore
     public void thatSomeUrlsAreOpenWithoutLogin() {
 
         ResponseEntity<String> response = anonymous.exchange(
@@ -101,7 +86,6 @@ public class SecurityIntegrationTest extends SecureResourceTest {
     }
 
     @Test
-    @Ignore
     public void thatTokenCanBeUsedToAccessSecuredResource() {
         HttpHeaders loginHeaders = doLogin();
 
@@ -120,7 +104,6 @@ public class SecurityIntegrationTest extends SecureResourceTest {
 
 
     @Test
-    @Ignore
     public void thatTokenCanBeUsedTwoTimesToAccessSecuredResource() {
         HttpHeaders loginHeaders = doLogin();
 
@@ -147,7 +130,6 @@ public class SecurityIntegrationTest extends SecureResourceTest {
     }
 
     @Test
-    @Ignore
     public void thatNewTokenCanBeUsedToAccessSecuredResource() {
         HttpHeaders loginHeaders = doLogin();
 
@@ -172,7 +154,6 @@ public class SecurityIntegrationTest extends SecureResourceTest {
     }
 
     @Test
-    @Ignore
     public void thatSecuredResourceIsInaccessibleAfterLogout() {
         HttpHeaders loginHeaders = doLogin();
 

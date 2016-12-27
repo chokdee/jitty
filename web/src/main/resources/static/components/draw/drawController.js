@@ -16,10 +16,10 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     $scope.$watch('modus', function () {
         // $scope.refreshGroupSize();
         if ($scope.modus.id == 1) {
-            $scope.templateurl = 'js/draw/groups.html';
+            $scope.templateurl = 'components/draw/groups.html';
         }
         else if ($scope.modus.id == 2) {
-            $scope.templateurl = 'js/draw/bracket.html';
+            $scope.templateurl = 'components/draw/bracket.html';
         } else {
             $scope.templateurl = '';
         }
@@ -31,12 +31,12 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 $scope.tournamentClass.playerPerGroup = 4; //default
             $scope.groups = $scope.tournamentClass.groups;
             if ($scope.tournamentClass.running) {
-                $scope.templateurl = 'js/draw/bracket.html';
+                $scope.templateurl = 'components/draw/bracket.html';
             }
 
-                // $scope.templateurl = 'js/draw/groups.html';
+                // $scope.templateurl = 'components/draw/groups.html';
             // else
-            //     $scope.templateurl = 'js/draw/bracket.html';
+            //     $scope.templateurl = 'components/draw/bracket.html';
         });
 
     };

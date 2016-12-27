@@ -15,15 +15,14 @@
  */
 package com.jmelzer.jitty.dao;
 
-import com.jmelzer.jitty.SampleDataJpaApplication;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentGroup;
 import com.jmelzer.jitty.model.TournamentSingleGame;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -36,8 +35,8 @@ import static org.junit.Assert.assertThat;
 /**
  * Integration tests for {@link TournamentSingleGameRepository}.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(SampleDataJpaApplication.class)
+@RunWith(SpringRunner.class)
+@DataJpaTest
 public class TournamentSingleGameRepositoryIntegrationTests {
 
     @Autowired
@@ -148,7 +147,7 @@ public class TournamentSingleGameRepositoryIntegrationTests {
 
         repository.save(game2);
 
-        List<TournamentSingleGame> list =  repository.findByPlayedOrderByEndTimeDesc(true);
+        List<TournamentSingleGame> list = repository.findByPlayedOrderByEndTimeDesc(true);
         assertThat(list.size(), is(2));
         assertThat(list.get(0).getId(), is(game2.getId()));
 

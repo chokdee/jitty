@@ -1,22 +1,17 @@
 package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.Application;
 import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.dto.TournamentDTO;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Date;
 
-import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
@@ -25,8 +20,6 @@ import static org.junit.Assert.*;
  * Created by J. Melzer on 19.05.2016.
  * Test user controller
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
 public class TourmentControllerTest extends SecureResourceTest {
 
     @Test
@@ -90,7 +83,7 @@ public class TourmentControllerTest extends SecureResourceTest {
             ResponseEntity<Void> entity = http(HttpMethod.POST, "api/tournaments",
                     createHttpEntity(tournament, okResponse.getHeaders()), Void.class);
 
-                assertThat(entity.getStatusCode(), is(HttpStatus.OK));
+            assertThat(entity.getStatusCode(), is(HttpStatus.OK));
             assertThat(jdbcTemplate.queryForObject("select count(*) from tournament ", Integer.class), is(size + 1));
 
         } catch (HttpClientErrorException e) {

@@ -15,15 +15,14 @@
  */
 package com.jmelzer.jitty.dao;
 
-import com.jmelzer.jitty.SampleDataJpaApplication;
 import com.jmelzer.jitty.model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -32,8 +31,8 @@ import static org.junit.Assert.*;
 /**
  * Integration tests for {@link UserRepository}.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(SampleDataJpaApplication.class)
+@RunWith(SpringRunner.class)
+@DataJpaTest
 public class UserRepositoryIntegrationTests {
 
     @Autowired

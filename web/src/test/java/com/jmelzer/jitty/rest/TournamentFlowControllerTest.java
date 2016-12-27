@@ -1,15 +1,11 @@
 package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.Application;
 import com.jmelzer.jitty.model.dto.*;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
@@ -27,8 +23,6 @@ import static org.junit.Assert.*;
  * Test draw controller
  */
 @SuppressWarnings("OverlyComplexMethod")
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
 public class TournamentFlowControllerTest extends SecureResourceTest {
     HttpHeaders loginHeaders;
 

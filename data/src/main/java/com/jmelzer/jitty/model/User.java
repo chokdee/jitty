@@ -37,7 +37,7 @@ public class User implements Serializable {
     @JoinColumn(name = "TOURNAMENT_ID")
     Tournament lastUsedTournament;
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer type;
     @Column(nullable = false, name = "loginname")

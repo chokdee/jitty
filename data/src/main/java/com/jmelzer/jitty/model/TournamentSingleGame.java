@@ -41,7 +41,9 @@ public class TournamentSingleGame {
     @Column(nullable = true, name = "table_no")
     Integer tableNo;
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "TOURNAMENT_SINGLE_GAME_SET")
+    @JoinTable(name = "TOURNAMENT_SINGLE_GAME_SET",
+            joinColumns = @JoinColumn(name = "TOURNAMENT_SINGLE_GAME_ID"),
+            inverseJoinColumns = @JoinColumn(name = "SETS_ID"))
     @OrderBy("id")
     List<GameSet> sets = new ArrayList<>();
 
@@ -54,7 +56,7 @@ public class TournamentSingleGame {
 
     //todo add Schiedsrichter
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private int winner = -1;

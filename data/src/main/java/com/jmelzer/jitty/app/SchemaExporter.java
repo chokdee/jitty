@@ -10,6 +10,9 @@
 
 package com.jmelzer.jitty.app;
 
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.boot.spi.MetadataImplementor;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
@@ -24,10 +27,8 @@ import java.util.List;
  * @author john.thompson
  */
 public class SchemaExporter {
-    /**
-     * Config object
-     */
-    private final Configuration cfg = new Configuration();
+    MetadataSources metadata;
+
     /**
      * prefix .
      */
@@ -39,8 +40,8 @@ public class SchemaExporter {
      * @param packageNames to scan
      * @throws Exception if error
      */
-    public SchemaExporter(final String... packageNames) throws Exception {
-        init(packageNames);
+    public SchemaExporter(Dialect dialect, final String... packageNames) throws Exception {
+        init(dialect, packageNames);
     }
 
     /**
@@ -50,13 +51,9 @@ public class SchemaExporter {
      * @throws Exception if error
      */
     public static void main(final String[] args) throws Exception {
-        SchemaExporter gen = new SchemaExporter("com.jmelzer.jitty.model");
+        SchemaExporter gen = new SchemaExporter(Dialect.HSQL, "com.jmelzer.jitty.model");
         gen.setPrefix("");
-
-//        gen.generate(Dialect.H2);
-        gen = new SchemaExporter("com.jmelzer.jitty.model");
-        gen.setPrefix("");
-        gen.generate(Dialect.HSQL);
+        gen.generate();
 
     }
 
@@ -71,13 +68,19 @@ public class SchemaExporter {
      * @param packageNames to scan
      * @throws Exception if error
      */
-    private void init(final String... packageNames) throws Exception {
-        cfg.setProperty("hibernate.hbm2ddl.auto", "create");
+    private void init(Dialect dialect, String... packageNames) throws Exception {
+//        cfg.setProperty("hibernate.hbm2ddl.auto", "create");
+
+        metadata = new MetadataSources(
+                new StandardServiceRegistryBuilder()
+                        .applySetting("hibernate.dialect", dialect.getDialectClass())
+                        .build());
+
 
         final List<Class<?>> classes = new ArrayList<Class<?>>();
         for (String packageName : packageNames) {
             for (final Object clazz : getClasses(packageName, classes)) {
-                cfg.addAnnotatedClass((Class) clazz);
+                metadata.addAnnotatedClass((Class) clazz);
             }
         }
     }
@@ -126,19 +129,13 @@ public class SchemaExporter {
         return classes;
     }
 
-    /**
-     * Method that actually creates the file.
-     *
-     * @param dialect to use
-     */
-    private String generate(final Dialect dialect) {
-        cfg.setProperty("hibernate.dialect", dialect.getDialectClass());
+    private String generate() {
 
-        final SchemaExport export = new SchemaExport(cfg);
+
+        SchemaExport export = new SchemaExport((MetadataImplementor) metadata.buildMetadata());
         export.setDelimiter(";");
-        final String workingDir = System.getProperty("user.dir");
+        String workingDir = System.getProperty("user.dir");
 
-//        String filename = workingDir + "/src/main/resources/sql/" + dialect.name().toLowerCase() + "/" + prefix + "ddl.sql";
         String filename = workingDir + "/src/main/resources/db/migration/V1__ddl.sql";
         export.setOutputFile(filename);
 
@@ -153,7 +150,7 @@ public class SchemaExporter {
         /**
          * .
          */
-        ORACLE("org.hibernate.dialect.Oracle10gDialect"),
+        MYSQL("org.hibernate.dialect.MySQL5Dialect"),
         /**
          * .
          */

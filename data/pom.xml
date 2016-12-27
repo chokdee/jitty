@@ -36,5 +36,25 @@
         </dependency>
     </dependencies>
 
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>de.juplo</groupId>
+                <artifactId>hibernate-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <export>false</export>
+                    <outputFile>../src/main/resources/db/migration/V1__ddl.sql</outputFile>
+                    <dialect>org.hibernate.dialect.HSQLDialect</dialect>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

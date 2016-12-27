@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Association {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, name = "shortname", unique = true)

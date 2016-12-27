@@ -1,9 +1,6 @@
 package com.jmelzer.jitty.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by J. Melzer on 03.06.2016.
@@ -11,13 +8,13 @@ import javax.persistence.Id;
  */
 @Entity(name = "GAME_SET")
 public class GameSet {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column
     int points1;
     @Column
     int points2;
-    @Id
-    @GeneratedValue
-    private Long id;
 
     public GameSet() {
     }

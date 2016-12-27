@@ -15,7 +15,6 @@
  */
 package com.jmelzer.jitty.dao;
 
-import com.jmelzer.jitty.SampleDataJpaApplication;
 import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentGroup;
@@ -23,8 +22,8 @@ import com.jmelzer.jitty.model.TournamentPlayer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
@@ -38,8 +37,8 @@ import static org.junit.Assert.*;
 /**
  * Integration tests for {@link UserRepository}.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(SampleDataJpaApplication.class)
+@RunWith(SpringRunner.class)
+@DataJpaTest
 public class TournamentRepositoryIntegrationTests {
 
     @Autowired

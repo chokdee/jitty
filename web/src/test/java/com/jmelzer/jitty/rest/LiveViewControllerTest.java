@@ -1,16 +1,12 @@
 package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.Application;
 import com.jmelzer.jitty.model.dto.GroupResultDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -21,8 +17,6 @@ import static org.junit.Assert.*;
  * Created by J. Melzer on 26.07.2016.
  * Test draw controller
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
 @DirtiesContext
 public class LiveViewControllerTest extends SecureResourceTest {
     @Test
@@ -40,6 +34,7 @@ public class LiveViewControllerTest extends SecureResourceTest {
             fail();
         }
     }
+
     @Test
     public void getGroups() throws Exception {
         try {

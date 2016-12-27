@@ -1,14 +1,16 @@
 package com.jmelzer.jitty.rest;
 
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.TestRestTemplate;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
@@ -17,22 +19,16 @@ import java.util.List;
 /**
  * Created by J. Melzer on 14.07.2016.
  */
-@WebIntegrationTest("server.port=9999")
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {
+        "server.port=9999"})
 public abstract class SecureResourceTest {
-    @Autowired
-    DataSource dataSource;
-
-    JdbcTemplate jdbcTemplate;
-
-    @Before
-    public void before() {
-        jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-
     static final String SET_COOKIE = "Set-Cookie";
     static final String CSRF_TOKEN_HEADER = "X-XSRF-TOKEN";
-    RestTemplate restTemplate = new TestRestTemplate();
+    @Autowired
+    DataSource dataSource;
+    JdbcTemplate jdbcTemplate;
+    TestRestTemplate restTemplate = new TestRestTemplate();
     private String sessionId;
 
     static String extractCsrfToken(HttpHeaders headers) {
@@ -42,6 +38,11 @@ public abstract class SecureResourceTest {
         } else {
             return list.get(1);
         }
+    }
+
+    @Before
+    public void before() {
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     protected <T> ResponseEntity<T> http(final HttpMethod method, final String path, HttpEntity<?> entity, Class<T> responseType) {

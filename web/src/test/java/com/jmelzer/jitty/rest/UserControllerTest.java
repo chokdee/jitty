@@ -1,17 +1,13 @@
 package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.Application;
 import com.jmelzer.jitty.model.User;
 import com.jmelzer.jitty.model.dto.UserDTO;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.HttpClientErrorException;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -21,9 +17,6 @@ import static org.junit.Assert.*;
  * Created by J. Melzer on 19.05.2016.
  * Test user controller
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-//@WebAppConfiguration
 public class UserControllerTest extends SecureResourceTest {
 
     @Test
