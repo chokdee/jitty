@@ -90,12 +90,12 @@
 </div>
 <div class="col-md-6">
     <div class="col-md-12">
-        <div class="row">
+        <div class="row" style="margin-left: 4px">
             <h4>Tische</h4>
         </div>
-        <div class="row" >
+        <div class="row"style="margin-left: 4px" >
             <label for="tablecount">Anzahl der Tische<span class="required">*</span></label>
-            <form name="tableCountForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="saveTableCount()">
+            <form name="tableCountForm" novalidate="" ng-submit="saveTableCount()">
                 <input type="text" ng-model="tables.length" name="tablecount" required id="tablecount" style="width: 30%" ng-init="24"/>
                 <input name="submit" type="submit" value="Ändern"/>
             </form>
@@ -107,7 +107,6 @@
                     <div class="tt-table">
                         <div class="table-nr">{{tableIndex+1}}</div>
                         <div class="table-n1">{{tables[tableIndex].game.player1.fullName == null ? '&nbsp;' : tables[tableIndex].game.player1.fullName}}</div>
-                        <!--<div class="table-n1">&nbsp;&nbsp;</div>-->
                         <hr size="1"/>
                         <div class="table-n1">{{tables[tableIndex].game.player2.fullName == null ? '&nbsp;' : tables[tableIndex].game.player2.fullName}}</div>
                     </div>

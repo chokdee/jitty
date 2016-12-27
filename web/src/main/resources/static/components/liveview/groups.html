@@ -3,7 +3,6 @@
 <table style="margin-bottom: 20px" class="" ng-repeat="group in groups">
     <thead>
     <tr>
-        <!--todo-->
         <td style="font-weight: bolder; font-size: larger" colspan="5">Gruppe {{group.groupName}}</td>
     </tr>
     <tr>
@@ -18,7 +17,6 @@
     </tr>
     </thead>
     <tbody>
-    <!--todo how many playes must be configured-->
     <tr ng-repeat="g in group.entries track by $index">
         <td ng-style="$index < 2 && {'font-weight':'bold'}" style="width: 15px">{{g.pos}}</td>
         <td ng-style="$index < 2 && {'font-weight':'bold'}" style="width: 150px">{{g.playerName}}</td>

@@ -347,17 +347,6 @@ ul#result li {
     float: left;
 }
 
-.sr-center-block {
-    display: block;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.sr-table {
-    width: 100%;
-    text-align: center;
-    border-collapse: collapse;
-}
 
 .center-modal {
     position: fixed;

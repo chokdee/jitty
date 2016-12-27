@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <title>Schiedsrichterzettel</title>
     <link href="../../css/app.css" rel="stylesheet">
-    <!--<link href="angular-bootstrap.css" rel="stylesheet">-->
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"-->
-    <!--crossorigin="anonymous"  media="all" >-->
+    <link href="../../css/print.css" rel="stylesheet">
     <style type="text/css" media="print">
         @page {
             size: auto;   /* auto is the initial value */
@@ -16,10 +14,9 @@
     </style>
 </head>
 <body>
-<!--<div style="width: 240pt;margin: auto; border: 1px solid">-->
-<div style="width: 240pt;border: 1px solid" class="sr-center-block">
-    <h2 style="text-align: center ">Schiedsrichterzettel</h2>
-    <div class="sr-center-block" style="width: 200pt">
+<div class="sr-center-block sr-border">
+    <h2 >Schiedsrichterzettel</h2>
+    <div class="sr-center-block sr-inner-block" >
         <div class="row">Klasse: {{game.tcName}}</div>
         <div class="row">
             <div class="my-md-6">
@@ -31,8 +28,8 @@
         </div>
         <br>
         <br>
-        <div class="row" style="">
-            <table class="sr-table" border="1">
+        <div class="row" >
+            <table class="sr-table sr-table-player" border="1">
                 <thead>
                 <tr>
                     <th >A</th>
@@ -41,12 +38,12 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td style="width: 50%">{{game.player1.fullName}}</td>
-                    <td style="width: 50%">{{game.player2.fullName}}</td>
+                    <td >{{game.player1.fullName}}</td>
+                    <td >{{game.player2.fullName}}</td>
                 </tr>
                 <tr>
-                    <td style="width: 50%">&nbsp;</td>
-                    <td style="width: 50%">&nbsp;</td>
+                    <td >&nbsp;</td>
+                    <td >&nbsp;</td>
                 </tr>
                 </tbody>
             </table>
@@ -54,56 +51,56 @@
             <table class="sr-table">
                 <thead>
                 <tr>
-                    <th style="text-align: center;border: solid 1pt black; width: 20%"></th>
-                    <th style="text-align: center;border: solid 1pt black;width: 60%">Gewinner</th>
-                    <th style="text-align: center;border: solid 1pt black;width: 20%">Bälle</th>
+                    <th class="sr-set-col"></th>
+                    <th class="sr-winner-col">Gewinner</th>
+                    <th class="sr-points-col">Bälle</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td style="border: solid 1pt black;width: 20%;text-align: center">1. Satz</td>
-                    <td style="border: solid 1pt black;width: 60%">&nbsp;</td>
-                    <td style="border: solid 1pt black;width: 20%">&nbsp;</td>
+                    <td class="sr-set-col">1. Satz</td>
+                    <td class="sr-winner-col">&nbsp;</td>
+                    <td class="sr-points-col">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="border: solid 1pt black;width: 20%;text-align: center">2. Satz</td>
-                    <td style="border: solid 1pt black;width: 60%">&nbsp;</td>
-                    <td style="border: solid 1pt black;width: 20%">&nbsp;</td>
+                    <td class="sr-set-col">2. Satz</td>
+                    <td class="sr-winner-col">&nbsp;</td>
+                    <td class="sr-points-col">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="border: solid 1pt black;width: 20%;text-align: center">3. Satz</td>
-                    <td style="border: solid 1pt black;width: 60%">&nbsp;</td>
-                    <td style="border: solid 1pt black;width: 20%">&nbsp;</td>
+                    <td class="sr-set-col">3. Satz</td>
+                    <td class="sr-winner-col">&nbsp;</td>
+                    <td class="sr-points-col">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="border: solid 1pt black;width: 20%;text-align: center">4. Satz</td>
-                    <td style="border: solid 1pt black;width: 60%">&nbsp;</td>
-                    <td style="border: solid 1pt black;width: 20%">&nbsp;</td>
+                    <td class="sr-set-col">4. Satz</td>
+                    <td class="sr-winner-col">&nbsp;</td>
+                    <td class="sr-points-col">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="border: solid 1pt black;width: 20%;text-align: center">5. Satz</td>
-                    <td style="border: solid 1pt black;width: 60%">&nbsp;</td>
-                    <td style="border: solid 1pt black;width: 20%">&nbsp;</td>
+                    <td class="sr-set-col">5. Satz</td>
+                    <td class="sr-winner-col">&nbsp;</td>
+                    <td class="sr-points-col">&nbsp;</td>
                 </tr>
                 </tbody>
             </table>
             <br>
             <h4 style="text-align: center">Endergebnis</h4>
-            <table class="sr-table" border="1">
+            <table class="sr-table sr-table-player" border="1">
                 <thead>
                 <tr>
                     <th style="width: 70%">Sieger</th>
-                    <th style="">Sätze</th>
+                    <th>Sätze</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td style="width: 50%">&nbsp;</td>
-                    <td style="width: 50%">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="width: 50%">&nbsp;</td>
-                    <td style="width: 50%">&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
                 </tbody>
             </table>
@@ -113,10 +110,10 @@
         <br>
         <br>
         <div class="row">
-            <div class="my-md-5" style="border-bottom: 1pt solid;display: inline-block">
+            <div class="sr-sign-left" >
                 &nbsp;
             </div>
-            <div class="my-md-5" style="margin-left: 10pt;border-bottom: 1pt solid;display: inline-block">
+            <div class="sr-sign-right" >
                 &nbsp;
             </div>
         </div>

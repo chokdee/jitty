@@ -1,0 +1,60 @@
+
+h2 {
+    text-align: center;
+}
+
+.sr-center-block {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.sr-table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.sr-border {
+    width: 240pt;
+    border: 1px solid
+}
+
+.sr-inner-block {
+    width: 200pt;
+}
+
+.sr-table-player td {
+    width: 50%;
+}
+
+.sr-sign-left {
+    border-bottom: 1pt solid;
+    display: inline-block;
+    width: 45%
+}
+
+.sr-sign-right {
+    margin-left: 10pt;
+    border-bottom: 1pt solid;
+    display: inline-block;
+    width: 45%;
+}
+
+.sr-set-col {
+    text-align: center;
+    border: solid 1pt black;
+    width: 20%;
+}
+
+.sr-winner-col {
+    text-align: center;
+    border: solid 1pt black;
+    width: 60%;
+}
+
+.sr-points-col {
+    text-align: center;
+    border: solid 1pt black;
+    width: 20%;
+}
