@@ -172,10 +172,10 @@ public class DrawKoFieldManager {
     @Transactional
     public void startKOField(Long tcId) {
         TournamentClass tc = tcRepository.findOne(tcId);
-        if (tc.getActivePhaseNo() == 2) {
+        if (tc.getActivePhaseNo() == 1) {
             return;
         }
-        tc.setActivePhase(2);
+        tc.setActivePhase(1);
         tournamentService.addPossibleKoGamesToQueue(tc);
         tcRepository.saveAndFlush(tc);
 
