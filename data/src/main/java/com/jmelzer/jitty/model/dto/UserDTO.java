@@ -7,9 +7,15 @@ public class UserDTO {
     private Long id;
 
     private String loginName;
+
     private String name;
+
     private String email;
+
     private String lastUsedTournamentName;
+
+    private long lastUsedTournamentId;
+
     private String password;
 
     public String getPassword() {
@@ -58,5 +64,13 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public long getLastUsedTournamentId() {
+        return lastUsedTournamentId;
+    }
+
+    public void setLastUsedTournamentId(long lastUsedTournamentId) {
+        this.lastUsedTournamentId = lastUsedTournamentId;
     }
 }

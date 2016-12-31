@@ -69,4 +69,30 @@ public class GroupPhase extends Phase {
         groups.add(group);
         group.setGroupPhase(this);
     }
+
+    @Override
+    public boolean areGamesPlayed() {
+        for (TournamentGroup group : groups) {
+            List<TournamentSingleGame> games = group.getGames();
+            for (TournamentSingleGame game : games) {
+                if (game.isPlayed()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isFinished() {
+        for (TournamentGroup group : groups) {
+            List<TournamentSingleGame> games = group.getGames();
+            for (TournamentSingleGame game : games) {
+                if (!game.isFinished()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

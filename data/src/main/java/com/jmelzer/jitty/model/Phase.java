@@ -31,4 +31,8 @@ public abstract class Phase {
     public void setSystem(TournamentSystem system) {
         this.system = system;
     }
+
+    public abstract boolean areGamesPlayed();
+
+    public abstract boolean isFinished();
 }

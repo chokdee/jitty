@@ -2,7 +2,9 @@ package com.jmelzer.jitty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.jmelzer.jitty.model.User;
 import com.jmelzer.jitty.model.dto.UserDTO;
+import com.jmelzer.jitty.service.TournamentService;
 import com.jmelzer.jitty.service.UserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

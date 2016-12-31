@@ -97,4 +97,11 @@ public class TableManager {
         busyTables.remove(game.getTableNo());
         freeTables.add(game.getTableNo());
     }
+
+    public void clear(int tableCount) {
+        this.tableCount=0;
+        freeTables.clear();
+        setTableCount(tableCount); //refresh
+        busyTables.clear();
+    }
 }

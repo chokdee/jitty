@@ -117,7 +117,7 @@ public class DrawKoFieldManager {
     @Transactional
     public KOFieldDTO drawKO(Long tcId, boolean assignPlayer) {
         TournamentClass tc = tcRepository.findOne(tcId);
-        if (tc.getActivePhase() == 2) {
+        if (tc.getActivePhaseNo() == 2) {
             return copy(tc.getKoField());
         }
         for (TournamentGroup tournamentGroup : tc.getGroups()) {
@@ -172,7 +172,7 @@ public class DrawKoFieldManager {
     @Transactional
     public void startKOField(Long tcId) {
         TournamentClass tc = tcRepository.findOne(tcId);
-        if (tc.getActivePhase() == 2) {
+        if (tc.getActivePhaseNo() == 2) {
             return;
         }
         tc.setActivePhase(2);

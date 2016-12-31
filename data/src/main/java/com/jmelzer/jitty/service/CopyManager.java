@@ -147,7 +147,7 @@ public class CopyManager {
 
     static public TournamentClassDTO copyOnly(TournamentClass clz) {
         TournamentClassDTO dto = new TournamentClassDTO();
-        BeanUtils.copyProperties(clz, dto, "players");
+        BeanUtils.copyProperties(clz, dto, "players", "system");
         return dto;
     }
 

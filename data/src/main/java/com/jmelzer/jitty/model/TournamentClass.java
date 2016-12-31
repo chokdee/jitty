@@ -1,6 +1,8 @@
 package com.jmelzer.jitty.model;
 
 
+import com.jmelzer.jitty.model.dto.TournamentClassStatus;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -235,12 +237,50 @@ public class TournamentClass {
         return players.size();
     }
 
-    public int getActivePhase() {
-        return activePhase;
+    public TournamentClassStatus calcStatus() {
+        if (finished()) {
+            return TournamentClassStatus.FINISHED;
+        }
+        if (!getRunning()) {
+            return TournamentClassStatus.NOTSTARTED;
+        } else {
+            boolean hasResults = getActivePhase().areGamesPlayed();
+            if (getActivePhaseNo() == 0) {
+                if (hasResults) {
+                    return TournamentClassStatus.PHASE1_AND_RESULTS;
+                } else {
+                    return TournamentClassStatus.PHASE1_STARTED_NOT_CALLED;
+                }
+            } else if (getActivePhaseNo() == 1) {
+                if (hasResults) {
+                    return TournamentClassStatus.PHASE2_AND_RESULTS;
+                } else {
+                    return TournamentClassStatus.PHASE2_STARTED_NOT_CALLED;
+                }
+            }
+        }
+        throw new RuntimeException("could not calculate status");
+    }
+
+    private boolean finished() {
+        return getActivePhaseNo() == 1 && getActivePhase().isFinished();
+    }
+
+    @Transient
+    public Phase getActivePhase() {
+        if (system == null) {
+            return null;
+        }
+
+        return getSystem().getPhases().get(activePhase);
     }
 
     public void setActivePhase(int activePhase) {
         this.activePhase = activePhase;
+    }
+
+    public int getActivePhaseNo() {
+        return activePhase;
     }
 
     public KOField getKoField() {
@@ -272,6 +312,8 @@ public class TournamentClass {
     public void createPhaseCombination(PhaseCombination phaseCombination) {
         if (system == null) {
             setSystem(new TournamentSystem());
+        } else {
+            system.clearPhases();
         }
         switch (phaseCombination) {
             case GK:

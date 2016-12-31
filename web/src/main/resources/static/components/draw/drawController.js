@@ -35,7 +35,6 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 $scope.tournamentClass.playerPerGroup = 4; //default
 
 
-
             if ($scope.tournamentClass.running) {
                 $scope.templateurl = 'components/draw/bracket.html';
             }
@@ -63,9 +62,10 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
     };
     $scope.selectPhaseCombination = function () {
-        $http.get('/api/draw/select-phase-combination?cid=' + $routeParams.id + '&type=' + $scope.modus.id, {}).then(function (response) {
-            console.log('System successfully selected')
-        });
+        if ($scope.modus != null && $scope.modus.id != null && $routeParams.id  != null)
+            $http.get('/api/draw/select-phase-combination?cid=' + $routeParams.id + '&type=' + $scope.modus.id, {}).then(function (response) {
+                console.log('System successfully selected')
+            });
 
     };
 

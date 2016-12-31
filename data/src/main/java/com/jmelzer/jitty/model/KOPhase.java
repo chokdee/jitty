@@ -19,4 +19,33 @@ public class KOPhase extends Phase {
     public void setKoField(KOField koField) {
         this.koField = koField;
     }
+
+    @Override
+    public boolean areGamesPlayed() {
+        for (TournamentSingleGame game : koField.getRound().getGames()) {
+            if (game.isPlayed()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isFinished() {
+        if (koField == null) {
+            return false;
+        }
+
+        int nr = koField.getNoOfRounds();
+        Round round = koField.getRound();
+        for (int i = 0; i < nr; i++) {
+            for (TournamentSingleGame game : round.getGames()) {
+                if (!game.isFinished()) {
+                    return false;
+                }
+            }
+            round = round.getNextRound();
+        }
+        return true;
+    }
 }

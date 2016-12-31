@@ -3,12 +3,15 @@ package com.jmelzer.jitty.service;
 import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.GameSetDTO;
+import com.jmelzer.jitty.model.dto.TournamentClassStatus;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.System;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -142,8 +145,9 @@ public class TournamentServiceTest {
         when(userRepository.findByLoginName(anyString())).thenReturn(user);
 
         assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
+        assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.NOTSTARTED));
 
-        tournamentClass.setActivePhase(1);
+        tournamentClass.setActivePhase(0);
         assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
         TournamentSingleGame game = new TournamentSingleGame();
         TournamentGroup group = new TournamentGroup();
@@ -151,11 +155,37 @@ public class TournamentServiceTest {
         tournamentClass.addGroup(group);
 
         tournamentClass.setRunning(true);
+        tournamentClass.setActivePhase(0);
         assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
+        assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.PHASE1_STARTED_NOT_CALLED));
 
         //all games were played
         game.setPlayed(true);
         assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
+        assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.PHASE1_AND_RESULTS));
 
+        tournamentClass.setActivePhase(1);
+        KOField koField = new KOField();
+        koField.setNoOfRounds(2);
+        Round r1 = new Round();
+        koField.setRound(r1);
+        TournamentSingleGame rg1 = new TournamentSingleGame();
+        r1.addAllGames(Collections.singletonList(rg1));
+        koField.setRound(r1);
+        TournamentSingleGame rg2 = new TournamentSingleGame();
+        Round r2 = new Round();
+        r1.setNextRound(r2);
+        r2.addAllGames(Collections.singletonList(rg2));
+        ((KOPhase)tournamentClass.getActivePhase()).setKoField(koField);
+        assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.PHASE2_STARTED_NOT_CALLED));
+
+        rg1.setPlayed(true);
+        rg1.setWinner(1);
+        assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.PHASE2_AND_RESULTS));
+
+        rg2.setPlayed(true);
+        rg2.setWinner(1);
+        assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.FINISHED));
     }
+
 }

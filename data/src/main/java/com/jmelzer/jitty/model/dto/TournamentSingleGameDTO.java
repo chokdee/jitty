@@ -34,6 +34,7 @@ public class TournamentSingleGameDTO {
 
     private Long id;
     private int winner = -1;
+    private Long tid;
 
     public TournamentPlayerDTO getPlayer1() {
         return player1;
