@@ -1,8 +1,7 @@
 package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.model.dto.KOFieldDTO;
-import com.jmelzer.jitty.model.dto.TournamentClassDTO;
-import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
+import com.jmelzer.jitty.model.PhaseCombination;
+import com.jmelzer.jitty.model.dto.*;
 import com.jmelzer.jitty.service.DrawGroupManager;
 import com.jmelzer.jitty.service.DrawKoFieldManager;
 import com.jmelzer.jitty.service.TournamentService;
@@ -28,6 +27,7 @@ public class DrawController {
 
     @Inject
     DrawKoFieldManager drawKoFieldManager;
+
     @Inject
     DrawGroupManager drawGroupManager;
 
@@ -38,11 +38,12 @@ public class DrawController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TournamentPlayerDTO> getPlayerforClass(@QueryParam(value = "cid") String id) {
-        List<TournamentPlayerDTO>  list = tournamentService.getPlayerforClass(Long.valueOf(id));
+        List<TournamentPlayerDTO> list = tournamentService.getPlayerforClass(Long.valueOf(id));
         LOG.debug("found player {}", list.size());
         return list;
 
     }
+
     @Path("/possible-player-for-groups")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -50,6 +51,7 @@ public class DrawController {
         return drawGroupManager.getPossiblePlayerForGroups(Long.valueOf(id));
 
     }
+
     @Path("/possible-player-for-kofield")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -74,20 +76,34 @@ public class DrawController {
         return Response.ok().build();
     }
 
+    @Path("/select-phase-combination")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response selectPhaseCombination(@QueryParam(value = "cid") String id, @QueryParam(value = "type") String type) {
+        tournamentService.selectPhaseCombination(Long.valueOf(id), PhaseCombination.enumOf(Integer.valueOf(type)));
+        return Response.ok().build();
+    }
+
+    @Path("/actual-phase")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public PhaseDTO actualPhase(@QueryParam(value = "cid") String id) {
+        return tournamentService.actualPhase(Long.valueOf(id));
+    }
 
     @Path("/calc-optimal-group-size")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public TournamentClassDTO calcOptimalGroupSize(TournamentClassDTO dto) {
+    public GroupPhaseDTO calcOptimalGroupSize(GroupPhaseDTO dto) {
         return drawGroupManager.calcOptimalGroupSize(dto);
     }
 
     @Path("/automatic-draw")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public TournamentClassDTO automaticDraw(TournamentClassDTO dto) {
-        TournamentClassDTO  dto2 = drawGroupManager.automaticDraw(dto);
-        return tournamentService.updateClass(dto2);
+    public GroupPhaseDTO automaticDraw(@QueryParam(value = "cid") String id, GroupPhaseDTO dto) {
+        return drawGroupManager.automaticDraw(Long.valueOf(id), dto);
+
     }
 
     @Path("/save")

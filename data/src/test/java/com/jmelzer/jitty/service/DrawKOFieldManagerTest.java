@@ -150,13 +150,14 @@ public class DrawKOFieldManagerTest {
     @Test
     public void calcKOSize() {
         TournamentClass tc = new TournamentClass();
-        tc.setGroupCount(4);
-        List<TournamentGroup> groups = new ArrayList<>(4);
-        tc.setGroups(groups);
+        tc.createPhaseCombination(PhaseCombination.GK);
+        tc.setActivePhase(0);
+//        tc.setGroupCount(4); todo
         for (int i = 0; i < 4; i++) {
-            groups.add(new TournamentGroup());
+            TournamentGroup tg = new TournamentGroup();
+            tc.addGroup(tg);
             for (int j = 0; j < 4; j++) {
-                tc.getGroups().get(i).addGame(new TournamentSingleGame());
+                tg.addGame(new TournamentSingleGame());
 
             }
         }

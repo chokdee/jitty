@@ -15,10 +15,7 @@
  */
 package com.jmelzer.jitty.dao;
 
-import com.jmelzer.jitty.model.Tournament;
-import com.jmelzer.jitty.model.TournamentClass;
-import com.jmelzer.jitty.model.TournamentGroup;
-import com.jmelzer.jitty.model.TournamentPlayer;
+import com.jmelzer.jitty.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,8 +75,10 @@ public class TournamentRepositoryIntegrationTests {
         TournamentClass tournamentClass = new TournamentClass();
         tournamentClass.setName("A-Klasse bis 3000 TTR");
         tournament.addClass(tournamentClass);
+        tournamentClass.createPhaseCombination(PhaseCombination.GK);
         TournamentClass tournamentClass2 = new TournamentClass();
         tournamentClass2.setName("B-Klasse bis 1800 TTR");
+        tournamentClass2.createPhaseCombination(PhaseCombination.GK);
         tournament.addClass(tournamentClass2);
 
 
@@ -104,23 +103,6 @@ public class TournamentRepositoryIntegrationTests {
         assertEquals(players.size(), tDB.getClasses().get(0).getPlayers().size());
         assertEquals(players.size(), tDB.getClasses().get(1).getPlayers().size());
 
-
-        //ok now add groups
-        TournamentGroup group = new TournamentGroup("A");
-        group.addPlayer(players.get(0));
-        group.addPlayer(players.get(1));
-        tDB.getClasses().get(0).addGroup(group);
-
-        TournamentGroup groupB = new TournamentGroup("B");
-        groupB.addPlayer(players.get(2));
-        groupB.addPlayer(players.get(3));
-        tDB.getClasses().get(0).addGroup(groupB);
-
-        repository.save(tDB);
-
-        tDB = repository.findOne(tournament.getId());
-        assertEquals(2, tDB.getClasses().get(0).getGroups().size());
-        assertEquals(2, tDB.getClasses().get(0).getGroups().get(0).getPlayers().size());
 
     }
 }

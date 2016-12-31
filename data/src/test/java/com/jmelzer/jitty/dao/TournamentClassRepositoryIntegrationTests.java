@@ -15,9 +15,8 @@
  */
 package com.jmelzer.jitty.dao;
 
-import com.jmelzer.jitty.model.Tournament;
-import com.jmelzer.jitty.model.TournamentClass;
-import com.jmelzer.jitty.model.TournamentGroup;
+import com.jmelzer.jitty.model.*;
+import com.jmelzer.jitty.model.TournamentSystem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,16 +74,19 @@ public class TournamentClassRepositoryIntegrationTests {
         assertThat(repository.findByTournamentAndRunning(tournament, true).size(), is(0));
     }
 
+
     @Transactional
     @Test
-    public void saveWithGroup() {
-        TournamentClass clz = new TournamentClass("save");
+    public void saveWithPhase() {
+        TournamentClass clz = new TournamentClass("saveWithPhase");
+
+        clz.createPhaseCombination(PhaseCombination.GK);
+        repository.save(clz);
 
         clz.addGroup(new TournamentGroup("1"));
         clz.addGroup(new TournamentGroup("2"));
 
-        repository.save(clz);
-
-        assertThat(repository.findOne(clz.getId()).getGroups().size(), is(2));
+        clz = repository.findOne(clz.getId());
+        assertThat(clz.getSystem().getPhases().size(), is(2));
     }
 }

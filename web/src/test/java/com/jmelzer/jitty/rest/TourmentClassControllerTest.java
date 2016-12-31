@@ -46,7 +46,7 @@ public class TourmentClassControllerTest extends SecureResourceTest {
         thrown.expect(HttpClientErrorException.class);
         thrown.expectMessage("400");
 
-        http(HttpMethod.DELETE, "api/tournament-classes/5",
+        http(HttpMethod.DELETE, "api/tournament-classes/2",
                 createHttpEntity(null, loginHeaders), ErrorMessage.class);
 
     }
@@ -73,8 +73,7 @@ public class TourmentClassControllerTest extends SecureResourceTest {
     @Test
     public void testSaveNewTC() throws Exception {
         try {
-
-            assertThat(jdbcTemplate.queryForObject("select count(*) from tournament_class where t_id = 2", Integer.class), is(5));
+            int before = jdbcTemplate.queryForObject("select count(*) from tournament_class where t_id = 2", Integer.class);
 
             HttpHeaders loginHeaders = doLogin();
             ResponseEntity<String> okResponse = restTemplate.exchange(
@@ -96,8 +95,9 @@ public class TourmentClassControllerTest extends SecureResourceTest {
 
             assertThat(entity.getStatusCode(), is(HttpStatus.OK));
 
-            assertThat(jdbcTemplate.queryForObject("select count(*) from tournament_class where t_id = 2", Integer.class), is(6));
+            assertThat(jdbcTemplate.queryForObject("select count(*) from tournament_class where t_id = 2", Integer.class), is(before+1));
         } catch (HttpClientErrorException e) {
+            e.printStackTrace();
             System.out.println(e.getResponseBodyAsString());
             fail();
         }

@@ -117,7 +117,7 @@ public class DrawKoFieldManager {
     @Transactional
     public KOFieldDTO drawKO(Long tcId, boolean assignPlayer) {
         TournamentClass tc = tcRepository.findOne(tcId);
-        if (tc.getPhase() != null && tc.getPhase() == 2) {
+        if (tc.getActivePhase() == 2) {
             return copy(tc.getKoField());
         }
         for (TournamentGroup tournamentGroup : tc.getGroups()) {
@@ -130,6 +130,7 @@ public class DrawKoFieldManager {
             List<TournamentSingleGame> games = assignPlayerToKoField(tc.getKoField(), tc.getGroups());
             for (TournamentSingleGame game : games) {
                 game.setTcName(tc.getName());
+                game.setTid(tc.getTournament().getId());
                 game.setRound(tc.getKoField().getRound());
                 tournamentService.save(game);
             }
@@ -138,13 +139,14 @@ public class DrawKoFieldManager {
                 List<TournamentSingleGame> nextGames = createEmptyGamesForRound(nextRound);
                 for (TournamentSingleGame game : nextGames) {
                     game.setTcName(tc.getName());
+                    game.setTid(tc.getTournament().getId());
                     game.setRound(nextRound);
                     tournamentService.save(game);
                 }
                 nextRound = nextRound.getNextRound();
                 games = nextGames;
             }
-//            tc.setPhase(2);
+//            tc.setActivePhase(2);
         }
         tc = tcRepository.saveAndFlush(tc);
         return copy(tc.getKoField());
@@ -170,10 +172,10 @@ public class DrawKoFieldManager {
     @Transactional
     public void startKOField(Long tcId) {
         TournamentClass tc = tcRepository.findOne(tcId);
-        if (tc.getPhase() != null && tc.getPhase() == 2) {
+        if (tc.getActivePhase() == 2) {
             return;
         }
-        tc.setPhase(2);
+        tc.setActivePhase(2);
         tournamentService.addPossibleKoGamesToQueue(tc);
         tcRepository.saveAndFlush(tc);
 
@@ -212,7 +214,7 @@ public class DrawKoFieldManager {
         RoundType roundType = calcKOSize(tc);
         KOField field = createKOField(roundType);
         tc.setKoField(field);
-        tc.setPhase(1);
+        tc.setActivePhase(1);
         tcRepository.saveAndFlush(tc);
     }
 }

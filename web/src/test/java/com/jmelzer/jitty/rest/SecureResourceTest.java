@@ -47,6 +47,7 @@ public abstract class SecureResourceTest {
 
     protected <T> ResponseEntity<T> http(final HttpMethod method, final String path, HttpEntity<?> entity, Class<T> responseType) {
         RestTemplate restTemplate = new RestTemplate();
+        System.out.println(method + ":" + "http://localhost:9999/" + path);
         return restTemplate.exchange("http://localhost:9999/" + path, method, entity, responseType);
     }
 

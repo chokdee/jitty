@@ -34,7 +34,7 @@ public class TournamentDirectorController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TournamentSingleGameDTO> possibleGames() {
-        return service.listQueue();
+        return service.listQueue(securityUtil.getActualUsername());
     }
 
     @Path("/running-games")

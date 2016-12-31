@@ -1,11 +1,7 @@
 package com.jmelzer.jitty.model.dto;
 
 
-import com.jmelzer.jitty.model.GameMode;
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by J. Melzer on 01.06.2016.
@@ -13,43 +9,62 @@ import java.util.List;
  */
 public class TournamentClassDTO {
     private Long id;
-    private String name;
-    private int startTTR = 0;
-    private int endTTR = 0;
 
-    String type;
+    private String type;
+
+    private Date startTime;
+
+    private boolean running;
+
+    private TournamentClassStatus status;
+
+    private TournamentSystemDTO system;
+
+    private String name;
+
+    private int startTTR = 0;
+
+    private int endTTR = 0;
 
     private Date minAge;
 
     private Date maxAge;
 
     private boolean openForMen;
+
     private boolean openForWomen;
-    Date startTime;
-    boolean running;
-    private int qualiGroupCount;
-    /**
-     * @see GameMode for values
-     */
-    String gameModePhase1;
 
-    /**
-     * @see GameMode for values
-     */
-    String gameModePhase2;
-
-    Integer playerPerGroup;
-
-    Integer groupCount;
-
-    List<TournamentGroupDTO> groups = new ArrayList<>();
-
-    public Date getStartTime() {
-        return startTime;
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + startTTR;
+        result = 31 * result + endTTR;
+        return result;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TournamentClassDTO classDTO = (TournamentClassDTO) o;
+
+        if (startTTR != classDTO.startTTR) {
+            return false;
+        }
+        if (endTTR != classDTO.endTTR) {
+            return false;
+        }
+        if (!id.equals(classDTO.id)) {
+            return false;
+        }
+        return name.equals(classDTO.name);
+
     }
 
     public String getType() {
@@ -60,36 +75,28 @@ public class TournamentClassDTO {
         this.type = type;
     }
 
-    public Date getMinAge() {
-        return minAge;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setMinAge(Date minAge) {
-        this.minAge = minAge;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
-    public Date getMaxAge() {
-        return maxAge;
+    public boolean isRunning() {
+        return running;
     }
 
-    public void setMaxAge(Date maxAge) {
-        this.maxAge = maxAge;
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
-    public boolean isOpenForMen() {
-        return openForMen;
+    public TournamentClassStatus getStatus() {
+        return status;
     }
 
-    public void setOpenForMen(boolean openForMen) {
-        this.openForMen = openForMen;
-    }
-
-    public boolean isOpenForWomen() {
-        return openForWomen;
-    }
-
-    public void setOpenForWomen(boolean openForWomen) {
-        this.openForWomen = openForWomen;
+    public void setStatus(TournamentClassStatus status) {
+        this.status = status;
     }
 
     public Long getId() {
@@ -124,116 +131,43 @@ public class TournamentClassDTO {
         this.endTTR = endTTR;
     }
 
-    public String getGameModePhase1() {
-        return gameModePhase1;
+    public Date getMinAge() {
+        return minAge;
     }
 
-    public void setGameModePhase1(String gameModePhase1) {
-        this.gameModePhase1 = gameModePhase1;
+    public void setMinAge(Date minAge) {
+        this.minAge = minAge;
     }
 
-    public String getGameModePhase2() {
-        return gameModePhase2;
+    public Date getMaxAge() {
+        return maxAge;
     }
 
-    public void setGameModePhase2(String gameModePhase2) {
-        this.gameModePhase2 = gameModePhase2;
+    public void setMaxAge(Date maxAge) {
+        this.maxAge = maxAge;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        TournamentClassDTO classDTO = (TournamentClassDTO) o;
-
-        if (startTTR != classDTO.startTTR) {
-            return false;
-        }
-        if (endTTR != classDTO.endTTR) {
-            return false;
-        }
-        if (!id.equals(classDTO.id)) {
-            return false;
-        }
-        return name.equals(classDTO.name);
-
+    public boolean isOpenForMen() {
+        return openForMen;
     }
 
-    @Override
-    public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + startTTR;
-        result = 31 * result + endTTR;
-        return result;
+    public void setOpenForMen(boolean openForMen) {
+        this.openForMen = openForMen;
     }
 
-    public Integer getPlayerPerGroup() {
-        return playerPerGroup;
+    public boolean isOpenForWomen() {
+        return openForWomen;
     }
 
-    public void setPlayerPerGroup(Integer playerPerGroup) {
-        this.playerPerGroup = playerPerGroup;
+    public void setOpenForWomen(boolean openForWomen) {
+        this.openForWomen = openForWomen;
     }
 
-    public Integer getGroupCount() {
-        return groupCount;
+    public TournamentSystemDTO getSystem() {
+        return system;
     }
 
-    public void setGroupCount(Integer groupCount) {
-        this.groupCount = groupCount;
-    }
-
-    public List<TournamentGroupDTO> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<TournamentGroupDTO> groups) {
-        this.groups = groups;
-    }
-
-    @Override
-    public String toString() {
-        return "TournamentClassDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", startTTR=" + startTTR +
-                ", endTTR=" + endTTR +
-                ", type='" + type + '\'' +
-                ", minAge=" + minAge +
-                ", maxAge=" + maxAge +
-                ", openForMen=" + openForMen +
-                ", openForWomen=" + openForWomen +
-                ", startTime=" + startTime +
-                ", gameModePhase1='" + gameModePhase1 + '\'' +
-                ", gameModePhase2='" + gameModePhase2 + '\'' +
-                ", playerPerGroup=" + playerPerGroup +
-                ", groupCount=" + groupCount +
-                '}';
-    }
-
-    public void addGroup(TournamentGroupDTO groupDTO) {
-        groups.add(groupDTO);
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-
-    public void setRunning(boolean running) {
-        this.running = running;
-    }
-
-    public int getQualiGroupCount() {
-        return qualiGroupCount;
-    }
-
-    public void setQualiGroupCount(int qualiGroupCount) {
-        this.qualiGroupCount = qualiGroupCount;
+    public void setSystem(TournamentSystemDTO system) {
+        this.system = system;
     }
 }

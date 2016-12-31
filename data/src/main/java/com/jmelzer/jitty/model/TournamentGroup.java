@@ -13,6 +13,10 @@ import java.util.List;
 @Table(name = "tournament_group")
 public class TournamentGroup {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     /**
      * Assoc to the player in the group.
      */
@@ -20,21 +24,22 @@ public class TournamentGroup {
     @JoinTable(name = "TG_PLAYER",
             joinColumns = @JoinColumn(name = "TOURNAMENT_GROUP_ID"),
             inverseJoinColumns = @JoinColumn(name = "PLAYER_ID"))
-    List<TournamentPlayer> players = new ArrayList<>();
+    private List<TournamentPlayer> players = new ArrayList<>();
+
     /**
      * Assoc to the groups in the class.
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "group")
-    List<TournamentSingleGame> games = new ArrayList<>();
+    private List<TournamentSingleGame> games = new ArrayList<>();
+
     @ManyToOne
-    @JoinColumn(name = "TC_ID")
-    TournamentClass tournamentClass;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @JoinColumn(name = "GP_ID")
+    private GroupPhase groupPhase;
+
     @Column(nullable = false, name = "name", length = 10)
     private String name;
-    //todo we have to store it somewhere after group phase
+
+    //todo we have to store it somewhere after group activePhase
     transient private List<PlayerStatistic> ranking;
 
 
@@ -114,14 +119,6 @@ public class TournamentGroup {
         players.remove(TournamentPlayer.BYE);
     }
 
-    public TournamentClass getTournamentClass() {
-        return tournamentClass;
-    }
-
-    public void setTournamentClass(TournamentClass tournamentClass) {
-        this.tournamentClass = tournamentClass;
-    }
-
     public boolean containsPlayer(Long id) {
         for (TournamentPlayer player : players) {
             if (player.getId().equals(id)) {
@@ -130,4 +127,18 @@ public class TournamentGroup {
         }
         return false;
     }
+
+    public Long getTournamentClassId() {
+        return getGroupPhase().getSystem().getTournamentClass().getId();
+    }
+
+    public GroupPhase getGroupPhase() {
+        return groupPhase;
+    }
+
+    public void setGroupPhase(GroupPhase groupPhase) {
+        this.groupPhase = groupPhase;
+    }
+
+
 }

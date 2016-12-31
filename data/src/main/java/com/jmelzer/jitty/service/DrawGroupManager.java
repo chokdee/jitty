@@ -1,10 +1,9 @@
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.dao.PhaseRepository;
 import com.jmelzer.jitty.dao.TournamentClassRepository;
-import com.jmelzer.jitty.model.TournamentClass;
-import com.jmelzer.jitty.model.TournamentGroup;
-import com.jmelzer.jitty.model.TournamentPlayer;
-import com.jmelzer.jitty.model.TournamentSingleGame;
+import com.jmelzer.jitty.model.*;
+import com.jmelzer.jitty.model.dto.GroupPhaseDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentGroupDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
@@ -32,16 +31,19 @@ public class DrawGroupManager {
     @Resource
     TournamentClassRepository tcRepository;
     @Resource
+    PhaseRepository phaseRepository;
+    @Resource
     SeedingManager seedingManager;
 
+    //todo make it javascript
     @Transactional
-    public TournamentClassDTO calcOptimalGroupSize(TournamentClassDTO tournamentClassDTO) {
-        TournamentClass tournamentClass = tcRepository.findOne(tournamentClassDTO.getId());
-        int ppg = tournamentClassDTO.getPlayerPerGroup() == null ? 4 : tournamentClassDTO.getPlayerPerGroup();
-        int optGroupSize = calcOptimalGroupSize(tournamentClass.getPlayerCount(), ppg);
-        tournamentClassDTO.setGroupCount(optGroupSize);
-        tournamentClassDTO.setPlayerPerGroup(ppg);
-        return tournamentClassDTO;
+    public GroupPhaseDTO calcOptimalGroupSize(GroupPhaseDTO phaseDTO) {
+        GroupPhase phase = (GroupPhase) phaseRepository.findOne(phaseDTO.getId());
+        int ppg = phaseDTO.getPlayerPerGroup() == null ? 4 : phaseDTO.getPlayerPerGroup();
+        int optGroupSize = calcOptimalGroupSize(phase.getSystem().getTournamentClass().getPlayerCount(), ppg);
+        phaseDTO.setGroupCount(optGroupSize);
+        phaseDTO.setPlayerPerGroup(ppg);
+        return phaseDTO;
     }
 
     private int calcOptimalGroupSize(int playerSize, int groupSize) {
@@ -73,7 +75,7 @@ public class DrawGroupManager {
      * calculate the order of the possible games in the correct order
      */
     @Transactional
-    public void calcGroupGames(List<TournamentGroup> groups) {
+    public void calcGroupGames(String clzName, Long tId, List<TournamentGroup> groups) {
         for (TournamentGroup group : groups) {
 //            System.out.println(group);
             List<TournamentPlayer> list = new ArrayList<>(group.getPlayers());
@@ -87,7 +89,7 @@ public class DrawGroupManager {
 //                System.out.println("---- games round " + i + " ----");
                 //first 1 against last
 
-                group.addGames(createOneRound(i, list, group.getTournamentClass().getName(), group.getTournamentClass().getId()));
+                group.addGames(createOneRound(i, list, clzName, tId));
 
                 list.add(1, list.get(list.size() - 1));
                 list.remove(list.size() - 1);
@@ -107,7 +109,7 @@ public class DrawGroupManager {
      * @param players List of players
      * @param tcName
      */
-    private List<TournamentSingleGame> createOneRound(int round, List<TournamentPlayer> players, String tcName, Long tcId) {
+    private List<TournamentSingleGame> createOneRound(int round, List<TournamentPlayer> players, String tcName, Long tourId) {
         int mid = players.size() / 2;
         // Split list into two
 
@@ -137,6 +139,7 @@ public class DrawGroupManager {
             if (!TournamentPlayer.BYE.equals(t1) && !TournamentPlayer.BYE.equals(t2)) {
                 TournamentSingleGame game = new TournamentSingleGame();
                 game.setPlayer1(t1);
+                game.setTid(tourId);
                 game.setPlayer2(t2);
                 game.setTcName(tcName);
                 tournamentService.save(game);
@@ -150,11 +153,11 @@ public class DrawGroupManager {
 
 
     @Transactional
-    public TournamentClassDTO automaticDraw(TournamentClassDTO dto) {
+    public GroupPhaseDTO automaticDraw(Long cid, GroupPhaseDTO dto) {
         List<TournamentGroupDTO> groups = createDTOGroups(dto.getGroupCount());
         dto.setGroups(groups);
 
-        List<TournamentPlayerDTO> players = tournamentService.getPlayerforClass(dto.getId());
+        List<TournamentPlayerDTO> players = tournamentService.getPlayerforClass(cid);
 
         //sort all player by qttr
         Collections.sort(players, (o1, o2) -> {
@@ -170,17 +173,19 @@ public class DrawGroupManager {
 
         seedingManager.setPlayerRandomAccordingToQTTR(groups, players);
 
-        return dto;
+        return tournamentService.updatePhase(cid, dto);
     }
 
     @Transactional
     public void startClass(Long id) {
         TournamentClass clz = tcRepository.findOne(id);
-        calcGroupGames(clz.getGroups());
+        GroupPhase groupPhase = (GroupPhase) clz.getActualPhase();
+        calcGroupGames(clz.getName(), clz.getTournament().getId(), groupPhase.getGroups());
         clz.setStartTime(new Date());
         clz.setRunning(true);
+        LOG.info("Class " + clz.getName() + " was started.");
         tcRepository.saveAndFlush(clz);
-        tournamentService.addPossibleGroupGamesToQueue(clz.getGroups());
+        tournamentService.addPossibleGroupGamesToQueue(groupPhase.getGroups());
     }
 
     @Transactional(readOnly = true)

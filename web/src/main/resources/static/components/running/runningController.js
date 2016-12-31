@@ -207,7 +207,7 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     $scope.saveGame = function () {
         $http({
             method: 'POST',
-            url: '/api/tournamentdirector/save-result',
+            url: '/api/tournamentdirector/save-result/',
             data: $scope.game
         }).then(function successCallback(response) {
             $scope.callAll();

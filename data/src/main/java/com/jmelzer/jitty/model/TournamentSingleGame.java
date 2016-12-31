@@ -12,71 +12,81 @@ import java.util.List;
 @Entity
 @Table(name = "TOURNAMENT_SINGLE_GAME")
 public class TournamentSingleGame {
-    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE} )
-    @JoinColumn(name = "player1_id", foreignKey = @ForeignKey(name = "FK_P1"))
-    TournamentPlayer player1;
-    @OneToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "player2_id", foreignKey = @ForeignKey(name = "FK_P2"))
-    TournamentPlayer player2;
+    //TC Name
+    @Column(nullable = false, name = "tournament_class_name")
+    String tcName;
 
-    /**
-     * Bereits gespielt?
-     */
-    @Column(nullable = false, name = "played")
-    boolean played;
-    /**
-     * Bereits aufgerufen?
-     */
-    @Column(nullable = false, name = "called")
-    boolean called;
-    @Column(nullable = true, name = "start_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    Date startTime;
-    @Column(nullable = true, name = "end_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    Date endTime;
-    /**
-     * Nummer des zugewiesenen Tisches.
-     */
-    @Column(nullable = true, name = "table_no")
-    Integer tableNo;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "TOURNAMENT_SINGLE_GAME_SET",
-            joinColumns = @JoinColumn(name = "TOURNAMENT_SINGLE_GAME_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SETS_ID"))
-    @OrderBy("id")
-    List<GameSet> sets = new ArrayList<>();
-
-    @ManyToOne()
-    TournamentGroup group;
-
-    @ManyToOne
-    @JoinColumn(name = "ROUND_ID")
-    Round round;
+    @Column(name = "NAME")
+    String gameName;
 
     //todo add Schiedsrichter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int winner = -1;
+    @Column(nullable = false, name = "t_id")
+    private Long tid;
 
-    //TC Name
-    @Column(nullable = false, name = "tournament_class_name")
-    String tcName;
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE})
+    @JoinColumn(name = "player1_id", foreignKey = @ForeignKey(name = "FK_P1"))
+    private TournamentPlayer player1;
+
+    @OneToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "player2_id", foreignKey = @ForeignKey(name = "FK_P2"))
+    private TournamentPlayer player2;
+
+    /**
+     * Bereits gespielt?
+     */
+    @Column(nullable = false, name = "played")
+    private boolean played;
+
+    /**
+     * Bereits aufgerufen?
+     */
+    @Column(nullable = false, name = "called")
+    private boolean called;
+
+    @Column(nullable = true, name = "start_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startTime;
+
+    @Column(nullable = true, name = "end_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endTime;
+
+    /**
+     * Nummer des zugewiesenen Tisches.
+     */
+    @Column(nullable = true, name = "table_no")
+    private Integer tableNo;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "TOURNAMENT_SINGLE_GAME_SET",
+            joinColumns = @JoinColumn(name = "TOURNAMENT_SINGLE_GAME_ID"),
+            inverseJoinColumns = @JoinColumn(name = "SETS_ID"))
+    @OrderBy("id")
+    private List<GameSet> sets = new ArrayList<>();
+
+    @ManyToOne()
+    private TournamentGroup group;
+
+    @ManyToOne
+    @JoinColumn(name = "ROUND_ID")
+    private Round round;
+
+    private int winner = -1;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "NEXT_GAME_ID")
     private TournamentSingleGame nextGame;
 
-    @Column(name = "NAME")
-    String gameName;
-
     public TournamentSingleGame() {
     }
 
-    public TournamentSingleGame(String tcName) {
+    public TournamentSingleGame(String tcName, Long tId) {
         this.tcName = tcName;
+        this.tid = tId;
     }
 
     public Long getId() {
@@ -180,6 +190,14 @@ public class TournamentSingleGame {
         return s;
     }
 
+    private String printSets() {
+        String s = "";
+        for (GameSet set : sets) {
+            s += set.points1 + ":" + set.points2 + ", ";
+        }
+        return s.trim().substring(0, s.length() - 2);
+    }
+
     public String getResultInShort(TournamentPlayer own) {
         String s = "";
         if (winner == -1) {
@@ -203,19 +221,12 @@ public class TournamentSingleGame {
         return s;
     }
 
-    private String printSets() {
-        String s = "";
-        for (GameSet set : sets) {
-            s += set.points1 + ":" + set.points2 + ", ";
-        }
-        return s.trim().substring(0, s.length() - 2);
+    public boolean isFinishedOrCalled() {
+        return isFinished() || called;
     }
 
     public boolean isFinished() {
         return winner > -1;
-    }
-    public boolean isFinishedOrCalled() {
-        return isFinished() || called;
     }
 
     public TournamentPlayer getWinningPlayer() {
@@ -224,6 +235,14 @@ public class TournamentSingleGame {
         }
 
         return player2;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = player1 != null ? player1.hashCode() : 0;
+        result = 31 * result + (player2 != null ? player2.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -248,11 +267,12 @@ public class TournamentSingleGame {
     }
 
     @Override
-    public int hashCode() {
-        int result = player1 != null ? player1.hashCode() : 0;
-        result = 31 * result + (player2 != null ? player2.hashCode() : 0);
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        return result;
+    public String toString() {
+        return "TournamentSingleGame{" +
+                "id='" + id + '\'' +
+                ", p1=" + (player1 != null ? player1.getId() : "null") +
+                ", p2=" + (player2 != null ? player2.getId() : "null") +
+                '}';
     }
 
     public TournamentGroup getGroup() {
@@ -287,21 +307,12 @@ public class TournamentSingleGame {
         this.tcName = tcName;
     }
 
-    @Override
-    public String toString() {
-        return "TournamentSingleGame{" +
-                "id='" + id + '\'' +
-                ", p1=" + (player1 != null ? player1.getId() : "null") +
-                ", p2=" + (player2 != null ? player2.getId() : "null") +
-                '}';
+    public TournamentSingleGame getNextGame() {
+        return nextGame;
     }
 
     public void setNextGame(TournamentSingleGame nextGame) {
         this.nextGame = nextGame;
-    }
-
-    public TournamentSingleGame getNextGame() {
-        return nextGame;
     }
 
     public String getGameName() {
@@ -311,7 +322,16 @@ public class TournamentSingleGame {
     public void setGameName(String gameName) {
         this.gameName = gameName;
     }
+
     public boolean isEmpty() {
         return player1 == null || player2 == null;
+    }
+
+    public Long getTid() {
+        return tid;
+    }
+
+    public void setTid(Long tid) {
+        this.tid = tid;
     }
 }

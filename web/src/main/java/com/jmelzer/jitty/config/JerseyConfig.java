@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.config;
 
+import com.jmelzer.jitty.logging.EndpointLoggingListener;
 import com.jmelzer.jitty.logging.MyApplicationEventListener;
 import com.jmelzer.jitty.rest.*;
 import org.glassfish.jersey.CommonProperties;
@@ -19,6 +20,7 @@ public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
         register(UserController.class).
                 register(MyApplicationEventListener.class).
+                register(new EndpointLoggingListener("/")).
                 register(TournamentClassController.class).
                 register(PlayerController.class).
                 register(ClubController.class).

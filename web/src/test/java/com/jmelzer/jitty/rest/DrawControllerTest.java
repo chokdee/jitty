@@ -1,5 +1,6 @@
 package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.model.dto.GroupPhaseDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import org.junit.Ignore;
@@ -42,11 +43,11 @@ public class DrawControllerTest extends SecureResourceTest {
             ResponseEntity<TournamentClassDTO> entity = http(HttpMethod.GET, "api/tournament-classes/1",
                     createHttpEntity(null, loginHeaders), TournamentClassDTO.class);
 
-            entity = http(HttpMethod.POST, "api/draw/calc-optimal-group-size",
-                    createHttpEntity(entity.getBody(), loginHeaders), TournamentClassDTO.class);
+            ResponseEntity<GroupPhaseDTO>  gpEntity = http(HttpMethod.POST, "api/draw/calc-optimal-group-size",
+                    createHttpEntity(entity.getBody(), loginHeaders), GroupPhaseDTO.class);
 
-            assertTrue(entity.getStatusCode().is2xxSuccessful());
-            assertThat(entity.getBody().getGroupCount(), is(greaterThan(1)));
+            assertTrue(gpEntity.getStatusCode().is2xxSuccessful());
+            assertThat(gpEntity.getBody().getGroupCount(), is(greaterThan(1)));
 //            System.out.println("entity = " + entity.getBody());
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
@@ -63,7 +64,10 @@ public class DrawControllerTest extends SecureResourceTest {
             ResponseEntity<TournamentClassDTO> entity = http(HttpMethod.GET, "api/tournament-classes/1",
                     createHttpEntity(null, loginHeaders), TournamentClassDTO.class);
 
-            assertNull(entity.getBody().getGroupCount());
+            ResponseEntity<GroupPhaseDTO> phaseDTO = http(HttpMethod.GET, "draw/actual-phase?cid=1",
+                    createHttpEntity(null, loginHeaders), GroupPhaseDTO.class);
+
+            assertNull(phaseDTO.getBody());
 
             entity = http(HttpMethod.POST, "api/draw/calc-optimal-group-size",
                     createHttpEntity(entity.getBody(), loginHeaders), TournamentClassDTO.class);

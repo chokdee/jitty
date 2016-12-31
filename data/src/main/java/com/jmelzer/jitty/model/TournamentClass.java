@@ -20,17 +20,15 @@ public class TournamentClass {
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(name = "TC_PLAYER")
     List<TournamentPlayer> players = new ArrayList<>();
-    /**
-     * Assoc to the groups in the class.
-     */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tournamentClass", orphanRemoval = true)
-    List<TournamentGroup> groups = new ArrayList<>();
+
     @ManyToOne(targetEntity = Tournament.class)
     @JoinColumn(name = "T_ID")
     Tournament tournament;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true, name = "start_time")
     Date startTime;
+
     @Column(nullable = true)
     String type;
 
@@ -38,55 +36,47 @@ public class TournamentClass {
     //trostrunden?
     @Column(nullable = false, name = "running")
     Boolean running = false;
-    @Column(nullable = true, name = "phase")
-    Integer phase = 0;
-    /**
-     * @see GameMode for values
-     */
-    @Column(nullable = true, name = "game_mode_phase_1", length = 1)
-    String gameModePhase1;
-    /**
-     * @see GameMode for values
-     */
-    @Column(nullable = true, name = "game_mode_phase_2", length = 1)
-    String gameModePhase2;
-    @Column(nullable = true, name = "player_per_group")
-    Integer playerPerGroup;
-    @Column(nullable = true, name = "group_count")
-    Integer groupCount;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "KOFIELD_ID")
-    KOField koField;
+
+    @Column(nullable = false, name = "ACTIVE_PHASE")
+    int activePhase = -1;
+
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "tournamentClass")
+    @JoinColumn(name = "SYSTEM_ID")
+    TournamentSystem system;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false, name = "name")
     private String name;
+
     /**
      * Min TTR Wert.
      */
     @Column(nullable = true, name = "start_ttr")
     private int startTTR = 0;
+
     /**
      * Max TTR Wert.
      */
     @Column(nullable = true, name = "end_ttr")
     private int endTTR = 0;
+
     @Temporal(TemporalType.DATE)
     @Column(nullable = true, name = "min_age")
     private Date minAge;
+
     @Temporal(TemporalType.DATE)
     @Column(nullable = true, name = "max_age")
     private Date maxAge;
+
     @Column(nullable = false, name = "open_for_men")
     private boolean openForMen;
+
     @Column(nullable = false, name = "open_for_women")
     private boolean openForWomen;
-    /**
-     * how many places will be qulified agter group.
-     */
-    @Column(nullable = false, name = "quali_group_count")
-    private int qualiGroupCount = 2;
 
 
     public TournamentClass(String name) {
@@ -94,47 +84,6 @@ public class TournamentClass {
     }
 
     public TournamentClass() {
-    }
-
-    public KOField getKoField() {
-        return koField;
-    }
-
-    public void setKoField(KOField koField) {
-        this.koField = koField;
-        koField.setTournamentClass(this);
-    }
-
-    public Integer getPlayerPerGroup() {
-        return playerPerGroup;
-    }
-
-    public void setPlayerPerGroup(Integer playerPerGroup) {
-        this.playerPerGroup = playerPerGroup;
-    }
-
-    public Integer getGroupCount() {
-        return groupCount;
-    }
-
-    public void setGroupCount(Integer groupCount) {
-        this.groupCount = groupCount;
-    }
-
-    public String getGameModePhase1() {
-        return gameModePhase1;
-    }
-
-    public void setGameModePhase1(String gameModePhase1) {
-        this.gameModePhase1 = gameModePhase1;
-    }
-
-    public String getGameModePhase2() {
-        return gameModePhase2;
-    }
-
-    public void setGameModePhase2(String gameModePhase2) {
-        this.gameModePhase2 = gameModePhase2;
     }
 
     public Long getId() {
@@ -161,22 +110,6 @@ public class TournamentClass {
         players.add(player);
     }
 
-    public void clearGroups() {
-        groups.clear();
-    }
-
-    public List<TournamentGroup> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<TournamentGroup> groups) {
-        this.groups = groups;
-    }
-
-    public void addGroup(TournamentGroup group) {
-        groups.add(group);
-        group.setTournamentClass(this);
-    }
 
     public int getStartTTR() {
         return startTTR;
@@ -220,33 +153,6 @@ public class TournamentClass {
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
-    }
-
-    @Override
-    public String toString() {
-        return "TournamentClass{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", startTTR=" + startTTR +
-                ", endTTR=" + endTTR +
-                ", players=" + players +
-                ", groups=" + groups +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        TournamentClass that = (TournamentClass) o;
-
-        return id.equals(that.id);
-
     }
 
     public String getType() {
@@ -294,6 +200,32 @@ public class TournamentClass {
         return id.hashCode();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TournamentClass that = (TournamentClass) o;
+
+        return id.equals(that.id);
+
+    }
+
+    @Override
+    public String toString() {
+        return "TournamentClass{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", startTTR=" + startTTR +
+                ", endTTR=" + endTTR +
+                ", players=" + players +
+                '}';
+    }
+
     public void removePlayer(TournamentPlayer player) {
         players.remove(player);
     }
@@ -303,19 +235,64 @@ public class TournamentClass {
         return players.size();
     }
 
-    public Integer getPhase() {
-        return phase;
+    public int getActivePhase() {
+        return activePhase;
     }
 
-    public void setPhase(Integer phase) {
-        this.phase = phase;
+    public void setActivePhase(int activePhase) {
+        this.activePhase = activePhase;
     }
 
-    public int getQualiGroupCount() {
-        return qualiGroupCount;
+    public KOField getKoField() {
+        return system.findKOField();
     }
 
-    public void setQualiGroupCount(int qualiGroupCount) {
-        this.qualiGroupCount = qualiGroupCount;
+    public void setKoField(KOField koField) {
+        system.setKOField(koField);
+    }
+
+    public TournamentSystem getSystem() {
+        return system;
+    }
+
+    private void setSystem(TournamentSystem system) {
+        this.system = system;
+        system.setTournamentClass(this);
+    }
+
+    //todo change it
+    public List<TournamentGroup> getGroups() {
+        if (system != null && activePhase > -1) {
+            return ((GroupPhase) system.getPhases().get(0)).getGroups();
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    public void createPhaseCombination(PhaseCombination phaseCombination) {
+        if (system == null) {
+            setSystem(new TournamentSystem());
+        }
+        switch (phaseCombination) {
+            case GK:
+                system.addPhase(new GroupPhase());
+                system.addPhase(new KOPhase());
+                break;
+            default:
+                throw new UnsupportedOperationException("not yet implemented");
+        }
+    }
+
+    public void addGroup(TournamentGroup copy) {
+        ((GroupPhase) system.getPhases().get(0)).addGroup(copy);
+    }
+
+
+    public Phase getActualPhase() {
+        if (activePhase > -1) {
+            return system.getPhases().get(activePhase);
+        } else {
+            return null;
+        }
     }
 }

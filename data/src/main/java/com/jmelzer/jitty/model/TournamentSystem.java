@@ -1,0 +1,70 @@
+package com.jmelzer.jitty.model;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Created by J. Melzer on 28.12.2016.
+ * Tournment system
+ */
+@Entity
+@Table(name = "t_system")
+public class TournamentSystem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "system", fetch = FetchType.LAZY)
+    @OrderColumn(name = "INDEX")
+    private List<Phase> phases = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "TC_ID")
+    private TournamentClass tournamentClass;
+
+    public KOField findKOField() {
+        for (Phase phase : phases) {
+            if (phase instanceof KOPhase) {
+                return ((KOPhase) phase).getKoField();
+            }
+        }
+        return null;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Phase> getPhases() {
+        return Collections.unmodifiableList(phases);
+    }
+
+    public void addPhase(Phase phase) {
+        phases.add(phase);
+        phase.setSystem(this);
+    }
+
+    public void setKOField(KOField koField) {
+        for (Phase phase : phases) {
+            if (phase instanceof KOPhase) {
+                ((KOPhase) phase).setKoField(koField);
+            }
+        }
+    }
+
+    public TournamentClass getTournamentClass() {
+        return tournamentClass;
+    }
+
+    public void setTournamentClass(TournamentClass tournamentClass) {
+        this.tournamentClass = tournamentClass;
+    }
+
+
+}

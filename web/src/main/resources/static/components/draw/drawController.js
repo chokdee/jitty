@@ -23,27 +23,37 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         } else {
             $scope.templateurl = '';
         }
+
+        $scope.selectPhaseCombination();
     });
     $scope.getTournamentClass = function () {
         $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
             console.log('Got TournamentClass successful');
+            $scope.getActualPhase();
+
             if ($scope.tournamentClass.playerPerGroup == null)
                 $scope.tournamentClass.playerPerGroup = 4; //default
-            $scope.groups = $scope.tournamentClass.groups;
+
+
+
             if ($scope.tournamentClass.running) {
                 $scope.templateurl = 'components/draw/bracket.html';
             }
 
-            // $scope.templateurl = 'components/draw/groups.html';
-            // else
-            //     $scope.templateurl = 'components/draw/bracket.html';
         });
 
     };
 
+    $scope.getActualPhase = function () {
+        $http.get('/api/draw/actual-phase?cid=' + $routeParams.id, {}).then(function (response) {
+            $scope.phase = response.data;
+            $scope.groups = $scope.phase.groups;
+        });
+    };
 
     if ($routeParams.id != null) {
         $scope.getTournamentClass();
+
     }
 
     $scope.getPossibleClasses = function () {
@@ -52,6 +62,14 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         });
 
     };
+    $scope.selectPhaseCombination = function () {
+        $http.get('/api/draw/select-phase-combination?cid=' + $routeParams.id + '&type=' + $scope.modus.id, {}).then(function (response) {
+            console.log('System successfully selected')
+        });
+
+    };
+
+
     if ($routeParams.id == null)
         $scope.getPossibleClasses();
 
@@ -59,19 +77,13 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 }).controller('GroupController', function ($scope, $http, $routeParams, $window, TournamentClass, Flash) {
     $scope.resultSize = 0;
 
-    $scope.$watch('tournamentClass.groupCount', function () {
+    $scope.$watch('phase.groupCount', function () {
         $scope.createGroups();
     });
 
     $scope.displaySaveMessage = function () {
         var message = 'Die Gruppenauslosung wurde erfolgreich gespeichert';
         var id = Flash.create('success', message, 4000, {container: 'flash-status'});
-        // First argument (string) is the type of the flash alert.
-        // Second argument (string) is the message displays in the flash alert (HTML is ok).
-        // Third argument (number, optional) is the duration of showing the flash. 0 to not automatically hide flash (user needs to click the cross on top-right corner).
-        // Fourth argument (object, optional) is the custom class and id to be added for the flash message created.
-        // Fifth argument (boolean, optional) is the visibility of close button for this flash.
-        // Returns the unique id of flash message that can be used to call Flash.dismiss(id); to dismiss the flash message.
     };
 
 
@@ -105,10 +117,10 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     $scope.automaticDraw = function () {
         $http({
             method: 'POST',
-            url: '/api/draw/automatic-draw',
-            data: $scope.tournamentClass
+            url: '/api/draw/automatic-draw?cid=' + $routeParams.id,
+            data: $scope.phase
         }).then(function successCallback(response) {
-            $scope.tournamentClass = response.data;
+            $scope.phase = response.data;
 
             $scope.createGroups();
             $scope.getPossiblePlayerForGroups();
@@ -119,11 +131,11 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
     };
     $scope.saveDraw = function () {
-        $scope.tournamentClass.groups = $scope.groups;
+        $scope.phase.groups = $scope.groups;
         $http({
             method: 'POST',
             url: '/api/draw/save',
-            data: $scope.tournamentClass
+            data: $scope.phase
         }).then(function successCallback(response) {
             $scope.displaySaveMessage();
         }, function errorCallback(response) {
@@ -141,10 +153,10 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         $http({
             method: 'POST',
             url: '/api/draw/calc-optimal-group-size',
-            data: $scope.tournamentClass
+            data: $scope.phase
         }).then(function successCallback(response) {
-            $scope.tournamentClass = response.data;
-            $scope.resultSize = $scope.tournamentClass.playerPerGroup * $scope.tournamentClass.groupCount;
+            $scope.phase = response.data;
+            $scope.resultSize = $scope.phase.playerPerGroup * $scope.phase.groupCount;
             console.log('resultsize = ' + $scope.resultSize);
 
             $scope.createGroups();
@@ -155,20 +167,22 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     };
 
     $scope.createGroups = function () {
-        if ($scope.tournamentClass.groups == null || $scope.tournamentClass.groups.length == 0) {
-            for (i = 0; i < $scope.tournamentClass.groupCount; i++) {
+        if ($scope.phase == null) return;
+
+        if ($scope.phase.groups == null || $scope.phase.groups.length == 0) {
+            for (i = 0; i < $scope.phase.groupCount; i++) {
                 $scope.groups[i] = {name: '' + (i + 1), players: {}};
             }
         } else {
-            $scope.groups = $scope.tournamentClass.groups;
+            $scope.groups = $scope.phase.groups;
         }
     };
     $scope.refreshGroupSize = function () {
-        if ($scope.tournamentClass != null && $scope.modus.id == 1 && $scope.tournamentClass.id != null)
+        if ($scope.phase != null && $scope.modus.id == 1 && $scope.phase.id != null)
             $scope.calcGroupSize();
     };
 
-    $scope.$watch('tournamentClass.playerPerGroup', function () {
+    $scope.$watch('phase.playerPerGroup', function () {
         $scope.refreshGroupSize();
     });
 

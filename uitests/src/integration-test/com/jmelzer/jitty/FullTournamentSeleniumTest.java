@@ -36,7 +36,7 @@ public class FullTournamentSeleniumTest {
 
     private void enterResultsForKO() throws InterruptedException {
         driver().findElement(By.id("assignFreeTables")).click();
-        Thread.sleep(100);
+        Thread.sleep(200);
         enterResults(2);
         driver().findElement(By.id("assignFreeTables")).click();
         Thread.sleep(100);
@@ -64,11 +64,11 @@ public class FullTournamentSeleniumTest {
         enterResults(4);
 
         driver().findElement(By.id("assignFreeTables")).click();
-        Thread.sleep(100);
+        waitForText(1, "Ergebnis...");
         enterResults(4);
 
         driver().findElement(By.id("assignFreeTables")).click();
-        Thread.sleep(100);
+        waitForText(1, "Ergebnis...");
         enterResults(4);
 
         waitForText(2, "Hier klicken");

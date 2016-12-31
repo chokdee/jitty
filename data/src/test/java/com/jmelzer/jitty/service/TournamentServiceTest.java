@@ -7,6 +7,7 @@ import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.System;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,32 +129,33 @@ public class TournamentServiceTest {
         assertThat(service.calcWinner(game).getWinner(), is(2));
     }
     @Test
-    public void getNotRunning() {
+    public void getAllClassesWithStatus() {
         UserRepository userRepository = mock(UserRepository.class);
         service.userRepository = userRepository;
         User user = new User();
         Tournament tournament = new Tournament();
         user.setLastUsedTournament(tournament);
         TournamentClass tournamentClass = new TournamentClass();
+        tournamentClass.createPhaseCombination(PhaseCombination.GK);
         tournament.addClass(tournamentClass);
 
         when(userRepository.findByLoginName(anyString())).thenReturn(user);
 
-        assertThat(service.getNotRunningOrStartPhase2("bla").size(), is(1));
+        assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
 
-        tournamentClass.setPhase(1);
-        assertThat(service.getNotRunningOrStartPhase2("bla").size(), is(1));
+        tournamentClass.setActivePhase(1);
+        assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
         TournamentSingleGame game = new TournamentSingleGame();
         TournamentGroup group = new TournamentGroup();
         group.addGame(game);
         tournamentClass.addGroup(group);
 
         tournamentClass.setRunning(true);
-        assertThat(service.getNotRunningOrStartPhase2("bla").size(), is(0));
+        assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
 
         //all games were played
         game.setPlayed(true);
-        assertThat(service.getNotRunningOrStartPhase2("bla").size(), is(1));
+        assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
 
     }
 }

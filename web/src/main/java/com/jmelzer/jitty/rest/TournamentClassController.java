@@ -35,7 +35,7 @@ public class TournamentClassController {
     @Path("/not-running")
     @GET
     public List<TournamentClassDTO> getNotRunning() {
-        return service.getNotRunningOrStartPhase2(securityUtil.getActualUsername());
+        return service.getAllClassesWithStatus(securityUtil.getActualUsername());
     }
 
     @Path("{id}")
@@ -52,7 +52,7 @@ public class TournamentClassController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Long saveOrCreate(@PathParam(value = "tid") String tid,
-                             TournamentClass tournamentClass) {
+                             TournamentClassDTO tournamentClass) {
         TournamentClass clz = service.addTC(Long.valueOf(tid), tournamentClass);
         return clz.getId();
 
