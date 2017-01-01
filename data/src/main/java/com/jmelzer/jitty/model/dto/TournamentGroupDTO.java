@@ -1,12 +1,6 @@
 package com.jmelzer.jitty.model.dto;
 
-import com.jmelzer.jitty.model.TournamentPlayer;
-import com.jmelzer.jitty.model.TournamentSingleGame;
-import com.jmelzer.jitty.service.TournamentService;
-
-import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

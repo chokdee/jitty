@@ -13,7 +13,6 @@ package com.jmelzer.jitty.app;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.boot.spi.MetadataImplementor;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import java.io.File;
@@ -146,7 +145,7 @@ public class SchemaExporter {
     /**
      * Holds the classnames of hibernate dialects for easy reference.
      */
-    private static enum Dialect {
+    private enum Dialect {
         /**
          * .
          */
@@ -167,7 +166,7 @@ public class SchemaExporter {
          *
          * @param dialectClass .
          */
-        private Dialect(final String dialectClass) {
+        Dialect(String dialectClass) {
             this.dialectClass = dialectClass;
         }
 

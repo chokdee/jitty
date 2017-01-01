@@ -7,8 +7,6 @@ package com.jmelzer.jitty.model.dto;
 
 import com.jmelzer.jitty.model.TournamentSystem;
 
-import javax.persistence.*;
-
 /**
  * Created by J. Melzer on 28.12.2016.
  */

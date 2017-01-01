@@ -1,10 +1,5 @@
 package com.jmelzer.jitty.model.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 /**
  * Created by J. Melzer on 03.06.2016.
  * Ein satz im SPiel

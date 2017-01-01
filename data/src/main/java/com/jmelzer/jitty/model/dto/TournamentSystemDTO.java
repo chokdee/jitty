@@ -5,9 +5,6 @@
 
 package com.jmelzer.jitty.model.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by J. Melzer on 30.12.2016.
  */

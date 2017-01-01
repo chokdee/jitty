@@ -1,13 +1,9 @@
 package com.jmelzer.jitty.config;
 
-import com.jmelzer.jitty.dao.UserRepository;
-import com.jmelzer.jitty.model.Tournament;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * Created by J. Melzer on 22.07.2016.

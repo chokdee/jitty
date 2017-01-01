@@ -43,7 +43,7 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider {
         }
         logger.info("user {} logged in", username);
         // we have to store password
-        return new UsernamePasswordAuthenticationToken(username, password, Collections.<GrantedAuthority>emptyList());
+        return new UsernamePasswordAuthenticationToken(username, password, Collections.emptyList());
     }
 
     @Override

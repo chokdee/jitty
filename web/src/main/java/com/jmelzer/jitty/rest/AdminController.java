@@ -23,6 +23,7 @@ public class AdminController {
 
     final static Logger LOG = LoggerFactory.getLogger(AdminController.class);
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Inject
     Provider<MonitoringStatistics> statistics;
 

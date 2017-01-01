@@ -2,9 +2,6 @@ package com.jmelzer.jitty.model;
 
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by J. Melzer on 01.06.2016.

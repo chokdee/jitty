@@ -4,7 +4,6 @@ import com.jmelzer.jitty.dao.PhaseRepository;
 import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.GroupPhaseDTO;
-import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentGroupDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import org.slf4j.Logger;

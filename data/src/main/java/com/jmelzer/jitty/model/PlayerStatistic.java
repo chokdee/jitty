@@ -1,7 +1,5 @@
 package com.jmelzer.jitty.model;
 
-import com.jmelzer.jitty.service.TournamentService;
-
 import java.util.ArrayList;
 import java.util.List;
 
