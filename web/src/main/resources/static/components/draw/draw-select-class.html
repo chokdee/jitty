@@ -22,9 +22,10 @@
     <tr ng-repeat="c in possibleClasses">
         <td><a href="#/draw/{{c.id}}">{{c.name}}</a></td>
         <td>{{c.startTime | date:'dd.MM.yyyy hh:mm' }}</td>
-        <td>{{c.status}}</td>
+        <td>{{translateStatus(c.status)}}</td>
         <td>
-            <a class="btn btn-primary" href="#/draw/{{c.id}}">Auswählen</a>
+            <!--<a ng-show="!c.confirm" class="btn btn-primary" href="#/draw/{{c.id}}">Auswählen</a>-->
+            <a class="btn btn-primary" confirm="Die Klasse hat bereits begonnen. Sicher?" confirm-if="c.confirm" ng-click="selectClass(c.id)">Beabeiten</a>
             <a class="btn btn-primary" href="#/groups/{{c.id}}">Ergebnisse</a>
         </td>
     </tr>

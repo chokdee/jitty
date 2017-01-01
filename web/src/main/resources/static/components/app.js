@@ -1,4 +1,5 @@
 angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'jitty.auth', 'ui.bootstrap', 'frapontillo.bootstrap-duallistbox', 'dndLists', 'ngFlash',
+    'angular-confirm',
     'jitty.services', 'jitty.directives', 'jitty.login', 'jitty.user',
     'jitty.tournament', 'jitty.player', 'jitty.draw', 'jitty.running', 'jitty.liveview', 'jitty.util']).config(function ($routeProvider, $httpProvider, $locationProvider) {
 
@@ -48,7 +49,7 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'jitty.auth', 'u
     };
 
 
-}).run(function ($rootScope, $route, $location, auth) {
+}).run(function ($rootScope, $route, $location, $confirmModalDefaults, auth) {
 
     var history = [];
 
@@ -68,4 +69,6 @@ angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'jitty.auth', 'u
     $rootScope.tournament = {};
 
     auth.init('/', '/login', '/logout');
+
+    $confirmModalDefaults.defaultLabels.title = 'Bestätigung';
 });
