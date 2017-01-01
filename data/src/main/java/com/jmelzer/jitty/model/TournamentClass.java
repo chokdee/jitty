@@ -247,6 +247,9 @@ public class TournamentClass {
             boolean hasResults = getActivePhase().areGamesPlayed();
             if (getActivePhaseNo() == 0) {
                 if (hasResults) {
+                    if (getActivePhase().isFinished()) {
+                        return TournamentClassStatus.PHASE1_FINISHED;
+                    }
                     return TournamentClassStatus.PHASE1_AND_RESULTS;
                 } else {
                     return TournamentClassStatus.PHASE1_STARTED_NOT_CALLED;
@@ -263,7 +266,14 @@ public class TournamentClass {
     }
 
     private boolean finished() {
-        return getActivePhaseNo() == 1 && getActivePhase().isFinished();
+        return (getActivePhaseNo() == getPhaseCount()-1) && getActivePhase().isFinished();
+    }
+
+    public int getPhaseCount() {
+        if (system == null) {
+            return -100;
+        }
+        return system.getPhaseCount();
     }
 
     @Transient

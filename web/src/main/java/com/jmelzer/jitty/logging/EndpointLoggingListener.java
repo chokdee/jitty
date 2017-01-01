@@ -84,6 +84,7 @@ public class EndpointLoggingListener implements ApplicationEventListener {
         populate(basePath, isLocator, Resource.from(klass), endpointLogLines);
     }
 
+    @SuppressWarnings("AssignmentToMethodParameter")
     private void populate(String basePath, boolean isLocator, Resource resource,
                           Set<EndpointLogLine> endpointLogLines) {
         if (!isLocator) {

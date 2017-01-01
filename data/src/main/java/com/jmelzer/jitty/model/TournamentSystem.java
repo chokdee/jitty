@@ -71,4 +71,8 @@ public class TournamentSystem {
     public void clearPhases() {
         phases.clear();
     }
+
+    public int getPhaseCount() {
+        return phases.size();
+    }
 }

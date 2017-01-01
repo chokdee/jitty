@@ -28,12 +28,12 @@ public class FullTournamentSeleniumTest {
         driver().navigate().back();
         selectTournament(id);
 
-//        for (int i = 0; i < 8; i++) {
-//            createRandomPlayerAndAssignToClassA();
-//        }
-//
-//        createDrawForBKlasse();
-//        enterResultsForGroup();
+        for (int i = 0; i < 8; i++) {
+            createRandomPlayerAndAssignToClassA();
+        }
+
+        createDrawForBKlasse();
+        enterResultsForGroup();
 //        createDrawForKO();
 //        enterResultsForKO();
     }
