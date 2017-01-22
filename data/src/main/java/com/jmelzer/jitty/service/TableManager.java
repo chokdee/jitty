@@ -39,7 +39,7 @@ public class TableManager {
     }
 
     public void setBusyTableNo(int no, TournamentSingleGame game) {
-        game.setTableNo(no);
+
         busyTables.put(no, game);
         freeTables.remove(no);
     }

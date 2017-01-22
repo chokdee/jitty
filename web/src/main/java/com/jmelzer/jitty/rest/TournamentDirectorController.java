@@ -68,7 +68,7 @@ public class TournamentDirectorController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response startPossibleGames() {
         try {
-            service.startPossibleGames(securityUtil.getActualUsername());
+            service.startPossibleGames();
         } catch (IntegrityViolation integrityViolation) {
             return ControllerUtil.buildErrorResponse(integrityViolation.getMessage());
         }

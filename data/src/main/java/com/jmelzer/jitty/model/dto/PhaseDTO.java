@@ -5,11 +5,20 @@
 
 package com.jmelzer.jitty.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.jmelzer.jitty.model.TournamentSystem;
 
 /**
  * Created by J. Melzer on 28.12.2016.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = KOPhaseDTO.class),
+        @JsonSubTypes.Type(value = GroupPhaseDTO.class),
+})
 public abstract class PhaseDTO {
 
     private TournamentSystem system;

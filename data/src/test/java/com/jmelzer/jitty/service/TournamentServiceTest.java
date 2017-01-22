@@ -1,5 +1,7 @@
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.dao.GameQueueRepository;
+import com.jmelzer.jitty.dao.TournamentSingleGameRepository;
 import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.GameSetDTO;
@@ -8,9 +10,7 @@ import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.System;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,9 +18,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by J. Melzer on 11.06.2016.
@@ -35,6 +36,19 @@ public class TournamentServiceTest {
 
     @Test
     public void testAddPossibleGamesToQueue() throws Exception {
+        GameQueueRepository gameQueueRepository = mock(GameQueueRepository.class);
+        TournamentSingleGameRepository tournamentSingleGameRepository = mock(TournamentSingleGameRepository.class);
+        TableManager tableManager = mock(TableManager.class);
+
+        when(tableManager.getFreeTableCount()).thenReturn(4);
+        when(tableManager.pollFreeTableNo(anyObject())).thenReturn(1);
+
+        service.tableManager = tableManager;
+        service.gameQueueRepository = gameQueueRepository;
+        service.tournamentSingleGameRepository = tournamentSingleGameRepository;
+
+        GameQueue queue = new GameQueue();
+        when(gameQueueRepository.findOne(1L)).thenReturn(queue);
 
         TournamentGroup group = prepareGroupWithPlayerAndGames();
         List<TournamentGroup> groups = new ArrayList<>();
@@ -42,18 +56,13 @@ public class TournamentServiceTest {
         service.addPossibleGroupGamesToQueue(groups);
         assertEquals(2, service.getQueueSize());
 
-        TournamentSingleGame game = service.poll();
-        game.setCalled(true);
-        assertEquals(1, service.getQueueSize());
-        service.addPossibleGroupGamesToQueue(groups);
-        assertEquals("player busy no new player can be added", 1, service.getQueueSize());
+        service.startPossibleGames();
+        //must be saved
+        verify(tournamentSingleGameRepository, atLeast(1)).save(isA(TournamentSingleGame.class));
+        verify(gameQueueRepository, atLeast(1)).saveAndFlush(queue);
 
-        game = service.poll();
-        game.setCalled(true);
-        assertEquals(0, service.getQueueSize());
+        assertEquals("player busy no new player can be added", 0, service.addPossibleGroupGamesToQueue(groups));
 
-        service.addPossibleGroupGamesToQueue(groups);
-        assertEquals(2, service.getQueueSize());
     }
 
 
@@ -74,17 +83,13 @@ public class TournamentServiceTest {
         return group;
     }
 
-    private TournamentGroup prepareGroupWith3PlayerAndGames() {
-        TournamentGroup group = new TournamentGroup("A");
-        group.addPlayer(new TournamentPlayer(1L, "1", "1"));
-        group.addPlayer(new TournamentPlayer(2L, "2", "2"));
-        group.addPlayer(new TournamentPlayer(3L, "3", "3"));
-
-
-        addGame(group, 0, 1);
-        addGame(group, 0, 2);
-        addGame(group, 1, 2);
-        return group;
+    private void addGame(TournamentGroup group, int i, int j) {
+        TournamentSingleGame game;
+        game = new TournamentSingleGame();
+        game.setId((long) i * j);
+        game.setPlayer1(group.getPlayers().get(i));
+        game.setPlayer2(group.getPlayers().get(j));
+        group.addGame(game);
     }
 
     @Test
@@ -108,12 +113,17 @@ public class TournamentServiceTest {
         }
     }
 
-    private void addGame(TournamentGroup group, int i, int j) {
-        TournamentSingleGame game;
-        game = new TournamentSingleGame();
-        game.setPlayer1(group.getPlayers().get(i));
-        game.setPlayer2(group.getPlayers().get(j));
-        group.addGame(game);
+    private TournamentGroup prepareGroupWith3PlayerAndGames() {
+        TournamentGroup group = new TournamentGroup("A");
+        group.addPlayer(new TournamentPlayer(1L, "1", "1"));
+        group.addPlayer(new TournamentPlayer(2L, "2", "2"));
+        group.addPlayer(new TournamentPlayer(3L, "3", "3"));
+
+
+        addGame(group, 0, 1);
+        addGame(group, 0, 2);
+        addGame(group, 1, 2);
+        return group;
     }
 
     @Test
@@ -131,6 +141,7 @@ public class TournamentServiceTest {
         game.addSet(new GameSetDTO(11, 13));
         assertThat(service.calcWinner(game).getWinner(), is(2));
     }
+
     @Test
     public void getAllClassesWithStatus() {
         UserRepository userRepository = mock(UserRepository.class);
@@ -176,7 +187,7 @@ public class TournamentServiceTest {
         Round r2 = new Round();
         r1.setNextRound(r2);
         r2.addAllGames(Collections.singletonList(rg2));
-        ((KOPhase)tournamentClass.getActivePhase()).setKoField(koField);
+        ((KOPhase) tournamentClass.getActivePhase()).setKoField(koField);
         assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.PHASE2_STARTED_NOT_CALLED));
 
         rg1.setPlayed(true);

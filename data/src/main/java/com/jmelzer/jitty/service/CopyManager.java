@@ -176,10 +176,10 @@ public class CopyManager {
         return group;
     }
 
-    static public TournamentClassDTO copy(TournamentClass clz) {
+    static public TournamentClassDTO copy(TournamentClass clz, boolean withSystem) {
         TournamentClassDTO dto = new TournamentClassDTO();
         BeanUtils.copyProperties(clz, dto, "system", "players");
-        if (clz.getSystem() != null) {
+        if (withSystem && clz.getSystem() != null) {
             dto.setSystem(new TournamentSystemDTO());
             for (Phase phase : clz.getSystem().getPhases()) {
                 dto.getSystem().addPhase(copy(phase, true));

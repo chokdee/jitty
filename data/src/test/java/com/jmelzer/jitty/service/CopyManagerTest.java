@@ -21,7 +21,7 @@ public class CopyManagerTest {
         clz.createPhaseCombination(PhaseCombination.GK);
         clz.addPlayer(new TournamentPlayer());
         clz.addGroup(new TournamentGroup());
-        TournamentClassDTO dto = CopyManager.copy(clz);
+        TournamentClassDTO dto = CopyManager.copy(clz, true);
         assertThat(dto.getName(), is("1"));
 //        assertThat(dto.getGroups().size(), is(1));
     }

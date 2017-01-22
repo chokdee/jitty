@@ -40,11 +40,17 @@ public class DrawControllerTest extends SecureResourceTest {
         try {
             HttpHeaders loginHeaders = doLogin();
 
+
+            ResponseEntity<Void> vE = http(HttpMethod.GET, "api/draw/select-phase-combination?cid=1&type=1",
+                    createHttpEntity(null, loginHeaders), Void.class);
+            assertTrue(vE.getStatusCode().is2xxSuccessful());
+
             ResponseEntity<TournamentClassDTO> entity = http(HttpMethod.GET, "api/tournament-classes/1",
                     createHttpEntity(null, loginHeaders), TournamentClassDTO.class);
+            assertTrue(entity.getStatusCode().is2xxSuccessful());
 
             ResponseEntity<GroupPhaseDTO>  gpEntity = http(HttpMethod.POST, "api/draw/calc-optimal-group-size",
-                    createHttpEntity(entity.getBody(), loginHeaders), GroupPhaseDTO.class);
+                    createHttpEntity(entity.getBody().getSystem().getPhases().get(0), loginHeaders), GroupPhaseDTO.class);
 
             assertTrue(gpEntity.getStatusCode().is2xxSuccessful());
             assertThat(gpEntity.getBody().getGroupCount(), is(greaterThan(1)));
