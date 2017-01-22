@@ -34,8 +34,8 @@ public class FullTournamentSeleniumTest {
 
         createDrawForBKlasse();
         enterResultsForGroup();
-//        createDrawForKO();
-//        enterResultsForKO();
+        createDrawForKO();
+        enterResultsForKO();
     }
 
     private long createTournament() throws Exception {
@@ -169,7 +169,10 @@ public class FullTournamentSeleniumTest {
     private void createDrawForKO() throws InterruptedException {
         navigate("#/tournamentdirector/overview", "Turnierleitung");
         driver().findElement(By.linkText("Hier klicken")).click();
-        waitForText(1, "KO Feld");
+        waitForText(1, "Phase");
+        Select select = new Select(driver().findElement(By.id("phase")));
+        select.selectByVisibleText("KO");
+
         driver().findElement(By.id("automaticDraw")).click();
         Thread.sleep(200);
         driver().findElement(By.id("startKO")).click();

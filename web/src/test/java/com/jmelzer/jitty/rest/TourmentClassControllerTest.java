@@ -58,7 +58,7 @@ public class TourmentClassControllerTest extends SecureResourceTest {
 
             HttpHeaders loginHeaders = doLogin();
 
-            ResponseEntity<TournamentClassDTO[]> entity = http(HttpMethod.GET, "api/tournament-classes/not-running",
+            ResponseEntity<TournamentClassDTO[]> entity = http(HttpMethod.GET, "api/tournament-classes/classes-with-status",
                     createHttpEntity(null, loginHeaders), TournamentClassDTO[].class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());

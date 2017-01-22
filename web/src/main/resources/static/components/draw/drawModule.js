@@ -8,7 +8,7 @@ angular.module('jitty.draw', ['ngRoute', 'ngResource', 'ngMessages', 'ui.select'
     }).when('/draw/:id', {
         title: 'Auslosung',
         templateUrl: '/components/draw/draw.html',
-        controller: 'DrawController'
+        controller: 'DrawEditController'
     }).otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

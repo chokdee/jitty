@@ -32,7 +32,7 @@ public class TournamentClassController {
     @Inject
     SecurityUtil securityUtil;
 
-    @Path("/not-running")
+    @Path("/classes-with-status")
     @GET
     public List<TournamentClassDTO> getNotRunning() {
         return service.getAllClassesWithStatus(securityUtil.getActualUsername());

@@ -1,5 +1,65 @@
-//todo refactor this  and add a listcontroller
-angular.module('jitty.draw.controllers', []).controller('DrawController', function ($scope, $http, $window, $routeParams, TournamentClass) {
+angular.module('jitty.draw.controllers', []).controller('DrawController', function ($scope, $http, $window, $routeParams) {
+
+    $scope.translateStatus = function (s) {
+        switch (s) {
+            case "NOTSTARTED":
+                return "nicht gestartet";
+            case "PHASE1_STARTED_NOT_CALLED":
+                return "Phase 1 läuft. Auslosung noch änderbar";
+            case "PHASE1_FINISHED":
+                return "Phase 1 beendet";
+            case "PHASE2_STARTED_NOT_CALLED":
+                return "Phase 2 läuft. Auslosung noch änderbar";
+            case "PHASE1_AND_RESULTS":
+                return "Phase 1 läuft";
+            case "PHASE2_AND_RESULTS":
+                return "Phase 2 läuft";
+            case "FINISHED":
+                return "Beendet";
+            default:
+                return "unbekannt";
+        }
+    };
+
+
+    $scope.getPossibleClasses = function () {
+        $http.get('/api/tournament-classes/classes-with-status', {}).then(function (response) {
+            $scope.possibleClasses = response.data;
+
+            var pc = $scope.possibleClasses;
+            for (i = 0; i < pc.length; i++) {
+                if (pc[i].status == 'PHASE1_STARTED_NOT_CALLED') {
+                    pc[i].confirm = true;
+                } else {
+                    pc[i].confirm = false;
+                }
+            }
+        });
+
+    };
+
+    $scope.selectClass = function (cid) {
+        $window.location.href = '#/draw/' + cid;
+    };
+
+    $scope.$watch('modus', function () {
+        $scope.selectPhaseCombination();
+    });
+    $scope.selectPhaseCombination = function () {
+        if ($scope.modus != null && $routeParams.id != null)
+            $http.get('/api/draw/select-phase-combination?cid=' + $routeParams.id + '&type=' + $scope.modus.id, {}).then(function () {
+                console.log('Phase successfully selected')
+                $scope.getTournamentClass();
+            });
+
+    };
+
+
+    if ($routeParams.id == null)
+        $scope.getPossibleClasses();
+
+
+}).controller('DrawEditController', function ($scope, $http, $routeParams, $window, TournamentClass) {
 
     $scope.modi = [{
         id: 0,
@@ -24,10 +84,9 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         } else {
             $scope.templateurl = '';
         }
-    }
+    };
 
     $scope.$watch('selectedPhase', function () {
-
         $scope.loadPart($scope.selectedPhase.counter);
 
     });
@@ -60,26 +119,6 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     }
     ;
 
-    $scope.translateStatus = function (s) {
-        switch (s) {
-            case "NOTSTARTED":
-                return "nicht gestartet";
-            case "PHASE1_STARTED_NOT_CALLED":
-                return "Phase 1 läuft. Auslosung noch änderbar";
-            case "PHASE1_FINISHED":
-                return "Phase 1 beendet";
-            case "PHASE2_STARTED_NOT_CALLED":
-                return "Phase 2 läuft. Auslosung noch änderbar";
-            case "PHASE1_AND_RESULTS":
-                return "Phase 1 läuft";
-            case "PHASE2_AND_RESULTS":
-                return "Phase 2 läuft";
-            case "FINISHED":
-                return "Beendet";
-            default:
-                return "unbekannt";
-        }
-    };
 
     $scope.getActualPhase = function () {
         $http.get('/api/draw/actual-phase?cid=' + $routeParams.id, {}).then(function (response) {
@@ -93,29 +132,11 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
     }
 
-    $scope.getPossibleClasses = function () {
-        $http.get('/api/tournament-classes/not-running', {}).then(function (response) {
-            $scope.possibleClasses = response.data;
-
-            var pc = $scope.possibleClasses;
-            for (i = 0; i < pc.length; i++) {
-                if (pc[i].status == 'PHASE1_STARTED_NOT_CALLED') {
-                    pc[i].confirm = true;
-                } else {
-                    pc[i].confirm = false;
-                }
-            }
-        });
-
-    };
-
-    $scope.selectClass = function (cid) {
-        $window.location.href = '#/draw/' + cid;
-    };
 
     $scope.$watch('modus', function () {
         $scope.selectPhaseCombination();
     });
+
     $scope.selectPhaseCombination = function () {
         if ($scope.modus != null && $routeParams.id != null)
             $http.get('/api/draw/select-phase-combination?cid=' + $routeParams.id + '&type=' + $scope.modus.id, {}).then(function (response) {
@@ -124,10 +145,6 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
             });
 
     };
-
-
-    if ($routeParams.id == null)
-        $scope.getPossibleClasses();
 
 
 }).controller('GroupController', function ($scope, $http, $routeParams, $window, TournamentClass, Flash) {
@@ -294,4 +311,5 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     $scope.calcKOSizeInInt();
     $scope.getKoField(false);
 });
+
 
