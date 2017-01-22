@@ -175,7 +175,7 @@ public class DrawKoFieldManager {
         if (tc.getActivePhaseNo() == 1) {
             return;
         }
-        tc.setActivePhase(1);
+        tc.setActivePhaseNo(1);
         tournamentService.addPossibleKoGamesToQueue(tc);
         tcRepository.saveAndFlush(tc);
 
@@ -214,7 +214,7 @@ public class DrawKoFieldManager {
         RoundType roundType = calcKOSize(tc);
         KOField field = createKOField(roundType);
         tc.setKoField(field);
-        tc.setActivePhase(1);
+        tc.setActivePhaseNo(1);
         tcRepository.saveAndFlush(tc);
     }
 }

@@ -10,5 +10,16 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-7">
+        <div class="form-group">
+            <label for="phase" class="col-md-2 control-label" style="font-size: larger">Phase</label>
+            <div class="col-md-5">
+                <select name="phase" id="phase"
+                        ng-options="item as item.name for item in tournamentClass.system.phases track by item.id" ng-model="selectedPhase" class="form-control"></select>
+            </div>
+        </div>
+    </div>
+</div>
 <hr style="width:60%; background-color:#a1a1a1 !important; height:1px;float: left"/>
 <ng-include src="templateurl"></ng-include>

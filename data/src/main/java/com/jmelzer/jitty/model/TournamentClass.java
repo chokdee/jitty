@@ -40,7 +40,7 @@ public class TournamentClass {
     Boolean running = false;
 
     @Column(nullable = false, name = "ACTIVE_PHASE")
-    int activePhase = -1;
+    int activePhaseNo = -1;
 
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "tournamentClass")
@@ -282,15 +282,15 @@ public class TournamentClass {
             return null;
         }
 
-        return getSystem().getPhases().get(activePhase);
+        return getSystem().getPhases().get(activePhaseNo);
     }
 
-    public void setActivePhase(int activePhase) {
-        this.activePhase = activePhase;
+    public void setActivePhaseNo(int activePhase) {
+        this.activePhaseNo = activePhase;
     }
 
     public int getActivePhaseNo() {
-        return activePhase;
+        return activePhaseNo;
     }
 
     public KOField getKoField() {
@@ -312,7 +312,7 @@ public class TournamentClass {
 
     //todo change it
     public List<TournamentGroup> getGroups() {
-        if (system != null && activePhase > -1) {
+        if (system != null && activePhaseNo > -1) {
             return ((GroupPhase) system.getPhases().get(0)).getGroups();
         } else {
             return new ArrayList<>();
@@ -341,8 +341,8 @@ public class TournamentClass {
 
 
     public Phase getActualPhase() {
-        if (activePhase > -1) {
-            return system.getPhases().get(activePhase);
+        if (activePhaseNo > -1) {
+            return system.getPhases().get(activePhaseNo);
         } else {
             return null;
         }

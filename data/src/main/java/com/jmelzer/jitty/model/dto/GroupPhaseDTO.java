@@ -66,4 +66,8 @@ public class GroupPhaseDTO extends PhaseDTO {
     public void addGroup(TournamentGroupDTO group) {
         groups.add(group);
     }
+
+    public String getName() {
+        return "Gruppe";
+    }
 }

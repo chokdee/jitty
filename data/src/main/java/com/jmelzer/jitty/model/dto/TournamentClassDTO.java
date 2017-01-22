@@ -34,6 +34,8 @@ public class TournamentClassDTO {
 
     private boolean openForWomen;
 
+    int activePhaseNo = -1;
+
     @Override
     public int hashCode() {
         int result = id.hashCode();
@@ -169,5 +171,13 @@ public class TournamentClassDTO {
 
     public void setSystem(TournamentSystemDTO system) {
         this.system = system;
+    }
+
+    public int getActivePhaseNo() {
+        return activePhaseNo;
+    }
+
+    public void setActivePhaseNo(int activePhaseNo) {
+        this.activePhaseNo = activePhaseNo;
     }
 }

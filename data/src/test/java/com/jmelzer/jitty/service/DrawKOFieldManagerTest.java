@@ -151,7 +151,7 @@ public class DrawKOFieldManagerTest {
     public void calcKOSize() {
         TournamentClass tc = new TournamentClass();
         tc.createPhaseCombination(PhaseCombination.GK);
-        tc.setActivePhase(0);
+        tc.setActivePhaseNo(0);
 //        tc.setGroupCount(4); todo
         for (int i = 0; i < 4; i++) {
             TournamentGroup tg = new TournamentGroup();

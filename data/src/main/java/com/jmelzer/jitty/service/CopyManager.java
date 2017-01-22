@@ -179,38 +179,45 @@ public class CopyManager {
     static public TournamentClassDTO copy(TournamentClass clz) {
         TournamentClassDTO dto = new TournamentClassDTO();
         BeanUtils.copyProperties(clz, dto, "system", "players");
-
-
-        return dto;
-    }
-
-    public static PhaseDTO copy(Phase phase) {
-        if (phase instanceof GroupPhase) {
-            return copy((GroupPhase) phase);
-        } else if (phase instanceof KOPhase) {
-            return copy((KOPhase) phase);
-        } else {
-            throw new IllegalArgumentException("unkown " + phase);
-        }
-    }
-
-    public static GroupPhaseDTO copy(GroupPhase groupPhase) {
-        GroupPhaseDTO dto = new GroupPhaseDTO();
-        BeanUtils.copyProperties(groupPhase, dto, "system", "groups");
-        for (TournamentGroup group : groupPhase.getGroups()) {
-            TournamentGroupDTO dtoGroup = copy(groupPhase.getSystem().getTournamentClass().getName(), group);
-            dto.addGroup(dtoGroup);
-            for (TournamentPlayer player : group.getPlayers()) {
-                dtoGroup.addPlayer(copy(player));
+        if (clz.getSystem() != null) {
+            dto.setSystem(new TournamentSystemDTO());
+            for (Phase phase : clz.getSystem().getPhases()) {
+                dto.getSystem().addPhase(copy(phase, true));
             }
         }
 
         return dto;
     }
 
-    public static KOPhaseDTO copy(KOPhase phase) {
+    public static PhaseDTO copy(Phase phase, boolean onlyPhase) {
+        if (phase instanceof GroupPhase) {
+            return copy((GroupPhase) phase, onlyPhase);
+        } else if (phase instanceof KOPhase) {
+            return copy((KOPhase) phase, onlyPhase);
+        } else {
+            throw new IllegalArgumentException("unkown " + phase);
+        }
+    }
+
+    public static GroupPhaseDTO copy(GroupPhase groupPhase, boolean onlyPhase) {
+        GroupPhaseDTO dto = new GroupPhaseDTO();
+        BeanUtils.copyProperties(groupPhase, dto, "system", "groups", "system");
+        if (!onlyPhase) {
+            for (TournamentGroup group : groupPhase.getGroups()) {
+                TournamentGroupDTO dtoGroup = copy(groupPhase.getSystem().getTournamentClass().getName(), group);
+                dto.addGroup(dtoGroup);
+                for (TournamentPlayer player : group.getPlayers()) {
+                    dtoGroup.addPlayer(copy(player));
+                }
+            }
+        }
+
+        return dto;
+    }
+
+    public static KOPhaseDTO copy(KOPhase phase, boolean onlyPhase) {
         KOPhaseDTO dto = new KOPhaseDTO();
-        BeanUtils.copyProperties(phase, dto);
+        BeanUtils.copyProperties(phase, dto, "koField", "system");
         return dto;
     }
 

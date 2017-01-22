@@ -20,4 +20,8 @@ public class KOPhaseDTO extends PhaseDTO {
     public void setKoField(KOField koField) {
         this.koField = koField;
     }
+
+    public String getName() {
+        return "KO";
+    }
 }

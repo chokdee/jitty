@@ -147,7 +147,7 @@ public class TournamentServiceTest {
         assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
         assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.NOTSTARTED));
 
-        tournamentClass.setActivePhase(0);
+        tournamentClass.setActivePhaseNo(0);
         assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
         TournamentSingleGame game = new TournamentSingleGame();
         TournamentGroup group = new TournamentGroup();
@@ -155,7 +155,7 @@ public class TournamentServiceTest {
         tournamentClass.addGroup(group);
 
         tournamentClass.setRunning(true);
-        tournamentClass.setActivePhase(0);
+        tournamentClass.setActivePhaseNo(0);
         assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
         assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.PHASE1_STARTED_NOT_CALLED));
 
@@ -164,7 +164,7 @@ public class TournamentServiceTest {
         assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
         assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.PHASE1_AND_RESULTS));
 
-        tournamentClass.setActivePhase(1);
+        tournamentClass.setActivePhaseNo(1);
         KOField koField = new KOField();
         koField.setNoOfRounds(2);
         Round r1 = new Round();

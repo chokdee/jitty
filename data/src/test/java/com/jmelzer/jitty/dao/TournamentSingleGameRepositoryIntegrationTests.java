@@ -64,7 +64,7 @@ public class TournamentSingleGameRepositoryIntegrationTests {
         assertNotNull(tournamentClass.getId());
 
         tournamentClass.createPhaseCombination(PhaseCombination.GK);
-        tournamentClass.setActivePhase(0);
+        tournamentClass.setActivePhaseNo(0);
         TournamentGroup group = new TournamentGroup("1");
         tournamentClass.addGroup(group);
 
@@ -107,7 +107,7 @@ public class TournamentSingleGameRepositoryIntegrationTests {
     public void nochmal() {
         TournamentClass clz = tournamentClassRepository.findOne(1L);
         clz.createPhaseCombination(PhaseCombination.GK);
-        clz.setActivePhase(0);
+        clz.setActivePhaseNo(0);
         TournamentGroup group = new TournamentGroup("1");
         clz.addGroup(group);
 

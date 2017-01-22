@@ -81,6 +81,10 @@ public class TournamentSingleGame {
     @JoinColumn(name = "NEXT_GAME_ID")
     private TournamentSingleGame nextGame;
 
+    @ManyToOne(targetEntity = GameQueue.class)
+    @JoinColumn(name = "GAME_QUEUE_ID")
+    private GameQueue gameQueue;
+
     public TournamentSingleGame() {
     }
 
@@ -334,5 +338,13 @@ public class TournamentSingleGame {
 
     public void setTid(Long tid) {
         this.tid = tid;
+    }
+
+    public GameQueue getGameQueue() {
+        return gameQueue;
+    }
+
+    public void setGameQueue(GameQueue gameQueue) {
+        this.gameQueue = gameQueue;
     }
 }

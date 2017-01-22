@@ -11,14 +11,14 @@ import java.util.List;
 @Table(name = "group_phase")
 public class GroupPhase extends Phase {
 
+    @Column(nullable = true, name = "player_per_group")
+    protected Integer playerPerGroup;
+
     /**
      * Assoc to the groups in the class.
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "groupPhase", orphanRemoval = true)
-    List<TournamentGroup> groups = new ArrayList<>();
-
-    @Column(nullable = true, name = "player_per_group")
-    private Integer playerPerGroup;
+    private List<TournamentGroup> groups = new ArrayList<>();
 
     @Column(nullable = true, name = "group_count")
     private Integer groupCount;
