@@ -28,10 +28,23 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
             var pc = $scope.possibleClasses;
             for (i = 0; i < pc.length; i++) {
-                if (pc[i].status == 'PHASE1_STARTED_NOT_CALLED') {
-                    pc[i].confirm = true;
-                } else {
-                    pc[i].confirm = false;
+
+                switch (pc[i].status) {
+                    case 'PHASE1_STARTED_NOT_CALLED':
+                        pc[i].confirmMsg = 'Die Phase 1 hat bereits begonnen. Sicher?';
+                        pc[i].confirm = true;
+                        break;
+                    case 'PHASE2_STARTED_NOT_CALLED':
+                        pc[i].confirmMsg = 'Die Phase 2 hat bereits begonnen. Sicher?';
+                        pc[i].confirm = true;
+                        break;
+                    case 'PHASE1_AND_RESULTS':
+                    case 'PHASE2_AND_RESULTS':
+                        pc[i].confirmMsg = 'Es gibt bereits Ergebnisse. Alle Ergebnisse werden gelöscht! Wirklich sicher?';
+                        pc[i].confirm = true;
+                        break;
+                    default:
+                        pc[i].confirm = false;
                 }
             }
         });

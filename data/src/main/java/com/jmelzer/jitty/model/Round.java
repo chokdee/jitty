@@ -114,4 +114,14 @@ public class Round {
         }
         throw new IllegalArgumentException("wether kofield or preRound must be set");
     }
+
+    public void removeGame(TournamentSingleGame game) {
+        game.setRound(null);
+        games.remove(game);
+    }
+
+    public void removeAllGames() {
+        games.forEach(g -> g.setRound(null));
+        games.clear();
+    }
 }

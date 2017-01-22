@@ -66,14 +66,16 @@ public class TournamentService {
     @Resource
     GameQueueRepository gameQueueRepository;
 
-    private GameQueue getQueueO() {
-        return gameQueueRepository.findOne(1L);
+    public int getQueueSize() {
+        return getQueue().size();
     }
+
     private List<TournamentSingleGame> getQueue() {
         return getQueueO().getGames();
     }
-    public int getQueueSize() {
-        return getQueue().size();
+
+    private GameQueue getQueueO() {
+        return gameQueueRepository.findOne(1L);
     }
 
     public List<TournamentSingleGameDTO> getBusyGames() {
@@ -321,6 +323,7 @@ public class TournamentService {
             dto.setStatus(aClass.calcStatus());
             ret.add(dto);
         }
+        ret.sort(Comparator.comparing(TournamentClassDTO::getName));
         return ret;
     }
 
@@ -446,9 +449,9 @@ public class TournamentService {
                 List<Tournament> tournaments = repository.findByRunning(true);
                 //todo what about multiple tournaments and tablemanager?
                 for (Tournament tournament : tournaments) {
-                    if (!tournament.getId().equals(tid)) {
-                        continue;
-                    }
+//                    if (!tournament.getId().equals(tid)) {
+//                        continue;
+//                    }
                     tableManager.setTableCount(tournament.getTableCount());
                     List<TournamentClass> tcs = tcRepository.findByTournamentAndRunning(tournament, true);
                     for (TournamentClass tc : tcs) {
@@ -700,6 +703,11 @@ public class TournamentService {
     @Transactional
     public GroupPhaseDTO updatePhase(Long cid, GroupPhaseDTO dto) {
         TournamentClass tc = tcRepository.findOne(cid);
+        if (tc.getActualPhase().areGamesPlayed()) {
+            tc.getActualPhase().resetGames();
+            tcRepository.saveAndFlush(tc);
+        }
+        busyGames.removeIf(g -> g.getTcName().equals(tc.getName()));
         GroupPhase groupPhase = (GroupPhase) phaseRepository.findOne(dto.getId());
         groupPhase.getGroups().clear();//fetch lazy
 //        tc.clearGroups();

@@ -141,4 +141,13 @@ public class TournamentGroup {
     }
 
 
+    public void removeGame(TournamentSingleGame game) {
+        game.setGroup(null);
+        games.remove(game);
+    }
+
+    public void removeAllGames() {
+        games.forEach(g -> g.setGroup(null));
+        games.clear();
+    }
 }

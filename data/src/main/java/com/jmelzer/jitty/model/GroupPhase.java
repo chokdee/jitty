@@ -84,6 +84,11 @@ public class GroupPhase extends Phase {
     }
 
     @Override
+    public void resetGames() {
+        groups.forEach(TournamentGroup::removeAllGames);
+    }
+
+    @Override
     public boolean isFinished() {
         for (TournamentGroup group : groups) {
             List<TournamentSingleGame> games = group.getGames();

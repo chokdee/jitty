@@ -31,6 +31,16 @@ public class KOPhase extends Phase {
     }
 
     @Override
+    public void resetGames() {
+        int nr = koField.getNoOfRounds();
+        Round round = koField.getRound();
+        for (int i = 0; i < nr; i++) {
+            round.removeAllGames();
+            round = round.getNextRound();
+        }
+    }
+
+    @Override
     public boolean isFinished() {
         if (koField == null) {
             return false;
