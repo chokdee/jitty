@@ -4,6 +4,7 @@ import com.jmelzer.jitty.config.SecurityUtil;
 import com.jmelzer.jitty.exceptions.IntegrityViolation;
 import com.jmelzer.jitty.model.dto.TableDTO;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
+import com.jmelzer.jitty.service.QueueManager;
 import com.jmelzer.jitty.service.TableManager;
 import com.jmelzer.jitty.service.TournamentService;
 import org.springframework.stereotype.Component;
@@ -29,19 +30,21 @@ public class TournamentDirectorController {
     SecurityUtil securityUtil;
     @Inject
     TableManager tableManager;
+    @Inject
+    QueueManager queueManager;
 
     @Path("/possible-games")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TournamentSingleGameDTO> possibleGames() {
-        return service.listQueue(securityUtil.getActualUsername());
+        return queueManager.listQueue(securityUtil.getActualUsername());
     }
 
     @Path("/running-games")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TournamentSingleGameDTO> runningGames() {
-        return service.getBusyGames();
+        return queueManager.getBusyGames();
     }
 
     @Path("/finished-games")

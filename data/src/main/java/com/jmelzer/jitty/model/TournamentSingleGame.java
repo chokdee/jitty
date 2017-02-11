@@ -277,6 +277,7 @@ public class TournamentSingleGame {
                 ", p1=" + (player1 != null ? player1.getId() : "null") +
                 ", p2=" + (player2 != null ? player2.getId() : "null") +
                 ", tid=" + tid+
+                ", tcName=" + tcName+
                 '}';
     }
 

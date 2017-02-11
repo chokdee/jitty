@@ -40,8 +40,6 @@ public class TournamentService {
     @Qualifier("transactionManager")
     protected PlatformTransactionManager txManager;
 
-    List<TournamentSingleGame> busyGames = new ArrayList<>();
-
     @Resource
     TournamentRepository repository;
 
@@ -64,58 +62,30 @@ public class TournamentService {
     TableManager tableManager;
 
     @Resource
-    GameQueueRepository gameQueueRepository;
+    QueueManager queueManager;
 
-    public int getQueueSize() {
-        return getQueue().size();
-    }
 
-    private List<TournamentSingleGame> getQueue() {
-        return getQueueO().getGames();
-    }
 
-    private GameQueue getQueueO() {
-        return gameQueueRepository.findOne(1L);
-    }
 
-    public List<TournamentSingleGameDTO> getBusyGames() {
-        List<TournamentSingleGameDTO> list = new ArrayList<>(busyGames.size());
-        for (TournamentSingleGame game : busyGames) {
-            list.add(copy(game, false));
-        }
-        return list;
-    }
-
-    public void removeBusyGame(TournamentSingleGame game) {
-        busyGames.remove(game);
-    }
-
-    @Transactional
-    public List<TournamentSingleGameDTO> listQueue(String userName) {
-        List<TournamentSingleGameDTO> list = new ArrayList<>();
-        for (TournamentSingleGame game : getQueue()) {
-            list.add(copy(game, false));
-        }
-        return list;
-    }
 
     public void addPossibleKoGamesToQueue(TournamentClass tournamentClass) {
         if (tournamentClass.getKoField() != null) {
-            GameQueue gameQueueO = getQueueO();
+            GameQueue gameQueueO = queueManager.getQueueO();
+            List<TournamentSingleGame>  toAddGames = new ArrayList<>();
 
             List<TournamentSingleGame> games = tournamentClass.getKoField().getRound().getGames();
-            addGamesToQueueInternally(gameQueueO, games);
+            addGamesToQueueInternally(gameQueueO, games, toAddGames);
             Round r = tournamentClass.getKoField().getRound();
             while (r != null) {
                 if (r.getNextRound() != null) {
                     r = r.getNextRound();
-                    addGamesToQueueInternally(gameQueueO, r.getGames());
+                    addGamesToQueueInternally(gameQueueO, r.getGames(), toAddGames);
                 } else {
                     break;
                 }
             }
 
-            gameQueueRepository.saveAndFlush(gameQueueO);
+            queueManager.addAll(toAddGames);
         }
     }
 
@@ -181,15 +151,14 @@ public class TournamentService {
         if (tid != null && tid == id) {
             return;
         }
-        GameQueue queue = getQueueO();
-        queue.clear();
-        busyGames.clear();
+        queueManager.clearAll();
         Tournament tournament = repository.findOne(id);
         LOG.info("switch to tournament {}", tournament);
         tid = id;
         tableManager.clear(tournament.getTableCount());
         List<TournamentClass> tcs = tcRepository.findByTournamentAndRunning(tournament, true);
         for (TournamentClass tc : tcs) {
+            //todo what about ko field here?
             addPossibleGroupGamesToQueue(tc.getGroups());
         }
     }
@@ -198,43 +167,21 @@ public class TournamentService {
      * iterate thrw all groups and add not played games. but take care of the player isn't already in the list
      */
     public int addPossibleGroupGamesToQueue(List<TournamentGroup> groups) {
-        GameQueue gameQueueO = getQueueO();
+        GameQueue gameQueueO = queueManager.getQueueO();
         int counter = 0;
+        List<TournamentSingleGame>  allGames = new ArrayList<>(gameQueueO.getGames());
+
         //todo add possible games for all running classes
         for (TournamentGroup group : groups) {
             List<TournamentSingleGame> games = group.getGames();
-            counter += addGamesToQueueInternally(gameQueueO, games);
+            counter += addGamesToQueueInternally(gameQueueO, games, allGames);
         }
 
-        gameQueueRepository.saveAndFlush(gameQueueO);
-//        getQueue().forEach(System.out::println);
+        queueManager.addAll(allGames);
+
         return counter;
     }
-
-    private int addGamesToQueueInternally(GameQueue gameQueueO, List<TournamentSingleGame> games) {
-        List<TournamentSingleGame> gameQueue = getQueue();
-        int counter = 0;
-
-        for (TournamentSingleGame game : games) {
-            if (game.isEmpty()) {
-                continue;
-            }
-
-            TournamentPlayer player1 = game.getPlayer1();
-            TournamentPlayer player2 = game.getPlayer2();
-            if (!playerInQueue(player1, gameQueue) && !playerInQueue(player2, gameQueue) &&
-                    !playerInQueue(player1, busyGames) && !playerInQueue(player2, busyGames) &&
-                    !game.isFinishedOrCalled()) {
-//                System.out.println("game = " + game.getId() + " - " + game);
-                gameQueueO.addGame(game);
-                counter++;
-            }
-
-        }
-        return counter;
-    }
-
-    private boolean playerInQueue(TournamentPlayer player, Collection<TournamentSingleGame> gameCollection) {
+    boolean playerInQueue(TournamentPlayer player, Collection<TournamentSingleGame> gameCollection) {
         for (TournamentSingleGame game : gameCollection) {
             if ((game.getPlayer1() != null && game.getPlayer1().equals(player)) ||
                     (game.getPlayer2() != null && game.getPlayer2().equals(player))) {
@@ -242,6 +189,33 @@ public class TournamentService {
             }
         }
         return false;
+    }
+    //todo move to queuemanager?
+    private int addGamesToQueueInternally(GameQueue gameQueueO, List<TournamentSingleGame> games, List<TournamentSingleGame>  allGames) {
+        List<TournamentSingleGame>  busyGames;
+
+
+        int counter = 0;
+
+        for (TournamentSingleGame game : games) {
+            if (game.isEmpty()) {
+                continue;
+            }
+            busyGames = queueManager.getBusyGamesOriginal();
+
+            TournamentPlayer player1 = game.getPlayer1();
+            TournamentPlayer player2 = game.getPlayer2();
+            if (!playerInQueue(player1, allGames) && !playerInQueue(player2, allGames) &&
+                    !playerInQueue(player1, busyGames) && !playerInQueue(player2, busyGames) &&
+                    !game.isFinishedOrCalled()) {
+
+                allGames.add(game);
+                counter++;
+            }
+
+        }
+
+        return counter;
     }
 
     @Transactional
@@ -365,8 +339,7 @@ public class TournamentService {
         if (game == null) {
             throw new IllegalArgumentException();
         }
-        getQueueO().addGame(game);
-        busyGames.remove(game);
+        queueManager.moveGameBackToPossibleGames(game);
         game.setCalled(false);
         game.setStartTime(null);
         tournamentSingleGameRepository.save(game);
@@ -409,21 +382,31 @@ public class TournamentService {
      */
     private void finishGame(TournamentSingleGame game) {
         LOG.info("finished game #" + game.getId());
-        busyGames.remove(game);
+        queueManager.removeBuyGame(game);
         if (game.getGroup() != null) {
             addPossibleGroupGamesToQueue(Collections.singletonList(game.getGroup()));
         } else {
             moveWinnerToNextRound(game);
-            loadGamesIntoQueue();
+            TournamentClass tc = getTCForGame(game);
+            addPossibleKoGamesToQueue(tc);
         }
         tableManager.pushFreeTable(game);
+    }
+
+    private TournamentClass getTCForGame(TournamentSingleGame game) {
+        List<TournamentClass> tournamentClasses = repository.findOne(game.getTid()).getClasses();
+        for (TournamentClass tournamentClass : tournamentClasses) {
+            if (tournamentClass.getName().equals(game.getTcName()))
+                return tournamentClass;
+        }
+        throw new IllegalArgumentException("no tc found for " + game);
     }
 
     @Transactional
     public List<TournamentSingleGameDTO> getFinishedGames() {
         List<TournamentSingleGame> dblist = tournamentSingleGameRepository.findByPlayedOrderByEndTimeDesc(true);
 
-        List<TournamentSingleGameDTO> list = new ArrayList<>(busyGames.size());
+        List<TournamentSingleGameDTO> list = new ArrayList<>();
         for (TournamentSingleGame game : dblist) {
             list.add(copy(game, false));
         }
@@ -453,11 +436,11 @@ public class TournamentService {
 //                        continue;
 //                    }
                     tableManager.setTableCount(tournament.getTableCount());
-                    List<TournamentClass> tcs = tcRepository.findByTournamentAndRunning(tournament, true);
-                    for (TournamentClass tc : tcs) {
-                        addPossibleKoGamesToQueue(tc);
-                        addPossibleGroupGamesToQueue(tc.getGroups());
-                    }
+//                    List<TournamentClass> tcs = tcRepository.findByTournamentAndRunning(tournament, true);
+//                    for (TournamentClass tc : tcs) {
+//                        addPossibleKoGamesToQueue(tc);
+//                        addPossibleGroupGamesToQueue(tc.getGroups());
+//                    }
                 }
             }
         });
@@ -638,62 +621,36 @@ public class TournamentService {
     @Transactional
     public void startPossibleGames() throws IntegrityViolation {
         int n = tableManager.getFreeTableCount();
-        List<TournamentSingleGame> gameQueue = getQueue();
+        List<TournamentSingleGame> gameQueue = new ArrayList<>(queueManager.getGamesFromQueue(n));
 
-        for (int i = 0; i < n; i++) {
-            if (gameQueue.isEmpty()) {
-                break;
-            }
-
-            TournamentSingleGame game = gameQueue.get(0);
+        for (TournamentSingleGame game : gameQueue) {
             startGame(game.getId());
         }
     }
-
     @Transactional
     public TournamentSingleGameDTO startGame(Long id) throws IntegrityViolation {
-        //todo in a method an refresh the object
-        TournamentSingleGame foundGame = null;
-        List<TournamentSingleGame> gameQueue = getQueue();
-        GameQueue gameQueueO = getQueueO();
+        return startGame(tournamentSingleGameRepository.findOne(id));
+    }
 
-        for (TournamentSingleGame game : gameQueue) {
-            if (game.getId().equals(id)) {
-                foundGame = game;
-                break;
-            }
+    @Transactional
+    public TournamentSingleGameDTO startGame(TournamentSingleGame game) throws IntegrityViolation {
+
+        if (tid != null && !Objects.equals(game.getTid(), tid)) {
+            throw new RuntimeException(game.toString());
         }
-        if (foundGame == null) {
-            throw new IllegalArgumentException();
-        }
-        if (tid != null && !Objects.equals(foundGame.getTid(), tid)) {
-            throw new RuntimeException(foundGame.toString());
-        }
-        //refresh
-//        foundGame = tournamentSingleGameRepository.findOne(foundGame.getId());
-        int no = tableManager.pollFreeTableNo(foundGame);
+        int no = tableManager.pollFreeTableNo(game);
         if (no == -1) {
             throw new IntegrityViolation("Es gibt keinen freien Tisch mehr");
         }
-        foundGame.setTableNo(no);
-        LOG.info("game " + foundGame + " started");
-        foundGame.setCalled(true);
-        foundGame.setStartTime(new Date());
-        addBusyGame(foundGame);
-        gameQueueO.removeGame(foundGame);
-        gameQueueRepository.saveAndFlush(gameQueueO);
-        tournamentSingleGameRepository.save(foundGame);
-        getQueue().forEach(System.out::println);
-        LOG.debug("started game with id {}", id);
-        return copy(foundGame, false);
+        game.setTableNo(no);
+        game.setCalled(true);
+        game.setStartTime(new Date());
+        tournamentSingleGameRepository.save(game);
+        queueManager.moveGameToBusyGames(game);
+        LOG.debug("started game {}", game);
+        return copy(game, false);
     }
 
-    public void addBusyGame(TournamentSingleGame game) {
-        if (game.getTableNo() == null) {
-            throw new IllegalArgumentException("game must have a table");
-        }
-        busyGames.add(game);
-    }
 
     @Transactional
     public GroupPhaseDTO phase1DrawGroup(Long cid, GroupPhaseDTO dto) {
@@ -707,7 +664,8 @@ public class TournamentService {
             tc.getActualPhase().resetGames();
             tcRepository.saveAndFlush(tc);
         }
-        busyGames.removeIf(g -> g.getTcName().equals(tc.getName()));
+        queueManager.removeAllFromClass(tc.getName());
+
         GroupPhase groupPhase = (GroupPhase) phaseRepository.findOne(dto.getId());
         groupPhase.getGroups().clear();//fetch lazy
 //        tc.clearGroups();

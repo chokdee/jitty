@@ -41,8 +41,10 @@ public class GameQueue {
     }
 
     public void addGame(TournamentSingleGame game) {
-        games.add(game);
-        game.setGameQueue(this);
+        if (!games.contains(game)) {
+            games.add(game);
+            game.setGameQueue(this);
+        }
     }
 
     public void removeGame(TournamentSingleGame game) {
