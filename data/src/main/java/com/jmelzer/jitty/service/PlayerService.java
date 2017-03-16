@@ -1,26 +1,45 @@
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.dao.ClubRepository;
 import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
+import com.jmelzer.jitty.model.Club;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentPlayer;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
+import com.jmelzer.jitty.model.xml.playerimport.Competition;
+import com.jmelzer.jitty.model.xml.playerimport.Person;
+import com.jmelzer.jitty.model.xml.playerimport.Player;
+import com.jmelzer.jitty.model.xml.playerimport.Tournament;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by J. Melzer on 15.07.2016.
  */
 @Component
 public class PlayerService {
+    static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy");
+
+    @Resource
+    XMLImporter xmlImporter;
+
     @Resource
     TournamentPlayerRepository repository;
+
+    @Resource
+    ClubRepository clubRepository;
 
     @Resource
     TournamentClassRepository classRepository;
@@ -73,4 +92,60 @@ public class PlayerService {
         repository.save(playerDB);
     }
 
+    public List<TournamentPlayer> importPlayerFromClickTT(InputStream istream) {
+        Tournament clickTTTournament = xmlImporter.parseClickTTPlayerExport(istream);
+        List<TournamentPlayer> tournamentPlayers = new ArrayList<>();
+        //todo validate tournament
+        for (Competition competition : clickTTTournament.getCompetition()) {
+            for (Player clickTTPlayer : competition.getPlayers().getPlayer()) {
+                System.out.println("clickTTPlayer = " + clickTTPlayer);
+                List<TournamentPlayer> dbPlayers = repository.findByLastNameAndFirstName(clickTTPlayer.getPerson().get(0).getLastname(),
+                        clickTTPlayer.getPerson().get(0).getFirstname());
+
+                if (dbPlayers.size() == 0 || dbPlayers.size() > 1) {
+                    TournamentPlayer dbP = createDbPlayer(clickTTPlayer);
+                    repository.saveAndFlush(dbP);
+                } else if (dbPlayers.size() == 1) {
+                    TournamentPlayer dbP = dbPlayers.get(0);
+                    if (compareClub(dbP, clickTTPlayer)) {
+                        merge(dbP, clickTTPlayer);
+                    } else {
+                        dbP = createDbPlayer(clickTTPlayer);
+                    }
+                    repository.saveAndFlush(dbP);
+                }
+            }
+        }
+        return tournamentPlayers;
+    }
+
+    private TournamentPlayer createDbPlayer(Player clickTTPlayer) {
+        Person person = clickTTPlayer.getPerson().get(0);
+        TournamentPlayer tp = new TournamentPlayer();
+        tp.setFirstName(person.getFirstname());
+        tp.setLastName(person.getLastname());
+        tp.setGender(person.getSex().equals("0") ? "w" : "m");
+        Club club = clubRepository.findByName(person.getClubName());
+        tp.setClub(club);
+        merge(tp, clickTTPlayer);
+        return tp;
+    }
+
+    private boolean compareClub(TournamentPlayer dbP, Player clickTTPlayer) {
+        if (dbP.getClub() == null) {
+            return false;
+        }
+        return Objects.equals(clickTTPlayer.getPerson().get(0).getClubName(), dbP.getClub().getName());
+    }
+
+    private void merge(TournamentPlayer tp, Player clickTTPlayer) {
+        Person person = clickTTPlayer.getPerson().get(0);
+        tp.setQttr(Integer.valueOf(person.getTtr()));
+        try {
+            tp.setBirthday(DATE_FORMAT.parse(person.getBirthyear()));
+        } catch (ParseException e) {
+            //ignore
+        }
+        //todo fill
+    }
 }

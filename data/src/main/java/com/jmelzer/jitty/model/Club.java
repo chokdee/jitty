@@ -24,6 +24,10 @@ public class Club {
     public Club() {
     }
 
+    public Club(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

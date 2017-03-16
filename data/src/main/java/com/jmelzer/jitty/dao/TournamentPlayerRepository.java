@@ -25,6 +25,7 @@ public interface TournamentPlayerRepository extends JpaRepository<TournamentPlay
     Page<TournamentPlayer> findAll(Pageable pageable);
 
     TournamentPlayer findByLastName(String lastName);
+    List<TournamentPlayer> findByLastNameAndFirstName(String lastName, String firstName);
     List<TournamentPlayer> findByClasses(List<TournamentClass> list);
 
 }

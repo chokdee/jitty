@@ -63,6 +63,7 @@ public class TournamentPlayerRepositoryIntegrationTests {
 
         assertNull(repository.findByLastName("xxx"));
         assertEquals("Boll", repository.findByLastName("Boll").getLastName());
+        assertEquals("Boll", repository.findByLastNameAndFirstName("Boll", "Timo").get(0).getLastName());
     }
 
     @Test

@@ -21,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -39,4 +41,9 @@ public class ClubRepositoryIntegrationTests {
         assertThat(repository.findAll().size(), greaterThan(5));
     }
 
+    @Test
+    public void findByName() {
+        assertNull(repository.findByName("bbbbb"));
+        assertThat(repository.findByName("TSV Eisenberg").getId(), is(2L));
+    }
 }
