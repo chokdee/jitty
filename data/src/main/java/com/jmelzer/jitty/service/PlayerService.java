@@ -92,18 +92,20 @@ public class PlayerService {
         repository.save(playerDB);
     }
 
-    public List<TournamentPlayer> importPlayerFromClickTT(InputStream istream) {
+    @Transactional
+    public List<TournamentPlayerDTO> importPlayerFromClickTT(InputStream istream) {
         Tournament clickTTTournament = xmlImporter.parseClickTTPlayerExport(istream);
         List<TournamentPlayer> tournamentPlayers = new ArrayList<>();
         //todo validate tournament
         for (Competition competition : clickTTTournament.getCompetition()) {
             for (Player clickTTPlayer : competition.getPlayers().getPlayer()) {
-                System.out.println("clickTTPlayer = " + clickTTPlayer);
+                
                 List<TournamentPlayer> dbPlayers = repository.findByLastNameAndFirstName(clickTTPlayer.getPerson().get(0).getLastname(),
                         clickTTPlayer.getPerson().get(0).getFirstname());
 
                 if (dbPlayers.size() == 0 || dbPlayers.size() > 1) {
                     TournamentPlayer dbP = createDbPlayer(clickTTPlayer);
+                    tournamentPlayers.add(dbP);
                     repository.saveAndFlush(dbP);
                 } else if (dbPlayers.size() == 1) {
                     TournamentPlayer dbP = dbPlayers.get(0);
@@ -112,11 +114,18 @@ public class PlayerService {
                     } else {
                         dbP = createDbPlayer(clickTTPlayer);
                     }
+                    tournamentPlayers.add(dbP);
                     repository.saveAndFlush(dbP);
                 }
             }
         }
-        return tournamentPlayers;
+        List<TournamentPlayerDTO> dtos = new ArrayList<>();
+        for (TournamentPlayer player : tournamentPlayers) {
+            TournamentPlayerDTO dto = new TournamentPlayerDTO();
+            BeanUtils.copyProperties(player, dto);
+            dtos.add(dto);
+        }
+        return dtos;
     }
 
     private TournamentPlayer createDbPlayer(Player clickTTPlayer) {

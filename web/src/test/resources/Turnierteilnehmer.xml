@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE tournament SYSTEM "http://liga.nu/dtd/TournamentPortal.dtd">
+<tournament end-date="2017-03-12" multiple-participations-same-day="false" winning-sets="3" multiple-participations-same-time="false" start-date="2017-03-12" name="andro WTTV-Cup" table-count="6" tournament-id="lxnfy8egjpKwukE9myqZarSPxduPRXbs">
+	
+		<tournament-location/> 
+	
+		<tournament-location city="Sankt Augustin" zip-code="53757 " name="Sporthalle Sportzentrum Menden-Süd" street="Siegstrasse 119"/> 
+	
+	
+		<competition start-date="2017-03-12 12:00" age-group="Damen/Herren" age-from="2017" max-persons="12" sex="gemischt" age-to="1897" type="Einzel" entry-fee="7.0" preliminary-round-playmode="Schweizer System">
+			<players>
+				
+					<player type="single" id="PLAYER1">
+						<person licence-nr="156012528" lastname="Beitel" club-name="TTG St. Augustin" sex="0" ttr-match-count="6" region="Mittelrhein" club-federation-nickname="WTTV" ttr="848" internal-nr="NU1891464" foreigner-eq-state="false" firstname="Annett" nationality="DE" club-nr="156012" birthyear="1979" sub-region="Rhein-Sieg"/>
+						 
+					</player>
+				
+					<player type="single" id="PLAYER2">
+						<person licence-nr="148026208" lastname="Bosse" club-name="TTV BW Neudorf" sex="1" ttr-match-count="216" region="Düsseldorf" club-federation-nickname="WTTV" ttr="1219" internal-nr="NU210632" foreigner-eq-state="false" firstname="Gerd" nationality="DE" club-nr="148026" birthyear="1954" sub-region="Rhein-Ruhr"/>
+						 
+					</player>
+				
+					<player type="single" id="PLAYER3">
+						<person licence-nr="156023461" lastname="Dauth" club-name="TTC Troisdorf" sex="1" ttr-match-count="6" region="Mittelrhein" club-federation-nickname="WTTV" ttr="1309" internal-nr="NU215803" foreigner-eq-state="false" firstname="Mario" nationality="DE" club-nr="156023" birthyear="1972" sub-region="Rhein-Sieg"/>
+						 
+					</player>
+				
+					<player type="single" id="PLAYER4">
+						<person licence-nr="151052427" lastname="Jakob" club-name="1. FC Köln" sex="1" ttr-match-count="759" region="Mittelrhein" club-federation-nickname="WTTV" ttr="1474" internal-nr="NU1259860" foreigner-eq-state="false" firstname="Jonte" nationality="DE" club-nr="151052" birthyear="2002" sub-region="Köln-Erft"/>
+						 
+					</player>
+				
+					<player type="single" id="PLAYER5">
+						<person licence-nr="151052426" lastname="Jakob" club-name="1. FC Köln" sex="1" ttr-match-count="564" region="Mittelrhein" club-federation-nickname="WTTV" ttr="1599" internal-nr="NU1259106" foreigner-eq-state="false" firstname="Jürgen" nationality="DE" club-nr="151052" birthyear="1968" sub-region="Köln-Erft"/>
+						 
+					</player>
+				
+					<player type="single" id="PLAYER6">
+						<person licence-nr="156022071" lastname="Klein" club-name="ESV Troisdorf" sex="1" ttr-match-count="452" region="Mittelrhein" club-federation-nickname="WTTV" ttr="1353" internal-nr="NU242490" foreigner-eq-state="false" firstname="Marco" nationality="DE" club-nr="156022" birthyear="1970" sub-region="Rhein-Sieg"/>
+						 
+					</player>
+				
+					<player type="single" id="PLAYER7">
+						<person licence-nr="156012521" lastname="Melzer" club-name="TTG St. Augustin" sex="1" ttr-match-count="310" region="Mittelrhein" club-federation-nickname="WTTV" ttr="1691" internal-nr="NU1429844" foreigner-eq-state="false" firstname="Jürgen" nationality="DE" club-nr="156012" birthyear="1967" sub-region="Rhein-Sieg"/>
+						 
+					</player>
+				
+					<player type="single" id="PLAYER8">
+						<person licence-nr="156029301" lastname="Meuser" club-name="TSV Seelscheid" sex="1" ttr-match-count="754" region="Mittelrhein" club-federation-nickname="WTTV" ttr="1642" internal-nr="NU256262" foreigner-eq-state="false" firstname="Marcus" nationality="DE" club-nr="156029" birthyear="1972" sub-region="Rhein-Sieg"/>
+						 
+					</player>
+				
+					<player type="single" id="PLAYER9">
+						<person licence-nr="156005304" lastname="Ruttka" club-name="DJK Eintracht Eitorf" sex="1" ttr-match-count="350" region="Mittelrhein" club-federation-nickname="WTTV" ttr="1477" internal-nr="NU271530" foreigner-eq-state="false" firstname="Stephan" nationality="DE" club-nr="156005" birthyear="1968" sub-region="Rhein-Sieg"/>
+						 
+					</player>
+				
+					<player type="single" id="PLAYER10">
+						<person licence-nr="156012499" lastname="Sauer" club-name="TTG St. Augustin" sex="1" ttr-match-count="120" region="Mittelrhein" club-federation-nickname="WTTV" ttr="1117" internal-nr="NU1480185" foreigner-eq-state="false" firstname="Georg" nationality="DE" club-nr="156012" birthyear="1955" sub-region="Rhein-Sieg"/>
+						 
+					</player>
+				
+					<player type="single" id="PLAYER11">
+						<person licence-nr="154017167" lastname="Siry" club-name="TTV Viktoria Bonn" sex="1" ttr-match-count="248" region="Mittelrhein" club-federation-nickname="WTTV" ttr="1534" internal-nr="NU281093" foreigner-eq-state="false" firstname="Manfred" nationality="DE" club-nr="154017" birthyear="1959" sub-region="Bonn"/>
+						 
+					</player>
+				
+					<player type="single" id="PLAYER12">
+						<person licence-nr="156041253" lastname="Walterscheid" club-name="SSV Happerschoß" sex="1" ttr-match-count="569" region="Mittelrhein" club-federation-nickname="WTTV" ttr="1470" internal-nr="NU291226" foreigner-eq-state="false" firstname="Ingo" nationality="DE" club-nr="156041" birthyear="1972" sub-region="Rhein-Sieg"/>
+						 
+					</player>
+				
+			</players>
+		</competition>
+	
+</tournament>

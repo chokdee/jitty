@@ -4,6 +4,7 @@ import com.jmelzer.jitty.logging.EndpointLoggingListener;
 import com.jmelzer.jitty.logging.MyApplicationEventListener;
 import com.jmelzer.jitty.rest.*;
 import org.glassfish.jersey.CommonProperties;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,7 @@ public class JerseyConfig extends ResourceConfig {
                 register(DrawController.class).
                 register(AdminController.class).
                 register(ErrorController.class).
+                register(MultiPartFeature.class).
                 register(TournamentController.class);
 //        property(ServerProperties.TRACING, "ALL");
         property(ServerProperties.MONITORING_STATISTICS_ENABLED , true);
