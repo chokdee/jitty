@@ -1,4 +1,4 @@
-angular.module('jitty.player.controllers', []).controller('PlayerListController', function ($scope, $window, Player) {
+angular.module('jitty.player.controllers', []).controller('PlayerListController', function ($scope, $window, Player, Flash, FileUploader) {
 
     $scope.reverse = true;
 
@@ -12,6 +12,20 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
     $scope.order = function (predicate) {
         $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
         $scope.predicate = predicate;
+    };
+
+    var uploader = $scope.uploader = new FileUploader( {
+        url: '/api/players/import-from-click-tt',
+        autoUpload:true,
+        removeAfterUpload:true,
+        queueLimit:1
+    });
+    uploader.onCompleteAll = function() {
+        console.info('onCompleteAll');
+        $scope.players = Player.query();
+    };
+    uploader.onCompleteItem = function(fileItem, response, status, headers) {
+        Flash.create('success', response, 4000, {container: 'flash-status'});
     };
 
 }).controller('PlayerEditController', function ($scope, $routeParams, Player, $location, $http, Club, Association, Flash) {

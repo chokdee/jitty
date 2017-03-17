@@ -94,21 +94,21 @@ public class PlayerControllerTest extends SecureResourceTest {
             LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
             map.add("Content-Type", "image/jpeg");
             map.add("file", new ClassPathResource("/Turnierteilnehmer.xml"));
-            ResponseEntity<TournamentPlayerDTO[]> entity =
+            ResponseEntity<String> entity =
                     restTemplate.exchange("http://localhost:9999/api/players/import-from-click-tt", HttpMethod.POST,
-                            createHttpEntity(map, loginHeaders, true) , TournamentPlayerDTO[].class);
+                            createHttpEntity(map, loginHeaders, true) , String.class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
-            assertThat(entity.getBody().length, is(12));
+            assertThat(entity.getBody(), is("Es wurden 12 Spieler importiert"));
 
             assertEquals(count + 12 ,
                     (int)jdbcTemplate.queryForObject("select count(*) from tournament_player", Integer.class));
 //secomnd time. no new player shall be imported
             entity =
                     restTemplate.exchange("http://localhost:9999/api/players/import-from-click-tt", HttpMethod.POST,
-                            createHttpEntity(map, loginHeaders, true) , TournamentPlayerDTO[].class);
+                            createHttpEntity(map, loginHeaders, true) , String.class);
             assertTrue(entity.getStatusCode().is2xxSuccessful());
-            assertThat(entity.getBody().length, is(12));
+            assertThat(entity.getBody(), is("Es wurden 12 Spieler importiert"));
 
             assertEquals(count + 12 ,
                     (int)jdbcTemplate.queryForObject("select count(*) from tournament_player", Integer.class));

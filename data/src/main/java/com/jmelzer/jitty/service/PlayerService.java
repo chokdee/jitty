@@ -93,19 +93,19 @@ public class PlayerService {
     }
 
     @Transactional
-    public List<TournamentPlayerDTO> importPlayerFromClickTT(InputStream istream) {
+    public int importPlayerFromClickTT(InputStream istream) {
         Tournament clickTTTournament = xmlImporter.parseClickTTPlayerExport(istream);
-        List<TournamentPlayer> tournamentPlayers = new ArrayList<>();
+        int count = 0;
         //todo validate tournament
         for (Competition competition : clickTTTournament.getCompetition()) {
             for (Player clickTTPlayer : competition.getPlayers().getPlayer()) {
-                
+
                 List<TournamentPlayer> dbPlayers = repository.findByLastNameAndFirstName(clickTTPlayer.getPerson().get(0).getLastname(),
                         clickTTPlayer.getPerson().get(0).getFirstname());
 
                 if (dbPlayers.size() == 0 || dbPlayers.size() > 1) {
                     TournamentPlayer dbP = createDbPlayer(clickTTPlayer);
-                    tournamentPlayers.add(dbP);
+                    count++;
                     repository.saveAndFlush(dbP);
                 } else if (dbPlayers.size() == 1) {
                     TournamentPlayer dbP = dbPlayers.get(0);
@@ -114,18 +114,13 @@ public class PlayerService {
                     } else {
                         dbP = createDbPlayer(clickTTPlayer);
                     }
-                    tournamentPlayers.add(dbP);
+                    count++;
                     repository.saveAndFlush(dbP);
                 }
             }
         }
-        List<TournamentPlayerDTO> dtos = new ArrayList<>();
-        for (TournamentPlayer player : tournamentPlayers) {
-            TournamentPlayerDTO dto = new TournamentPlayerDTO();
-            BeanUtils.copyProperties(player, dto);
-            dtos.add(dto);
-        }
-        return dtos;
+
+        return count;
     }
 
     private TournamentPlayer createDbPlayer(Player clickTTPlayer) {
@@ -136,6 +131,7 @@ public class PlayerService {
         tp.setGender(person.getSex().equals("0") ? "w" : "m");
         Club club = clubRepository.findByName(person.getClubName());
         tp.setClub(club);
+        //todo verband
         merge(tp, clickTTPlayer);
         return tp;
     }

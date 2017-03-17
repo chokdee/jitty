@@ -87,10 +87,11 @@ public class PlayerController {
     @POST
     @Path("/import-from-click-tt")  //Your Path or URL to call this service
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<TournamentPlayerDTO> uploadFile(
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response uploadFile(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition contentDispositionHeader) {
-        return service.importPlayerFromClickTT(fileInputStream);
+        int count = service.importPlayerFromClickTT(fileInputStream);
+        return Response.status(Response.Status.OK).entity("Es wurden " + count + " Spieler importiert").build();
     }
 }

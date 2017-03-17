@@ -5,6 +5,14 @@
 <!--suppress HtmlFormInputWithoutLabel -->
 <a name="create" ng-click="createNewPlayer()" class="btn-primary btn" style="top:20px;">Neuen Spieler anlegen</a>
 
+<input class="btn-primary btn" type="file" nv-file-select uploader="uploader"/><br/>
+<ul>
+    <li ng-repeat="item in uploader.queue">
+        Name: <span ng-bind="item.file.name"></span><br/>
+        <button ng-click="item.upload()">upload</button>
+    </li>
+</ul>
+
 <h3>Alle Spieler</h3>
 
 <table class="table usertable">
