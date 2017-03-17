@@ -63,6 +63,11 @@ public class UserService {
     }
 
     @Transactional
+    public Tournament findTournamentByLoginUser(String userName) {
+        User user = repository.findByLoginName(userName);
+        return user.getLastUsedTournament();
+    }
+    @Transactional
     public UserDTO findByLoginName(String userName) {
         UserDTO userDTO = new UserDTO();
         User user = repository.findByLoginName(userName);

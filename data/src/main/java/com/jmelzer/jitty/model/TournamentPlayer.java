@@ -33,6 +33,9 @@ public class TournamentPlayer {
     @ManyToOne(optional = true, cascade = CascadeType.DETACH)
     private Club club;
 
+    @ManyToOne(optional = false, cascade = CascadeType.DETACH)
+    private Tournament tournament;
+
     @ManyToOne(optional = true, cascade = CascadeType.DETACH)
     private Association association;
 
@@ -214,6 +217,15 @@ public class TournamentPlayer {
 
     public List<TournamentSingleGame> getGames() {
         return games;
+    }
+
+
+    public Tournament getTournament() {
+        return tournament;
+    }
+
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
     }
 
     public List<TournamentClass> getClasses() {

@@ -8,6 +8,7 @@ package com.jmelzer.jitty.service;
 import com.jmelzer.jitty.dao.ClubRepository;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.model.Club;
+import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentPlayer;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +61,7 @@ public class PlayerServiceTest {
         tp2.setClub(new Club("Falscger Verein"));
         when(playerRepository.findByLastNameAndFirstName("Dauth", "Mario")).thenReturn(Collections.singletonList(tp2));
 
-        playerService.importPlayerFromClickTT(inputStream);
+        playerService.importPlayerFromClickTT(inputStream, new Tournament());
 
         Mockito.verify(playerRepository, times(1)).saveAndFlush(tp);
         Mockito.verify(playerRepository, times(12)).saveAndFlush(anyObject());

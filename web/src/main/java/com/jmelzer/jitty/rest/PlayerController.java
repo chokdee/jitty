@@ -44,7 +44,7 @@ public class PlayerController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<TournamentPlayerDTO> getList() {
         LOG.info("query all TournamentPlayer ");
-        return service.findAll();
+        return service.findAll( securityUtil.getActualTournament());
     }
 
     @Path("{id}")
@@ -58,7 +58,7 @@ public class PlayerController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response saveOrCreate(TournamentPlayerDTO player) {
-        service.save(player);
+        service.save(player, securityUtil.getActualTournament());
         return Response.ok().build();
     }
 
@@ -91,7 +91,7 @@ public class PlayerController {
     public Response uploadFile(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition contentDispositionHeader) {
-        int count = service.importPlayerFromClickTT(fileInputStream);
+        int count = service.importPlayerFromClickTT(fileInputStream, securityUtil.getActualTournament());
         return Response.status(Response.Status.OK).entity("Es wurden " + count + " Spieler importiert").build();
     }
 }

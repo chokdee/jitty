@@ -43,13 +43,18 @@ public class TournamentPlayerRepositoryIntegrationTests {
 
     @Autowired
     TournamentPlayerRepository repository;
+
     @Autowired
     AssociationRepository associationRepository;
+
     @Autowired
     ClubRepository clubRepository;
+
     @Autowired
     TournamentClassRepository tournamentClassRepository;
 
+    @Autowired
+    TournamentRepository tournamentRepository;
 
     @Test
     public void findsFirstPageOf() {
@@ -78,6 +83,7 @@ public class TournamentPlayerRepositoryIntegrationTests {
         player.setMobileNumber("0800-26662662");
         player.setQttr(2000);
         player.setTtr(2100);
+        player.setTournament(tournamentRepository.findOne(2L));
         player.setAssociation(associationRepository.findOne(1L));
         player.setClub(clubRepository.findOne(1L));
         repository.saveAndFlush(player);

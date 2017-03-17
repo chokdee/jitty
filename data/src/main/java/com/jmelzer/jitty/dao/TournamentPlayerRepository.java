@@ -11,6 +11,7 @@
 package com.jmelzer.jitty.dao;
 
 
+import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentPlayer;
 import org.springframework.data.domain.Page;
@@ -28,4 +29,5 @@ public interface TournamentPlayerRepository extends JpaRepository<TournamentPlay
     List<TournamentPlayer> findByLastNameAndFirstName(String lastName, String firstName);
     List<TournamentPlayer> findByClasses(List<TournamentClass> list);
 
+    List<TournamentPlayer> findByTournament(Tournament tournament);
 }

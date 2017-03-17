@@ -45,8 +45,8 @@ public class PlayerService {
     TournamentClassRepository classRepository;
 
     @Transactional(readOnly = true)
-    public List<TournamentPlayerDTO> findAll() {
-        List<TournamentPlayer> players = repository.findAll();
+    public List<TournamentPlayerDTO> findAll(com.jmelzer.jitty.model.Tournament actualTournament) {
+        List<TournamentPlayer> players = repository.findByTournament(actualTournament);
         List<TournamentPlayerDTO> dtos = new ArrayList<>();
         for (TournamentPlayer player : players) {
             TournamentPlayerDTO dto = new TournamentPlayerDTO();
@@ -76,7 +76,7 @@ public class PlayerService {
     }
 
     @Transactional
-    public void save(TournamentPlayerDTO player) {
+    public void save(TournamentPlayerDTO player, com.jmelzer.jitty.model.Tournament actualTournament) {
         TournamentPlayer playerDB = null;
 
         if (player.getId() == null) {
@@ -89,11 +89,12 @@ public class PlayerService {
             playerDB.removeAllClasses();
             playerDB.addClass(classRepository.findOne(classDTO.getId()));
         }
+        playerDB.setTournament(actualTournament);
         repository.save(playerDB);
     }
 
     @Transactional
-    public int importPlayerFromClickTT(InputStream istream) {
+    public int importPlayerFromClickTT(InputStream istream, com.jmelzer.jitty.model.Tournament actualTournament) {
         Tournament clickTTTournament = xmlImporter.parseClickTTPlayerExport(istream);
         int count = 0;
         //todo validate tournament
@@ -105,10 +106,12 @@ public class PlayerService {
 
                 if (dbPlayers.size() == 0 || dbPlayers.size() > 1) {
                     TournamentPlayer dbP = createDbPlayer(clickTTPlayer);
+                    dbP.setTournament(actualTournament);
                     count++;
                     repository.saveAndFlush(dbP);
                 } else if (dbPlayers.size() == 1) {
                     TournamentPlayer dbP = dbPlayers.get(0);
+                    dbP.setTournament(actualTournament);
                     if (compareClub(dbP, clickTTPlayer)) {
                         merge(dbP, clickTTPlayer);
                     } else {
