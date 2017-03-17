@@ -14,43 +14,56 @@ import java.util.List;
 public class TournamentPlayer {
 
     public static TournamentPlayer BYE = new TournamentPlayer(0L, "FREI", "LOS");
+
     public transient int ranking = 0;
+
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, mappedBy = "players")
+    List<TournamentClass> classes = new ArrayList<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false, name = "firstname")
     private String firstName;
+
     @Column(nullable = false, name = "lastname")
     private String lastName;
+
     @ManyToOne(optional = true, cascade = CascadeType.DETACH)
     private Club club;
+
     @ManyToOne(optional = true, cascade = CascadeType.DETACH)
     private Association association;
+
     @Column
     private String email;
+
     @Column(nullable = true, name = "mobilenumber")
     private String mobileNumber;
+
     @Column(nullable = true)
     private int qttr;
+
     @Column
     private int ttr;
+
     @Temporal(TemporalType.DATE)
     @Column
     private Date birthday;
+
     @Column(length = 1)
     private String gender;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_game_at")
     private Date lastGameAt;
 
     @ManyToMany(cascade = CascadeType.DETACH)
-    @JoinTable(name="GAME_TO_PLAYER",
-            joinColumns=@JoinColumn(name="GAME_ID", referencedColumnName="ID"),
-            inverseJoinColumns=@JoinColumn(name="PLAYER_ID", referencedColumnName="ID"))
+    @JoinTable(name = "GAME_TO_PLAYER",
+            joinColumns = @JoinColumn(name = "GAME_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "PLAYER_ID", referencedColumnName = "ID"))
     private List<TournamentSingleGame> games = new ArrayList<>();
-
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, mappedBy = "players")
-    List<TournamentClass> classes = new ArrayList<>();
 
 
     public TournamentPlayer() {
@@ -151,13 +164,11 @@ public class TournamentPlayer {
     }
 
     @Override
-    public String toString() {
-        return "TournamentPlayer{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", qttr=" + qttr +
-                ", ranking=" + ranking +
-                '}';
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -182,11 +193,13 @@ public class TournamentPlayer {
     }
 
     @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        return result;
+    public String toString() {
+        return "TournamentPlayer{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", qttr=" + qttr +
+                ", ranking=" + ranking +
+                '}';
     }
 
     public String getFullName() {
@@ -214,6 +227,7 @@ public class TournamentPlayer {
             aClass.addPlayer(this);
         }
     }
+
     public void addClass(TournamentClass tournamentClass) {
         classes.add(tournamentClass);
         tournamentClass.addPlayer(this);
