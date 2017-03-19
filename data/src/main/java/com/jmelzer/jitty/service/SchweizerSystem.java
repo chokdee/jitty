@@ -74,7 +74,7 @@ public class SchweizerSystem {
         return games;
     }
 
-    public List<TournamentSingleGameDTO> createGamesForRound(int i, List<TournamentPlayerDTO> player) {
+    public List<TournamentSingleGameDTO> createGamesForRound(int round, List<TournamentPlayerDTO> player, boolean bruteForce) {
         //build groups of player with the same amount of won games
         int size = player.size() / 2;
         List<TournamentSingleGameDTO> games = new ArrayList<>(size);
@@ -88,34 +88,69 @@ public class SchweizerSystem {
                 hashMap.get(playerDTO.getWonGames()).add(playerDTO);
             }
         }
-        for (int winningGames = i-1; winningGames >= 0; winningGames--) {
-            List<TournamentPlayerDTO> sameWinList = hashMap.get(winningGames);
-
-            while (sameWinList.size() > 0) {
-//                    RandomUtil randomUtil = new RandomUtil(0, sameWinList.size() - 1);
-//                    int n = randomUtil.nextInt();
-                Collections.shuffle(sameWinList);
+        if (!bruteForce) {
+            for (int winningGames = round - 1; winningGames >= 0; winningGames--) {
+                List<TournamentPlayerDTO> sameWinList = hashMap.get(winningGames);
+                fillGames(round, player, games, hashMap, winningGames, sameWinList);
+            }
+        } else {
+            List<TournamentPlayerDTO> allPlayer  = new ArrayList<>(player);
+            Collections.shuffle(allPlayer);
+            while (allPlayer.size() > 0) {
                 TournamentSingleGameDTO game = new TournamentSingleGameDTO();
-                TournamentPlayerDTO p1 = sameWinList.get(0);
-                sameWinList.remove(p1);
-
-                TournamentPlayerDTO p2 = getRandomPlayerWithSameWinCount(sameWinList, p1);
-                if (p2 == null) {
-                    p2 = getPlayerFromNextLevel(hashMap, winningGames - 1, p1);
-                } else {
-                    sameWinList.remove(p2);
-                }
-                if (p2 == null) {
-                    throw new RuntimeException("retry");
-                }
+                TournamentPlayerDTO p1 = allPlayer.get(0);
                 game.setPlayer1(p1);
+                TournamentPlayerDTO p2 = getPlayerNotPlayedEachOther(p1, allPlayer);
+                if (p2 == null) throwNoResult(round, player, games);
                 game.setPlayer2(p2);
+                allPlayer.remove(p1);
+                allPlayer.remove(p2);
                 games.add(game);
-
-
             }
         }
         return games;
+    }
+
+    private void fillGames(int round, List<TournamentPlayerDTO> player, List<TournamentSingleGameDTO> games, Map<Integer, List<TournamentPlayerDTO>> hashMap, int winningGames, List<TournamentPlayerDTO> sameWinList) {
+        while (sameWinList != null && sameWinList.size() > 0) {
+            Collections.shuffle(sameWinList);
+            TournamentSingleGameDTO game = new TournamentSingleGameDTO();
+            TournamentPlayerDTO p1 = sameWinList.get(0);
+            sameWinList.remove(p1);
+
+            TournamentPlayerDTO p2 = getRandomPlayerWithSameWinCount(sameWinList, p1);
+            if (p2 == null) {
+                p2 = getPlayerFromNextLevel(hashMap, winningGames - 1, p1);
+            } else {
+                sameWinList.remove(p2);
+            }
+            if (p2 == null) {
+                throwNoResult(round, player, games);
+                return;
+            }
+            game.setPlayer1(p1);
+            game.setPlayer2(p2);
+            games.add(game);
+
+
+        }
+    }
+
+    private void throwNoResult(int round, List<TournamentPlayerDTO> player, List<TournamentSingleGameDTO> games) {
+        System.out.println("games before exception");
+        for (TournamentSingleGameDTO g : games) {
+            System.out.println(g);
+        }
+        cleanGames(player, round);
+        throw new SwissRuntimeException("retry");
+    }
+
+    private void cleanGames(List<TournamentPlayerDTO> player, int round) {
+        for (TournamentPlayerDTO playerDTO : player) {
+            if (playerDTO.getPlayedGames().size() >= round) {
+                playerDTO.removeLastGame();
+            }
+        }
     }
 
     private TournamentPlayerDTO getPlayerFromNextLevel(Map<Integer, List<TournamentPlayerDTO>> hashMap, int key, TournamentPlayerDTO p) {
@@ -125,14 +160,20 @@ public class SchweizerSystem {
             return null;
         }
         Collections.shuffle(nextLevel);
-        for (TournamentPlayerDTO p1 : nextLevel) {
+        TournamentPlayerDTO p1 = getPlayerNotPlayedEachOther(p, nextLevel);
+        if (p1 != null) return p1;
+        return getPlayerFromNextLevel(hashMap, key - 1, p);
+    }
+
+    private TournamentPlayerDTO getPlayerNotPlayedEachOther(TournamentPlayerDTO p, List<TournamentPlayerDTO> list) {
+        for (TournamentPlayerDTO p1 : list) {
             if (!p1.playedAgainst(p)) {
-                nextLevel.remove(p1);
+                list.remove(p1);
                 return p1;
             }
 
         }
-        return getPlayerFromNextLevel(hashMap, key - 1, p);
+        return null;
     }
 
     TournamentPlayerDTO getRandomPlayerWithSameWinCount(List<TournamentPlayerDTO> players, TournamentPlayerDTO player) {

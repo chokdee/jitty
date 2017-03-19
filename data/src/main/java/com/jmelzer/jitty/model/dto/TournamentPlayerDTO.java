@@ -2,6 +2,7 @@ package com.jmelzer.jitty.model.dto;
 
 import com.jmelzer.jitty.model.Association;
 import com.jmelzer.jitty.model.Club;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -178,6 +179,7 @@ public class TournamentPlayerDTO {
 
     public void addGame(TournamentSingleGameDTO game) {
         playedGames.add(game);
+        Assert.isTrue(playedGames.size() <= 6);
     }
 
     public void calcWinningGames() {
@@ -236,6 +238,7 @@ public class TournamentPlayerDTO {
                 "fullName='" + fullName + '\'' +
                 ", qttr=" + qttr +
                 ", won=" + wonGames +
+                ", buchholzZahl=" + buchholzZahl +
                 ", playedAgainst=" + playedAgainst() +
                 '}';
     }
@@ -243,14 +246,17 @@ public class TournamentPlayerDTO {
     private String playedAgainst() {
         String s = "";
         for (TournamentSingleGameDTO playedGame : playedGames) {
-            if (playedGame.getPlayer1() != this) {
+            Assert.isTrue(playedGame.getPlayer1() == this || playedGame.getPlayer2() == this);
+            if (playedGame.getPlayer1() != this && playedGame.getPlayer1() != null) {
                 s += playedGame.getPlayer1().getFullName();
             } else {
-                s += playedGame.getPlayer2().getFullName();
+                if (playedGame.getPlayer2() != null) {
+                    s += playedGame.getPlayer2().getFullName();
+                }
             }
             s += ",";
         }
-        return s.substring(0, s.length()-1);
+        return s.substring(0, s.length() - 1);
     }
 
     public String getFullName() {
@@ -269,5 +275,9 @@ public class TournamentPlayerDTO {
             }
         }
         return false;
+    }
+
+    public void removeLastGame() {
+        playedGames.remove(playedGames.size() - 1);
     }
 }
