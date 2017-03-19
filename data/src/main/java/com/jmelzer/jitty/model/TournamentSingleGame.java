@@ -75,6 +75,7 @@ public class TournamentSingleGame {
     @JoinColumn(name = "ROUND_ID")
     private Round round;
 
+    //-1 unset, 1=home , 2=guest
     private int winner = -1;
 
     @OneToOne(cascade = CascadeType.ALL)

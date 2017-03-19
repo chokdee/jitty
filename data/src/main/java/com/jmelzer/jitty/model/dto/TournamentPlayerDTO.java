@@ -13,22 +13,52 @@ import java.util.List;
  */
 public class TournamentPlayerDTO {
 
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private String fullName;
-    private Club club;
-    private Association association;
-    private String email;
-    private String mobileNumber;
-    private int qttr;
-    private int ttr;
-    private Date birthday;
-    private String gender;
-    private String periodSinceLastGame;
-    private String lastGameAt;
+    List<TournamentSingleGameDTO> playedGames = new ArrayList<>();
 
     List<TournamentClassDTO> classes = new ArrayList<>();
+
+    private Long id;
+
+    private String firstName;
+
+    private String lastName;
+
+    private String fullName;
+
+    private Club club;
+
+    private Association association;
+
+    private String email;
+
+    private String mobileNumber;
+
+    private int qttr;
+
+    private int ttr;
+
+    private Date birthday;
+
+    private String gender;
+
+    private String periodSinceLastGame;
+
+    private String lastGameAt;
+
+    /**
+     * count won games
+     */
+    private int wonGames;
+
+    private int buchholzZahl;
+
+    public TournamentPlayerDTO() {
+    }
+
+    public TournamentPlayerDTO(String fullName, int qttr) {
+        this.fullName = fullName;
+        this.qttr = qttr;
+    }
 
     public Long getId() {
         return id;
@@ -126,14 +156,6 @@ public class TournamentPlayerDTO {
         classes.add(classDTO);
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
     public String getPeriodSinceLastGame() {
         return periodSinceLastGame;
     }
@@ -142,31 +164,110 @@ public class TournamentPlayerDTO {
         this.periodSinceLastGame = periodSinceLastGame;
     }
 
-    @Override
-    public String toString() {
-        return "TournamentPlayerDTO{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", club=" + club +
-                ", association=" + association +
-                ", email='" + email + '\'' +
-                ", mobileNumber='" + mobileNumber + '\'' +
-                ", qttr=" + qttr +
-                ", ttr=" + ttr +
-                ", birthday=" + birthday +
-                ", gender='" + gender + '\'' +
-                ", classes=" + classes +
-                '}';
-
-    }
-
     public String getLastGameAt() {
         return lastGameAt;
     }
 
     public void setLastGameAt(String lastGameAt) {
         this.lastGameAt = lastGameAt;
+    }
+
+    public List<TournamentSingleGameDTO> getPlayedGames() {
+        return playedGames;
+    }
+
+    public void addGame(TournamentSingleGameDTO game) {
+        playedGames.add(game);
+    }
+
+    public void calcWinningGames() {
+        wonGames = 0;
+        for (TournamentSingleGameDTO playedGame : playedGames) {
+            if (playedGame.getPlayer1() == this && playedGame.getWinner() == 1) {
+                wonGames++;
+            } else if (playedGame.getPlayer2() == this && playedGame.getWinner() == 2) {
+                wonGames++;
+            }
+        }
+
+    }
+
+    public void calcBuchholz() {
+        buchholzZahl = 0;
+        for (TournamentSingleGameDTO playedGame : playedGames) {
+            if (playedGame.getPlayer1() == this) {
+                buchholzZahl += playedGame.getPlayer2().getWonGames();
+            } else if (playedGame.getPlayer2() == this) {
+                buchholzZahl += playedGame.getPlayer1().getWonGames();
+            }
+        }
+    }
+
+    public int getWonGames() {
+        return wonGames;
+    }
+
+    public int getBuchholzZahl() {
+        return buchholzZahl;
+    }
+
+    @Override
+    public int hashCode() {
+        return fullName.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TournamentPlayerDTO playerDTO = (TournamentPlayerDTO) o;
+
+        return fullName.equals(playerDTO.fullName);
+    }
+
+    @Override
+    public String toString() {
+        return "TournamentPlayerDTO{" +
+                "fullName='" + fullName + '\'' +
+                ", qttr=" + qttr +
+                ", won=" + wonGames +
+                ", playedAgainst=" + playedAgainst() +
+                '}';
+    }
+
+    private String playedAgainst() {
+        String s = "";
+        for (TournamentSingleGameDTO playedGame : playedGames) {
+            if (playedGame.getPlayer1() != this) {
+                s += playedGame.getPlayer1().getFullName();
+            } else {
+                s += playedGame.getPlayer2().getFullName();
+            }
+            s += ",";
+        }
+        return s.substring(0, s.length()-1);
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public boolean playedAgainst(TournamentPlayerDTO p) {
+        for (TournamentSingleGameDTO playedGame : playedGames) {
+            if (p.equals(playedGame.getPlayer1()) || p.equals(playedGame.getPlayer2())) {
+                System.out.println("player " + p.getFullName() + " already played in game" + playedGame);
+                return true;
+            }
+        }
+        return false;
     }
 }

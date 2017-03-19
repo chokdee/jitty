@@ -33,6 +33,7 @@ public class TournamentSingleGameDTO {
     List<GameSetDTO> sets = new ArrayList<>();
 
     private Long id;
+   //-1 unset, 1=home , 2=guest
     private int winner = -1;
     private Long tid;
 
@@ -42,6 +43,7 @@ public class TournamentSingleGameDTO {
 
     public void setPlayer1(TournamentPlayerDTO player1) {
         this.player1 = player1;
+        player1.addGame(this);
     }
 
     public TournamentPlayerDTO getPlayer2() {
@@ -50,6 +52,7 @@ public class TournamentSingleGameDTO {
 
     public void setPlayer2(TournamentPlayerDTO player2) {
         this.player2 = player2;
+        player2.addGame(this);
     }
 
     public boolean isPlayed() {
