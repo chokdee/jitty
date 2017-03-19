@@ -179,7 +179,6 @@ public class TournamentPlayerDTO {
 
     public void addGame(TournamentSingleGameDTO game) {
         playedGames.add(game);
-        Assert.isTrue(playedGames.size() <= 6);
     }
 
     public void calcWinningGames() {
