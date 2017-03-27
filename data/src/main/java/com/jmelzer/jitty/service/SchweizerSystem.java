@@ -99,10 +99,10 @@ public class SchweizerSystem {
             while (allPlayer.size() > 0) {
                 TournamentSingleGameDTO game = new TournamentSingleGameDTO();
                 TournamentPlayerDTO p1 = allPlayer.get(0);
-                game.setPlayer1(p1);
+                game.setPlayer1AndBackReference(p1);
                 TournamentPlayerDTO p2 = getPlayerNotPlayedEachOther(p1, allPlayer);
                 if (p2 == null) throwNoResult(round, player, games);
-                game.setPlayer2(p2);
+                game.setPlayer2AndBackReference(p2);
                 allPlayer.remove(p1);
                 allPlayer.remove(p2);
                 games.add(game);

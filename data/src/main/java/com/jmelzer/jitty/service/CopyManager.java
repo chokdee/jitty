@@ -4,6 +4,7 @@ import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.*;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.Assert;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -82,7 +83,7 @@ public class CopyManager {
 
     public static TournamentPlayerDTO copy(TournamentPlayer player) {
         TournamentPlayerDTO dto = new TournamentPlayerDTO();
-        BeanUtils.copyProperties(player, dto);
+        BeanUtils.copyProperties(player, dto, "playedGames", "games", "classes", "association", "classes");
         if (player.getLastGameAt() != null) {
             LocalDateTime time = LocalDateTime.ofInstant(player.getLastGameAt().toInstant(), ZoneId.systemDefault());
             long h = ChronoUnit.HOURS.between(time, LocalDateTime.now());
