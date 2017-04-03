@@ -146,7 +146,7 @@ public class TournamentService {
         return tc;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public synchronized void selectTournament(long id) {
         if (tid != null && tid == id) {
             return;
@@ -698,10 +698,11 @@ public class TournamentService {
 
     @Transactional
     public void selectPhaseCombination(Long aLong, PhaseCombination phaseCombination) {
+        if (phaseCombination == null) return;
         TournamentClass tc = tcRepository.findOne(aLong);
-        if (tc.getActivePhase() != null) { //todo must be overridden
-            return;
-        }
+//        if (tc.getActivePhase() != null) { //todo must be overridden
+//            return;
+//        }
         tc.createPhaseCombination(phaseCombination);
         tc.setActivePhaseNo(0);
         tcRepository.saveAndFlush(tc);

@@ -32,7 +32,7 @@ import java.util.*;
  * Nach der letzten Runde hat der Spieler mit den meisten Siegen das Turnier gewonnen; bei gleicher Anzahl an Siegen ist die Buchholzzahl maßgeblich.
  * Ist auch diese gleich entscheidet der direkte Vergleich.<br><br>
  */
-public class SchweizerSystem {
+public class SwissSystemManager {
 
     public List<TournamentPlayerDTO> calcRankingFirstRound(List<TournamentPlayerDTO> player) {
         player.sort((o1, o2) -> new Integer(o1.getQttr()).compareTo(o2.getQttr()) * -1);
@@ -184,5 +184,6 @@ public class SchweizerSystem {
         }
         return null;
     }
+
 
 }

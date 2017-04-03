@@ -17,13 +17,13 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by J. Melzer on 17.03.2017.
  */
-public class SchweizerSystemTest {
-    SchweizerSystem schweizerSystem = new SchweizerSystem();
+public class SwissSystemManagerTest {
+    SwissSystemManager swissSystemManager = new SwissSystemManager();
 
     @Test
     public void calcRankingFirstRound() throws Exception {
         List<TournamentPlayerDTO> player = createPlayer();
-        schweizerSystem.calcRankingFirstRound(player);
+        swissSystemManager.calcRankingFirstRound(player);
         assertEquals(1500, player.get(0).getQttr());
         assertEquals(1200, player.get(1).getQttr());
         assertEquals(1100, player.get(2).getQttr());
@@ -53,9 +53,9 @@ public class SchweizerSystemTest {
 
             System.out.println("HHHHHHHHHHHHHH   " + i + " HHHHHHHHHHHHHH");
             List<TournamentPlayerDTO> player = createPlayer();
-            schweizerSystem.calcRankingFirstRound(player);
+            swissSystemManager.calcRankingFirstRound(player);
             System.out.println("------ round 1 starts .-------------- ");
-            List<TournamentSingleGameDTO> games = schweizerSystem.createGamesForTheFirstRound(player);
+            List<TournamentSingleGameDTO> games = swissSystemManager.createGamesForTheFirstRound(player);
 
             for (TournamentSingleGameDTO game : games) {
                 System.out.println("game = " + game);
@@ -64,7 +64,7 @@ public class SchweizerSystemTest {
             for (int round = 2; round <= 6; round++) {
 
                 System.out.println("------ round " + round + " starts .-------------- ");
-                schweizerSystem.calcRankingRound(round, player);
+                swissSystemManager.calcRankingRound(round, player);
 
                 for (TournamentPlayerDTO playerDTO : player) {
                     System.out.println("playerDTO = " + playerDTO);
@@ -78,7 +78,7 @@ public class SchweizerSystemTest {
             }
 
             System.out.println(" ### RESULT ###");
-            schweizerSystem.calcRankingRound(7, player);
+            swissSystemManager.calcRankingRound(7, player);
             for (TournamentPlayerDTO playerDTO : player) {
                 System.out.println("playerDTO = " + playerDTO);
             }
@@ -93,9 +93,9 @@ public class SchweizerSystemTest {
                 System.out.println("------ #" + i + " run -------------- ");
                 if (i > 3) {
                     System.out.println("brute force !!");
-                    games = schweizerSystem.createGamesForRound(round, player, true);
+                    games = swissSystemManager.createGamesForRound(round, player, true);
                 } else {
-                    games = schweizerSystem.createGamesForRound(round, player, false);
+                    games = swissSystemManager.createGamesForRound(round, player, false);
                 }
                 break;
             } catch (SwissRuntimeException e) {

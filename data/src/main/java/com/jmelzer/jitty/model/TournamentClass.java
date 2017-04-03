@@ -330,6 +330,9 @@ public class TournamentClass {
                 system.addPhase(new GroupPhase());
                 system.addPhase(new KOPhase());
                 break;
+            case SWS:
+                system.addPhase(new SwissSystemPhase("A"));
+                break;
             default:
                 throw new UnsupportedOperationException("not yet implemented");
         }

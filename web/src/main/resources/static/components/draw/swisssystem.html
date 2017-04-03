@@ -1,0 +1,81 @@
+<!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
+<div ng-controller="SwissSystemController">
+    <div class="row">
+        <flash-message name="flash-status"></flash-message>
+    </div>
+
+        <div class="col-md-10">
+            <p style="font-weight: bold">Gruppenphase Schweitersystem.</p>
+        </div>
+
+        <hr/>
+
+        <div class="row">
+
+            <div class="col-md-3">
+
+                <h4>Nicht zugewiesene Spieler</h4>
+                <div class="playerlist">
+                    <ul dnd-list="list">
+                        <!-- The dnd-draggable directive makes an element draggable and will
+                             transfer the object that was assigned to it. If an element was
+                             dragged away, you have to remove it from the original list
+                             yourself using the dnd-moved attribute -->
+                        <li ng-repeat="item in players"
+                            dnd-draggable="item"
+                            dnd-moved="list.splice($index, 1)"
+                            dnd-effect-allowed="move"
+                            dnd-selected="models.selected = item"
+                            ng-class="{'selected': models.selected === item}"
+                        >
+                            {{item.firstName + ' ' + item.lastName + ' - ' + item.club.name + ' - ' + item.qttr}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <p>{{groups}}</p>
+            <div class="col-md-7">
+                <div style="margin-left: 10px">
+                    <a id="automaticDraw" class="btn btn-primary" ng-click="automaticDraw()">Auslosung</a>
+                    <a id="start" class="btn btn-primary" ng-click="start()">Starten...</a>
+                </div>
+                <br>
+                <div class="dropzone">
+
+                            <div class="container-element box box-blue">
+                                <h3>Gruppe</h3>
+                                <ul dnd-list="items"
+                                    dnd-horizontal-list="true"
+                                    dnd-external-sources="true"
+                                    dnd-inserted="logEvent('Element was inserted at position ' + index, event)"
+                                    class="itemlist">
+                                    <li ng-repeat="item in items.players"
+                                        dnd-draggable="item"
+                                        dnd-type="'itemType'"
+                                        dnd-effect-allowed="copyMove"
+                                        dnd-dragstart="logEvent('Started to drag an item', event)"
+                                        dnd-moved="items.splice($index, 1); logEvent('Item moved', event)"
+                                        dnd-copied="logEvent('Item copied', event)"
+                                        dnd-canceled="logEvent('Drag operation canceled', event)"
+                                        dnd-dragend="logEvent('Drag operation ended', event)">
+                                        <div>
+                                            <div>
+                                            {{item.firstName + ' ' + item.lastName}}
+                                            </div>
+                                            <div>
+                                                {{item.qttr}}
+                                            </div>
+                                        </div>
+
+                                    </li>
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -69,6 +69,9 @@ public class TournamentSystem {
 
 
     public void clearPhases() {
+        for (Phase phase : phases) {
+            phase.setSystem(null);
+        }
         phases.clear();
     }
 

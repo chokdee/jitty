@@ -1,9 +1,11 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.model.PhaseCombination;
+import com.jmelzer.jitty.model.SwissSystemPhase;
 import com.jmelzer.jitty.model.dto.*;
 import com.jmelzer.jitty.service.DrawGroupManager;
 import com.jmelzer.jitty.service.DrawKoFieldManager;
+import com.jmelzer.jitty.service.SwissSystemManager;
 import com.jmelzer.jitty.service.TournamentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +51,14 @@ public class DrawController {
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TournamentPlayerDTO> getPossiblePlayerForGroups(@QueryParam(value = "cid") String id) {
         return drawGroupManager.getPossiblePlayerForGroups(Long.valueOf(id));
+
+    }
+
+    @Path("/possible-player-swiss-system")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<TournamentPlayerDTO> getPossiblePlayerForSwissSystem(@QueryParam(value = "cid") String id) {
+        return tournamentService.getPlayerforClass(Long.valueOf(id));
 
     }
 

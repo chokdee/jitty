@@ -80,22 +80,28 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     }, {
         id: 1,
         label: 'VR Gruppe, ER KO-Runde'
+    }, {
+        id: 5,
+        label: 'Schweizer System'
     },
         // {
         // id: 2,
         // label: 'KO-Runde'}
     ];
-    $scope.modus = $scope.modi[1];
+    $scope.modus = $scope.modi[0];
     $scope.selectedPhase = -10;
 
     $scope.loadPart = function (index) {
-        if (index == 0) {
-            $scope.templateurl = 'components/draw/groups.html';
-        }
-        else if (index == 1) {
-            $scope.templateurl = 'components/draw/bracket.html';
-        } else {
-            $scope.templateurl = '';
+        $scope.templateurl = '';
+        if ($scope.modus.id == 1) {
+            if (index == 0) {
+                $scope.templateurl = 'components/draw/groups.html';
+            }
+            else if (index == 1) {
+                $scope.templateurl = 'components/draw/bracket.html';
+            }
+        } else if ($scope.modus.id == 5) {
+            $scope.templateurl = 'components/draw/swisssystem.html';
         }
     };
 
@@ -158,6 +164,23 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
             });
 
     };
+
+
+}).controller('SwissSystemController', function ($scope, $http, $routeParams, $window, TournamentClass, Flash) {
+
+    $scope.getPossiblePlayer = function () {
+        $http.get('/api/draw/possible-player-swiss-system?cid=' + $routeParams.id, {}).then(function (response) {
+            $scope.players = response.data;
+        });
+    };
+
+    if ($routeParams.id != null) {
+        if ($scope.tournamentClass == null)
+            $scope.getTournamentClass();
+
+        $scope.getPossiblePlayer();
+    }
+    $scope.groups = {name: 'A' , players: {}};
 
 
 }).controller('GroupController', function ($scope, $http, $routeParams, $window, TournamentClass, Flash) {

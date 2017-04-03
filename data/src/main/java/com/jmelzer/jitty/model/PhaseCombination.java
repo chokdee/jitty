@@ -14,9 +14,10 @@ public enum PhaseCombination {
     //VR Gruppe, ER Gruppe
     GG(2),
     //Nur KO
-    KO(3);
+    KO(3),
     //VR Gruppe, ZR Gruppe,
-
+    //Schweizer System wie WTTV Cup
+    SWS(5);
 
     int value;
 

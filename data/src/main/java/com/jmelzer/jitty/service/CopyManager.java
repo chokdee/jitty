@@ -4,7 +4,6 @@ import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.*;
 import org.springframework.beans.BeanUtils;
-import org.springframework.util.Assert;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -195,6 +194,8 @@ public class CopyManager {
             return copy((GroupPhase) phase, onlyPhase);
         } else if (phase instanceof KOPhase) {
             return copy((KOPhase) phase, onlyPhase);
+        } else if (phase instanceof SwissSystemPhase) {
+            return copy((SwissSystemPhase) phase, onlyPhase);
         } else {
             throw new IllegalArgumentException("unkown " + phase);
         }
@@ -219,6 +220,19 @@ public class CopyManager {
     public static KOPhaseDTO copy(KOPhase phase, boolean onlyPhase) {
         KOPhaseDTO dto = new KOPhaseDTO();
         BeanUtils.copyProperties(phase, dto, "koField", "system");
+        return dto;
+    }
+
+    public static SwissSystemPhaseDTO copy(SwissSystemPhase phase, boolean onlyPhase) {
+        SwissSystemPhaseDTO dto = new SwissSystemPhaseDTO();
+        BeanUtils.copyProperties(phase, dto, "group", "system");
+        if (!onlyPhase) {
+            TournamentGroupDTO dtoGroup = copy(phase.getSystem().getTournamentClass().getName(), phase.getGroup());
+            dto.setGroup(dtoGroup);
+            for (TournamentPlayer player : phase.getGroup().getPlayers()) {
+                dtoGroup.addPlayer(copy(player));
+            }
+        }
         return dto;
     }
 
