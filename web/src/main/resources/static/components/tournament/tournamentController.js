@@ -160,20 +160,42 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
 }).controller('TournamentClassEditController', function ($scope, $routeParams, TournamentClass, $location, $http, popupService, $window) {
         $scope.tournamentClass = {};
 
+        $scope.getTournamentSystemType = function () {
+            $http.get('/api/tournaments/system-types', {}).then(function (response) {
+                $scope.systems = response.data;
+                $scope.getTournamentClass();
+            });
+        };
+        $scope.getTournamentSystemType();
+
         $scope.canEdit = true;
+        $scope.system = {};
 
         $scope.getTournamentClass = function () {
             $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
                 console.log('Got TournamentClass successful');
+                $scope.system.selected = $scope.selectSystem($scope.tournamentClass.systemType);
+                console.log($scope.system.selected);
 
             });
             if ($scope.tournamentClass.running == true)
                 $scope.canEdit = false;
         };
-        $scope.getTournamentClass();
 
+
+        $scope.selectSystem = function (val) {
+            for (var i = 0; i < $scope.systems.length; i++) {
+                var obj = $scope.systems[i];
+                if (obj.value == val) {
+                    return obj;
+                }
+            }
+        }
         $scope.saveTournamentClass = function () {
             if ($scope.tournamentClassForm.$valid) {
+                if ($scope.system.selected != null)
+                    $scope.tournamentClass.systemType = $scope.system.selected.value;
+
                 TournamentClass.save($scope.tournamentClass, function () {
                     console.log('TournamentClass saved successful');
                     //$location.path('/tournaments' + $scope.id);

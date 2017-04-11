@@ -18,6 +18,16 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label for="systeminput">Turniersysteme</label>
+                    <ui-select id="systeminput" ng-model="system.selected">
+                        <ui-select-match placeholder="Ein Turniersystem aussuchen">{{$select.selected.label}}</ui-select-match>
+                        <ui-select-choices repeat="s in systems">
+                            <span ng-bind="s.label"></span>
+                        </ui-select-choices>
+                    </ui-select>
+
+                </div>
+                <div class="control-group">
                     <label for="startTTR"><span>Von TTR (0 für offen) <span class="required">*</span></span></label>
                     <input type="text" ng-model="tournamentClass.startTTR" name="startTTR" required id="startTTR" ng-disabled="!canEdit"
                            class="form-control ng-pristine ng-invalid ng-invalid-required"/>

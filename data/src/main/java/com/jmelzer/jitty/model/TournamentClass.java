@@ -28,15 +28,18 @@ public class TournamentClass {
     Tournament tournament;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = true, name = "start_time")
+    @Column(nullable = true, name = "START_TIME")
     Date startTime;
 
-    @Column(nullable = true)
-    String type;
+    /**
+     * see @TournamentSystemType
+     */
+    @Column(name = "SYSTEM_TYPE")
+    Integer systemType;
 
     //type (Einzel / Doppem / Mixed)
     //trostrunden?
-    @Column(nullable = false, name = "running")
+    @Column(nullable = false, name = "RUNNING")
     Boolean running = false;
 
     @Column(nullable = false, name = "ACTIVE_PHASE")
@@ -157,12 +160,12 @@ public class TournamentClass {
         this.startTime = startTime;
     }
 
-    public String getType() {
-        return type;
+    public Integer getSystemType() {
+        return systemType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setSystemType(Integer systemType) {
+        this.systemType = systemType;
     }
 
     public Date getMinAge() {
@@ -266,7 +269,7 @@ public class TournamentClass {
     }
 
     private boolean finished() {
-        return (getActivePhaseNo() == getPhaseCount()-1) && getActivePhase().isFinished();
+        return (getActivePhaseNo() == getPhaseCount() - 1) && getActivePhase().isFinished();
     }
 
     public int getPhaseCount() {
@@ -285,12 +288,12 @@ public class TournamentClass {
         return getSystem().getPhases().get(activePhaseNo);
     }
 
-    public void setActivePhaseNo(int activePhase) {
-        this.activePhaseNo = activePhase;
-    }
-
     public int getActivePhaseNo() {
         return activePhaseNo;
+    }
+
+    public void setActivePhaseNo(int activePhase) {
+        this.activePhaseNo = activePhase;
     }
 
     public KOField getKoField() {

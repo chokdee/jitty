@@ -10,7 +10,7 @@ import java.util.Date;
 public class TournamentClassDTO {
     private Long id;
 
-    private String type;
+    private Integer systemType;
 
     private Date startTime;
 
@@ -69,12 +69,12 @@ public class TournamentClassDTO {
 
     }
 
-    public String getType() {
-        return type;
+    public Integer getSystemType() {
+        return systemType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setSystemType(Integer systemType) {
+        this.systemType = systemType;
     }
 
     public Date getStartTime() {

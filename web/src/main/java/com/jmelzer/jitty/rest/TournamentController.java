@@ -2,8 +2,10 @@ package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.Tournament;
+import com.jmelzer.jitty.model.TournamentSystemType;
 import com.jmelzer.jitty.model.User;
 import com.jmelzer.jitty.model.dto.TournamentDTO;
+import com.jmelzer.jitty.model.dto.TournamentSystemDTO;
 import com.jmelzer.jitty.service.TournamentService;
 import com.jmelzer.jitty.service.UserService;
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,6 +43,12 @@ public class TournamentController {
     public List<TournamentDTO> getList() {
         LOG.info("query all Tournament ");
         return service.findAll();
+    }
+
+    @Path("/system-types")
+    @GET
+    public List<TournamentSystemType> getSystemList() {
+        return Arrays.asList(TournamentSystemType.GK, TournamentSystemType.SWS);
     }
 
     @Path("{id}")
