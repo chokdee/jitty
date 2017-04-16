@@ -20,6 +20,8 @@ public class TournamentPlayerDTO {
 
     private Long id;
 
+    private String importId;
+
     private String firstName;
 
     private String lastName;
@@ -59,6 +61,20 @@ public class TournamentPlayerDTO {
     public TournamentPlayerDTO(String fullName, int qttr) {
         this.fullName = fullName;
         this.qttr = qttr;
+    }
+
+    public TournamentPlayerDTO(String importId, String fullName, int qttr) {
+        this.importId = importId;
+        this.fullName = fullName;
+        this.qttr = qttr;
+    }
+
+    public String getImportId() {
+        return importId;
+    }
+
+    public void setImportId(String importId) {
+        this.importId = importId;
     }
 
     public Long getId() {
@@ -234,6 +250,7 @@ public class TournamentPlayerDTO {
     @Override
     public String toString() {
         return "TournamentPlayerDTO{" +
+                "importId='" + importId + '\'' +
                 "fullName='" + fullName + '\'' +
                 ", qttr=" + qttr +
                 ", won=" + wonGames +
@@ -244,6 +261,9 @@ public class TournamentPlayerDTO {
 
     private String playedAgainst() {
         String s = "";
+        if (playedGames.isEmpty()) {
+            return s;
+        }
         for (TournamentSingleGameDTO playedGame : playedGames) {
             Assert.isTrue(playedGame.getPlayer1() == this || playedGame.getPlayer2() == this);
             if (playedGame.getPlayer1() != this && playedGame.getPlayer1() != null) {
@@ -269,7 +289,7 @@ public class TournamentPlayerDTO {
     public boolean playedAgainst(TournamentPlayerDTO p) {
         for (TournamentSingleGameDTO playedGame : playedGames) {
             if (p.equals(playedGame.getPlayer1()) || p.equals(playedGame.getPlayer2())) {
-                System.out.println("player " + p.getFullName() + " already played in game" + playedGame);
+//                System.out.println("player " + p.getFullName() + " already played in game" + playedGame);
                 return true;
             }
         }

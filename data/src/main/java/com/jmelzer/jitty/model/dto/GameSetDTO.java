@@ -1,5 +1,7 @@
 package com.jmelzer.jitty.model.dto;
 
+import com.google.common.base.MoreObjects;
+
 /**
  * Created by J. Melzer on 03.06.2016.
  * Ein satz im SPiel
@@ -39,5 +41,14 @@ public class GameSetDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("points1", points1)
+                .add("points2", points2)
+                .add("id", id)
+                .toString();
     }
 }

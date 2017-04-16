@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE tournament SYSTEM "http://www.datenautomaten.nu/dtd/nuLiga/TournamentPortal.dtd">
+<tournament end-date="2017-03-12" start-date="2017-03-12" name="andro WTTV-Cup" tournament-id="lxnfy8egjpKwukE9myqZarSPxduPRXbs">
+  <competition start-date="2017-03-12 12:00" type="Einzel" age-group="Damen/Herren">
+    <players>
+      <player type="single" id="PLAYER1">
+        <person licence-nr="156012528" club-name="TTG St. Augustin" sex="0" lastname="Beitel" ttr="848" internal-nr="NU1891464" club-nr="156012" firstname="Annett" birthyear="1979"/>
+      </player>
+      <player type="single" id="PLAYER10">
+        <person licence-nr="156012499" club-name="TTG St. Augustin" sex="1" lastname="Sauer" ttr="1117" internal-nr="NU1480185" club-nr="156012" firstname="Georg" birthyear="1955"/>
+      </player>
+      <player type="single" id="PLAYER11">
+        <person licence-nr="154017167" club-name="TTV Viktoria Bonn" sex="1" lastname="Siry" ttr="1534" internal-nr="NU281093" club-nr="154017" firstname="Manfred" birthyear="1959"/>
+      </player>
+      <player type="single" id="PLAYER12">
+        <person licence-nr="156041253" club-name="SSV Happerschoß" sex="1" lastname="Walterscheid" ttr="1470" internal-nr="NU291226" club-nr="156041" firstname="Ingo" birthyear="1972"/>
+      </player>
+      <player type="single" id="PLAYER2">
+        <person licence-nr="148026208" club-name="TTV BW Neudorf" sex="1" lastname="Bosse" ttr="1219" internal-nr="NU210632" club-nr="148026" firstname="Gerd" birthyear="1954"/>
+      </player>
+      <player type="single" id="PLAYER3">
+        <person licence-nr="156023461" club-name="TTC Troisdorf" sex="1" lastname="Dauth" ttr="1309" internal-nr="NU215803" club-nr="156023" firstname="Mario" birthyear="1972"/>
+      </player>
+      <player type="single" id="PLAYER4">
+        <person licence-nr="151052427" club-name="1. FC Köln" sex="1" lastname="Jakob" ttr="1474" internal-nr="NU1259860" club-nr="151052" firstname="Jonte" birthyear="2002"/>
+      </player>
+      <player type="single" id="PLAYER5">
+        <person licence-nr="151052426" club-name="1. FC Köln" sex="1" lastname="Jakob" ttr="1599" internal-nr="NU1259106" club-nr="151052" firstname="Jürgen" birthyear="1968"/>
+      </player>
+      <player type="single" id="PLAYER6">
+        <person licence-nr="112027262" club-name="SV Westfalia Somborn" sex="1" lastname="Janoschka" ttr="1301" internal-nr="NU237655" club-nr="112027" firstname="Adrian" birthyear="1975"/>
+      </player>
+      <player type="single" id="PLAYER7">
+        <person licence-nr="156029301" club-name="TSV Seelscheid" sex="1" lastname="Meuser" ttr="1642" internal-nr="NU256262" club-nr="156029" firstname="Marcus" birthyear="1972"/>
+      </player>
+      <player type="single" id="PLAYER8">
+        <person licence-nr="156012149" club-name="TTG St. Augustin" sex="1" lastname="Rick" ttr="1500" internal-nr="NU269061" club-nr="156012" firstname="Hans-Heinz" birthyear="1947"/>
+      </player>
+      <player type="single" id="PLAYER9">
+        <person licence-nr="156005304" club-name="DJK Eintracht Eitorf" sex="1" lastname="Ruttka" ttr="1477" internal-nr="NU271530" club-nr="156005" firstname="Stephan" birthyear="1968"/>
+      </player>
+    </players>
+    <matches>
+      <match games-b="15" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="9" set-b-2="2" set-b-1="4" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER1" player-a="PLAYER7" scheduled="" group=" Endrunde Gruppe A - Runde  1" nr="1"/>
+      <match games-b="10" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="1" set-b-2="8" set-b-1="1" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER10" player-a="PLAYER5" scheduled="" group=" Endrunde Gruppe A - Runde  1" nr="2"/>
+      <match games-b="33" matches-b="0" sets-b="1" games-a="41" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="6" set-b-3="11" set-b-2="9" set-b-1="7" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="11" set-a-3="8" set-a-2="11" set-a-1="11" player-b="PLAYER2" player-a="PLAYER11" scheduled="" group=" Endrunde Gruppe A - Runde  1" nr="3"/>
+      <match games-b="28" matches-b="0" sets-b="1" games-a="40" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="5" set-b-3="11" set-b-2="7" set-b-1="5" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="11" set-a-3="7" set-a-2="11" set-a-1="11" player-b="PLAYER6" player-a="PLAYER8" scheduled="" group=" Endrunde Gruppe A - Runde  1" nr="4"/>
+      <match games-b="32" matches-b="0" sets-b="1" games-a="43" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="5" set-b-3="12" set-b-2="6" set-b-1="9" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="11" set-a-3="10" set-a-2="11" set-a-1="11" player-b="PLAYER3" player-a="PLAYER9" scheduled="" group=" Endrunde Gruppe A - Runde  1" nr="5"/>
+      <match games-b="40" matches-b="1" sets-b="3" games-a="35" matches-a="0" sets-a="1" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="11" set-b-3="11" set-b-2="11" set-b-1="7" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="7" set-a-3="8" set-a-2="9" set-a-1="11" player-b="PLAYER12" player-a="PLAYER4" scheduled="" group=" Endrunde Gruppe A - Runde  1" nr="6"/>
+      <match games-b="25" matches-b="0" sets-b="0" games-a="36" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="10" set-b-2="11" set-b-1="4" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="12" set-a-2="13" set-a-1="11" player-b="PLAYER12" player-a="PLAYER7" scheduled="" group=" Endrunde Gruppe A - Runde  2" nr="7"/>
+      <match games-b="37" matches-b="0" sets-b="1" games-a="43" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="6" set-b-3="9" set-b-2="11" set-b-1="11" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="11" set-a-3="11" set-a-2="8" set-a-1="13" player-b="PLAYER9" player-a="PLAYER5" scheduled="" group=" Endrunde Gruppe A - Runde  2" nr="8"/>
+      <match games-b="55" matches-b="1" sets-b="3" games-a="48" matches-a="0" sets-a="2" set-b-7="0" set-b-6="0" set-b-5="11" set-b-4="15" set-b-3="7" set-b-2="11" set-b-1="11" set-a-7="0" set-a-6="0" set-a-5="5" set-a-4="17" set-a-3="11" set-a-2="8" set-a-1="7" player-b="PLAYER8" player-a="PLAYER11" scheduled="" group=" Endrunde Gruppe A - Runde  2" nr="9"/>
+      <match games-b="17" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="9" set-b-2="4" set-b-1="4" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER1" player-a="PLAYER4" scheduled="" group=" Endrunde Gruppe A - Runde  2" nr="10"/>
+      <match games-b="13" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="4" set-b-2="6" set-b-1="3" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER10" player-a="PLAYER3" scheduled="" group=" Endrunde Gruppe A - Runde  2" nr="11"/>
+      <match games-b="51" matches-b="1" sets-b="3" games-a="52" matches-a="0" sets-a="1" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="19" set-b-3="4" set-b-2="13" set-b-1="15" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="17" set-a-3="11" set-a-2="11" set-a-1="13" player-b="PLAYER2" player-a="PLAYER6" scheduled="" group=" Endrunde Gruppe A - Runde  2" nr="12"/>
+      <match games-b="35" matches-b="0" sets-b="1" games-a="37" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="8" set-b-3="7" set-b-2="11" set-b-1="9" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="11" set-a-3="11" set-a-2="4" set-a-1="11" player-b="PLAYER11" player-a="PLAYER7" scheduled="" group=" Endrunde Gruppe A - Runde  3" nr="13"/>
+      <match games-b="24" matches-b="0" sets-b="1" games-a="39" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="5" set-b-3="2" set-b-2="11" set-b-1="6" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="11" set-a-3="11" set-a-2="6" set-a-1="11" player-b="PLAYER8" player-a="PLAYER5" scheduled="" group=" Endrunde Gruppe A - Runde  3" nr="14"/>
+      <match games-b="17" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="5" set-b-2="7" set-b-1="5" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER6" player-a="PLAYER9" scheduled="" group=" Endrunde Gruppe A - Runde  3" nr="15"/>
+      <match games-b="20" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="6" set-b-2="6" set-b-1="8" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER2" player-a="PLAYER4" scheduled="" group=" Endrunde Gruppe A - Runde  3" nr="16"/>
+      <match games-b="27" matches-b="0" sets-b="0" games-a="34" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="10" set-b-2="9" set-b-1="8" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="12" set-a-2="11" set-a-1="11" player-b="PLAYER3" player-a="PLAYER12" scheduled="" group=" Endrunde Gruppe A - Runde  3" nr="17"/>
+      <match games-b="9" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="2" set-b-2="4" set-b-1="3" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER1" player-a="PLAYER10" scheduled="" group=" Endrunde Gruppe A - Runde  3" nr="18"/>
+      <match games-b="42" matches-b="1" sets-b="3" games-a="34" matches-a="0" sets-a="1" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="11" set-b-3="9" set-b-2="11" set-b-1="11" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="9" set-a-3="11" set-a-2="8" set-a-1="6" player-b="PLAYER5" player-a="PLAYER7" scheduled="" group=" Endrunde Gruppe A - Runde  4" nr="19"/>
+      <match games-b="33" matches-b="1" sets-b="3" games-a="20" matches-a="0" sets-a="0" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="11" set-b-2="11" set-b-1="11" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="7" set-a-2="7" set-a-1="6" player-b="PLAYER12" player-a="PLAYER8" scheduled="" group=" Endrunde Gruppe A - Runde  4" nr="20"/>
+      <match games-b="41" matches-b="1" sets-b="3" games-a="28" matches-a="0" sets-a="1" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="11" set-b-3="8" set-b-2="11" set-b-1="11" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="3" set-a-3="11" set-a-2="7" set-a-1="7" player-b="PLAYER4" player-a="PLAYER9" scheduled="" group=" Endrunde Gruppe A - Runde  4" nr="21"/>
+      <match games-b="9" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="2" set-b-2="3" set-b-1="4" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER10" player-a="PLAYER11" scheduled="" group=" Endrunde Gruppe A - Runde  4" nr="22"/>
+      <match games-b="35" matches-b="0" sets-b="1" games-a="44" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="9" set-b-3="7" set-b-2="6" set-b-1="13" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="11" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER2" player-a="PLAYER3" scheduled="" group=" Endrunde Gruppe A - Runde  4" nr="23"/>
+      <match games-b="15" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="6" set-b-2="5" set-b-1="4" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER1" player-a="PLAYER6" scheduled="" group=" Endrunde Gruppe A - Runde  4" nr="24"/>
+      <match games-b="33" matches-b="1" sets-b="3" games-a="25" matches-a="0" sets-a="0" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="11" set-b-2="11" set-b-1="11" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="8" set-a-2="8" set-a-1="9" player-b="PLAYER4" player-a="PLAYER5" scheduled="" group=" Endrunde Gruppe A - Runde  5" nr="25"/>
+      <match games-b="23" matches-b="0" sets-b="1" games-a="36" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="7" set-b-3="1" set-b-2="11" set-b-1="4" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="11" set-a-3="11" set-a-2="3" set-a-1="11" player-b="PLAYER8" player-a="PLAYER7" scheduled="" group=" Endrunde Gruppe A - Runde  5" nr="26"/>
+      <match games-b="19" matches-b="0" sets-b="0" games-a="34" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="10" set-b-2="4" set-b-1="5" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="12" set-a-2="11" set-a-1="11" player-b="PLAYER11" player-a="PLAYER12" scheduled="" group=" Endrunde Gruppe A - Runde  5" nr="27"/>
+      <match games-b="8" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="3" set-b-2="3" set-b-1="2" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER10" player-a="PLAYER9" scheduled="" group=" Endrunde Gruppe A - Runde  5" nr="28"/>
+      <match games-b="18" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="8" set-b-2="5" set-b-1="5" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER6" player-a="PLAYER3" scheduled="" group=" Endrunde Gruppe A - Runde  5" nr="29"/>
+      <match games-b="30" matches-b="0" sets-b="0" games-a="41" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="9" set-b-2="17" set-b-1="4" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="19" set-a-1="11" player-b="PLAYER1" player-a="PLAYER2" scheduled="" group=" Endrunde Gruppe A - Runde  5" nr="30"/>
+      <match games-b="5" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="1" set-b-2="3" set-b-1="1" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER10" player-a="PLAYER7" scheduled="" group=" Endrunde Gruppe A - Runde  6" nr="31"/>
+      <match games-b="17" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="5" set-b-2="4" set-b-1="8" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER3" player-a="PLAYER5" scheduled="" group=" Endrunde Gruppe A - Runde  6" nr="32"/>
+      <match games-b="49" matches-b="1" sets-b="3" games-a="49" matches-a="0" sets-a="2" set-b-7="0" set-b-6="0" set-b-5="11" set-b-4="7" set-b-3="11" set-b-2="11" set-b-1="9" set-a-7="0" set-a-6="0" set-a-5="9" set-a-4="11" set-a-3="9" set-a-2="9" set-a-1="11" player-b="PLAYER11" player-a="PLAYER4" scheduled="" group=" Endrunde Gruppe A - Runde  6" nr="33"/>
+      <match games-b="17" matches-b="0" sets-b="0" games-a="35" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="4" set-b-2="11" set-b-1="2" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="13" set-a-1="11" player-b="PLAYER6" player-a="PLAYER12" scheduled="" group=" Endrunde Gruppe A - Runde  6" nr="34"/>
+      <match games-b="20" matches-b="0" sets-b="0" games-a="35" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="5" set-b-2="4" set-b-1="11" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="13" player-b="PLAYER2" player-a="PLAYER9" scheduled="" group=" Endrunde Gruppe A - Runde  6" nr="35"/>
+      <match games-b="16" matches-b="0" sets-b="0" games-a="33" matches-a="1" sets-a="3" set-b-7="0" set-b-6="0" set-b-5="0" set-b-4="0" set-b-3="3" set-b-2="8" set-b-1="5" set-a-7="0" set-a-6="0" set-a-5="0" set-a-4="0" set-a-3="11" set-a-2="11" set-a-1="11" player-b="PLAYER1" player-a="PLAYER8" scheduled="" group=" Endrunde Gruppe A - Runde  6" nr="36"/>
+    </matches>
+  </competition>
+</tournament>

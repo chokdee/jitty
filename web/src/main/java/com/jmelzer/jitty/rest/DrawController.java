@@ -34,6 +34,9 @@ public class DrawController {
     DrawGroupManager drawGroupManager;
 
     @Inject
+    SwissSystemManager swissSystemManager;
+
+    @Inject
     TournamentService tournamentService;
 
     @Path("/player-for-class")
@@ -113,6 +116,14 @@ public class DrawController {
     @Consumes(MediaType.APPLICATION_JSON)
     public GroupPhaseDTO automaticDraw(@QueryParam(value = "cid") String id, GroupPhaseDTO dto) {
         return drawGroupManager.automaticDraw(Long.valueOf(id), dto);
+
+    }
+
+    @Path("/swiss/calc-ranking-first-round")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<TournamentPlayerDTO>  calcRankingFirstRound(List<TournamentPlayerDTO> players) {
+        return swissSystemManager.calcRankingFirstRound(players);
 
     }
 

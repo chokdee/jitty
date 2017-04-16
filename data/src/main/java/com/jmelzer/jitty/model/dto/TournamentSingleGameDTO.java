@@ -142,13 +142,8 @@ public class TournamentSingleGameDTO {
         return "TournamentSingleGameDTO{" +
                 "player1=" + player1 +
                 ", player2=" + player2 +
-                ", group=" + group +
                 ", played=" + played +
-                ", called=" + called +
-                ", startTime=" + startTime +
-                ", tableNo=" + tableNo +
-                ", sets=" + sets +
-                ", id=" + id +
+//                ", sets=" + sets +
                 ", winner=" + winner +
                 '}';
     }

@@ -7,6 +7,7 @@ package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -32,6 +33,7 @@ import java.util.*;
  * Nach der letzten Runde hat der Spieler mit den meisten Siegen das Turnier gewonnen; bei gleicher Anzahl an Siegen ist die Buchholzzahl maßgeblich.
  * Ist auch diese gleich entscheidet der direkte Vergleich.<br><br>
  */
+@Component
 public class SwissSystemManager {
 
     public List<TournamentPlayerDTO> calcRankingFirstRound(List<TournamentPlayerDTO> player) {

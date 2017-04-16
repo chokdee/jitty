@@ -80,9 +80,6 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     }, {
         id: 1,
         label: 'VR Gruppe, ER KO-Runde'
-    }, {
-        id: 5,
-        label: 'Schweizer System'
     },
         // {
         // id: 2,
@@ -100,8 +97,6 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
             else if (index == 1) {
                 $scope.templateurl = 'components/draw/bracket.html';
             }
-        } else if ($scope.modus.id == 5) {
-            $scope.templateurl = 'components/draw/swisssystem.html';
         }
     };
 

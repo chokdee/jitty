@@ -1,25 +1,31 @@
 <h3>{{'Auslosung der Klasse \'' + tournamentClass.name + '\' '}}</h3>
-<div class="row" ng-show="!tournamentClass.running">
-    <div class="col-md-7">
-        <div class="form-group">
-            <label for="modus1" class="col-md-2 control-label" style="font-size: larger">System</label>
-            <div class="col-md-5">
-                <select name="modus1" id="modus1"
-                        ng-options="item as item.label for item in modi track by item.id" ng-model="modus" class="form-control"></select>
+<div ng-show="tournamentClass.systemType == 1">
+    <div class="row" ng-show="!tournamentClass.running">
+        <div class="col-md-7">
+            <div class="form-group">
+                <label for="modus1" class="col-md-2 control-label" style="font-size: larger">System</label>
+                <div class="col-md-5">
+                    <select name="modus1" id="modus1"
+                            ng-options="item as item.label for item in modi track by item.id" ng-model="modus" class="form-control"></select>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-7">
-        <div class="form-group">
-            <label for="phase" class="col-md-2 control-label" style="font-size: larger">Phase</label>
-            <div class="col-md-5">
-                <select name="phase" id="phase"
-                        ng-options="item as item.name for item in tournamentClass.system.phases track by item.id" ng-model="selectedPhase" class="form-control"></select>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="form-group">
+                <label for="phase" class="col-md-2 control-label" style="font-size: larger">Phase</label>
+                <div class="col-md-5">
+                    <select name="phase" id="phase"
+                            ng-options="item as item.name for item in tournamentClass.system.phases track by item.id" ng-model="selectedPhase" class="form-control"></select>
+                </div>
             </div>
         </div>
     </div>
+    <hr style="width:60%; background-color:#a1a1a1 !important; height:1px;float: left"/>
+    <ng-include src="templateurl"></ng-include>
 </div>
-<hr style="width:60%; background-color:#a1a1a1 !important; height:1px;float: left"/>
-<ng-include src="templateurl"></ng-include>
+
+<div ng-show="tournamentClass.systemType == 2">
+    <ng-include src="'components/draw/swisssystem.html'"></ng-include>
+</div>
