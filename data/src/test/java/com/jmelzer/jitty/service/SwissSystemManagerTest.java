@@ -57,7 +57,7 @@ public class SwissSystemManagerTest {
 
     @Test
     public void calcRankingSixRounds() throws Exception {
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1; i++) {
 
             System.out.println("HHHHHHHHHHHHHH   " + i + " HHHHHHHHHHHHHH");
             List<TournamentPlayerDTO> player = createPlayer();
@@ -66,7 +66,7 @@ public class SwissSystemManagerTest {
             List<TournamentSingleGameDTO> games = swissSystemManager.createGamesForTheFirstRound(player);
 
             for (TournamentSingleGameDTO game : games) {
-                System.out.println("game = " + game);
+//                System.out.println("game = " + game);
                 game.setWinner(2);
             }
             for (int round = 2; round <= 6; round++) {
@@ -75,12 +75,12 @@ public class SwissSystemManagerTest {
                 swissSystemManager.calcRankingRound(round, player);
 
                 for (TournamentPlayerDTO playerDTO : player) {
-                    System.out.println("playerDTO = " + playerDTO);
+//                    System.out.println("playerDTO = " + playerDTO);
                 }
 
                 games = createGames(player, round);
                 for (TournamentSingleGameDTO game : games) {
-                    System.out.println("game = " + game);
+//                    System.out.println("game = " + game);
                     game.setWinner(1);
                 }
             }
