@@ -40,7 +40,7 @@ public class PlayerControllerTest extends SecureResourceTest {
                     createHttpEntity(null, loginHeaders), TournamentPlayerDTO[].class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
-            assertThat(entity.getBody()[0].getId(), is(1L));
+            assertThat(entity.getBody()[0].getId(), is(greaterThan(1L)));
 
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
