@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.hamcrest.Matchers.greaterThan;
@@ -75,7 +76,7 @@ public class TournamentPlayerRepositoryIntegrationTests {
     @Transactional
     public void save() {
         TournamentPlayer player = new TournamentPlayer();
-        player.setBirthday(new Date(99, 1, 1));
+        player.setBirthday(new GregorianCalendar(1980, 2, 11).getTime());
         player.setEmail("blub@blub.de");
         player.setFirstName("Macy");
         player.setLastName("Stacey");
