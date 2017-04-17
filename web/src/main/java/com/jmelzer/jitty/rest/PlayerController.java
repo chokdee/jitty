@@ -1,7 +1,11 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.config.SecurityUtil;
-import com.jmelzer.jitty.model.TournamentPlayer;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.service.PlayerService;
@@ -16,7 +20,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.*;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +48,7 @@ public class PlayerController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<TournamentPlayerDTO> getList() {
         LOG.info("query all TournamentPlayer ");
-        return service.findAll( securityUtil.getActualTournament());
+        return service.findAll(securityUtil.getActualTournamentId());
     }
 
     @Path("{id}")
@@ -58,7 +62,7 @@ public class PlayerController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response saveOrCreate(TournamentPlayerDTO player) {
-        service.save(player, securityUtil.getActualTournament());
+        service.save(player, securityUtil.getActualTournamentId());
         return Response.ok().build();
     }
 
@@ -91,7 +95,7 @@ public class PlayerController {
     public Response uploadFile(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition contentDispositionHeader) {
-        int count = service.importPlayerFromClickTT(fileInputStream, securityUtil.getActualTournament());
+        int count = service.importPlayerFromClickTT(fileInputStream, securityUtil.getActualTournamentId());
         return Response.status(Response.Status.OK).entity("Es wurden " + count + " Spieler importiert").build();
     }
 }

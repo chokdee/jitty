@@ -1,6 +1,10 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.service;
 
-import com.jmelzer.jitty.dao.GameQueueRepository;
 import com.jmelzer.jitty.dao.TournamentSingleGameRepository;
 import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.*;
@@ -58,7 +62,7 @@ public class TournamentServiceTest {
         groups.add(group);
         assertEquals(2, service.addPossibleGroupGamesToQueue(groups));
 
-        service.startPossibleGames();
+        service.startPossibleGames(1L);
         //must be saved
         verify(tournamentSingleGameRepository, atLeast(1)).save(isA(TournamentSingleGame.class));
 //        verify(gameQueueRepository, atLeast(1)).saveAndFlush(queue);

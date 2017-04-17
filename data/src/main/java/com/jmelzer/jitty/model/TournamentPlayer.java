@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
@@ -33,8 +38,8 @@ public class TournamentPlayer {
     @ManyToOne(optional = true, cascade = CascadeType.DETACH)
     private Club club;
 
-    @ManyToOne(optional = false, cascade = CascadeType.DETACH)
-    private Tournament tournament;
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, mappedBy = "players")
+    private List<Tournament> tournaments = new ArrayList<>();
 
     @ManyToOne(optional = true, cascade = CascadeType.DETACH)
     private Association association;
@@ -220,12 +225,13 @@ public class TournamentPlayer {
     }
 
 
-    public Tournament getTournament() {
-        return tournament;
+    public List<Tournament> getTournaments() {
+        return tournaments;
     }
 
-    public void setTournament(Tournament tournament) {
-        this.tournament = tournament;
+    public void addTournament(Tournament tournament) {
+        this.tournaments.add(tournament);
+        tournament.addPlayer(this);
     }
 
     public List<TournamentClass> getClasses() {

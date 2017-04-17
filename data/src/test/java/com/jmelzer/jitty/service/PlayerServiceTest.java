@@ -7,6 +7,7 @@ package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.ClubRepository;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
+import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.model.Club;
 import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentPlayer;
@@ -43,6 +44,9 @@ public class PlayerServiceTest {
     @InjectMocks
     PlayerService playerService = new PlayerService();
 
+    @Mock
+    TournamentRepository tournamentRepository;
+
     @Before
     public void setup() {
     }
@@ -50,6 +54,7 @@ public class PlayerServiceTest {
     @Test
     public void importPlayerFromClickTT() throws Exception {
         playerService.xmlImporter = new XMLImporter();
+        when(tournamentRepository.findOne(1L)).thenReturn(new Tournament());
         InputStream inputStream = getClass().getResourceAsStream("/xml-import/Turnierteilnehmer.xml");
 
         when(playerRepository.findByLastNameAndFirstName("Annett", "Beitel")).thenReturn(new ArrayList<>());
@@ -61,7 +66,7 @@ public class PlayerServiceTest {
         tp2.setClub(new Club("Falscger Verein"));
         when(playerRepository.findByLastNameAndFirstName("Dauth", "Mario")).thenReturn(Collections.singletonList(tp2));
 
-        playerService.importPlayerFromClickTT(inputStream, new Tournament());
+        playerService.importPlayerFromClickTT(inputStream, 1L);
 
         Mockito.verify(playerRepository, times(1)).saveAndFlush(tp);
         Mockito.verify(playerRepository, times(12)).saveAndFlush(anyObject());

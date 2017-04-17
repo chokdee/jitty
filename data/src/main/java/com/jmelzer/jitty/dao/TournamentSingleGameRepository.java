@@ -1,11 +1,7 @@
-/* 
-* Copyright (C) allesklar.com AG
-* All rights reserved.
-*
-* Author: juergi
-* Date: 27.05.12 
-*
-*/
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
 
 
 package com.jmelzer.jitty.dao;
@@ -19,5 +15,5 @@ import java.util.List;
 
 @Repository
 public interface TournamentSingleGameRepository extends JpaRepository<TournamentSingleGame, Long> {
-    List<TournamentSingleGame> findByPlayedOrderByEndTimeDesc(boolean played);
+    List<TournamentSingleGame> findByPlayedAndTidOrderByEndTimeDesc(boolean played, long tid);
 }

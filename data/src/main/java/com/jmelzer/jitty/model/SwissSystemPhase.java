@@ -21,6 +21,19 @@ public class SwissSystemPhase extends Phase {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private TournamentGroup group;
 
+    @Column(name = "ROUND", nullable = false)
+    private int round = 1;
+
+    @Column(name = "MAX_ROUNDS", nullable = false)
+    private int maxRounds = 6;
+
+    public SwissSystemPhase() {
+    }
+
+    public SwissSystemPhase(String name) {
+        group = new TournamentGroup(name);
+    }
+
     public TournamentGroup getGroup() {
         return group;
     }
@@ -29,11 +42,12 @@ public class SwissSystemPhase extends Phase {
         this.group = group;
     }
 
-    public SwissSystemPhase() {
+    public int getRound() {
+        return round;
     }
 
-    public SwissSystemPhase(String name) {
-        group = new TournamentGroup(name);
+    public void setRound(int round) {
+        this.round = round;
     }
 
     @Override

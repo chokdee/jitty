@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
@@ -10,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by J. Melzer on 30.07.2016.
@@ -122,6 +129,18 @@ public class CopyManager {
 //        }
     }
 
+    public static List<TournamentSingleGame> copy(List<TournamentSingleGameDTO> dtos, String name, Long tid) {
+        List<TournamentSingleGame> games = new ArrayList<>();
+        for (TournamentSingleGameDTO dto : dtos) {
+            TournamentSingleGame game = new TournamentSingleGame();
+            copy(dto, game);
+            game.setTcName(name);
+            game.setTid(tid);
+            games.add(game);
+        }
+        return games;
+
+    }
     public static void copy(TournamentSingleGameDTO dto, TournamentSingleGame game) {
         BeanUtils.copyProperties(dto, game, "group", "player1", "player2", "sets");
         game.getSets().clear();

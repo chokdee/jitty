@@ -45,10 +45,12 @@ public class QueueManager {
         return busyGames;
     }
 
-    public List<TournamentSingleGameDTO> getBusyGames() {
-        List<TournamentSingleGameDTO> list = new ArrayList<>(busyGames.size());
+    public List<TournamentSingleGameDTO> getBusyGames(Long actualTournamentId) {
+        List<TournamentSingleGameDTO> list = new ArrayList<>();
         for (TournamentSingleGame game : busyGames) {
-            list.add(copy(game, false));
+            if (game.getTid().equals(actualTournamentId)) {
+                list.add(copy(game, false));
+            }
         }
         return list;
     }
@@ -58,10 +60,12 @@ public class QueueManager {
     }
 
     @Transactional
-    public List<TournamentSingleGameDTO> listQueue(String userName) {
+    public List<TournamentSingleGameDTO> listQueue(Long tid) {
         List<TournamentSingleGameDTO> list = new ArrayList<>();
         for (TournamentSingleGame game : getQueue()) {
-            list.add(copy(game, false));
+            if (game.getTid().equals(tid)) {
+                list.add(copy(game, false));
+            }
         }
         return list;
     }
@@ -92,9 +96,19 @@ public class QueueManager {
         busyGames.remove(game);
     }
 
-    List<TournamentSingleGame> getGamesFromQueue(int count) {
+    List<TournamentSingleGame> getGamesFromQueue(int count, Long tid) {
         List<TournamentSingleGame> q = getQueue();
-        return q.subList(0, count > q.size() ? q.size() : count);
+        int max = q.size();
+        int i = 0;
+        List<TournamentSingleGame> result = new ArrayList<>();
+        while (result.size() < count && i < max) {
+            TournamentSingleGame game = q.get(i);
+            if (game.getTid().equals(tid)) {
+                result.add(game);
+            }
+            i++;
+        }
+        return result;
     }
 
     public void removeAllFromClass(String name) {

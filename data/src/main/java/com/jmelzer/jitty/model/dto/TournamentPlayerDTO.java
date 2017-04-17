@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model.dto;
 
 import com.jmelzer.jitty.model.Association;
@@ -75,14 +80,6 @@ public class TournamentPlayerDTO {
 
     public void setImportId(String importId) {
         this.importId = importId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -200,24 +197,33 @@ public class TournamentPlayerDTO {
     public void calcWinningGames() {
         wonGames = 0;
         for (TournamentSingleGameDTO playedGame : playedGames) {
-            if (playedGame.getPlayer1() == this && playedGame.getWinner() == 1) {
+            if (playedGame.getPlayer1().getId().equals(id) && playedGame.getWinner() == 1) {
                 wonGames++;
-            } else if (playedGame.getPlayer2() == this && playedGame.getWinner() == 2) {
+            } else if (playedGame.getPlayer2().getId().equals(id) && playedGame.getWinner() == 2) {
                 wonGames++;
             }
         }
 
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void calcBuchholz() {
         buchholzZahl = 0;
         for (TournamentSingleGameDTO playedGame : playedGames) {
-            if (playedGame.getPlayer1() == this) {
+            if (playedGame.getPlayer1().getId().equals(id)) {
                 buchholzZahl += playedGame.getPlayer2().getWonGames();
-            } else if (playedGame.getPlayer2() == this) {
+            } else if (playedGame.getPlayer2().getId().equals(id)) {
                 buchholzZahl += playedGame.getPlayer1().getWonGames();
             }
         }
+        System.out.println("buchholzZahl = " + buchholzZahl);
     }
 
     public int getWonGames() {
@@ -265,7 +271,7 @@ public class TournamentPlayerDTO {
             return s;
         }
         for (TournamentSingleGameDTO playedGame : playedGames) {
-            Assert.isTrue(playedGame.getPlayer1() == this || playedGame.getPlayer2() == this);
+            Assert.isTrue(playedGame.getPlayer1().getId().equals(id) || playedGame.getPlayer2().getId().equals(id));
             if (playedGame.getPlayer1() != this && playedGame.getPlayer1() != null) {
                 s += playedGame.getPlayer1().getFullName();
             } else {
@@ -298,5 +304,9 @@ public class TournamentPlayerDTO {
 
     public void removeLastGame() {
         playedGames.remove(playedGames.size() - 1);
+    }
+
+    public void clearGames() {
+        this.playedGames.clear();
     }
 }

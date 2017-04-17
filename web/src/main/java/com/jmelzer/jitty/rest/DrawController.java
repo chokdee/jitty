@@ -1,7 +1,12 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.exceptions.IntegrityViolation;
 import com.jmelzer.jitty.model.PhaseCombination;
-import com.jmelzer.jitty.model.SwissSystemPhase;
 import com.jmelzer.jitty.model.dto.*;
 import com.jmelzer.jitty.service.DrawGroupManager;
 import com.jmelzer.jitty.service.DrawKoFieldManager;
@@ -61,8 +66,28 @@ public class DrawController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TournamentPlayerDTO> getPossiblePlayerForSwissSystem(@QueryParam(value = "cid") String id) {
-        return tournamentService.getPlayerforClass(Long.valueOf(id));
+        return swissSystemManager.getRanking(Long.valueOf(id));
+    }
 
+    @Path("/swiss-draw")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<TournamentSingleGameDTO> getSwissDraw(@QueryParam(value = "cid") String id) {
+        Long cid = Long.valueOf(id);
+        return swissSystemManager.calcDraw(cid);
+    }
+
+    @Path("/start-swiss-round")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response startSwissRound(@QueryParam(value = "cid") String id, List<TournamentSingleGameDTO> games) {
+        try {
+            swissSystemManager.startClass(Long.valueOf(id), games);
+        } catch (IntegrityViolation integrityViolation) {
+            LOG.warn("not possible to start the class {} error message is '{}'", id, integrityViolation.getMessage());
+            return ControllerUtil.buildErrorResponse(integrityViolation.getMessage());
+        }
+        return Response.ok().build();
     }
 
     @Path("/possible-player-for-kofield")

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
@@ -144,8 +149,8 @@ public class TournamentSingleGame {
     }
 
     public void setWinner(int winner) {
-        if (winner < 1 || winner > 2) {
-            throw new IllegalArgumentException("winner must be 1 or -1");
+        if (winner > 2) {
+            throw new IllegalArgumentException("winner must be 1, 2 or -1");
         }
         this.winner = winner;
     }

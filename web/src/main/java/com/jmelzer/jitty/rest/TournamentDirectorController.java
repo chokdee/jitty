@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.config.SecurityUtil;
@@ -37,21 +42,21 @@ public class TournamentDirectorController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TournamentSingleGameDTO> possibleGames() {
-        return queueManager.listQueue(securityUtil.getActualUsername());
+        return queueManager.listQueue(securityUtil.getActualTournamentId());
     }
 
     @Path("/running-games")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TournamentSingleGameDTO> runningGames() {
-        return queueManager.getBusyGames();
+        return queueManager.getBusyGames(securityUtil.getActualTournamentId());
     }
 
     @Path("/finished-games")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TournamentSingleGameDTO> finishedGames() {
-        return service.getFinishedGames();
+        return service.getFinishedGames(securityUtil.getActualTournamentId());
     }
 
     @Path("/start-game")
@@ -59,7 +64,7 @@ public class TournamentDirectorController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response startGame(@QueryParam(value = "id") String id) {
         try {
-            TournamentSingleGameDTO dto =service.startGame(Long.valueOf(id));
+            TournamentSingleGameDTO dto = service.startGame(Long.valueOf(id));
             return Response.ok(dto).build();
         } catch (IntegrityViolation integrityViolation) {
             return ControllerUtil.buildErrorResponse(integrityViolation.getMessage());
@@ -71,7 +76,7 @@ public class TournamentDirectorController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response startPossibleGames() {
         try {
-            service.startPossibleGames();
+            service.startPossibleGames(securityUtil.getActualTournamentId());
         } catch (IntegrityViolation integrityViolation) {
             return ControllerUtil.buildErrorResponse(integrityViolation.getMessage());
         }

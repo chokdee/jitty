@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 angular.module('jitty.draw.controllers', []).controller('DrawController', function ($scope, $http, $window, $routeParams) {
 
     $scope.translateStatus = function (s) {
@@ -101,7 +106,8 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     };
 
     $scope.$watch('selectedPhase', function () {
-        $scope.loadPart($scope.selectedPhase.counter);
+        if ($scope.selectedPhase !== null)
+            $scope.loadPart($scope.selectedPhase.counter);
 
     });
 
@@ -110,16 +116,16 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 console.log('Got TournamentClass successful');
                 $scope.getActualPhase();
 
-                if ($scope.tournamentClass.playerPerGroup == null)
+            if ($scope.tournamentClass.playerPerGroup === null)
                     $scope.tournamentClass.playerPerGroup = 4; //default
 
 
                 if ($scope.tournamentClass.running) {
                     $scope.templateurl = 'components/draw/bracket.html';
                 }
-                if ($scope.tournamentClass.system != null) {
+            if ($scope.tournamentClass.system !== null) {
                     for (i = 0; i < $scope.tournamentClass.system.phases.length; i++) {
-                        if ($scope.tournamentClass.activePhaseNo == i) {
+                        if ($scope.tournamentClass.activePhaseNo === i) {
                             $scope.selectedPhase = $scope.tournamentClass.system.phases[i];
                         }
                         $scope.tournamentClass.system.phases[i].counter = i;
@@ -163,19 +169,110 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
 }).controller('SwissSystemController', function ($scope, $http, $routeParams, $window, TournamentClass, Flash) {
 
-    $scope.getPossiblePlayer = function () {
+    $scope.playerColumns = [
+        {
+            field: 'id',
+            maxWidth: 0,
+            displayName: 'ID',
+            cellTemplate: '<div class="ui-grid-cell-contents" id="{{ COL_FIELD }}">{{ COL_FIELD }}</div>'
+        }, {
+            field: 'fullName',
+            maxWidth: 150,
+            displayName: 'Name',
+        }, {
+            field: 'qttr',
+            maxWidth: 100,
+            displayName: 'Q-TTR',
+        }, {
+            field: 'wonGames',
+            maxWidth: 100,
+            displayName: 'Gewonnen',
+        }, {
+            field: 'buchholzZahl',
+            maxWidth: 100,
+            displayName: 'Buchholz',
+        }
+    ];
+    $scope.gridPlayerList = {
+        enableSorting: false,
+        rowHeight: 40,
+        columnDefs: $scope.playerColumns,
+    };
+
+    $scope.getPossibleSwissPlayer = function () {
         $http.get('/api/draw/possible-player-swiss-system?cid=' + $routeParams.id, {}).then(function (response) {
             $scope.players = response.data;
+            $scope.gridPlayerList.data = response.data;
         });
     };
 
-    if ($routeParams.id != null) {
-        if ($scope.tournamentClass == null)
+    $scope.gameColumns = [
+        {
+            field: 'player1.fullName',
+            maxWidth: 150,
+            displayName: 'Spieler 1',
+        }, {
+            field: 'player1.qttr',
+            maxWidth: 100,
+            displayName: 'Q-TTR'
+        }, {
+            field: 'player1.wonGames',
+            maxWidth: 50,
+            displayName: 'Gew. '
+        }, {
+            field: 'player2.fullName',
+            displayName: 'Spieler 2',
+            maxWidth: 150
+        }, {
+            field: 'player2.qttr',
+            maxWidth: 100,
+            displayName: 'Q-TTR'
+        }, {
+            field: 'player2.wonGames',
+            maxWidth: 50,
+            displayName: 'Gew.'
+        }
+    ];
+    $scope.gridGameList = {
+        enableSorting: false,
+        rowHeight: 40,
+        columnDefs: $scope.gameColumns,
+    };
+
+    $scope.swissDraw = function () {
+        $http({
+            method: 'GET',
+            url: '/api/draw/swiss-draw?cid=' + $routeParams.id,
+        }).then(function successCallback(response) {
+            $scope.gridGameList.data = response.data;
+
+        }, function errorCallback(response) {
+            $scope.errorMessage = response.data.error;
+        });
+
+    };
+
+    $scope.startSwissRound = function () {
+        $http({
+            method: 'POST',
+            url: '/api/draw/start-swiss-round?cid=' + $routeParams.id,
+            data: $scope.gridGameList.data
+
+        }).then(function successCallback(response) {
+            $window.location.href = '/#/tournamentdirector/overview';
+
+        }, function errorCallback(response) {
+            $scope.errorMessage = response.data.error;
+        });
+
+    };
+
+    if ($routeParams.id !== null) {
+        if ($scope.tournamentClass === null)
             $scope.getTournamentClass();
 
-        $scope.getPossiblePlayer();
+        $scope.getPossibleSwissPlayer();
     }
-    $scope.groups = {name: 'A' , players: {}};
 
 
 }).controller('GroupController', function ($scope, $http, $routeParams, $window, TournamentClass, Flash) {

@@ -1,8 +1,14 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.ClubRepository;
 import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
+import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.model.Club;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentPlayer;
@@ -22,6 +28,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,9 +51,12 @@ public class PlayerService {
     @Resource
     TournamentClassRepository classRepository;
 
+    @Resource
+    TournamentRepository tournamentRepository;
+
     @Transactional(readOnly = true)
-    public List<TournamentPlayerDTO> findAll(com.jmelzer.jitty.model.Tournament actualTournament) {
-        List<TournamentPlayer> players = repository.findByTournament(actualTournament);
+    public List<TournamentPlayerDTO> findAll(Long actualTournament) {
+        Collection<TournamentPlayer> players = tournamentRepository.findOne(actualTournament).getPlayers();
         List<TournamentPlayerDTO> dtos = new ArrayList<>();
         for (TournamentPlayer player : players) {
             TournamentPlayerDTO dto = new TournamentPlayerDTO();
@@ -76,9 +86,9 @@ public class PlayerService {
     }
 
     @Transactional
-    public void save(TournamentPlayerDTO player, com.jmelzer.jitty.model.Tournament actualTournament) {
+    public void save(TournamentPlayerDTO player, Long tid) {
         TournamentPlayer playerDB = null;
-
+        com.jmelzer.jitty.model.Tournament actualTournament = tournamentRepository.findOne(tid);
         if (player.getId() == null) {
             playerDB = new TournamentPlayer();
         } else {
@@ -89,14 +99,15 @@ public class PlayerService {
             playerDB.removeAllClasses();
             playerDB.addClass(classRepository.findOne(classDTO.getId()));
         }
-        playerDB.setTournament(actualTournament);
+        playerDB.addTournament(actualTournament);
         repository.save(playerDB);
     }
 
     @Transactional
-    public int importPlayerFromClickTT(InputStream istream, com.jmelzer.jitty.model.Tournament actualTournament) {
+    public int importPlayerFromClickTT(InputStream istream, Long tid) {
         Tournament clickTTTournament = xmlImporter.parseClickTTPlayerExport(istream);
         int count = 0;
+        com.jmelzer.jitty.model.Tournament actualTournament = tournamentRepository.findOne(tid);
         //todo validate tournament
         for (Competition competition : clickTTTournament.getCompetition()) {
             for (Player clickTTPlayer : competition.getPlayers().getPlayer()) {
@@ -106,12 +117,12 @@ public class PlayerService {
 
                 if (dbPlayers.size() == 0 || dbPlayers.size() > 1) {
                     TournamentPlayer dbP = createDbPlayer(clickTTPlayer);
-                    dbP.setTournament(actualTournament);
+                    dbP.addTournament(actualTournament);
                     count++;
                     repository.saveAndFlush(dbP);
                 } else if (dbPlayers.size() == 1) {
                     TournamentPlayer dbP = dbPlayers.get(0);
-                    dbP.setTournament(actualTournament);
+                    dbP.addTournament(actualTournament);
                     if (compareClub(dbP, clickTTPlayer)) {
                         merge(dbP, clickTTPlayer);
                     } else {

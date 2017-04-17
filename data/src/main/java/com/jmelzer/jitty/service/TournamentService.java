@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.*;
@@ -181,15 +186,7 @@ public class TournamentService {
 
         return counter;
     }
-    boolean playerInQueue(TournamentPlayer player, Collection<TournamentSingleGame> gameCollection) {
-        for (TournamentSingleGame game : gameCollection) {
-            if ((game.getPlayer1() != null && game.getPlayer1().equals(player)) ||
-                    (game.getPlayer2() != null && game.getPlayer2().equals(player))) {
-                return true;
-            }
-        }
-        return false;
-    }
+
     //todo move to queuemanager?
     private int addGamesToQueueInternally(GameQueue gameQueueO, List<TournamentSingleGame> games, List<TournamentSingleGame>  allGames) {
         List<TournamentSingleGame>  busyGames;
@@ -216,6 +213,16 @@ public class TournamentService {
         }
 
         return counter;
+    }
+
+    boolean playerInQueue(TournamentPlayer player, Collection<TournamentSingleGame> gameCollection) {
+        for (TournamentSingleGame game : gameCollection) {
+            if ((game.getPlayer1() != null && game.getPlayer1().equals(player)) ||
+                    (game.getPlayer2() != null && game.getPlayer2().equals(player))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Transactional
@@ -307,6 +314,9 @@ public class TournamentService {
         for (TournamentPlayer player : players) {
             TournamentPlayerDTO dto = new TournamentPlayerDTO();
             BeanUtils.copyProperties(player, dto, "classes");
+            for (TournamentSingleGame game : player.getGames()) {
+                dto.addGame(copy(game, false));
+            }
             ret.add(dto);
         }
         return ret;
@@ -403,8 +413,8 @@ public class TournamentService {
     }
 
     @Transactional
-    public List<TournamentSingleGameDTO> getFinishedGames() {
-        List<TournamentSingleGame> dblist = tournamentSingleGameRepository.findByPlayedOrderByEndTimeDesc(true);
+    public List<TournamentSingleGameDTO> getFinishedGames(Long actualTournamentId) {
+        List<TournamentSingleGame> dblist = tournamentSingleGameRepository.findByPlayedAndTidOrderByEndTimeDesc(true, actualTournamentId);
 
         List<TournamentSingleGameDTO> list = new ArrayList<>();
         for (TournamentSingleGame game : dblist) {
@@ -619,9 +629,9 @@ public class TournamentService {
     }
 
     @Transactional
-    public void startPossibleGames() throws IntegrityViolation {
+    public void startPossibleGames(Long tid) throws IntegrityViolation {
         int n = tableManager.getFreeTableCount();
-        List<TournamentSingleGame> gameQueue = new ArrayList<>(queueManager.getGamesFromQueue(n));
+        List<TournamentSingleGame> gameQueue = new ArrayList<>(queueManager.getGamesFromQueue(n, tid));
 
         for (TournamentSingleGame game : gameQueue) {
             startGame(game.getId());
@@ -697,9 +707,9 @@ public class TournamentService {
     }
 
     @Transactional
-    public void selectPhaseCombination(Long aLong, PhaseCombination phaseCombination) {
+    public void selectPhaseCombination(Long tcId, PhaseCombination phaseCombination) {
         if (phaseCombination == null) return;
-        TournamentClass tc = tcRepository.findOne(aLong);
+        TournamentClass tc = tcRepository.findOne(tcId);
 //        if (tc.getActivePhase() != null) { //todo must be overridden
 //            return;
 //        }

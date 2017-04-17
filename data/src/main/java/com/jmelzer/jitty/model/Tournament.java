@@ -1,10 +1,12 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by J. Melzer on 01.06.2016.
@@ -13,14 +15,20 @@ import java.util.List;
 @Entity
 @Table(name = "tournament")
 public class Tournament {
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinTable(name = "T_PLAYER")
+    Set<TournamentPlayer> players = new LinkedHashSet<>();
+
     /**
      * Assoc to the tournament classes.
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tournament")
     List<TournamentClass> classes = new ArrayList<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false, name = "name")
     private String name;
     @Temporal(TemporalType.DATE)
@@ -98,5 +106,13 @@ public class Tournament {
 
     public void setTableCount(int tableCount) {
         this.tableCount = tableCount;
+    }
+
+    public void addPlayer(TournamentPlayer player) {
+        players.add(player);
+    }
+
+    public Collection<TournamentPlayer> getPlayers() {
+        return Collections.unmodifiableCollection(players);
     }
 }

@@ -1,17 +1,6 @@
 /*
- * Copyright 2012-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (c) 2017.
+ * J. Melzer
  */
 package com.jmelzer.jitty.dao;
 
@@ -136,21 +125,21 @@ public class TournamentSingleGameRepositoryIntegrationTests {
         game.setPlayed(true);
         repository.save(game);
 
-        assertThat(repository.findByPlayedOrderByEndTimeDesc(true).size(), is(1));
+        assertThat(repository.findByPlayedAndTidOrderByEndTimeDesc(true, 1L).size(), is(1));
 
         TournamentSingleGame game2 = new TournamentSingleGame("222", 1L);
         game2.setPlayer1(playerRepository.findOne(1L));
         game2.setPlayer2(playerRepository.findOne(2L));
         repository.save(game2);
 
-        assertThat(repository.findByPlayedOrderByEndTimeDesc(true).size(), is(1));
+        assertThat(repository.findByPlayedAndTidOrderByEndTimeDesc(true, 1L).size(), is(1));
 
         game2.setPlayed(true);
         game2.setEndTime(new Date());
 
         repository.save(game2);
 
-        List<TournamentSingleGame> list = repository.findByPlayedOrderByEndTimeDesc(true);
+        List<TournamentSingleGame> list = repository.findByPlayedAndTidOrderByEndTimeDesc(true, 1L);
         assertThat(list.size(), is(2));
         assertThat(list.get(0).getId(), is(game2.getId()));
 
