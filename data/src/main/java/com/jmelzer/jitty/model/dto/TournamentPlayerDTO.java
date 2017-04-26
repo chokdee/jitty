@@ -60,6 +60,8 @@ public class TournamentPlayerDTO {
 
     private int buchholzZahl;
 
+    private int feinBuchholzZahl;
+
     public TournamentPlayerDTO() {
     }
 
@@ -214,20 +216,63 @@ public class TournamentPlayerDTO {
         this.id = id;
     }
 
-    public void calcBuchholz() {
+    public void calcBuchholz(List<TournamentPlayerDTO> player) {
         buchholzZahl = 0;
+        if (playedGames == null || playedGames.isEmpty()) {
+            return;
+        }
         for (TournamentSingleGameDTO playedGame : playedGames) {
             if (playedGame.getPlayer1().getId().equals(id)) {
-                buchholzZahl += playedGame.getPlayer2().getWonGames();
+                buchholzZahl += getWonGames(player, playedGame.getPlayer2().getId());
             } else if (playedGame.getPlayer2().getId().equals(id)) {
-                buchholzZahl += playedGame.getPlayer1().getWonGames();
+                buchholzZahl += getWonGames(player, playedGame.getPlayer1().getId());
             }
         }
         System.out.println("buchholzZahl = " + buchholzZahl);
     }
 
+    /**
+     * workaround method, cause the player in the playedGames are not fully filled
+     *
+     * @param player to be searched for
+     * @param id     to be searched
+     * @return 0 or won games
+     */
+    private int getWonGames(List<TournamentPlayerDTO> player, Long id) {
+        for (TournamentPlayerDTO tournamentPlayerDTO : player) {
+            if (tournamentPlayerDTO.getId().equals(id)) {
+                return tournamentPlayerDTO.getWonGames();
+            }
+        }
+        return 0;
+    }
+
     public int getWonGames() {
         return wonGames;
+    }
+
+    public void calcFeinBuchholz(List<TournamentPlayerDTO> player) {
+        feinBuchholzZahl = 0;
+        if (playedGames == null || playedGames.isEmpty()) {
+            return;
+        }
+        for (TournamentSingleGameDTO playedGame : playedGames) {
+            if (playedGame.getPlayer1().getId().equals(id)) {
+                feinBuchholzZahl += getBuchholz(player, playedGame.getPlayer2().getId());
+            } else if (playedGame.getPlayer2().getId().equals(id)) {
+                feinBuchholzZahl += getBuchholz(player, playedGame.getPlayer1().getId());
+            }
+        }
+        System.out.println("feinBuchholzZahl = " + feinBuchholzZahl);
+    }
+
+    private int getBuchholz(List<TournamentPlayerDTO> player, Long id) {
+        for (TournamentPlayerDTO tournamentPlayerDTO : player) {
+            if (tournamentPlayerDTO.getId().equals(id)) {
+                return tournamentPlayerDTO.getBuchholzZahl();
+            }
+        }
+        return 0;
     }
 
     public int getBuchholzZahl() {
@@ -308,5 +353,9 @@ public class TournamentPlayerDTO {
 
     public void clearGames() {
         this.playedGames.clear();
+    }
+
+    public int getFeinBuchholzZahl() {
+        return feinBuchholzZahl;
     }
 }

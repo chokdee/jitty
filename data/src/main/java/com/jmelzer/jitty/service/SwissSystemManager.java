@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.*;
 
+import static com.jmelzer.jitty.service.CopyManager.copy;
+
 /**
  * Created by J. Melzer .<br><br>
  * <br>
@@ -216,7 +218,7 @@ public class SwissSystemManager {
         SwissSystemPhase swissSystemPhase = (SwissSystemPhase) clz.getActivePhase();
         LOG.info("Class " + clz.getName() + " was started.");
         tcRepository.saveAndFlush(clz);
-        List<TournamentSingleGame> pGames = CopyManager.copy(games, clz.getName(), clz.getTournament().getId());
+        List<TournamentSingleGame> pGames = copy(games, clz.getName(), clz.getTournament().getId());
         for (int i = 0; i < games.size(); i++) {
             TournamentSingleGame pGame = pGames.get(i);
             pGame.setPlayer1(playerRepository.findOne(games.get(i).getPlayer1().getId()));
@@ -266,6 +268,10 @@ public class SwissSystemManager {
             tournamentService.selectPhaseCombination(cid, PhaseCombination.SWS);
         }
         calcRankingRound(round, ps);
+        //clear games, we don't need at the client
+        for (TournamentPlayerDTO p : ps) {
+            p.clearGames();
+        }
         return ps;
 
     }
@@ -280,7 +286,10 @@ public class SwissSystemManager {
             playerDTO.calcWinningGames();
         }
         for (TournamentPlayerDTO playerDTO : player) {
-            playerDTO.calcBuchholz();
+            playerDTO.calcBuchholz(player);
+        }
+        for (TournamentPlayerDTO playerDTO : player) {
+            playerDTO.calcFeinBuchholz(player);
         }
 
         player.sort((o1, o2) -> {
@@ -290,7 +299,12 @@ public class SwissSystemManager {
             if (sComp != 0) {
                 return sComp;
             } else {
-                return Integer.compare(o1.getBuchholzZahl(), o2.getBuchholzZahl()) * -1;
+                int b = Integer.compare(o1.getBuchholzZahl(), o2.getBuchholzZahl()) * -1;
+                if (b != 0) {
+                    return b;
+                }
+
+                return Integer.compare(o1.getFeinBuchholzZahl(), o2.getFeinBuchholzZahl()) * -1;
             }
         });
 

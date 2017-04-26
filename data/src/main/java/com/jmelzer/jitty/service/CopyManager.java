@@ -89,7 +89,7 @@ public class CopyManager {
 
     public static TournamentPlayerDTO copy(TournamentPlayer player) {
         TournamentPlayerDTO dto = new TournamentPlayerDTO();
-        BeanUtils.copyProperties(player, dto, "playedGames", "games", "classes", "association", "classes");
+        BeanUtils.copyProperties(player, dto, "playedGames", "games", "classes", "association", "classes", "tournaments");
         if (player.getLastGameAt() != null) {
             LocalDateTime time = LocalDateTime.ofInstant(player.getLastGameAt().toInstant(), ZoneId.systemDefault());
             long h = ChronoUnit.HOURS.between(time, LocalDateTime.now());
@@ -100,6 +100,7 @@ public class CopyManager {
             dto.setPeriodSinceLastGame("--");
             dto.setLastGameAt("noch nicht gespielt");
         }
+
         return dto;
     }
 

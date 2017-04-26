@@ -7,7 +7,6 @@ package com.jmelzer.jitty.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Created by J. Melzer on 08.04.2017.
@@ -36,5 +35,9 @@ public enum TournamentSystemType {
             }
         }
         return null;
+    }
+
+    public int getValue() {
+        return value;
     }
 }
