@@ -5,6 +5,7 @@
 
 package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.config.SecurityUtil;
 import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentSystemType;
@@ -43,6 +44,9 @@ public class TournamentController {
     @Inject
     UserService userService;
 
+    @Inject
+    SecurityUtil securityUtil;
+
     @GET
     public List<TournamentDTO> getList() {
         LOG.info("query all Tournament ");
@@ -54,6 +58,14 @@ public class TournamentController {
     public List<TournamentSystemType> getSystemList() {
         return Arrays.asList(TournamentSystemType.GK, TournamentSystemType.AC, TournamentSystemType.VRC);
     }
+
+    @Path("/has-only-one-class")
+    @GET
+    public Boolean hasOnlyOneClass() {
+        Long id = securityUtil.getActualTournamentId();
+        return service.hasOnlyOneClass(id);
+    }
+
 
     @Path("{id}")
     @GET

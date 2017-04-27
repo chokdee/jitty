@@ -9,6 +9,7 @@ import com.jmelzer.jitty.dao.ClubRepository;
 import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.dao.TournamentRepository;
+import com.jmelzer.jitty.exceptions.IntegrityViolation;
 import com.jmelzer.jitty.model.Club;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentPlayer;
@@ -81,8 +82,28 @@ public class PlayerService {
     }
 
     @Transactional
-    public void delete(Long aLong) {
-        repository.delete(aLong);
+    public void delete(Long aLong) throws IntegrityViolation {
+        TournamentPlayer player = repository.findOne(aLong);
+        if (player == null) {
+            throw new IntegrityViolation("Der Spieler existiert nicht.");
+        }
+        if (repository.countGames(aLong) > 0) {
+            throw new IntegrityViolation("Es wurden bereits Spiele gespielt, der Spieler kann nicht mehr gel\u00F6scht werden");
+        }
+        if (player.getTournaments() != null) {
+            for (com.jmelzer.jitty.model.Tournament tournament : player.getTournaments()) {
+                tournament.removePlayer(player);
+                tournamentRepository.save(tournament);
+            }
+        }
+        if (player.getClasses() != null) {
+            for (TournamentClass tournamentClass : player.getClasses()) {
+                tournamentClass.removePlayer(player);
+                classRepository.save(tournamentClass);
+            }
+        }
+        repository.removeFromGroups(aLong);
+        repository.delete(player);
     }
 
     @Transactional
@@ -104,10 +125,16 @@ public class PlayerService {
     }
 
     @Transactional
-    public int importPlayerFromClickTT(InputStream istream, Long tid) {
+    public int importPlayerFromClickTT(InputStream istream, Long tid, Boolean assignWhileImport) {
         Tournament clickTTTournament = xmlImporter.parseClickTTPlayerExport(istream);
         int count = 0;
+
         com.jmelzer.jitty.model.Tournament actualTournament = tournamentRepository.findOne(tid);
+        TournamentClass tc = null;
+        if (assignWhileImport) {
+            tc = actualTournament.getClasses().get(0);
+        }
+
         //todo validate tournament
         for (Competition competition : clickTTTournament.getCompetition()) {
             for (Player clickTTPlayer : competition.getPlayers().getPlayer()) {
@@ -130,6 +157,10 @@ public class PlayerService {
                     }
                     count++;
                     repository.saveAndFlush(dbP);
+                    if (tc != null) {
+                        tc.addPlayer(dbP);
+                        classRepository.save(tc);
+                    }
                 }
             }
         }

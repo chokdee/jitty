@@ -66,7 +66,7 @@ public class PlayerServiceTest {
         tp2.setClub(new Club("Falscger Verein"));
         when(playerRepository.findByLastNameAndFirstName("Dauth", "Mario")).thenReturn(Collections.singletonList(tp2));
 
-        playerService.importPlayerFromClickTT(inputStream, 1L);
+        playerService.importPlayerFromClickTT(inputStream, 1L, false);
 
         Mockito.verify(playerRepository, times(1)).saveAndFlush(tp);
         Mockito.verify(playerRepository, times(12)).saveAndFlush(anyObject());

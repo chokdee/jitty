@@ -1,9 +1,25 @@
-angular.module('jitty.player.controllers', []).controller('PlayerListController', function ($scope, $window, Player, Flash, FileUploader) {
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
+angular.module('jitty.player.controllers', []).controller('PlayerListController', function ($scope, $window, Player,
+                                                                                            Flash, FileUploader, $http) {
 
     $scope.reverse = true;
 
     $scope.players = Player.query();
 
+    $scope.hasOnlyOneClass = false;
+    $scope.assignWhileImport = true;
+
+    $scope.getKoField = function (assignPlayer) {
+        $http.get('/api/tournaments/has-only-one-class', {}).then(function (response) {
+            $scope.hasOnlyOneClass = response.data;
+        });
+
+    };
+    $scope.getKoField();
 
     $scope.createNewPlayer = function () {
         $window.location.href = '/#/player-add';
@@ -15,7 +31,7 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
     };
 
     var uploader = $scope.uploader = new FileUploader( {
-        url: '/api/players/import-from-click-tt',
+        url: '/api/players/import-from-click-tt?assignWhileImport=' + $scope.assignWhileImport,
         autoUpload:true,
         removeAfterUpload:true,
         queueLimit:1
@@ -26,6 +42,24 @@ angular.module('jitty.player.controllers', []).controller('PlayerListController'
     };
     uploader.onCompleteItem = function(fileItem, response, status, headers) {
         Flash.create('success', response, 4000, {container: 'flash-status'});
+    };
+
+    $scope.deletePlayer = function (id) {
+        $http({
+            method: 'DELETE',
+            url: '/api/players/' + id
+        }).then(function successCallback(response) {
+            //refresh data
+            $scope.players = Player.query();
+            Flash.create('success', 'Der Spieler mit der Id ' + id + ' wurde gel\u00F6scht.', 4000, {container: 'flash-status'});
+
+        }, function errorCallback(response) {
+            if (response.status === 400) {
+                Flash.create('danger', response.data.error, 4000, {container: 'flash-status'});
+                console.log('got 400 response message = ' + response.data.error);
+            }
+        });
+
     };
 
 }).controller('PlayerEditController', function ($scope, $routeParams, Player, $location, $http, Club, Association, Flash) {

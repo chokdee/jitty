@@ -115,4 +115,8 @@ public class Tournament {
     public Collection<TournamentPlayer> getPlayers() {
         return Collections.unmodifiableCollection(players);
     }
+
+    public void removePlayer(TournamentPlayer player) {
+        players.remove(player);
+    }
 }

@@ -6,6 +6,7 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.config.SecurityUtil;
+import com.jmelzer.jitty.exceptions.IntegrityViolation;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.service.PlayerService;
@@ -14,6 +15,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -93,9 +95,31 @@ public class PlayerController {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
     public Response uploadFile(
+            @QueryParam(value = "assignWhileImport") String assignWhileImportS,
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition contentDispositionHeader) {
-        int count = service.importPlayerFromClickTT(fileInputStream, securityUtil.getActualTournamentId());
+        Boolean assignWhileImport = Boolean.valueOf(assignWhileImportS);
+        int count = service.importPlayerFromClickTT(fileInputStream, securityUtil.getActualTournamentId(), assignWhileImport);
         return Response.status(Response.Status.OK).entity("Es wurden " + count + " Spieler importiert").build();
+    }
+
+    @Path("{id}")
+    @DELETE
+    public Response delete(@PathParam(value = "id") String id) {
+        LOG.info("delete class {}", id);
+        try {
+            service.delete(Long.valueOf(id));
+        } catch (EmptyResultDataAccessException e) {
+            LOG.warn("player with id {} not found ", id);
+            return null;
+        } catch (NumberFormatException e) {
+            LOG.warn("id is not a number ", id);
+            return null;
+        } catch (IntegrityViolation integrityViolation) {
+            LOG.warn("not possible to delete the class {} error message is '{}'", id, integrityViolation.getMessage());
+            return ControllerUtil.buildErrorResponse(integrityViolation.getMessage());
+        }
+        return Response.ok().build();
+
     }
 }

@@ -717,4 +717,10 @@ public class TournamentService {
         tc.setActivePhaseNo(0);
         tcRepository.saveAndFlush(tc);
     }
+
+    @Transactional(readOnly = true)
+    public Boolean hasOnlyOneClass(Long id) {
+        List<TournamentClass> cs = repository.findOne(id).getClasses();
+        return cs != null && cs.size() == 1;
+    }
 }

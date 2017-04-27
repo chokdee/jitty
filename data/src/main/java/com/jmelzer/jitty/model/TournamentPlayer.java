@@ -265,4 +265,8 @@ public class TournamentPlayer {
     public void setLastGameAt(Date lastGameAt) {
         this.lastGameAt = lastGameAt;
     }
+
+    public void removeAllTournaments() {
+        tournaments.clear();
+    }
 }
