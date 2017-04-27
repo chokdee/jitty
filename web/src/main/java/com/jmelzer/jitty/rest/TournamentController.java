@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.dao.UserRepository;
@@ -5,7 +10,6 @@ import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentSystemType;
 import com.jmelzer.jitty.model.User;
 import com.jmelzer.jitty.model.dto.TournamentDTO;
-import com.jmelzer.jitty.model.dto.TournamentSystemDTO;
 import com.jmelzer.jitty.service.TournamentService;
 import com.jmelzer.jitty.service.UserService;
 import org.slf4j.Logger;
@@ -48,7 +52,7 @@ public class TournamentController {
     @Path("/system-types")
     @GET
     public List<TournamentSystemType> getSystemList() {
-        return Arrays.asList(TournamentSystemType.GK, TournamentSystemType.SWS);
+        return Arrays.asList(TournamentSystemType.GK, TournamentSystemType.AC, TournamentSystemType.VRC);
     }
 
     @Path("{id}")

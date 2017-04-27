@@ -5,6 +5,7 @@
 
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.model.TournamentSystemType;
 import com.jmelzer.jitty.model.dto.GameSetDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
@@ -72,7 +73,7 @@ public class SwissSystemManagerTest {
             for (int round = 2; round <= 6; round++) {
 
                 System.out.println("------ round " + round + " starts .-------------- ");
-                swissSystemManager.calcRankingRound(round, player);
+                swissSystemManager.calcRankingRound(TournamentSystemType.AC, round, player);
 
                 for (TournamentPlayerDTO playerDTO : player) {
 //                    System.out.println("playerDTO = " + playerDTO);
@@ -86,7 +87,7 @@ public class SwissSystemManagerTest {
             }
 
             System.out.println(" ### RESULT ###");
-            swissSystemManager.calcRankingRound(7, player);
+            swissSystemManager.calcRankingRound(TournamentSystemType.AC, 7, player);
             for (TournamentPlayerDTO playerDTO : player) {
                 System.out.println("playerDTO = " + playerDTO);
             }
@@ -178,7 +179,7 @@ public class SwissSystemManagerTest {
             assertTrue(match.getGroup().contains("Runde  " + round));
             System.out.println("game = " + game);
         }
-        swissSystemManager.calcRankingRound(round, player);
+        swissSystemManager.calcRankingRound(TournamentSystemType.AC, round, player);
         return matchNr1;
     }
 
@@ -194,21 +195,6 @@ public class SwissSystemManagerTest {
         return games;
     }
 
-    private TournamentSingleGameDTO createGame(Match match, List<TournamentPlayerDTO> player) {
-        TournamentSingleGameDTO game = new TournamentSingleGameDTO();
-        game.setPlayer1AndBackReference(findPlayer((Player) match.getPlayerA(), player));
-        game.setPlayer2AndBackReference(findPlayer((Player) match.getPlayerB(), player));
-        return game;
-    }
-
-    private TournamentPlayerDTO findPlayer(Player playerA, List<TournamentPlayerDTO> player) {
-        for (TournamentPlayerDTO tournamentPlayerDTO : player) {
-            if (playerA.getId().equals(tournamentPlayerDTO.getImportId()))
-                return tournamentPlayerDTO;
-        }
-        throw new RuntimeException("not found " + playerA.getId());
-    }
-
     private List<GameSetDTO> convertToSets(Match match) {
         List<GameSetDTO> sets = new ArrayList<>();
         sets.add(new GameSetDTO(Integer.valueOf(match.getSetA1()), Integer.valueOf(match.getSetB1())));
@@ -222,5 +208,21 @@ public class SwissSystemManagerTest {
             sets.add(new GameSetDTO(Integer.valueOf(match.getSetA5()), Integer.valueOf(match.getSetB5())));
         }
         return sets;
+    }
+
+    private TournamentSingleGameDTO createGame(Match match, List<TournamentPlayerDTO> player) {
+        TournamentSingleGameDTO game = new TournamentSingleGameDTO();
+        game.setPlayer1AndBackReference(findPlayer((Player) match.getPlayerA(), player));
+        game.setPlayer2AndBackReference(findPlayer((Player) match.getPlayerB(), player));
+        return game;
+    }
+
+    private TournamentPlayerDTO findPlayer(Player playerA, List<TournamentPlayerDTO> player) {
+        for (TournamentPlayerDTO tournamentPlayerDTO : player) {
+            if (playerA.getId().equals(tournamentPlayerDTO.getImportId())) {
+                return tournamentPlayerDTO;
+            }
+        }
+        throw new RuntimeException("not found " + playerA.getId());
     }
 }

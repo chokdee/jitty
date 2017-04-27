@@ -358,4 +358,24 @@ public class TournamentPlayerDTO {
     public int getFeinBuchholzZahl() {
         return feinBuchholzZahl;
     }
+
+    public int resultAgainst(TournamentPlayerDTO p2) {
+        for (TournamentSingleGameDTO playedGame : playedGames) {
+            if (playedGame.getPlayer1().getId().equals(p2.getId())) {
+                if (playedGame.getWinner() == 1) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+            if (playedGame.getPlayer2().getId().equals(p2.getId())) {
+                if (playedGame.getWinner() == 1) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        }
+        return 0;
+    }
 }

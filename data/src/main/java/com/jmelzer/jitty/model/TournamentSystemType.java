@@ -16,7 +16,8 @@ public enum TournamentSystemType {
     //Normal Group / KO System
     GK(1, "Gruppen und KO"),
     //Schweizer System wie WTTV Cup
-    SWS(2, "Schweizer System (Cup Systeme)");
+    AC(2, "WTTV Andro Cup"),
+    VRC(3, "Rheinland Cup");
 
     @JsonProperty
     int value;

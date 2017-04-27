@@ -8,10 +8,7 @@ package com.jmelzer.jitty.service;
 import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.exceptions.IntegrityViolation;
-import com.jmelzer.jitty.model.PhaseCombination;
-import com.jmelzer.jitty.model.SwissSystemPhase;
-import com.jmelzer.jitty.model.TournamentClass;
-import com.jmelzer.jitty.model.TournamentSingleGame;
+import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import org.slf4j.Logger;
@@ -208,16 +205,21 @@ public class SwissSystemManager {
             throw new IntegrityViolation("Anzahl der Spiele sind 0");
         }
         //todo how to prevent duplicate rounds?
-        tournamentService.selectPhaseCombination(id, PhaseCombination.SWS);
+//        tournamentService.selectPhaseCombination(id, PhaseCombination.SWS);
         TournamentClass clz = tcRepository.findOne(id);
         if (clz.getActivePhase() == null) {
             tournamentService.selectPhaseCombination(id, PhaseCombination.SWS);
+        } else {
+            System.out.println("start .getRound() = " + (((SwissSystemPhase) clz.getActivePhase()).getRound()));
         }
         clz.setStartTime(new Date());
         clz.setRunning(true);
         SwissSystemPhase swissSystemPhase = (SwissSystemPhase) clz.getActivePhase();
+        swissSystemPhase.setRound(swissSystemPhase.getRound() + 1);
         LOG.info("Class " + clz.getName() + " was started.");
-        tcRepository.saveAndFlush(clz);
+        System.out.println("before save getRound() = " + swissSystemPhase.getRound());
+        clz = tcRepository.saveAndFlush(clz);
+        System.out.println("after save .getRound() = " + (((SwissSystemPhase) clz.getActivePhase()).getRound()));
         List<TournamentSingleGame> pGames = copy(games, clz.getName(), clz.getTournament().getId());
         for (int i = 0; i < games.size(); i++) {
             TournamentSingleGame pGame = pGames.get(i);
@@ -226,7 +228,7 @@ public class SwissSystemManager {
             tournamentService.save(pGame);
             swissSystemPhase.getGroup().addGame(pGame);
         }
-        swissSystemPhase.setRound(swissSystemPhase.getRound() + 1);
+
         queueManager.addAll(pGames);
     }
 
@@ -238,8 +240,10 @@ public class SwissSystemManager {
             tournamentService.selectPhaseCombination(cid, PhaseCombination.SWS);
             tc = tcRepository.findOne(cid);
         }
-        int round = ((SwissSystemPhase) tc.getActivePhase()).getRound();
-        calcRankingRound(round, ps);
+        SwissSystemPhase phase = ((SwissSystemPhase) tc.getActivePhase());
+        TournamentSystemType stype = TournamentSystemType.enumOf(tc.getSystemType());
+        int round = phase.getRound();
+        calcRankingRound(stype, round, ps);
         for (int i = 1; i <= 100; i++) {
             try {
                 System.out.println("------ #" + i + " run -------------- ");
@@ -267,7 +271,7 @@ public class SwissSystemManager {
         } else {
             tournamentService.selectPhaseCombination(cid, PhaseCombination.SWS);
         }
-        calcRankingRound(round, ps);
+        calcRankingRound(TournamentSystemType.enumOf(tc.getSystemType()), round, ps);
         //clear games, we don't need at the client
         for (TournamentPlayerDTO p : ps) {
             p.clearGames();
@@ -276,7 +280,7 @@ public class SwissSystemManager {
 
     }
 
-    public void calcRankingRound(int roundNr, List<TournamentPlayerDTO> player) {
+    public void calcRankingRound(TournamentSystemType stype, int roundNr, List<TournamentPlayerDTO> player) {
         if (roundNr == 1) {
             calcRankingFirstRound(player);
         }
@@ -292,21 +296,13 @@ public class SwissSystemManager {
             playerDTO.calcFeinBuchholz(player);
         }
 
-        player.sort((o1, o2) -> {
+        //tod add sorting for different Verbaende
+        if (stype == TournamentSystemType.AC) {
+            WTTVCupSorter.sort(player);
+        } else {
+            throw new UnsupportedOperationException("not yet implemented for " + stype);
+        }
 
-            int sComp = Integer.compare(o1.getWonGames(), o2.getWonGames()) * -1;
-
-            if (sComp != 0) {
-                return sComp;
-            } else {
-                int b = Integer.compare(o1.getBuchholzZahl(), o2.getBuchholzZahl()) * -1;
-                if (b != 0) {
-                    return b;
-                }
-
-                return Integer.compare(o1.getFeinBuchholzZahl(), o2.getFeinBuchholzZahl()) * -1;
-            }
-        });
 
     }
 

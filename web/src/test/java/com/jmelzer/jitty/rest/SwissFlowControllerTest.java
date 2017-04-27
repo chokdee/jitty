@@ -79,12 +79,16 @@ public class SwissFlowControllerTest extends SecureResourceTest {
             assertThat(possibleGamesEntity.getBody().length, is(0));
             int possGames = 0;
             //auslosung  speichern und starten
-            for (int i = 0; i < 6; i++) {
-                System.out.println("####################    start round " + (1 + 1) + " ####################");
+            for (int i = 1; i <= 6; i++) {
+                System.out.println("####################    start round " + (i) + " ####################");
+
+                ResponseEntity<TournamentClassDTO> tcE = http(HttpMethod.GET, "api/tournament-classes/" + tClassId,
+                        createHttpEntity(null, loginHeaders), TournamentClassDTO.class);
+                assertThat(((SwissSystemPhaseDTO) (tcE.getBody().getSystem().getPhases().get(0))).getRound(), is(i));
 
                 voidEntity = http(HttpMethod.POST, "api/draw/start-swiss-round?cid=" + tClassId,
                         createHttpEntity(gamesEntity.getBody(), loginHeaders), Void.class);
-                assertTrue(phaseEntity.getStatusCode().is2xxSuccessful());
+                assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
 
                 assertThat(jdbcTemplate.queryForObject("select count(*) from tournament_group where id = " + phaseEntity.getBody().getGroup().getId(), Integer.class), is(1));
 
@@ -165,7 +169,7 @@ public class SwissFlowControllerTest extends SecureResourceTest {
         tournamentClass.setName(TC_NAME);
         tournamentClass.setStartTTR(0);
         tournamentClass.setEndTTR(3000);
-        tournamentClass.setSystemType(TournamentSystemType.SWS.getValue());
+        tournamentClass.setSystemType(TournamentSystemType.AC.getValue());
 
         ResponseEntity<Long> longEntitiy = http(HttpMethod.POST, "api/tournament-classes/" + tId,
                 createHttpEntity(tournamentClass, loginHeaders), Long.class);
