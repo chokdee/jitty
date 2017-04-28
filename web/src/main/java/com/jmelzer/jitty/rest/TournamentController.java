@@ -88,12 +88,12 @@ public class TournamentController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Long saveOrCreate(TournamentDTO tournament) {
+    public Long saveOrCreate(TournamentDTO dto) {
         Tournament t;
-        if (tournament.getId() == null) {
-            t = service.create(tournament);
+        if (dto.getId() == null) {
+            t = service.create(dto);
         } else {
-            t = service.update(tournament);
+            t = service.update(dto);
         }
         return t.getId();
     }

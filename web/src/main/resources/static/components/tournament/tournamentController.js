@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 angular.module('jitty.tournament.controllers', []).controller('TournamentListController', function ($scope, $window, Flash, Tournament, $http, $location) {
 
     $scope.predicate = 'startDate';
@@ -90,9 +95,24 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
             $window.location.href = '/#/tournament/' + $scope.id + '/tournament-classes-add';
         };
     }
-).controller('TournamentCreateController', function ($scope, $routeParams, Tournament, $location, $http) {
-
-
+).controller('TournamentCreateController', function ($scope, $routeParams, Tournament, $location, $http, Flash) {
+    var vm = this;
+    $scope.types = [{
+        id: 0,
+        label: ''
+    }, {
+        id: 1,
+        label: 'Allg. Turnier (z.B. Gruppe / KO Runde etc,'
+    }, {
+        id: 2,
+        label: 'Cup Turnier (VR Cup, WTTV Cup etc.)'
+    }, {
+        id: 3,
+        label: 'Ranglistenturnier (not supported yet)'
+    }
+    ];
+    $scope.tournament = undefined;
+    vm.tournamenttype = {};
     $scope.formats = ['dd.MM.yyyy'];
     $scope.format = $scope.formats[0];
     $scope.altInputFormats = ['d!/M!/yyyy'];
@@ -126,11 +146,21 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
         if ($scope.tournamentForm.$valid) {
             $scope.tournament.startDate = $scope.startDate;
             $scope.tournament.endDate = $scope.endDate;
-            Tournament.save($scope.tournament, function () {
-                console.log('Tournament saved successful');
-                $scope.tournaments = Tournament.query();
-                $location.path('/tournaments');
+            $scope.tournament.type = vm.tournamenttype.selected.id;
+            $http({
+                method: 'POST',
+                url: '/api/tournaments/',
+                data: $scope.tournament
+            }).then(function successCallback(response) {
+                Flash.create('success', 'Das Turnier wurde gespeichert, bitte noch die Klassen bearbeiten.', 4000, {container: 'flash-status'});
+                $location.path('/tournaments/' + response.data);
+            }, function errorCallback(response) {
             });
+            // Tournament.save($scope.tournament, function () {
+            //     console.log('Tournament saved successful');
+            //     $scope.tournaments = Tournament.query();
+            //     $location.path('/tournaments');
+            // });
         }
     };
 

@@ -1,4 +1,9 @@
-<div class="form-style-2">
+<!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
+<div class="form-style-2" ng-controller="TournamentCreateController as ctrl">
     <div class="form-style-2-heading">Turnier eingeben</div>
     <form name="tournamentForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="saveTournament()">
 
@@ -12,6 +17,16 @@
                     <div ng-message="required" class="message slide-left">Bitte einen Namen eingeben</div>
                 </div>
             </div>
+        </div>
+        <div class="control-group">
+            <p>{{ctrl.tournamenttype.selected}}</p>
+            <label for="type"><span>Turnierart <span class="required">*</span></span></label>
+            <ui-select id="type" ng-model="ctrl.tournamenttype.selected">
+                <ui-select-match placeholder="Bitte Turniersystem auswählen">{{$select.selected.label}}</ui-select-match>
+                <ui-select-choices repeat="s in types">
+                    <span ng-bind="s.label"></span>
+                </ui-select-choices>
+            </ui-select>
         </div>
         <div class="control-group">
             <label for="startDate"><span>Start<span class="required">*</span></span></label>

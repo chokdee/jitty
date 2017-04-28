@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model.dto;
 
 import java.util.ArrayList;
@@ -9,12 +14,27 @@ import java.util.List;
  * Turnier
  */
     public class TournamentDTO {
-    private Long id;
-    private String name;
-    private Date startDate;
-    private Date endDate;
-    private int tableCount = 8;
     List<TournamentClassDTO> classes = new ArrayList<>();
+
+    private Long id;
+
+    private String name;
+
+    private Date startDate;
+
+    private Date endDate;
+
+    private int type;
+
+    private int tableCount = 8;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public Long getId() {
         return id;

@@ -70,13 +70,10 @@ public class TournamentService {
     QueueManager queueManager;
 
 
-
-
-
     public void addPossibleKoGamesToQueue(TournamentClass tournamentClass) {
         if (tournamentClass.getKoField() != null) {
             GameQueue gameQueueO = queueManager.getQueueO();
-            List<TournamentSingleGame>  toAddGames = new ArrayList<>();
+            List<TournamentSingleGame> toAddGames = new ArrayList<>();
 
             List<TournamentSingleGame> games = tournamentClass.getKoField().getRound().getGames();
             addGamesToQueueInternally(gameQueueO, games, toAddGames);
@@ -131,13 +128,21 @@ public class TournamentService {
     public Tournament create(TournamentDTO dto) {
         Tournament tournament = new Tournament();
         copy(dto, tournament);
-        //todo where to config it?
-        //todo add double and women and child classes
-        tournament.addClass(createTC("A-Klasse", 0, 3000));
-        tournament.addClass(createTC("B-Klasse", 0, 1800));
-        tournament.addClass(createTC("C-Klasse", 0, 1600));
-        tournament.addClass(createTC("D-Klasse", 0, 1400));
-        tournament.addClass(createTC("E-Klasse", 0, 1200));
+        switch (dto.getType()) {
+            case 1:
+                //todo add double and women and child classes
+                tournament.addClass(createTC("A-Klasse", 0, 3000));
+                tournament.addClass(createTC("B-Klasse", 0, 1800));
+                tournament.addClass(createTC("C-Klasse", 0, 1600));
+                tournament.addClass(createTC("D-Klasse", 0, 1400));
+                tournament.addClass(createTC("E-Klasse", 0, 1200));
+                break;
+            case 2:
+                tournament.addClass(createTC("Cup-Klasse", 0, 3000));
+                break;
+            default:
+                break;
+        }
         tableManager.setTableCount(tournament.getTableCount());
         Tournament t = repository.saveAndFlush(tournament);
         selectTournament(t.getId());
@@ -174,7 +179,7 @@ public class TournamentService {
     public int addPossibleGroupGamesToQueue(List<TournamentGroup> groups) {
         GameQueue gameQueueO = queueManager.getQueueO();
         int counter = 0;
-        List<TournamentSingleGame>  allGames = new ArrayList<>(gameQueueO.getGames());
+        List<TournamentSingleGame> allGames = new ArrayList<>(gameQueueO.getGames());
 
         //todo add possible games for all running classes
         for (TournamentGroup group : groups) {
@@ -188,8 +193,8 @@ public class TournamentService {
     }
 
     //todo move to queuemanager?
-    private int addGamesToQueueInternally(GameQueue gameQueueO, List<TournamentSingleGame> games, List<TournamentSingleGame>  allGames) {
-        List<TournamentSingleGame>  busyGames;
+    private int addGamesToQueueInternally(GameQueue gameQueueO, List<TournamentSingleGame> games, List<TournamentSingleGame> allGames) {
+        List<TournamentSingleGame> busyGames;
 
 
         int counter = 0;
@@ -406,8 +411,9 @@ public class TournamentService {
     private TournamentClass getTCForGame(TournamentSingleGame game) {
         List<TournamentClass> tournamentClasses = repository.findOne(game.getTid()).getClasses();
         for (TournamentClass tournamentClass : tournamentClasses) {
-            if (tournamentClass.getName().equals(game.getTcName()))
+            if (tournamentClass.getName().equals(game.getTcName())) {
                 return tournamentClass;
+            }
         }
         throw new IllegalArgumentException("no tc found for " + game);
     }
@@ -637,6 +643,7 @@ public class TournamentService {
             startGame(game.getId());
         }
     }
+
     @Transactional
     public TournamentSingleGameDTO startGame(Long id) throws IntegrityViolation {
         return startGame(tournamentSingleGameRepository.findOne(id));
@@ -708,7 +715,9 @@ public class TournamentService {
 
     @Transactional
     public void selectPhaseCombination(Long tcId, PhaseCombination phaseCombination) {
-        if (phaseCombination == null) return;
+        if (phaseCombination == null) {
+            return;
+        }
         TournamentClass tc = tcRepository.findOne(tcId);
 //        if (tc.getActivePhase() != null) { //todo must be overridden
 //            return;
