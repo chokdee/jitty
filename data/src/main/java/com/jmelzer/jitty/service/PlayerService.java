@@ -144,27 +144,28 @@ public class PlayerService {
 
                 if (dbPlayers.size() == 0 || dbPlayers.size() > 1) {
                     TournamentPlayer dbP = createDbPlayer(clickTTPlayer);
-                    dbP.addTournament(actualTournament);
                     count++;
-                    repository.saveAndFlush(dbP);
+                    dbP = repository.saveAndFlush(dbP);
+                    dbP.addTournament(actualTournament);
                 } else if (dbPlayers.size() == 1) {
                     TournamentPlayer dbP = dbPlayers.get(0);
-                    dbP.addTournament(actualTournament);
                     if (compareClub(dbP, clickTTPlayer)) {
                         merge(dbP, clickTTPlayer);
                     } else {
                         dbP = createDbPlayer(clickTTPlayer);
                     }
                     count++;
-                    repository.saveAndFlush(dbP);
+                    dbP = repository.saveAndFlush(dbP);
+                    dbP.addTournament(actualTournament);
                     if (tc != null) {
                         tc.addPlayer(dbP);
-                        classRepository.save(tc);
+                        classRepository.saveAndFlush(tc);
                     }
                 }
             }
         }
-
+        actualTournament = tournamentRepository.saveAndFlush(actualTournament);
+        System.out.println("actualTournament = " + actualTournament.getPlayers().size());
         return count;
     }
 

@@ -21,6 +21,7 @@ import static com.jmelzer.jitty.rest.TestUtil.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
+
 /**
  * Created by J. Melzer on 19.05.2016.
  * Test player controller
@@ -32,6 +33,7 @@ public class PlayerControllerTest extends SecureResourceTest {
     public void before() {
         doLogin();
     }
+
     @Test
     public void testGetList() throws Exception {
         try {
@@ -85,10 +87,12 @@ public class PlayerControllerTest extends SecureResourceTest {
         try {
 
             Long tId = createTournament("player import", 6, 1);
+            System.out.println("tId = " + tId);
             //create a class
             TournamentClassDTO tournamentClass = createClz(tId, "Damen/Herren");
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            int count = jdbcTemplate.queryForObject("select count(*) from tournament_player", Integer.class);
+            int count = jdbcTemplate.queryForObject("select count(*) from T_PLAYER where TOURNAMENTS_ID = " + tId, Integer.class);
+            assertThat(count, is(0));
 
             RestTemplate restTemplate = new RestTemplate();
             LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
@@ -96,22 +100,23 @@ public class PlayerControllerTest extends SecureResourceTest {
             map.add("file", new ClassPathResource("/Turnierteilnehmer.xml"));
             ResponseEntity<String> entity =
                     restTemplate.exchange("http://localhost:9999/api/players/import-from-click-tt", HttpMethod.POST,
-                            createHttpEntity(map, loginHeaders, true) , String.class);
+                            createHttpEntity(map, loginHeaders, true), String.class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
             assertThat(entity.getBody(), is("Es wurden 12 Spieler importiert"));
 
-            assertEquals(count + 12 ,
-                    (int)jdbcTemplate.queryForObject("select count(*) from tournament_player", Integer.class));
+            count = jdbcTemplate.queryForObject("select count(*) from T_PLAYER where TOURNAMENTS_ID = " + tId, Integer.class);
+            assertThat(count, is(12));
+
 //secomnd time. no new player shall be imported
             entity =
                     restTemplate.exchange("http://localhost:9999/api/players/import-from-click-tt", HttpMethod.POST,
-                            createHttpEntity(map, loginHeaders, true) , String.class);
+                            createHttpEntity(map, loginHeaders, true), String.class);
             assertTrue(entity.getStatusCode().is2xxSuccessful());
             assertThat(entity.getBody(), is("Es wurden 12 Spieler importiert"));
 
-            assertEquals(count + 12 ,
-                    (int)jdbcTemplate.queryForObject("select count(*) from tournament_player", Integer.class));
+            count = jdbcTemplate.queryForObject("select count(*) from T_PLAYER where TOURNAMENTS_ID = " + tId, Integer.class);
+            assertThat(count, is(12));
 
 
         } catch (HttpClientErrorException e) {

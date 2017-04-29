@@ -143,7 +143,7 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
         opened: false
     };
     $scope.saveTournament = function () {
-        if (vm.tournamenttype == undefined || vm.tournamenttype.selected == undefined || vm.tournamenttype.selected.id < 1) {
+        if (vm.tournamenttype === undefined || vm.tournamenttype.selected === undefined || vm.tournamenttype.selected.id < 1) {
             Flash.create('danger', 'Bitte Turniersystem auswählen:', 4000, {container: 'flash-status'});
             return;
         }

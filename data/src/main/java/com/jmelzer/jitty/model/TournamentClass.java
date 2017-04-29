@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model;
 
 
@@ -112,6 +117,11 @@ public class TournamentClass {
     }
 
     public void addPlayer(TournamentPlayer player) {
+        for (TournamentPlayer p : players) {
+            if (p.getId().equals(player.getId())) {
+                return;
+            }
+        }
         players.add(player);
     }
 
