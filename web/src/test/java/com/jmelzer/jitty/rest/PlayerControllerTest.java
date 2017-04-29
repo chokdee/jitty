@@ -7,7 +7,6 @@ package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
@@ -29,20 +28,16 @@ import static org.junit.Assert.*;
 public class PlayerControllerTest extends SecureResourceTest {
 
 
-    @Before
-    public void before() {
-        doLogin();
-    }
-
     @Test
     public void testGetList() throws Exception {
         try {
 
+            createTournament("playertest1", 4, 2);
             ResponseEntity<TournamentPlayerDTO[]> entity = http(HttpMethod.GET, "api/players",
                     createHttpEntity(null, loginHeaders), TournamentPlayerDTO[].class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
-            assertThat(entity.getBody()[0].getId(), is(greaterThan(1L)));
+            assertThat(entity.getBody().length, is(0));
 
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
