@@ -37,8 +37,7 @@ public class TestUtil {
         tournament.setStartDate(new Date());
         tournament.setEndDate(new Date());
         tournament.setType(type);
-        ResponseEntity<Long> longEntitiy = http(HttpMethod.POST, "api/tournaments",
-                createHttpEntity(tournament, loginHeaders), Long.class);
+        ResponseEntity<Long> longEntitiy = http(HttpMethod.POST, "api/tournaments", createHttpEntity(tournament, loginHeaders), Long.class);
         assertTrue(longEntitiy.getStatusCode().is2xxSuccessful());
         Long tId = longEntitiy.getBody();
 

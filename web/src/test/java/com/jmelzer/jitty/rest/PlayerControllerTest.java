@@ -6,6 +6,7 @@
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
+import com.jmelzer.jitty.model.dto.TournamentDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -81,12 +82,13 @@ public class PlayerControllerTest extends SecureResourceTest {
     public void testImport() throws Exception {
         try {
 
-            Long tId = createTournament("player import", 6, 1);
-            System.out.println("tId = " + tId);
+            Long tId = createTournament("player import", 6, 2);
+            TournamentDTO tournament = http(HttpMethod.GET, "api/tournaments/" + tId, createHttpEntity(null, loginHeaders), TournamentDTO.class).getBody();
             //create a class
-            TournamentClassDTO tournamentClass = createClz(tId, "Damen/Herren");
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             int count = jdbcTemplate.queryForObject("select count(*) from T_PLAYER where TOURNAMENTS_ID = " + tId, Integer.class);
+            assertThat(count, is(0));
+            count = jdbcTemplate.queryForObject("select count(*) from TC_PLAYER where CLASSES_ID = " + tournament.getClasses().get(0).getId(), Integer.class);
             assertThat(count, is(0));
 
             RestTemplate restTemplate = new RestTemplate();
@@ -94,13 +96,15 @@ public class PlayerControllerTest extends SecureResourceTest {
             map.add("Content-Type", "image/jpeg");
             map.add("file", new ClassPathResource("/Turnierteilnehmer.xml"));
             ResponseEntity<String> entity =
-                    restTemplate.exchange("http://localhost:9999/api/players/import-from-click-tt", HttpMethod.POST,
+                    restTemplate.exchange("http://localhost:9999/api/players/import-from-click-tt?assignWhileImport=true", HttpMethod.POST,
                             createHttpEntity(map, loginHeaders, true), String.class);
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
             assertThat(entity.getBody(), is("Es wurden 12 Spieler importiert"));
 
             count = jdbcTemplate.queryForObject("select count(*) from T_PLAYER where TOURNAMENTS_ID = " + tId, Integer.class);
+            assertThat(count, is(12));
+            count = jdbcTemplate.queryForObject("select count(*) from TC_PLAYER where CLASSES_ID = " + tournament.getClasses().get(0).getId(), Integer.class);
             assertThat(count, is(12));
 
 //secomnd time. no new player shall be imported

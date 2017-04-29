@@ -134,6 +134,7 @@ public class PlayerService {
         if (assignWhileImport) {
             tc = actualTournament.getClasses().get(0);
         }
+        List<TournamentPlayer> modifiedPlayer = new ArrayList<>();
 
         //todo validate tournament
         for (Competition competition : clickTTTournament.getCompetition()) {
@@ -145,8 +146,8 @@ public class PlayerService {
                 if (dbPlayers.size() == 0 || dbPlayers.size() > 1) {
                     TournamentPlayer dbP = createDbPlayer(clickTTPlayer);
                     count++;
-                    dbP = repository.saveAndFlush(dbP);
-                    dbP.addTournament(actualTournament);
+                    modifiedPlayer.add(dbP);
+
                 } else if (dbPlayers.size() == 1) {
                     TournamentPlayer dbP = dbPlayers.get(0);
                     if (compareClub(dbP, clickTTPlayer)) {
@@ -155,13 +156,17 @@ public class PlayerService {
                         dbP = createDbPlayer(clickTTPlayer);
                     }
                     count++;
-                    dbP = repository.saveAndFlush(dbP);
-                    dbP.addTournament(actualTournament);
-                    if (tc != null) {
-                        tc.addPlayer(dbP);
-                        classRepository.saveAndFlush(tc);
-                    }
+                    modifiedPlayer.add(dbP);
+
                 }
+            }
+        }
+        for (TournamentPlayer player : modifiedPlayer) {
+            player = repository.saveAndFlush(player);
+            player.addTournament(actualTournament);
+            if (tc != null) {
+                tc.addPlayer(player);
+                classRepository.saveAndFlush(tc);
             }
         }
         tournamentRepository.saveAndFlush(actualTournament);
