@@ -65,6 +65,7 @@ public class PlayerServiceTest {
         TournamentPlayer tp2 = new TournamentPlayer(3L, "Mario", "Dauth");
         tp2.setClub(new Club("Falscger Verein"));
         when(playerRepository.findByLastNameAndFirstName("Dauth", "Mario")).thenReturn(Collections.singletonList(tp2));
+        when(playerRepository.saveAndFlush(anyObject())).thenReturn(tp2);
 
         playerService.importPlayerFromClickTT(inputStream, 1L, false);
 

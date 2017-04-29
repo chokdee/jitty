@@ -164,8 +164,7 @@ public class PlayerService {
                 }
             }
         }
-        actualTournament = tournamentRepository.saveAndFlush(actualTournament);
-        System.out.println("actualTournament = " + actualTournament.getPlayers().size());
+        tournamentRepository.saveAndFlush(actualTournament);
         return count;
     }
 
