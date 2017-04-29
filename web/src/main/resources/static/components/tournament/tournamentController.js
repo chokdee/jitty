@@ -102,7 +102,7 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
         label: ''
     }, {
         id: 1,
-        label: 'Allg. Turnier (z.B. Gruppe / KO Runde etc,'
+        label: 'Allg. Turnier (z.B. Gruppe / KO Runde etc.'
     }, {
         id: 2,
         label: 'Cup Turnier (VR Cup, WTTV Cup etc.)'
@@ -143,6 +143,10 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
         opened: false
     };
     $scope.saveTournament = function () {
+        if (vm.tournamenttype == undefined || vm.tournamenttype.selected == undefined || vm.tournamenttype.selected.id < 1) {
+            Flash.create('danger', 'Bitte Turniersystem auswählen:' + vm.tournamenttype, 4000, {container: 'flash-status'});
+            return;
+        }
         if ($scope.tournamentForm.$valid) {
             $scope.tournament.startDate = $scope.startDate;
             $scope.tournament.endDate = $scope.endDate;
@@ -156,11 +160,6 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
                 $location.path('/tournaments/' + response.data);
             }, function errorCallback(response) {
             });
-            // Tournament.save($scope.tournament, function () {
-            //     console.log('Tournament saved successful');
-            //     $scope.tournaments = Tournament.query();
-            //     $location.path('/tournaments');
-            // });
         }
     };
 

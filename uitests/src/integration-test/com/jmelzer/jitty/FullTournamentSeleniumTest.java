@@ -1,7 +1,13 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -55,6 +61,25 @@ public class FullTournamentSeleniumTest {
 
         String tName = "Selenium Test - " + randomString(5);
         driver().findElement(By.name("name")).sendKeys(tName);
+
+        WebElement select = driver().findElement(By.id("tournamenttype"));
+        select.click();
+        WebElement in = select.findElement(By.tagName("input"));
+//        in.sendKeys("Allg. Turnier (z.B. Gruppe / KO Runde etc.");
+        in.sendKeys(Keys.ARROW_DOWN);
+        in.sendKeys(Keys.ENTER);
+
+
+        //submit for
+        driver().findElement(By.name("name")).submit();
+
+        (new WebDriverWait(driver, 1)).until(new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver d) {
+                return d.getPageSource().contains("Das Turnier wurde gespeichert");
+            }
+        });
+
+        //nochmal speichern
         driver().findElement(By.name("name")).submit();
 
         (new WebDriverWait(driver, 1)).until(new ExpectedCondition<Boolean>() {
@@ -144,15 +169,18 @@ public class FullTournamentSeleniumTest {
         waitForText(2, "Hier klicken");
     }
 
-    private void enterResults(int size) throws InterruptedException {
-        for (int i = 0; i < size; i++) {
-            driver().findElement(By.linkText("Ergebnis...")).click();
-            waitForText(2, "Spieler 1");
-            driver().findElement(By.id("gameResult")).sendKeys("" + nextInt(0, 10) + " " + nextInt(0, 10) + " " + nextInt(0, 10));
-            Thread.sleep(500);
-            driver().findElement(By.id("btnOk")).click();
-            Thread.sleep(500);
-        }
+    private void createDrawForKO() throws InterruptedException {
+        navigate("#/tournamentdirector/overview", "Turnierleitung");
+        driver().findElement(By.linkText("Hier klicken")).click();
+        waitForText(1, "Phase");
+        Select select = new Select(driver().findElement(By.id("phase")));
+        select.selectByVisibleText("KO");
+
+        driver().findElement(By.id("automaticDraw")).click();
+        Thread.sleep(200);
+        driver().findElement(By.id("startKO")).click();
+
+        waitForText(1, "Mögliche Begegnungen");
     }
 
     private void enterResultsForKO() throws InterruptedException {
@@ -166,17 +194,14 @@ public class FullTournamentSeleniumTest {
         driver().findElement(By.linkText("KO Feld anzeigen")).click();
     }
 
-    private void createDrawForKO() throws InterruptedException {
-        navigate("#/tournamentdirector/overview", "Turnierleitung");
-        driver().findElement(By.linkText("Hier klicken")).click();
-        waitForText(1, "Phase");
-        Select select = new Select(driver().findElement(By.id("phase")));
-        select.selectByVisibleText("KO");
-
-        driver().findElement(By.id("automaticDraw")).click();
-        Thread.sleep(200);
-        driver().findElement(By.id("startKO")).click();
-
-        waitForText(1, "Mögliche Begegnungen");
+    private void enterResults(int size) throws InterruptedException {
+        for (int i = 0; i < size; i++) {
+            driver().findElement(By.linkText("Ergebnis...")).click();
+            waitForText(2, "Spieler 1");
+            driver().findElement(By.id("gameResult")).sendKeys("" + nextInt(0, 10) + " " + nextInt(0, 10) + " " + nextInt(0, 10));
+            Thread.sleep(500);
+            driver().findElement(By.id("btnOk")).click();
+            Thread.sleep(500);
+        }
     }
 }

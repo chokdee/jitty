@@ -1,15 +1,20 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.model.dto.GroupResultDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.client.HttpClientErrorException;
 
+import static com.jmelzer.jitty.rest.TestUtil.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
@@ -24,7 +29,7 @@ public class LiveViewControllerTest extends SecureResourceTest {
     @Test
     public void getStartedClasses() throws Exception {
         try {
-            HttpHeaders loginHeaders = doLogin();
+            doLogin();
 
             ResponseEntity<TournamentClassDTO[]> entity = http(HttpMethod.GET, "api/lifeview/started-classes",
                     createHttpEntity(null, loginHeaders), TournamentClassDTO[].class);
@@ -40,7 +45,7 @@ public class LiveViewControllerTest extends SecureResourceTest {
     @Test
     public void getGroups() throws Exception {
         try {
-            HttpHeaders loginHeaders = doLogin();
+            doLogin();
 
             ResponseEntity<GroupResultDTO[]> entity = http(HttpMethod.GET, "api/lifeview/groups?cid=2",
                     createHttpEntity(null, loginHeaders), GroupResultDTO[].class);

@@ -1,11 +1,16 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.rest;
 
 import org.junit.Test;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
+import static com.jmelzer.jitty.rest.TestUtil.*;
 import static junit.framework.TestCase.assertNull;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
@@ -87,7 +92,7 @@ public class SecurityIntegrationTest extends SecureResourceTest {
 
     @Test
     public void thatTokenCanBeUsedToAccessSecuredResource() {
-        HttpHeaders loginHeaders = doLogin();
+        doLogin();
 
         ResponseEntity<String> response = anonymous.exchange(
                 "http://localhost:9999/resource",
@@ -99,13 +104,13 @@ public class SecurityIntegrationTest extends SecureResourceTest {
     }
 
     private HttpEntity<?> createHttpEntity(HttpHeaders loginHeaders) {
-        return super.createHttpEntity(null, loginHeaders);
+        return TestUtil.createHttpEntity(null, loginHeaders);
     }
 
 
     @Test
     public void thatTokenCanBeUsedTwoTimesToAccessSecuredResource() {
-        HttpHeaders loginHeaders = doLogin();
+        doLogin();
 
         HttpEntity<?> httpEntity = createHttpEntity(loginHeaders);
 
@@ -131,7 +136,7 @@ public class SecurityIntegrationTest extends SecureResourceTest {
 
     @Test
     public void thatNewTokenCanBeUsedToAccessSecuredResource() {
-        HttpHeaders loginHeaders = doLogin();
+        doLogin();
 
         // first time everything is ok
         ResponseEntity<String> okResponse = anonymous.exchange(
@@ -155,7 +160,7 @@ public class SecurityIntegrationTest extends SecureResourceTest {
 
     @Test
     public void thatSecuredResourceIsInaccessibleAfterLogout() {
-        HttpHeaders loginHeaders = doLogin();
+        doLogin();
 
         // first time everything is ok
         ResponseEntity<String> okResponse = anonymous.exchange(

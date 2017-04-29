@@ -17,9 +17,9 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Date;
 
+import static com.jmelzer.jitty.rest.TestUtil.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-
 /**
  * Created by J. Melzer on 26.07.2016.
  * Test draw controller
@@ -31,13 +31,11 @@ public class SwissFlowControllerTest extends SecureResourceTest {
 
     static int TABLE_COUNT = 6;
 
-    HttpHeaders loginHeaders;
-
 
     @Test
     public void flow() throws Exception {
         try {
-            loginHeaders = doLogin();
+            doLogin();
 
             ResponseEntity<TournamentSingleGameDTO[]> possibleGamesEntity = null;
             int possibleGamesBeforeStartTest = 0;

@@ -1,18 +1,22 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.model.User;
 import com.jmelzer.jitty.model.dto.UserDTO;
 import org.junit.Test;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 
+import static com.jmelzer.jitty.rest.TestUtil.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-
 /**
  * Created by J. Melzer on 19.05.2016.
  * Test user controller
@@ -22,7 +26,7 @@ public class UserControllerTest extends SecureResourceTest {
     @Test
     public void testGetUserList() throws Exception {
         try {
-            HttpHeaders loginHeaders = doLogin();
+            doLogin();
 
             ResponseEntity<UserDTO[]> entity = http(HttpMethod.GET, "api/users",
                     createHttpEntity(null, loginHeaders), UserDTO[].class);
@@ -40,7 +44,7 @@ public class UserControllerTest extends SecureResourceTest {
     @Test
     public void testNewUser() throws Exception {
         try {
-            HttpHeaders loginHeaders = doLogin();
+            doLogin();
             ResponseEntity<String> okResponse = restTemplate.exchange(
                     "http://localhost:9999/resource",
                     HttpMethod.GET,
@@ -76,7 +80,7 @@ public class UserControllerTest extends SecureResourceTest {
     @Test
     public void testGetOne() throws Exception {
         try {
-            HttpHeaders loginHeaders = doLogin();
+            doLogin();
 
             ResponseEntity<UserDTO> entity = http(HttpMethod.GET, "api/users/1",
                     createHttpEntity(null, loginHeaders), UserDTO.class);
@@ -93,7 +97,7 @@ public class UserControllerTest extends SecureResourceTest {
     @Test
     public void testChangePw() throws Exception {
         try {
-            HttpHeaders loginHeaders = doLogin();
+            doLogin();
             ResponseEntity<String> okResponse = restTemplate.exchange(
                     "http://localhost:9999/resource",
                     HttpMethod.GET,

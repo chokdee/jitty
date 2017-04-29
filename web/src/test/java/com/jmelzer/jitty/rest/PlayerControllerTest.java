@@ -17,10 +17,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import static com.jmelzer.jitty.rest.TestUtil.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
-
 /**
  * Created by J. Melzer on 19.05.2016.
  * Test player controller
@@ -30,7 +30,7 @@ public class PlayerControllerTest extends SecureResourceTest {
 
     @Before
     public void before() {
-        loginHeaders = doLogin();
+        doLogin();
     }
     @Test
     public void testGetList() throws Exception {
@@ -84,7 +84,7 @@ public class PlayerControllerTest extends SecureResourceTest {
     public void testImport() throws Exception {
         try {
 
-            Long tId = createTournament("player import");
+            Long tId = createTournament("player import", 6, 1);
             //create a class
             TournamentClassDTO tournamentClass = createClz(tId, "Damen/Herren");
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);

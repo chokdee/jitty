@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.model.dto.*;
@@ -8,10 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static com.jmelzer.jitty.rest.TestUtil.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
@@ -28,13 +33,11 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
 
     static int TABLE_COUNT = 8;
 
-    HttpHeaders loginHeaders;
-
 
     @Test
     public void flow() throws Exception {
         try {
-            loginHeaders = doLogin();
+            doLogin();
 
             ResponseEntity<TournamentSingleGameDTO[]> possibleGamesEntity = null;
             int possibleGamesBeforeStartTest = 0;
@@ -263,51 +266,15 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
     }
 
     private Long createTournament() {
-        //create a tournament
-        TournamentDTO tournament = new TournamentDTO();
-        tournament.setName("Flowtest");
-        tournament.setTableCount(TABLE_COUNT);
-        tournament.setStartDate(new Date());
-        tournament.setEndDate(new Date());
-        ResponseEntity<Long> longEntitiy = http(HttpMethod.POST, "api/tournaments",
-                createHttpEntity(tournament, loginHeaders), Long.class);
-        assertTrue(longEntitiy.getStatusCode().is2xxSuccessful());
-        Long tId = longEntitiy.getBody();
-
-        http(HttpMethod.GET, "api/tournaments/actual/" + tId, createHttpEntity(tournament, loginHeaders), Void.class);
-        return tId;
+        return TestUtil.createTournament("Flowtest", TABLE_COUNT, 1);
     }
 
     private TournamentClassDTO createClz(Long tId) {
-        TournamentClassDTO tournamentClass = new TournamentClassDTO();
-        tournamentClass.setName(TC_NAME);
-        tournamentClass.setStartTTR(0);
-        tournamentClass.setEndTTR(3000);
-
-        ResponseEntity<Long> longEntitiy = http(HttpMethod.POST, "api/tournament-classes/" + tId,
-                createHttpEntity(tournamentClass, loginHeaders), Long.class);
-        assertTrue(longEntitiy.getStatusCode().is2xxSuccessful());
-        Long tClassId = longEntitiy.getBody();
-        assertNotNull(tClassId);
-
-        ResponseEntity<GroupPhaseDTO> phaseDTO = http(HttpMethod.GET, "api/draw/actual-phase?cid=" + tClassId,
-                createHttpEntity(null, loginHeaders), GroupPhaseDTO.class);
-
-        assertNull("still not drawed", phaseDTO.getBody());
-        //return fresh copy
-        return http(HttpMethod.GET, "api/tournament-classes/" + tClassId,
-                createHttpEntity(null, loginHeaders), TournamentClassDTO.class).getBody();
+        return TestUtil.createClz(tId, TC_NAME);
     }
 
     private void createPlayer(int i, TournamentClassDTO tournamentClass) {
-        TournamentPlayerDTO player = new TournamentPlayerDTO();
-        player.setFirstName(i + " aaaa");
-        player.setLastName(i + " bbbb");
-        player.setQttr(1660 + i);
-        player.addClass(tournamentClass);
-        ResponseEntity<Void> longEntitiy = http(HttpMethod.POST, "api/players",
-                createHttpEntity(player, loginHeaders), Void.class);
-        assertTrue(longEntitiy.getStatusCode().is2xxSuccessful());
+        TestUtil.createPlayer(i, tournamentClass);
     }
 
     private int addAndSaveResult(HttpHeaders loginHeaders, Long cid, TournamentSingleGameDTO[] runningGames) {

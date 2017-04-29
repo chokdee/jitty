@@ -1,9 +1,12 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.rest;
 
-import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.dto.TournamentDTO;
 import org.junit.Test;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +15,10 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Date;
 
+import static com.jmelzer.jitty.rest.TestUtil.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.*;
-
 /**
  * Created by J. Melzer on 19.05.2016.
  * Test user controller
@@ -25,7 +28,7 @@ public class TourmentControllerTest extends SecureResourceTest {
     @Test
     public void testGetList() throws Exception {
         try {
-            HttpHeaders loginHeaders = doLogin();
+            doLogin();
 
             ResponseEntity<TournamentDTO[]> entity = http(HttpMethod.GET, "api/tournaments",
                     createHttpEntity(null, loginHeaders), TournamentDTO[].class);
@@ -42,7 +45,7 @@ public class TourmentControllerTest extends SecureResourceTest {
     @Test
     public void testGetTournament() throws Exception {
         try {
-            HttpHeaders loginHeaders = doLogin();
+            doLogin();
 
             ResponseEntity<TournamentDTO> entity = http(HttpMethod.GET, "api/tournaments/2",
                     createHttpEntity(null, loginHeaders), TournamentDTO.class);
@@ -66,7 +69,7 @@ public class TourmentControllerTest extends SecureResourceTest {
 
             int size = jdbcTemplate.queryForObject("select count(*) from tournament ", Integer.class);
 
-            HttpHeaders loginHeaders = doLogin();
+            doLogin();
             ResponseEntity<String> okResponse = restTemplate.exchange(
                     "http://localhost:9999/resource",
                     HttpMethod.GET,
@@ -75,8 +78,9 @@ public class TourmentControllerTest extends SecureResourceTest {
 
             assertThat(okResponse.getStatusCode(), is(HttpStatus.OK));
 
-            Tournament tournament = new Tournament();
+            TournamentDTO tournament = new TournamentDTO();
             tournament.setName("dummy");
+            tournament.setType(1);
             tournament.setStartDate(new Date());
             tournament.setEndDate(new Date());
 
@@ -84,7 +88,8 @@ public class TourmentControllerTest extends SecureResourceTest {
                     createHttpEntity(tournament, okResponse.getHeaders()), Void.class);
 
             assertThat(entity.getStatusCode(), is(HttpStatus.OK));
-            assertThat(jdbcTemplate.queryForObject("select count(*) from tournament ", Integer.class), is(size + 1));
+            assertThat(jdbcTemplate.queryForObject("select count(*) from tournament ", Integer.class),
+                    is(size + 1));
 
         } catch (HttpClientErrorException e) {
             System.out.println(e.getResponseBodyAsString());
@@ -98,7 +103,7 @@ public class TourmentControllerTest extends SecureResourceTest {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             int tcc = jdbcTemplate.queryForObject("select count(*) from tournament_class where t_id = 2 ", Integer.class);
 
-            HttpHeaders loginHeaders = doLogin();
+            doLogin();
 
             ResponseEntity<TournamentDTO> entity = http(HttpMethod.GET, "api/tournaments/2",
                     createHttpEntity(null, loginHeaders), TournamentDTO.class);
