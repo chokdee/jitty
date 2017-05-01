@@ -7,6 +7,7 @@ package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.exceptions.IntegrityViolation;
 import com.jmelzer.jitty.model.PhaseCombination;
+import com.jmelzer.jitty.model.TournamentSystemType;
 import com.jmelzer.jitty.model.dto.*;
 import com.jmelzer.jitty.service.DrawGroupManager;
 import com.jmelzer.jitty.service.DrawKoFieldManager;
@@ -77,17 +78,50 @@ public class DrawController {
         return swissSystemManager.calcDraw(cid);
     }
 
-    @Path("/start-swiss-round")
-    @POST
+    @Path("/start-swiss-class")
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response startSwissRound(@QueryParam(value = "cid") String id, List<TournamentSingleGameDTO> games) {
+    public Response startSwissRound(@QueryParam(value = "cid") String id) {
         try {
-            swissSystemManager.startClass(Long.valueOf(id), games);
+            swissSystemManager.startClass(Long.valueOf(id));
         } catch (IntegrityViolation integrityViolation) {
-            LOG.warn("not possible to start the class {} error message is '{}'", id, integrityViolation.getMessage());
+            LOG.warn("not possible to start the class {}, error message is '{}' ", id, integrityViolation.getMessage());
             return ControllerUtil.buildErrorResponse(integrityViolation.getMessage());
         }
         return Response.ok().build();
+    }
+
+    @Path("/create-next-swiss-round-if-necessary")
+    @GET
+    public Response createtNextSwissRoundIfNecessary(@QueryParam(value = "cid") String id, @QueryParam(value = "round") String sRound) {
+        try {
+            return Response.ok(swissSystemManager.createtNextSwissRoundIfNecessary(Long.valueOf(id), Integer.valueOf(sRound))).build();
+        } catch (IntegrityViolation integrityViolation) {
+            LOG.warn("not possible to create next round {} for class {} error message is '{}'", sRound, id, integrityViolation.getMessage());
+            return ControllerUtil.buildErrorResponse(integrityViolation.getMessage());
+        }
+    }
+
+    @Path("/start-swiss-round")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response startSwissRound(
+            @QueryParam(value = "cid") String id,
+            @QueryParam(value = "round") String sRound,
+            List<TournamentSingleGameDTO> games) {
+        try {
+            swissSystemManager.startRound(Long.valueOf(id), Integer.valueOf(sRound), games);
+        } catch (IntegrityViolation integrityViolation) {
+            LOG.warn("not possible to start the round {} for class {} error message is '{}'", sRound, id, integrityViolation.getMessage());
+            return ControllerUtil.buildErrorResponse(integrityViolation.getMessage());
+        }
+        return Response.ok().build();
+    }
+
+    @Path("/swiss-round")
+    @GET
+    public int round(@QueryParam(value = "cid") String id) {
+        return swissSystemManager.getRoundNr(Long.valueOf(id));
     }
 
     @Path("/possible-player-for-kofield")
@@ -97,6 +131,7 @@ public class DrawController {
         return drawKoFieldManager.getPossiblePlayerForKOField(Long.valueOf(id));
 
     }
+
 
     @Path("/calc-ko-size")
     @GET
@@ -109,8 +144,28 @@ public class DrawController {
     @Path("/start")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response start(@QueryParam(value = "cid") String id) {
-        drawGroupManager.startClass(Long.valueOf(id));
+    public Response start(@QueryParam(value = "cid") String sid) {
+        Long id = Long.valueOf(sid);
+        TournamentClassDTO tc = tournamentService.findOneClass(id);
+        TournamentSystemType stype = TournamentSystemType.enumOf(tc.getSystemType());
+        try {
+            assert stype != null;
+
+            switch (stype) {
+                case GK:
+                    drawGroupManager.startClass(id);
+                    break;
+                case AC:
+                    swissSystemManager.startClass(id);
+                    break;
+                default:
+                    throw new IntegrityViolation("unkown type " + stype);
+
+            }
+        } catch (IntegrityViolation integrityViolation) {
+            LOG.warn("not possible to start the class {} error message is '{}'", id, integrityViolation.getMessage());
+            return ControllerUtil.buildErrorResponse(integrityViolation.getMessage());
+        }
         return Response.ok().build();
     }
 
@@ -147,7 +202,7 @@ public class DrawController {
     @Path("/swiss/calc-ranking-first-round")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<TournamentPlayerDTO>  calcRankingFirstRound(List<TournamentPlayerDTO> players) {
+    public List<TournamentPlayerDTO> calcRankingFirstRound(List<TournamentPlayerDTO> players) {
         return swissSystemManager.calcRankingFirstRound(players);
 
     }

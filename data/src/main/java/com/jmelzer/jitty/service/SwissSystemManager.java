@@ -9,6 +9,7 @@ import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.exceptions.IntegrityViolation;
 import com.jmelzer.jitty.model.*;
+import com.jmelzer.jitty.model.dto.TournamentClassStatus;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
 import org.slf4j.Logger;
@@ -200,26 +201,44 @@ public class SwissSystemManager {
     }
 
     @Transactional
-    public void startClass(Long id, List<TournamentSingleGameDTO> games) throws IntegrityViolation {
-        if (games.isEmpty()) {
-            throw new IntegrityViolation("Anzahl der Spiele sind 0");
-        }
-        //todo how to prevent duplicate rounds?
-//        tournamentService.selectPhaseCombination(id, PhaseCombination.SWS);
+    public void startClass(Long id) throws IntegrityViolation {
+
         TournamentClass clz = tcRepository.findOne(id);
         if (clz.getActivePhase() == null) {
             tournamentService.selectPhaseCombination(id, PhaseCombination.SWS);
-        } else {
-            System.out.println("start .getRound() = " + (((SwissSystemPhase) clz.getActivePhase()).getRound()));
+        }
+        if (clz.getRunning() != null && clz.getRunning()) {
+            throw new IntegrityViolation("Die Klasse wurde bereits gestartet");
         }
         clz.setStartTime(new Date());
         clz.setRunning(true);
-        SwissSystemPhase swissSystemPhase = (SwissSystemPhase) clz.getActivePhase();
-        swissSystemPhase.setRound(swissSystemPhase.getRound() + 1);
-        LOG.info("Class " + clz.getName() + " was started.");
-        System.out.println("before save getRound() = " + swissSystemPhase.getRound());
+        LOG.info("started swiss class {}", id);
         clz = tcRepository.saveAndFlush(clz);
-        System.out.println("after save .getRound() = " + (((SwissSystemPhase) clz.getActivePhase()).getRound()));
+
+        assert clz.getActivePhase() != null;
+    }
+
+    @Transactional(readOnly = true)
+    public int getRoundNr(Long id) {
+        TournamentClass clz = tcRepository.findOne(id);
+        SwissSystemPhase swissSystemPhase = (SwissSystemPhase) clz.getActivePhase();
+        return swissSystemPhase.getRound();
+    }
+
+    @Transactional
+    public void startRound(long classId, int round, List<TournamentSingleGameDTO> games) throws IntegrityViolation {
+        if (games.isEmpty()) {
+            throw new IntegrityViolation("Anzahl der Spiele sind 0");
+        }
+        TournamentClass clz = tcRepository.findOne(classId);
+        createtNextSwissRoundIfNecessary(classId, round);
+
+
+        SwissSystemPhase swissSystemPhase = (SwissSystemPhase) clz.getActivePhase();
+        swissSystemPhase.setRound(round);
+        LOG.info("Started Round #{}", round);
+        clz = tcRepository.saveAndFlush(clz);
+
         List<TournamentSingleGame> pGames = copy(games, clz.getName(), clz.getTournament().getId());
         for (int i = 0; i < games.size(); i++) {
             TournamentSingleGame pGame = pGames.get(i);
@@ -230,6 +249,38 @@ public class SwissSystemManager {
         }
 
         queueManager.addAll(pGames);
+
+    }
+
+    @Transactional
+    public int createtNextSwissRoundIfNecessary(Long cid, int actualRound) throws IntegrityViolation {
+        TournamentClass clz = tcRepository.findOne(cid);
+
+        if (clz.calcStatus() == TournamentClassStatus.FINISHED) {
+            throw new IntegrityViolation("Die Turnierklasse ist abgeschlossen");
+        }
+
+        SwissSystemPhase activePhase = (SwissSystemPhase) clz.getActivePhase();
+        if (activePhase.isFinished()) {
+            int pc = clz.getPhaseCount();
+            //don't create more than necessary
+            if (pc < actualRound + 1) {
+                SwissSystemPhase phase = new SwissSystemPhase("Runde " + (actualRound + 1));
+                clz.addPhase(phase);
+                clz.setActivePhaseNo(actualRound);
+                phase.setRound(actualRound + 1);
+
+                LOG.info("created Round #{}", (actualRound + 1));
+
+                tcRepository.saveAndFlush(clz);
+                return phase.getRound();
+            }
+
+
+        }
+
+
+        return activePhase.getRound();
     }
 
     @Transactional
@@ -285,7 +336,7 @@ public class SwissSystemManager {
             calcRankingFirstRound(player);
         }
 
-        //rankking of player
+        //calculate parameter for ranking of the player
         for (TournamentPlayerDTO playerDTO : player) {
             playerDTO.calcWinningGames();
         }
@@ -296,7 +347,7 @@ public class SwissSystemManager {
             playerDTO.calcFeinBuchholz(player);
         }
 
-        //tod add sorting for different Verbaende
+        //todo add sorting for different Verbaende
         if (stype == TournamentSystemType.AC) {
             WTTVCupSorter.sort(player);
         } else {

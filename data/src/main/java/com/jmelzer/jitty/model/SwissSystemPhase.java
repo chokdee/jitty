@@ -34,6 +34,14 @@ public class SwissSystemPhase extends Phase {
         group = new TournamentGroup(name);
     }
 
+    public int getMaxRounds() {
+        return maxRounds;
+    }
+
+    public void setMaxRounds(int maxRounds) {
+        this.maxRounds = maxRounds;
+    }
+
     public TournamentGroup getGroup() {
         return group;
     }
@@ -69,11 +77,29 @@ public class SwissSystemPhase extends Phase {
     @Override
     public boolean isFinished() {
         List<TournamentSingleGame> games = group.getGames();
+        if (games.size() == 0) {
+            return false;
+        }
+
         for (TournamentSingleGame game : games) {
             if (!game.isFinished()) {
                 return false;
             }
         }
         return true;
+    }
+
+    public boolean hasRunningGames() {
+        List<TournamentSingleGame> games = group.getGames();
+        for (TournamentSingleGame game : games) {
+            if (game.isCalled()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isLastPhase() {
+        return maxRounds == round;
     }
 }

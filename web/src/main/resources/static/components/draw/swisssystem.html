@@ -9,8 +9,10 @@
     </div>
 
     <hr/>
-    <pre>{{'Runde ' + tournamentClass.system.phases[0].round}}</pre>
+    <pre>{{'Runde ' + roundNr}}</pre>
+    <pre>{{'player:'}}{{gridPlayerList.data}}</pre>
     <div class="row">
+        <!--todo get the user feedback-->
         <a id="automaticDraw" class="btn btn-primary" ng-click="swissDraw()">Auslosung</a>
         <a id="start" class="btn btn-primary" ng-click="startSwissRound()">Starten...</a>
     </div>

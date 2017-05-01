@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
@@ -46,7 +51,6 @@ public class TournamentSystem {
     }
 
     public void addPhase(Phase phase) {
-        if (phases.size()==2) throw new RuntimeException("to much pahses");
         phases.add(phase);
         phase.setSystem(this);
     }

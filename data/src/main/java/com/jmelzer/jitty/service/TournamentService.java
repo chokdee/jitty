@@ -606,9 +606,18 @@ public class TournamentService {
         List<TournamentClass> clzs = tcRepository.findByTournamentAndRunning(t, true);
         List<Long> ids = new ArrayList<>();
         for (TournamentClass clz : clzs) {
-            boolean b = isPhase1FinishedAndPhase2NotStarted(clz);
-            if (b) {
-                ids.add(clz.getId());
+            if (clz.getActivePhase() instanceof SwissSystemPhase) {
+                SwissSystemPhase sPhase = (SwissSystemPhase) clz.getActivePhase();
+
+                if (!sPhase.isLastPhase() && sPhase.isFinished()) {
+                    ids.add(clz.getId());
+                }
+            } else {
+
+                boolean b = isPhase1FinishedAndPhase2NotStarted(clz);
+                if (b) {
+                    ids.add(clz.getId());
+                }
             }
         }
         return ids.toArray(new Long[ids.size()]);
@@ -719,9 +728,6 @@ public class TournamentService {
             return;
         }
         TournamentClass tc = tcRepository.findOne(tcId);
-//        if (tc.getActivePhase() != null) { //todo must be overridden
-//            return;
-//        }
         tc.createPhaseCombination(phaseCombination);
         tc.setActivePhaseNo(0);
         tcRepository.saveAndFlush(tc);

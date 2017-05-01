@@ -19,7 +19,9 @@ import java.util.Date;
 
 import static com.jmelzer.jitty.rest.TestUtil.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
+
 /**
  * Created by J. Melzer on 26.07.2016.
  * Test draw controller
@@ -58,12 +60,19 @@ public class SwissFlowControllerTest extends SecureResourceTest {
             for (int i = 0; i < PLAYERSIZE; i++) {
                 createPlayer(i, tournamentClass);
             }
-            ResponseEntity<Void> voidEntity = http(HttpMethod.GET, "api/draw/select-phase-combination?cid=" + tClassId + "&type=5",
-                    createHttpEntity(null, loginHeaders), Void.class);
+
+            //start the class
+            ResponseEntity<Void> voidEntity = http(HttpMethod.GET, "api/draw/start-swiss-class?cid=" + tClassId, createHttpEntity(null, loginHeaders), Void.class);
             assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+
+//            http(HttpMethod.GET, "api/draw/select-phase-combination?cid=" + tClassId + "&type=5",
+//                    createHttpEntity(null, loginHeaders), Void.class);
+//            assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
 
             ResponseEntity<SwissSystemPhaseDTO> phaseEntity = http(HttpMethod.GET, "api/draw/actual-phase?cid=" + tClassId,
                     createHttpEntity(null, loginHeaders), SwissSystemPhaseDTO.class);
+            assertTrue(phaseEntity.getStatusCode().is2xxSuccessful());
+            assertThat(phaseEntity.getBody(), is(notNullValue()));
 
             ResponseEntity<TournamentPlayerDTO[]> psEntity = http(HttpMethod.GET, "api/draw/possible-player-swiss-system?cid=" + tClassId,
                     createHttpEntity(null, loginHeaders), TournamentPlayerDTO[].class);
@@ -80,13 +89,16 @@ public class SwissFlowControllerTest extends SecureResourceTest {
             for (int i = 1; i <= 6; i++) {
                 System.out.println("####################    start round " + (i) + " ####################");
 
-                ResponseEntity<TournamentClassDTO> tcE = http(HttpMethod.GET, "api/tournament-classes/" + tClassId,
-                        createHttpEntity(null, loginHeaders), TournamentClassDTO.class);
-                assertThat(((SwissSystemPhaseDTO) (tcE.getBody().getSystem().getPhases().get(0))).getRound(), is(i));
 
-                voidEntity = http(HttpMethod.POST, "api/draw/start-swiss-round?cid=" + tClassId,
+                //start the first round
+                voidEntity = http(HttpMethod.POST, "api/draw/start-swiss-round?cid=" + tClassId + "&round=" + i,
                         createHttpEntity(gamesEntity.getBody(), loginHeaders), Void.class);
                 assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+
+                ResponseEntity<Integer> intE = http(HttpMethod.GET, "api/draw/swiss-round?cid=" + tClassId,
+                        createHttpEntity(null, loginHeaders), Integer.class);
+
+                assertThat(intE.getBody(), is(i));
 
                 assertThat(jdbcTemplate.queryForObject("select count(*) from tournament_group where id = " + phaseEntity.getBody().getGroup().getId(), Integer.class), is(1));
 

@@ -1,4 +1,9 @@
 
+<!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
 <h3>Bitte zunächst eine Klasse auswählen</h3>
 
 <table class="table usertable">
@@ -20,12 +25,12 @@
     </thead>
     <tbody>
     <tr ng-repeat="c in possibleClasses">
-        <td><a href="#/draw/{{c.id}}">{{c.name}}</a></td>
+        <td><a ng-click="selectClass(c)">{{c.name}}</a></td>
         <td>{{c.startTime | date:'dd.MM.yyyy hh:mm' }}</td>
         <td>{{translateStatus(c.status)}}</td>
         <td>
             <!--<a ng-show="!c.confirm" class="btn btn-primary" href="#/draw/{{c.id}}">Auswählen</a>-->
-            <a class="btn btn-primary" confirm="{{c.confirmMsg}}" confirm-if="c.confirm" ng-click="selectClass(c.id)">Auslosung...</a>
+            <a class="btn btn-primary" confirm="{{c.confirmMsg}}" confirm-if="c.confirm" ng-click="selectClass(c)">Auslosung...</a>
             <a class="btn btn-primary" href="#/groups/{{c.id}}">Ergebnisse...</a>
         </td>
     </tr>

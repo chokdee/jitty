@@ -1,3 +1,8 @@
+<!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
 <script type="text/ng-template" id="myModalContent.html">
     <div class="modal-header">
         <h3 class="modal-title">Ergebnis eingeben</h3>
@@ -69,6 +74,7 @@
     </div>
     <div class="row" ng-show="finishedTC" style="font-size: medium">
         <pr>Es gibt eine Klasse zum Auslosen.</pr>
+        <!--workorund for refresh in draw view-->
         <a href="{{'/#/draw/' + finishedTC}}">Hier klicken</a>
         <br/>
     </div>

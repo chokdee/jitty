@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static com.jmelzer.jitty.model.dto.TournamentClassStatus.SWISS_PHASE_RUNNING;
+
 /**
  * Created by J. Melzer on 01.06.2016.
  * Turnier-Klasse
@@ -254,9 +256,13 @@ public class TournamentClass {
         if (finished()) {
             return TournamentClassStatus.FINISHED;
         }
+
         if (!getRunning()) {
             return TournamentClassStatus.NOTSTARTED;
         } else {
+            if (getActivePhase() instanceof SwissSystemPhase) {
+                return SWISS_PHASE_RUNNING;
+            }
             boolean hasResults = getActivePhase().areGamesPlayed();
             if (getActivePhaseNo() == 0) {
                 if (hasResults) {
@@ -279,7 +285,15 @@ public class TournamentClass {
     }
 
     private boolean finished() {
-        return (getActivePhaseNo() == getPhaseCount() - 1) && getActivePhase().isFinished();
+        if (getActivePhase() instanceof SwissSystemPhase) {
+            SwissSystemPhase sp = (SwissSystemPhase) getActivePhase();
+            if (sp.getRound() >= sp.getMaxRounds()) {
+                return true;
+            }
+            return false;
+        } else {
+            return (getActivePhaseNo() == getPhaseCount() - 1) && getActivePhase().isFinished();
+        }
     }
 
     public int getPhaseCount() {
@@ -344,7 +358,7 @@ public class TournamentClass {
                 system.addPhase(new KOPhase());
                 break;
             case SWS:
-                system.addPhase(new SwissSystemPhase("A"));
+                system.addPhase(new SwissSystemPhase("Runde 1"));
                 break;
             default:
                 throw new UnsupportedOperationException("not yet implemented");
@@ -362,5 +376,9 @@ public class TournamentClass {
         } else {
             return null;
         }
+    }
+
+    public void addPhase(Phase phase) {
+        system.addPhase(phase);
     }
 }
