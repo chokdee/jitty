@@ -46,6 +46,13 @@ public class TournamentSystem {
         this.id = id;
     }
 
+    public Phase getPhase(int idx) {
+        if (idx < 0 || idx >= phases.size()) {
+            return null;
+        }
+        return phases.get(idx);
+    }
+
     public List<Phase> getPhases() {
         return Collections.unmodifiableList(phases);
     }

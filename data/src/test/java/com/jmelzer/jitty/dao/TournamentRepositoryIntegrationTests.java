@@ -1,17 +1,6 @@
 /*
- * Copyright 2012-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (c) 2017.
+ * J. Melzer
  */
 package com.jmelzer.jitty.dao;
 
@@ -74,10 +63,12 @@ public class TournamentRepositoryIntegrationTests {
 
         TournamentClass tournamentClass = new TournamentClass();
         tournamentClass.setName("A-Klasse bis 3000 TTR");
+        tournamentClass.setSystemType(TournamentSystemType.GK.getValue());
         tournament.addClass(tournamentClass);
         tournamentClass.createPhaseCombination(PhaseCombination.GK);
         TournamentClass tournamentClass2 = new TournamentClass();
         tournamentClass2.setName("B-Klasse bis 1800 TTR");
+        tournamentClass2.setSystemType(TournamentSystemType.GK.getValue());
         tournamentClass2.createPhaseCombination(PhaseCombination.GK);
         tournament.addClass(tournamentClass2);
 

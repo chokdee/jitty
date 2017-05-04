@@ -5,6 +5,7 @@
 
 package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.model.TournamentSystemType;
 import com.jmelzer.jitty.model.dto.GroupPhaseDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentDTO;
@@ -95,11 +96,12 @@ public class TestUtil {
         }
     }
 
-    public static TournamentClassDTO createClz(Long tId, String name) {
+    public static TournamentClassDTO createClz(Long tId, String name, TournamentSystemType systemType) {
         TournamentClassDTO tournamentClass = new TournamentClassDTO();
         tournamentClass.setName(name);
         tournamentClass.setStartTTR(0);
         tournamentClass.setEndTTR(3000);
+        tournamentClass.setSystemType(systemType.getValue());
 
         ResponseEntity<Long> longEntitiy = http(HttpMethod.POST, "api/tournament-classes/" + tId,
                 createHttpEntity(tournamentClass, loginHeaders), Long.class);

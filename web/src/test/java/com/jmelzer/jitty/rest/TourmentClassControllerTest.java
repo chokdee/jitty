@@ -5,6 +5,7 @@
 
 package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.model.TournamentSystemType;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import org.junit.Rule;
 import org.junit.Test;
@@ -86,6 +87,7 @@ public class TourmentClassControllerTest extends SecureResourceTest {
             tournamentClass.setName("dummy");
             tournamentClass.setStartTTR(0);
             tournamentClass.setEndTTR(1000);
+            tournamentClass.setSystemType(TournamentSystemType.GK.getValue());
 
             ResponseEntity<Void> entity = http(HttpMethod.POST, "api/tournament-classes/" + id,
                     createHttpEntity(tournamentClass, okResponse.getHeaders()), Void.class);

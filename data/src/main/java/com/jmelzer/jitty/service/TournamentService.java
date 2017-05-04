@@ -131,14 +131,14 @@ public class TournamentService {
         switch (dto.getType()) {
             case 1:
                 //todo add double and women and child classes
-                tournament.addClass(createTC("A-Klasse", 0, 3000));
-                tournament.addClass(createTC("B-Klasse", 0, 1800));
-                tournament.addClass(createTC("C-Klasse", 0, 1600));
-                tournament.addClass(createTC("D-Klasse", 0, 1400));
-                tournament.addClass(createTC("E-Klasse", 0, 1200));
+                tournament.addClass(createTC("A-Klasse", 0, 3000, TournamentSystemType.GK));
+                tournament.addClass(createTC("B-Klasse", 0, 1800, TournamentSystemType.GK));
+                tournament.addClass(createTC("C-Klasse", 0, 1600, TournamentSystemType.GK));
+                tournament.addClass(createTC("D-Klasse", 0, 1400, TournamentSystemType.GK));
+                tournament.addClass(createTC("E-Klasse", 0, 1200, TournamentSystemType.GK));
                 break;
             case 2:
-                tournament.addClass(createTC("Cup-Klasse", 0, 3000));
+                tournament.addClass(createTC("Cup-Klasse", 0, 3000, TournamentSystemType.AC));
                 break;
             default:
                 break;
@@ -149,10 +149,11 @@ public class TournamentService {
         return t;
     }
 
-    private TournamentClass createTC(String name, int startTTR, int endTTR) {
+    private TournamentClass createTC(String name, int startTTR, int endTTR, TournamentSystemType systemType) {
         TournamentClass tc = new TournamentClass(name);
         tc.setStartTTR(startTTR);
         tc.setEndTTR(endTTR);
+        tc.setSystemType(systemType.getValue());
         return tc;
     }
 

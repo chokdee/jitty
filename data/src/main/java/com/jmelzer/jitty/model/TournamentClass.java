@@ -41,7 +41,7 @@ public class TournamentClass {
     /**
      * see @TournamentSystemType
      */
-    @Column(name = "SYSTEM_TYPE")
+    @Column(name = "SYSTEM_TYPE", nullable = false)
     Integer systemType;
 
     //type (Einzel / Doppem / Mixed)
@@ -309,7 +309,7 @@ public class TournamentClass {
             return null;
         }
 
-        return getSystem().getPhases().get(activePhaseNo);
+        return getSystem().getPhase(activePhaseNo);
     }
 
     public int getActivePhaseNo() {

@@ -252,6 +252,14 @@ public class SwissSystemManager {
 
     }
 
+    /**
+     * create the next round object if the actual round is finished
+     *
+     * @param cid         class id
+     * @param actualRound actual round number
+     * @return # of actual active round
+     * @throws IntegrityViolation if error
+     */
     @Transactional
     public int createtNextSwissRoundIfNecessary(Long cid, int actualRound) throws IntegrityViolation {
         TournamentClass clz = tcRepository.findOne(cid);
@@ -267,19 +275,18 @@ public class SwissSystemManager {
             if (pc < actualRound + 1) {
                 SwissSystemPhase phase = new SwissSystemPhase("Runde " + (actualRound + 1));
                 clz.addPhase(phase);
-                clz.setActivePhaseNo(actualRound);
+                clz.setActivePhaseNo(actualRound - 1); //zero based
                 phase.setRound(actualRound + 1);
 
                 LOG.info("created Round #{}", (actualRound + 1));
 
                 tcRepository.saveAndFlush(clz);
-                return phase.getRound();
             }
 
 
         }
 
-
+        activePhase = (SwissSystemPhase) clz.getActivePhase();
         return activePhase.getRound();
     }
 

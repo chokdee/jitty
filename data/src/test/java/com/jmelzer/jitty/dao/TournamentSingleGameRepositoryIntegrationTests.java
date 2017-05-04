@@ -4,10 +4,7 @@
  */
 package com.jmelzer.jitty.dao;
 
-import com.jmelzer.jitty.model.PhaseCombination;
-import com.jmelzer.jitty.model.TournamentClass;
-import com.jmelzer.jitty.model.TournamentGroup;
-import com.jmelzer.jitty.model.TournamentSingleGame;
+import com.jmelzer.jitty.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,11 +46,13 @@ public class TournamentSingleGameRepositoryIntegrationTests {
     public void testSave() {
 
         TournamentClass tournamentClass = new TournamentClass("test");
+        tournamentClass.setSystemType(TournamentSystemType.GK.getValue());
         tournamentClassRepository.save(tournamentClass);
         assertNotNull(tournamentClass.getId());
 
         tournamentClass.createPhaseCombination(PhaseCombination.GK);
         tournamentClass.setActivePhaseNo(0);
+        tournamentClass.setSystemType(TournamentSystemType.GK.getValue());
         TournamentGroup group = new TournamentGroup("1");
         tournamentClass.addGroup(group);
 
@@ -97,6 +96,7 @@ public class TournamentSingleGameRepositoryIntegrationTests {
         TournamentClass clz = tournamentClassRepository.findOne(1L);
         clz.createPhaseCombination(PhaseCombination.GK);
         clz.setActivePhaseNo(0);
+        clz.setSystemType(TournamentSystemType.GK.getValue());
         TournamentGroup group = new TournamentGroup("1");
         clz.addGroup(group);
 

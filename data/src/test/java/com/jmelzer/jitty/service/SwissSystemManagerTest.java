@@ -253,11 +253,11 @@ public class SwissSystemManagerTest {
 
         game.setWinner(1);
 
-        assertEquals(2, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
+        assertEquals(1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
         assertThat(tc.getPhaseCount(), is(2));
 
         //called it twice, shall be the same result
-        assertEquals(2, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
+        assertEquals(1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
         assertThat(tc.getPhaseCount(), is(2));
 
         for (int i = 2; i <= 6; i++) {
@@ -266,7 +266,7 @@ public class SwissSystemManagerTest {
             game = new TournamentSingleGame();
             activePhase.getGroup().addGame(game);
             try {
-                assertEquals("games are not finished", i, swissSystemManager.createtNextSwissRoundIfNecessary(1L, i));
+                assertEquals("games are not finished", i - 1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, i));
             } catch (IntegrityViolation integrityViolation) {
                 if (i != 6) {
                     fail();
@@ -276,7 +276,7 @@ public class SwissSystemManagerTest {
 
             game.setWinner(1);
 
-            assertEquals(i + 1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, i));
+            assertEquals(i, swissSystemManager.createtNextSwissRoundIfNecessary(1L, i));
             assertThat(tc.getPhaseCount(), is(i + 1));
         }
 

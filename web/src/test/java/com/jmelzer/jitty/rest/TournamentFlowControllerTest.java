@@ -5,6 +5,7 @@
 
 package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.model.TournamentSystemType;
 import com.jmelzer.jitty.model.dto.*;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
@@ -270,7 +271,7 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
     }
 
     private TournamentClassDTO createClz(Long tId) {
-        return TestUtil.createClz(tId, TC_NAME);
+        return TestUtil.createClz(tId, TC_NAME, TournamentSystemType.GK);
     }
 
     private void createPlayer(int i, TournamentClassDTO tournamentClass) {
