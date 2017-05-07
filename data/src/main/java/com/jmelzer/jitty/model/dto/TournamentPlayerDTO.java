@@ -62,6 +62,10 @@ public class TournamentPlayerDTO {
 
     private int feinBuchholzZahl;
 
+    private Boolean suspended;
+
+    private String suspendedText;
+
     public TournamentPlayerDTO() {
     }
 
@@ -359,6 +363,11 @@ public class TournamentPlayerDTO {
         return feinBuchholzZahl;
     }
 
+
+    public Boolean getSuspended() {
+        return suspended;
+    }
+
     public int resultAgainst(TournamentPlayerDTO p2) {
         for (TournamentSingleGameDTO playedGame : playedGames) {
             if (playedGame.getPlayer1().getId().equals(p2.getId())) {
@@ -377,5 +386,21 @@ public class TournamentPlayerDTO {
             }
         }
         return 0;
+    }
+
+    public boolean isSuspended() {
+        return suspended != null && suspended;
+    }
+
+    public void setSuspended(Boolean suspended) {
+        this.suspended = suspended;
+    }
+
+    public String getSuspendedText() {
+        return suspendedText;
+    }
+
+    public void setSuspendedText(String suspendedText) {
+        this.suspendedText = suspendedText;
     }
 }

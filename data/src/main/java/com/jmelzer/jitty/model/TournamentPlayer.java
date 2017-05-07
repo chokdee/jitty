@@ -67,6 +67,9 @@ public class TournamentPlayer {
     @Column(name = "last_game_at")
     private Date lastGameAt;
 
+    @Column
+    private Boolean suspended = false;
+
     @ManyToMany(cascade = CascadeType.DETACH)
     @JoinTable(name = "GAME_TO_PLAYER",
             joinColumns = @JoinColumn(name = "GAME_ID", referencedColumnName = "ID"),
@@ -268,5 +271,13 @@ public class TournamentPlayer {
 
     public void removeAllTournaments() {
         tournaments.clear();
+    }
+
+    public Boolean getSuspended() {
+        return suspended;
+    }
+
+    public void setSuspended(Boolean suspended) {
+        this.suspended = suspended;
     }
 }

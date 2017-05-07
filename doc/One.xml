@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
+<!DOCTYPE tournament SYSTEM "http://liga.nu/dtd/TournamentPortal.dtd">
+<tournament end-date="2017-03-12" multiple-participations-same-day="false" winning-sets="3" multiple-participations-same-time="false" start-date="2017-03-12" name="andro WTTV-Cup" table-count="6" tournament-id="lxnfy8egjpKwukE9myqZarSPxduPRXbs">
+
+    <tournament-location/>
+
+    <tournament-location city="Sankt Augustin" zip-code="53757 " name="Sporthalle Sportzentrum Menden-Süd" street="Siegstrasse 119"/>
+
+
+    <competition start-date="2017-03-12 12:00" age-group="Damen/Herren" age-from="2017" max-persons="12" sex="gemischt" age-to="1897" type="Einzel" entry-fee="7.0" preliminary-round-playmode="Schweizer System">
+        <players>
+
+            <player type="single" id="PLAYER1">
+                <person licence-nr="156012528" lastname="Beitel3" club-name="TTG St. Augustin" sex="0" ttr-match-count="6" region="Mittelrhein" club-federation-nickname="WTTV" ttr="848" internal-nr="NU1891464" foreigner-eq-state="false" firstname="Annett" nationality="DE" club-nr="156012" birthyear="1979" sub-region="Rhein-Sieg"/>
+
+            </player>
+
+        </players>
+    </competition>
+
+</tournament>

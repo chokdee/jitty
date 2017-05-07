@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 .usertable tr td:nth-child(2) {
     width: 250px;
 }
@@ -571,4 +576,8 @@ ul#result li {
     padding-top: 20px;
     /* Set the fixed height of the footer here */
     height: 25px;
+}
+
+.suspended-row {
+    background-color: #ff0000 !important;
 }

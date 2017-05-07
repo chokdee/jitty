@@ -20,12 +20,12 @@
                 </div>
             </div>
             <br>
-            <!--<pre>{{sets}}</pre>-->
+            <!--<pre>Ergebnis: {{gameResult.sets}}</pre>-->
             <div class="row">
                 <div class="col-md-3">
                     <span style="font-weight: bold">Spieler 1: </span><span>{{game.player1.fullName}}</span>
                 </div>
-                <div ng-repeat="g in sets" class="col-md-1">
+                <div ng-repeat="g in gameResult.sets" class="col-md-1">
                     <span>{{g.points1}}</span>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                 <div class="col-md-3">
                     <span style="font-weight: bold">Spieler 2: </span><span>{{game.player2.fullName}}</span>
                 </div>
-                <div ng-repeat="g in sets" class="col-md-1">
+                <div ng-repeat="g in gameResult.sets" class="col-md-1">
                     <span>{{g.points2}}</span>
                 </div>
             </div>
@@ -54,12 +54,10 @@
                         <br>
                         <input id="winbydefault" type="checkbox" ng-model="gameResult.winByDefault" name="winbydefault"/> Kampflos
                         <br>
-                        <pre>{{gameResult.winByDefault}}</pre>
+                        <!--<pre>{{gameResult.winByDefault}}</pre>-->
                         <select id="select-win" ng-show="gameResult.winByDefault"
                                 ng-options="item as item.label for item in winReasons track by item.id"
                                 ng-model="gameResult.winReason">
-                            <!--<option value="1">Spieler 1 hat aufgegeben</option>-->
-                            <!--<option value="2">Spieler 2 hat aufgegeben</option>-->
                         </select>
                     </div>
                 </div>

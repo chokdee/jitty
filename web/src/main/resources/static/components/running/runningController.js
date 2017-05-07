@@ -346,7 +346,7 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         return gameset;
     }
 
-    $scope.$watch('gameResult.sets', function () {
+    $scope.$watch('sets', function () {
         var res = $scope.sets.split(" ");
             var arrayLength = res.length;
             var sets = [];

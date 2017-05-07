@@ -138,7 +138,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 if ($scope.tournamentClass.running) {
                     $scope.templateurl = 'components/draw/bracket.html';
                 }
-            if ($scope.tournamentClass.system !== null && $scope.tournamentClass.system.phases !== null) {
+            if ($scope.tournamentClass.system !== undefined && $scope.tournamentClass.system.phases !== null) {
                     for (i = 0; i < $scope.tournamentClass.system.phases.length; i++) {
                         if ($scope.tournamentClass.activePhaseNo === i) {
                             $scope.selectedPhase = $scope.tournamentClass.system.phases[i];
@@ -188,11 +188,6 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
         $scope.playerColumns = [
             {
-                field: 'id',
-                maxWidth: 0,
-                displayName: 'ID',
-                cellTemplate: '<div class="ui-grid-cell-contents" id="{{ COL_FIELD }}">{{ COL_FIELD }}</div>'
-            }, {
                 field: 'fullName',
                 maxWidth: 150,
                 displayName: 'Name',
@@ -210,11 +205,16 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 displayName: 'Buchholz',
             }
         ];
-        $scope.gridPlayerList = {
+    $scope.title = "I 'm a tooltip!";
+    $scope.gridPlayerList = {
             enableSorting: false,
             rowHeight: 40,
             columnDefs: $scope.playerColumns,
             data: [],
+        rowTemplate: '<div ng-class="{\'suspended-row\':row.entity.suspended===true}" title="{{row.entity.suspendedText}}" ng-click="grid.appScope.fnOne(row)" ' +
+        'ng-repeat="col in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ui-grid-cell>' +
+        '</div>',
+
             onRegisterApi: function onRegisterApi(registeredApi) {
                 gridApi = registeredApi;
             }

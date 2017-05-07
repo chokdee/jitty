@@ -371,6 +371,9 @@ public class TournamentService {
         game.setPlayed(true);
         TournamentPlayer p1 = game.getPlayer1();
         TournamentPlayer p2 = game.getPlayer2();
+        if (game.getWinByDefault() != null && game.getWinByDefault()) {
+            game.getLosingPlayer().setSuspended(true);
+        }
         p1.setLastGameAt(new Date());
         p2.setLastGameAt(new Date());
         save(game);

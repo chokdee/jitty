@@ -81,11 +81,17 @@ public class SwissSystemManager {
             return createGamesForTheFirstRound(sortedPlayer);
 
         }
+        List<TournamentPlayerDTO> realPlayer = new ArrayList<>();
+        for (TournamentPlayerDTO p : player) {
+            if (!p.isSuspended()) {
+                realPlayer.add(p);
+            }
+        }
         //build groups of player with the same amount of won games
-        int size = player.size() / 2;
+        int size = realPlayer.size() / 2;
         List<TournamentSingleGameDTO> games = new ArrayList<>(size);
         Map<Integer, List<TournamentPlayerDTO>> hashMap = new HashMap<>();
-        for (TournamentPlayerDTO playerDTO : player) {
+        for (TournamentPlayerDTO playerDTO : realPlayer) {
             if (!hashMap.containsKey(playerDTO.getWonGames())) {
                 List<TournamentPlayerDTO> list = new ArrayList<>();
                 list.add(playerDTO);
@@ -97,10 +103,10 @@ public class SwissSystemManager {
         if (!bruteForce) {
             for (int winningGames = round - 1; winningGames >= 0; winningGames--) {
                 List<TournamentPlayerDTO> sameWinList = hashMap.get(winningGames);
-                fillGames(round, player, games, hashMap, winningGames, sameWinList);
+                fillGames(round, realPlayer, games, hashMap, winningGames, sameWinList);
             }
         } else {
-            List<TournamentPlayerDTO> allPlayer = new ArrayList<>(player);
+            List<TournamentPlayerDTO> allPlayer = new ArrayList<>(realPlayer);
             Collections.shuffle(allPlayer);
             while (allPlayer.size() > 0) {
                 TournamentSingleGameDTO game = new TournamentSingleGameDTO();
@@ -108,7 +114,7 @@ public class SwissSystemManager {
                 game.setPlayer1AndBackReference(p1);
                 TournamentPlayerDTO p2 = getPlayerNotPlayedEachOther(p1, allPlayer);
                 if (p2 == null) {
-                    throwNoResult(round, player, games);
+                    throwNoResult(round, realPlayer, games);
                 }
                 game.setPlayer2AndBackReference(p2);
                 allPlayer.remove(p1);
@@ -337,6 +343,9 @@ public class SwissSystemManager {
         //clear games, we don't need at the client
         for (TournamentPlayerDTO p : ps) {
             p.clearGames();
+            if (p.isSuspended()) {
+                p.setSuspendedText("Spieler hat aufgegeben");
+            }
         }
         return ps;
 

@@ -53,6 +53,7 @@ CREATE TABLE tournament_player (
   lastname       VARCHAR(255) NOT NULL,
   mobilenumber   VARCHAR(255),
   qttr           INTEGER,
+  suspended      BOOLEAN,
   ttr            INTEGER,
   association_id BIGINT,
   club_id        BIGINT,

@@ -256,6 +256,14 @@ public class TournamentSingleGame {
         return player2;
     }
 
+    public TournamentPlayer getLosingPlayer() {
+        if (winner == 2) {
+            return player2;
+        }
+
+        return player1;
+    }
+
     @Override
     public int hashCode() {
         int result = player1 != null ? player1.hashCode() : 0;
