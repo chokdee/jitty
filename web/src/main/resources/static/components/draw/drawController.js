@@ -70,6 +70,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
         }, function errorCallback(response) {
             $scope.errorMessage = response.data.error;
+            $window.location.href = '#/draw/' + clz.id;
         });
 
     };
@@ -183,6 +184,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
 }).controller('SwissSystemController', function ($scope, $http, $routeParams, $window, uiGridConstants, TournamentClass, Flash) {
         var gridApi;
+    var gridApi2;
 
         $scope.playerColumns = [
             {
@@ -260,6 +262,9 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
             enableSorting: false,
             rowHeight: 40,
             columnDefs: $scope.gameColumns,
+            onRegisterApi: function onRegisterApi(registeredApi) {
+                gridApi2 = registeredApi;
+            }
         };
 
         $scope.swissDraw = function () {
@@ -268,6 +273,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 url: '/api/draw/swiss-draw?cid=' + $routeParams.id,
             }).then(function successCallback(response) {
                 $scope.gridGameList.data = response.data;
+                gridApi2.core.handleWindowResize();
 
             }, function errorCallback(response) {
                 $scope.errorMessage = response.data.error;
@@ -296,7 +302,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 url: '/api/draw/create-next-swiss-round-if-necessary?cid=' + $routeParams.id + '&round=' + $scope.roundNr,
 
             }).then(function successCallback(response) {
-                $scope.roundNr = response.data;
+                // $scope.roundNr = response.data;
 
             }, function errorCallback(response) {
                 $scope.errorMessage = response.data.error;

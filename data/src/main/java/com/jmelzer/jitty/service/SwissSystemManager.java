@@ -222,7 +222,11 @@ public class SwissSystemManager {
     public int getRoundNr(Long id) {
         TournamentClass clz = tcRepository.findOne(id);
         SwissSystemPhase swissSystemPhase = (SwissSystemPhase) clz.getActivePhase();
-        return swissSystemPhase.getRound();
+        if (swissSystemPhase.isFinished()) {
+            return swissSystemPhase.getRound() + 1;
+        } else {
+            return swissSystemPhase.getRound();
+        }
     }
 
     @Transactional
