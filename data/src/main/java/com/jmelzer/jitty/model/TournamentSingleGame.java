@@ -17,17 +17,17 @@ import java.util.List;
 @Entity
 @Table(name = "TOURNAMENT_SINGLE_GAME")
 public class TournamentSingleGame {
-    //TC Name
-    @Column(nullable = false, name = "tournament_class_name")
-    String tcName;
-
-    @Column(name = "NAME")
-    String gameName;
-
     //todo add Schiedsrichter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    //TC Name
+    @Column(nullable = false, name = "tournament_class_name")
+    private String tcName;
+
+    @Column(name = "NAME")
+    private String gameName;
 
     @Column(nullable = false, name = "t_id")
     private Long tid;
@@ -82,6 +82,15 @@ public class TournamentSingleGame {
 
     //-1 unset, 1=home , 2=guest
     private int winner = -1;
+
+    /** kampflos */
+    @Column(name = "win_by_default")
+    private Boolean winByDefault;
+
+    /** kampflos grund */
+    @Column(name = "win_reason")
+    private Integer winReason;
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "NEXT_GAME_ID")
@@ -282,8 +291,8 @@ public class TournamentSingleGame {
                 "id='" + id + '\'' +
                 ", p1=" + (player1 != null ? player1.getId() : "null") +
                 ", p2=" + (player2 != null ? player2.getId() : "null") +
-                ", tid=" + tid+
-                ", tcName=" + tcName+
+                ", tid=" + tid +
+                ", tcName=" + tcName +
                 '}';
     }
 
@@ -353,5 +362,21 @@ public class TournamentSingleGame {
 
     public void setGameQueue(GameQueue gameQueue) {
         this.gameQueue = gameQueue;
+    }
+
+    public Boolean getWinByDefault() {
+        return winByDefault;
+    }
+
+    public void setWinByDefault(Boolean winByDefault) {
+        this.winByDefault = winByDefault;
+    }
+
+    public Integer getWinReason() {
+        return winReason;
+    }
+
+    public void setWinReason(Integer winReason) {
+        this.winReason = winReason;
     }
 }

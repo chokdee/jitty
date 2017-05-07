@@ -378,18 +378,22 @@ public class TournamentService {
     }
 
     TournamentSingleGameDTO calcWinner(TournamentSingleGameDTO dto) {
-        int w = 0;
-        for (GameSetDTO gameSetDTO : dto.getSets()) {
-            w += gameSetDTO.getPoints1() > gameSetDTO.getPoints2() ? 1 : -1;
-        }
-        if (w < 0) {
-            w = 2;
-        } else if (w > 0) {
-            w = 1;
+        if (dto.getWinByDefault() != null && dto.getWinByDefault()) {
+            dto.setWinner(dto.getWinReason());
         } else {
-            throw new IllegalArgumentException("no winner could be calculated");
+            int w = 0;
+            for (GameSetDTO gameSetDTO : dto.getSets()) {
+                w += gameSetDTO.getPoints1() > gameSetDTO.getPoints2() ? 1 : -1;
+            }
+            if (w < 0) {
+                w = 2;
+            } else if (w > 0) {
+                w = 1;
+            } else {
+                throw new IllegalArgumentException("no winner could be calculated");
+            }
+            dto.setWinner(w);
         }
-        dto.setWinner(w);
         return dto;
     }
 

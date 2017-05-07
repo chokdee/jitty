@@ -1,4 +1,9 @@
-angular.module('jitty.running.controllers', []).controller('RunningController', function ($scope, $http, $uibModal, $log, printer, uiGridConstants) {
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
+angular.module('jitty.running.controllers', []).controller('RunningController', function ($scope, $http, $uibModal, $timeout, $log, printer, uiGridConstants) {
     $scope.getPossibleGames = function () {
         $http.get('/api/tournamentdirector/possible-games', {}).then(function (response) {
             $scope.possibleGames = response.data;
@@ -58,6 +63,9 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         $http.get('/api/tournamentdirector/running-games', {}).then(function (response) {
             $scope.runningGames = response.data;
             $scope.gridOptionsRunning.data = response.data;
+            $timeout(function () {
+                $scope.addEL();
+            });
         });
 
     };
@@ -80,11 +88,17 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
 
     };
     // ganes to play table
-    $scope.columns = [{
-        field: 'group.tournamentClass.name',
-        maxWidth: 80,
-        displayName: 'Klasse'
-    },
+    $scope.columns = [
+        {
+            field: 'id',
+            maxWidth: 0,
+            displayName: 'ID',
+            cellTemplate: '<div class="ui-grid-cell-contents" id="{{ COL_FIELD }}">{{ COL_FIELD }}</div>'
+        }, {
+            field: 'group.tournamentClass.name',
+            maxWidth: 80,
+            displayName: 'Klasse'
+        },
         {
             field: 'roundOrGroupName',
             maxWidth: 85,
@@ -120,11 +134,51 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         }
     ];
 
+
+    function handleDrop(e) {
+        // this / e.target is current target element.
+        if (e.stopPropagation) {
+            e.stopPropagation(); // stops the browser from redirecting.
+        }
+        console.log(e.dataTransfer.getData('Text'));
+        // See the section on the DataTransfer object.
+        return false;
+    }
+
+    function handleDragEnd(e) {
+        // this/e.target is the source node.
+        // [].forEach.call(cols, function (col) {
+        //     col.classList.remove('over');
+        // });
+        console.log(e.dataTransfer.getData('Text'));
+    }
+
+    function handleDragStart(e) {
+        this.style.opacity = '0.4';  // this / e.target is the source node.
+
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('Text', e.currentTarget.firstChild.id);
+    }
+
+    $scope.addEL = function () {
+        var cols = document.querySelectorAll('div.ui-grid-cell');
+        [].forEach.call(cols, function (col) {
+            col.addEventListener('dragstart', handleDragStart, false);
+            col.addEventListener('drop', handleDrop, false);
+            col.addEventListener('dragend', handleDragEnd, false);
+
+        });
+    };
+
+
     $scope.gridOptions = {
         enableSorting: true,
         enableFiltering: true,
         rowHeight: 40,
-        columnDefs: $scope.columns
+        columnDefs: $scope.columns,
+        rowTemplate: "<div draggable=\"true\"   ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns \" " +
+        "style=\"cursor: move;\" class=\"ui-grid-cell\" ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader }\" ui-grid-cell></div>"
+        // rowTemplate: '<div ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell {{col.cellClass}}" ng-cell></div>'
     };
     $scope.enterGameResult = function (entity) {
         $scope.game = entity;
@@ -143,11 +197,12 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
             }
         });
 
-        modalInstance.result.then(function (gameset) {
-            $scope.game.sets = gameset;
+        modalInstance.result.then(function (game) {
+            $scope.game.sets = game.sets;
+            $scope.game.winByDefault = game.winByDefault;
+            if (game.winReason != undefined)
+                $scope.game.winReason = game.winReason.id;
             $scope.saveGame();
-            //alert(gameset[0].points1);
-            //todo safe the result in the db ab remove the game from the list
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -210,12 +265,17 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
             url: '/api/tournamentdirector/save-result/',
             data: $scope.game
         }).then(function successCallback(response) {
+            console.log('save success:' + response.data);
             $scope.callAll();
         }, function errorCallback(response) {
             $scope.errorMessage = response.data.error;
+            console.log('errorMessage = ' + response.data.error);
         });
 
     };
+    $scope.openGedueck = function (id) {
+        $window.location.href = '/#/draw/' + id;
+    }
     $scope.startPossibleGames = function () {
         $http({
             method: 'GET',
@@ -252,7 +312,15 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     };
 
 }).controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
-
+    $scope.sets = '';
+    $scope.gameResult = {sets: [], winByDefault: false, winReason: 0};
+    $scope.winReasons = [{
+        id: 1,
+        label: 'Spieler 1 hat aufgegeben',
+    }, {
+        id: 2,
+        label: 'Spieler 2 hat aufgegeben',
+    }];
 
     function calcResult(shortResult) {
         gameset = {};
@@ -278,8 +346,8 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
         return gameset;
     }
 
-    $scope.$watch('gameResult', function () {
-            var res = $scope.gameResult.split(" ");
+    $scope.$watch('gameResult.sets', function () {
+        var res = $scope.sets.split(" ");
             var arrayLength = res.length;
             var sets = [];
             if (arrayLength < 1 || res[0] == '')
@@ -293,12 +361,12 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
                     sets.push(calcResult(res[i]))
                 }
             }
-            $scope.sets = sets;
+        $scope.gameResult.sets = sets;
         }
     );
 
     $scope.ok = function () {
-        $uibModalInstance.close($scope.sets);
+        $uibModalInstance.close($scope.gameResult);
     };
 
     $scope.cancel = function () {

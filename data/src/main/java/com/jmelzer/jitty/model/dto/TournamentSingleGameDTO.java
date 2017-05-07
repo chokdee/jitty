@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model.dto;
 
 import java.util.ArrayList;
@@ -37,29 +42,35 @@ public class TournamentSingleGameDTO {
     private int winner = -1;
     private Long tid;
 
+    private Boolean winByDefault;
+
+    private Integer winReason;
+
     public TournamentPlayerDTO getPlayer1() {
         return player1;
+    }
+
+    public void setPlayer1(TournamentPlayerDTO player1) {
+        this.player1 = player1;
     }
 
     public void setPlayer1AndBackReference(TournamentPlayerDTO player1) {
         this.player1 = player1;
         player1.addGame(this);
     }
-    public void setPlayer1(TournamentPlayerDTO player1) {
-        this.player1 = player1;
-    }
 
     public TournamentPlayerDTO getPlayer2() {
         return player2;
     }
 
-    public void setPlayer2AndBackReference(TournamentPlayerDTO player2) {
-        this.player2 = player2;
-        player2.addGame(this);
-    }
     public void setPlayer2(TournamentPlayerDTO player2) {
         this.player2 = player2;
 
+    }
+
+    public void setPlayer2AndBackReference(TournamentPlayerDTO player2) {
+        this.player2 = player2;
+        player2.addGame(this);
     }
 
     public boolean isPlayed() {
@@ -185,5 +196,21 @@ public class TournamentSingleGameDTO {
 
     public void setRoundOrGroupName(String roundOrGroupName) {
         this.roundOrGroupName = roundOrGroupName;
+    }
+
+    public Boolean getWinByDefault() {
+        return winByDefault;
+    }
+
+    public void setWinByDefault(Boolean winByDefault) {
+        this.winByDefault = winByDefault;
+    }
+
+    public Integer getWinReason() {
+        return winReason;
+    }
+
+    public void setWinReason(Integer winReason) {
+        this.winReason = winReason;
     }
 }
