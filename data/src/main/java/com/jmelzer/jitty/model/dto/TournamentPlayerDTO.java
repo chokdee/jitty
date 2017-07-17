@@ -19,6 +19,8 @@ import java.util.List;
  */
 public class TournamentPlayerDTO {
 
+    public static TournamentPlayerDTO BYE = new TournamentPlayerDTO(0L, "FREI LOS", 0);
+
     List<TournamentSingleGameDTO> playedGames = new ArrayList<>();
 
     List<TournamentClassDTO> classes = new ArrayList<>();
@@ -66,10 +68,13 @@ public class TournamentPlayerDTO {
 
     private String suspendedText;
 
+    private boolean freilos;
+
     public TournamentPlayerDTO() {
     }
 
-    public TournamentPlayerDTO(String fullName, int qttr) {
+    public TournamentPlayerDTO(Long id, String fullName, int qttr) {
+        this.id = id;
         this.fullName = fullName;
         this.qttr = qttr;
     }
@@ -305,7 +310,7 @@ public class TournamentPlayerDTO {
     @Override
     public String toString() {
         return "TournamentPlayerDTO{" +
-                "importId='" + importId + '\'' +
+                "id='" + id + '\'' +
                 "fullName='" + fullName + '\'' +
                 ", qttr=" + qttr +
                 ", won=" + wonGames +
@@ -402,5 +407,13 @@ public class TournamentPlayerDTO {
 
     public void setSuspendedText(String suspendedText) {
         this.suspendedText = suspendedText;
+    }
+
+    public void setFreilos(boolean freilos) {
+        this.freilos = freilos;
+    }
+
+    public boolean hasFreilos() {
+        return freilos;
     }
 }

@@ -95,7 +95,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 }).controller('DrawEditController', function ($scope, $http, $routeParams, $window, TournamentClass) {
 
     $scope.modi = [{
-        id: 0,
+        id: undefined,
         label: ''
     }, {
         id: 1,
@@ -105,19 +105,21 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         // id: 2,
         // label: 'KO-Runde'}
     ];
-    $scope.modus = $scope.modi[0];
+    $scope.modus = {id: undefined};//$scope.modi[1];
     $scope.selectedPhase = -10;
 
     $scope.loadPart = function (index) {
         $scope.templateurl = '';
-        if ($scope.modus.id == 1) {
-            if (index == 0) {
+        if ($scope.modus != null && $scope.modus.id != undefined && $scope.modus.id === 1) {
+            if (index === 0) {
                 $scope.templateurl = 'components/draw/groups.html';
             }
-            else if (index == 1) {
+            else if (index === 1) {
                 $scope.templateurl = 'components/draw/bracket.html';
             }
         }
+        console.log('modus = ' + $scope.modus);
+        console.log('loadpart = ' + $scope.templateurl);
     };
 
     $scope.$watch('selectedPhase', function () {
@@ -127,30 +129,33 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     });
 
     $scope.getTournamentClass = function () {
-        $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
-                console.log('Got TournamentClass successful');
-                $scope.getActualPhase();
+        if ($scope.tournamentClass == null) {
+            $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
+                    console.log('Got TournamentClass successful');
+                    $scope.modus = {id: $scope.tournamentClass.systemType};
+                    $scope.loadPart();
+                    $scope.getActualPhase();
 
-            if ($scope.tournamentClass.playerPerGroup === null)
-                    $scope.tournamentClass.playerPerGroup = 4; //default
+                    if ($scope.tournamentClass.playerPerGroup === null)
+                        $scope.tournamentClass.playerPerGroup = 4; //default
 
 
-                if ($scope.tournamentClass.running) {
-                    $scope.templateurl = 'components/draw/bracket.html';
-                }
-            if ($scope.tournamentClass.system !== undefined && $scope.tournamentClass.system.phases !== null) {
-                    for (i = 0; i < $scope.tournamentClass.system.phases.length; i++) {
-                        if ($scope.tournamentClass.activePhaseNo === i) {
-                            $scope.selectedPhase = $scope.tournamentClass.system.phases[i];
-                        }
-                        $scope.tournamentClass.system.phases[i].counter = i;
+                    if ($scope.tournamentClass.running) {
+                        $scope.templateurl = 'components/draw/bracket.html';
                     }
+                    if ($scope.tournamentClass.system !== undefined && $scope.tournamentClass.system.phases !== null) {
+                        for (i = 0; i < $scope.tournamentClass.system.phases.length; i++) {
+                            if ($scope.tournamentClass.activePhaseNo === i) {
+                                $scope.selectedPhase = $scope.tournamentClass.system.phases[i];
+                            }
+                            $scope.tournamentClass.system.phases[i].counter = i;
+                        }
+                    }
+
+
                 }
-
-
-            }
-        );
-
+            );
+        }
     }
     ;
 
@@ -173,7 +178,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     });
 
     $scope.selectPhaseCombination = function () {
-        if ($scope.modus != null && $routeParams.id != null)
+        if ($scope.modus != undefined && $routeParams.id != null)
             $http.get('/api/draw/select-phase-combination?cid=' + $routeParams.id + '&type=' + $scope.modus.id, {}).then(function (response) {
                 console.log('Phase successfully selected')
                 $scope.getTournamentClass();
@@ -272,7 +277,8 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 method: 'GET',
                 url: '/api/draw/swiss-draw?cid=' + $routeParams.id,
             }).then(function successCallback(response) {
-                $scope.gridGameList.data = response.data;
+                $scope.gridGameList.data = response.data.games;
+                $scope.freilos = response.data.freilos;
                 gridApi2.core.handleWindowResize();
 
             }, function errorCallback(response) {

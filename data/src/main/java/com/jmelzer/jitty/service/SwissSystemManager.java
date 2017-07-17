@@ -9,6 +9,7 @@ import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.exceptions.IntegrityViolation;
 import com.jmelzer.jitty.model.*;
+import com.jmelzer.jitty.model.dto.SwissDraw;
 import com.jmelzer.jitty.model.dto.TournamentClassStatus;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
@@ -62,23 +63,33 @@ public class SwissSystemManager {
     @Resource
     TournamentPlayerRepository playerRepository;
 
-    public List<TournamentSingleGameDTO> createGamesForTheFirstRound(List<TournamentPlayerDTO> player) {
+    public SwissDraw createGamesForTheFirstRound(List<TournamentPlayerDTO> player) {
         int size = player.size() / 2;
+        List<TournamentPlayerDTO> copyList = new ArrayList<>(player);
         List<TournamentSingleGameDTO> games = new ArrayList<>(size);
+        SwissDraw swissDraw = new SwissDraw();
         for (int i = 0; i < size; i++) {
             //todo handle bye
             TournamentSingleGameDTO game = new TournamentSingleGameDTO();
-            game.setPlayer1(player.get(i));
-            game.setPlayer2(player.get(player.size() - 1 - i));
+            game.setPlayer1AndBackReference(player.get(i));
+            game.setPlayer2AndBackReference(player.get(player.size() - 1 - i));
             games.add(game);
+            copyList.remove(player.get(i));
+            copyList.remove(player.get(player.size() - 1 - i));
         }
-        return games;
+        if (isOdd(size)) {
+            assert copyList.size() == 1;
+            copyList.get(0).setFreilos(true);
+            swissDraw.setFreilos(copyList.get(0));
+        }
+        swissDraw.setGames(games);
+        return swissDraw;
     }
 
-    public List<TournamentSingleGameDTO> createGamesForRound(int round, List<TournamentPlayerDTO> player, boolean bruteForce) {
+    public SwissDraw createGamesForRound(int round, List<TournamentPlayerDTO> player, boolean bruteForce) {
         if (round == 1) {
             List<TournamentPlayerDTO> sortedPlayer = calcRankingFirstRound(player);
-            return createGamesForTheFirstRound(sortedPlayer);
+            return preventStackOverflow(createGamesForTheFirstRound(sortedPlayer));
 
         }
         List<TournamentPlayerDTO> realPlayer = new ArrayList<>();
@@ -123,11 +134,28 @@ public class SwissSystemManager {
             }
         }
         //prevent stackoverflow
+        return new SwissDraw(preventStackOverflow(games));
+    }
+
+    private SwissDraw preventStackOverflow(SwissDraw swissDraw) {
+        preventStackOverflow(swissDraw.getGames());
+        return swissDraw;
+    }
+
+    private List<TournamentSingleGameDTO> preventStackOverflow(List<TournamentSingleGameDTO> games) {
         for (TournamentSingleGameDTO game : games) {
-            game.getPlayer1().clearGames();
-            game.getPlayer2().clearGames();
+            if (game.getPlayer1() != null) {
+                game.getPlayer1().clearGames();
+            }
+            if (game.getPlayer2() != null) {
+                game.getPlayer2().clearGames();
+            }
         }
         return games;
+    }
+
+    boolean isOdd(int x) {
+        return (x & 1) != 0;
     }
 
     private void fillGames(int round, List<TournamentPlayerDTO> player, List<TournamentSingleGameDTO> games, Map<Integer, List<TournamentPlayerDTO>> hashMap, int winningGames, List<TournamentPlayerDTO> sameWinList) {
@@ -143,7 +171,7 @@ public class SwissSystemManager {
             } else {
                 sameWinList.remove(p2);
             }
-            if (p2 == null) {
+            if (p2 == null && !isOdd(player.size())) {
                 throwNoResult(round, player, games);
                 return;
             }
@@ -301,7 +329,7 @@ public class SwissSystemManager {
     }
 
     @Transactional
-    public List<TournamentSingleGameDTO> calcDraw(Long cid) {
+    public SwissDraw calcDraw(Long cid) {
         List<TournamentPlayerDTO> ps = tournamentService.getPlayerforClass(cid);
         TournamentClass tc = tcRepository.findOne(cid);
         if (tc.getActivePhase() == null) {

@@ -73,10 +73,11 @@ public class DrawController {
     @Path("/swiss-draw")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<TournamentSingleGameDTO> getSwissDraw(@QueryParam(value = "cid") String id) {
+    public SwissDraw getSwissDraw(@QueryParam(value = "cid") String id) {
         Long cid = Long.valueOf(id);
         return swissSystemManager.calcDraw(cid);
     }
+
 
     @Path("/start-swiss-class")
     @GET

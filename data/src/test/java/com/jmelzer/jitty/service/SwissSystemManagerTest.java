@@ -44,7 +44,7 @@ public class SwissSystemManagerTest {
 
     @Test
     public void calcRankingFirstRound() throws Exception {
-        List<TournamentPlayerDTO> player = createPlayer();
+        List<TournamentPlayerDTO> player = createPlayer(12);
         swissSystemManager.calcRankingFirstRound(player);
         assertEquals(1500, player.get(0).getQttr());
         assertEquals(1200, player.get(1).getQttr());
@@ -52,20 +52,25 @@ public class SwissSystemManagerTest {
         assertEquals(1000, player.get(3).getQttr());
     }
 
-    private List<TournamentPlayerDTO> createPlayer() {
+    private List<TournamentPlayerDTO> createPlayer(int count) {
         List<TournamentPlayerDTO> player = new ArrayList<>();
-        player.add(new TournamentPlayerDTO("1", 1000));
-        player.add(new TournamentPlayerDTO("2", 1200));
-        player.add(new TournamentPlayerDTO("3", 1100));
-        player.add(new TournamentPlayerDTO("4", 1500));
-        player.add(new TournamentPlayerDTO("5", 999));
-        player.add(new TournamentPlayerDTO("6", 998));
-        player.add(new TournamentPlayerDTO("7", 997));
-        player.add(new TournamentPlayerDTO("8", 996));
-        player.add(new TournamentPlayerDTO("9", 995));
-        player.add(new TournamentPlayerDTO("10", 994));
-        player.add(new TournamentPlayerDTO("11", 993));
-        player.add(new TournamentPlayerDTO("12", 992));
+        player.add(new TournamentPlayerDTO(1L, "1", 1000));
+        player.add(new TournamentPlayerDTO(2L, "2", 1200));
+        player.add(new TournamentPlayerDTO(3L, "3", 1100));
+        player.add(new TournamentPlayerDTO(4L, "4", 1500));
+        if (count > 4) {
+            for (int i = 5; i <= count; i++) {
+                player.add(new TournamentPlayerDTO((long) i, "" + i, 999 - i));
+
+            }
+        }
+//        player.add(new TournamentPlayerDTO("6", 998));
+//        player.add(new TournamentPlayerDTO("7", 997));
+//        player.add(new TournamentPlayerDTO("8", 996));
+//        player.add(new TournamentPlayerDTO("9", 995));
+//        player.add(new TournamentPlayerDTO("10", 994));
+//        player.add(new TournamentPlayerDTO("11", 993));
+//        player.add(new TournamentPlayerDTO("12", 992));
         return player;
     }
 
@@ -74,14 +79,20 @@ public class SwissSystemManagerTest {
         for (int i = 0; i < 1; i++) {
 
             System.out.println("HHHHHHHHHHHHHH   " + i + " HHHHHHHHHHHHHH");
-            List<TournamentPlayerDTO> player = createPlayer();
+            List<TournamentPlayerDTO> player = createPlayer(11);
             swissSystemManager.calcRankingFirstRound(player);
             System.out.println("------ round 1 starts .-------------- ");
-            List<TournamentSingleGameDTO> games = swissSystemManager.createGamesForTheFirstRound(player);
+            List<TournamentSingleGameDTO> games = swissSystemManager.createGamesForTheFirstRound(player).getGames();
 
             for (TournamentSingleGameDTO game : games) {
-//                System.out.println("game = " + game);
                 game.setWinner(2);
+            }
+            swissSystemManager.calcRankingRound(TournamentSystemType.AC, 1, player);
+            //the last one do not have a played game
+            for (int j = 0; j < player.size() - 1; j++) {
+                TournamentPlayerDTO playerDTO = player.get(j);
+                System.out.println("playerDTO = " + playerDTO);
+                assertEquals("#" + j + playerDTO.toString(), 1, playerDTO.getPlayedGames().size());
             }
             for (int round = 2; round <= 6; round++) {
 
@@ -89,7 +100,7 @@ public class SwissSystemManagerTest {
                 swissSystemManager.calcRankingRound(TournamentSystemType.AC, round, player);
 
                 for (TournamentPlayerDTO playerDTO : player) {
-//                    System.out.println("playerDTO = " + playerDTO);
+                    System.out.println("playerDTO = " + playerDTO);
                 }
 
                 games = createGames(player, round);
@@ -115,9 +126,9 @@ public class SwissSystemManagerTest {
                 System.out.println("------ #" + i + " run -------------- ");
                 if (i > 80) {
                     System.out.println("brute force !!");
-                    games = swissSystemManager.createGamesForRound(round, player, true);
+                    games = swissSystemManager.createGamesForRound(round, player, true).getGames();
                 } else {
-                    games = swissSystemManager.createGamesForRound(round, player, false);
+                    games = swissSystemManager.createGamesForRound(round, player, false).getGames();
                 }
                 break;
             } catch (SwissRuntimeException e) {
@@ -280,5 +291,13 @@ public class SwissSystemManagerTest {
             assertThat(tc.getPhaseCount(), is(i + 1));
         }
 
+    }
+
+    @Test
+    public void isOdd() throws Exception {
+        assertTrue(swissSystemManager.isOdd(1));
+        assertTrue(swissSystemManager.isOdd(3));
+        assertFalse(swissSystemManager.isOdd(2));
+        assertFalse(swissSystemManager.isOdd(4));
     }
 }

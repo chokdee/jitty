@@ -7,12 +7,12 @@ INSERT INTO T_PLAYER (PLAYERS_ID, TOURNAMENTS_ID) SELECT
                                                     id,
                                                     3
                                                   FROM TOURNAMENT_PLAYER
-                                                  WHERE id > 12;
+                                                  WHERE id > 13;
 INSERT INTO TC_PLAYER (PLAYERS_ID, CLASSES_ID) SELECT
                                                  id,
                                                  6
                                                FROM TOURNAMENT_PLAYER
-                                               WHERE id > 12;
+                                               WHERE id > 13;
 
 
 UPDATE USER SET TOURNAMENT_ID = 3

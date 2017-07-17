@@ -1,3 +1,8 @@
+<!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
 <h3>{{'Auslosung der Klasse \'' + tournamentClass.name + '\' '}}</h3>
 <div ng-show="tournamentClass.systemType == 1">
     <div class="row" ng-show="!tournamentClass.running">
@@ -26,6 +31,6 @@
     <ng-include src="templateurl"></ng-include>
 </div>
 
-<div ng-show="tournamentClass.systemType == 2">
+<div ng-if="tournamentClass.systemType == 2">
     <ng-include src="'components/draw/swisssystem.html'"></ng-include>
 </div>

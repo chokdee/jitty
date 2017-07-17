@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.PhaseRepository;
@@ -57,6 +62,30 @@ public class DrawGroupManager {
         return groupCount;
     }
 
+    @Transactional
+    public GroupPhaseDTO automaticDraw(Long cid, GroupPhaseDTO dto) {
+        List<TournamentGroupDTO> groups = createDTOGroups(dto.getGroupCount());
+        dto.setGroups(groups);
+
+        List<TournamentPlayerDTO> players = tournamentService.getPlayerforClass(cid);
+
+        //sort all player by qttr
+        Collections.sort(players, (o1, o2) -> {
+            if (o1.getQttr() < o2.getQttr()) {
+                return 1;
+            }
+            if (o1.getQttr() > o2.getQttr()) {
+                return -1;
+            }
+            return 0;
+        });
+
+
+        seedingManager.setPlayerRandomAccordingToQTTR(groups, players);
+
+        return tournamentService.updatePhase(cid, dto);
+    }
+
     private List<TournamentGroupDTO> createDTOGroups(int groupCount) {
         List<TournamentGroupDTO> groups = new ArrayList<>(groupCount);
         //todo must be configured maybe 1, 2 better
@@ -68,6 +97,18 @@ public class DrawGroupManager {
             name++;
         }
         return groups;
+    }
+
+    @Transactional
+    public void startClass(Long id) {
+        TournamentClass clz = tcRepository.findOne(id);
+        GroupPhase groupPhase = (GroupPhase) clz.getActualPhase();
+        calcGroupGames(clz.getName(), clz.getTournament().getId(), groupPhase.getGroups());
+        clz.setStartTime(new Date());
+        clz.setRunning(true);
+        LOG.info("Class " + clz.getName() + " was started.");
+        tcRepository.saveAndFlush(clz);
+        tournamentService.addPossibleGroupGamesToQueue(groupPhase.getGroups());
     }
 
     /**
@@ -84,16 +125,11 @@ public class DrawGroupManager {
             }
             for (int i = 1; i < list.size(); i++) {
 
-
-//                System.out.println("---- games round " + i + " ----");
-                //first 1 against last
-
                 group.addGames(createOneRound(i, list, clzName, tId));
 
                 list.add(1, list.get(list.size() - 1));
                 list.remove(list.size() - 1);
 
-//                System.out.println("-----------------");
             }
 
             group.removeByePlayer();
@@ -148,43 +184,6 @@ public class DrawGroupManager {
 //            System.out.println("" + round + ":" +  ((round-1)*l1.size())+(tId+1) + " " + t1.getLastName() + " -->" + t2.getLastName());
         }
         return games;
-    }
-
-
-    @Transactional
-    public GroupPhaseDTO automaticDraw(Long cid, GroupPhaseDTO dto) {
-        List<TournamentGroupDTO> groups = createDTOGroups(dto.getGroupCount());
-        dto.setGroups(groups);
-
-        List<TournamentPlayerDTO> players = tournamentService.getPlayerforClass(cid);
-
-        //sort all player by qttr
-        Collections.sort(players, (o1, o2) -> {
-            if (o1.getQttr() < o2.getQttr()) {
-                return 1;
-            }
-            if (o1.getQttr() > o2.getQttr()) {
-                return -1;
-            }
-            return 0;
-        });
-
-
-        seedingManager.setPlayerRandomAccordingToQTTR(groups, players);
-
-        return tournamentService.updatePhase(cid, dto);
-    }
-
-    @Transactional
-    public void startClass(Long id) {
-        TournamentClass clz = tcRepository.findOne(id);
-        GroupPhase groupPhase = (GroupPhase) clz.getActualPhase();
-        calcGroupGames(clz.getName(), clz.getTournament().getId(), groupPhase.getGroups());
-        clz.setStartTime(new Date());
-        clz.setRunning(true);
-        LOG.info("Class " + clz.getName() + " was started.");
-        tcRepository.saveAndFlush(clz);
-        tournamentService.addPossibleGroupGamesToQueue(groupPhase.getGroups());
     }
 
     @Transactional(readOnly = true)
