@@ -77,10 +77,10 @@ public class SwissFlowControllerTest extends SecureResourceTest {
             ResponseEntity<TournamentPlayerDTO[]> psEntity = http(HttpMethod.GET, "api/draw/possible-player-swiss-system?cid=" + tClassId,
                     createHttpEntity(null, loginHeaders), TournamentPlayerDTO[].class);
             assertThat(psEntity.getBody().length, is(12));
-            ResponseEntity<TournamentSingleGameDTO[]> gamesEntity = http(HttpMethod.GET, "api/draw/swiss-draw?cid=" + tClassId,
-                    createHttpEntity(null, loginHeaders), TournamentSingleGameDTO[].class);
+            ResponseEntity<SwissDraw> gamesEntity = http(HttpMethod.GET, "api/draw/swiss-draw?cid=" + tClassId,
+                    createHttpEntity(null, loginHeaders), SwissDraw.class);
             assertTrue(gamesEntity.getStatusCode().is2xxSuccessful());
-            assertThat(gamesEntity.getBody().length, is(PLAYERSIZE / 2));
+            assertThat(gamesEntity.getBody().getGames().size(), is(PLAYERSIZE / 2));
 
             possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games", createHttpEntity(phaseEntity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
             assertThat(possibleGamesEntity.getBody().length, is(0));
@@ -92,7 +92,7 @@ public class SwissFlowControllerTest extends SecureResourceTest {
 
                 //start the first round
                 voidEntity = http(HttpMethod.POST, "api/draw/start-swiss-round?cid=" + tClassId + "&round=" + i,
-                        createHttpEntity(gamesEntity.getBody(), loginHeaders), Void.class);
+                        createHttpEntity(gamesEntity.getBody().getGames(), loginHeaders), Void.class);
                 assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
 
                 ResponseEntity<Integer> intE = http(HttpMethod.GET, "api/draw/swiss-round?cid=" + tClassId,
