@@ -27,8 +27,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.*;
 
-import static com.jmelzer.jitty.service.CopyManager.copy;
-import static com.jmelzer.jitty.service.CopyManager.copyForBracket;
+import static com.jmelzer.jitty.service.CopyManager.*;
 
 /**
  * Created by J. Melzer on 01.06.2016.
@@ -494,17 +493,7 @@ public class TournamentService {
             GroupResultDTO groupResultDTO = new GroupResultDTO();
             groupResultDTO.setGroupName(group.getName());
             results.add(groupResultDTO);
-            int pos = 1;
-            for (PlayerStatistic ps : group.getRanking()) {
-                GroupResultEntryDTO entry = new GroupResultEntryDTO();
-                entry.setPos(pos++);
-                entry.setClub(ps.player.getClub() != null ? ps.player.getClub().getName() : "");
-                entry.setPlayerName(ps.player.getFullName());
-                entry.setGameStat(ps.win + ":" + ps.lose);
-                entry.setSetStat(ps.setsWon + ":" + ps.setsLost);
-                entry.setDetailResult(ps.detailResult);
-                groupResultDTO.getEntries().add(entry);
-            }
+            fillResults(group, groupResultDTO);
         }
 
         return results;

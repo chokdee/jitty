@@ -140,7 +140,6 @@ public class SwissFlowControllerTest extends SecureResourceTest {
 
             assertThat(possGames, is(6 * MAX_PARALLEL_GAMES_COUNT));
 
-//            printBracket(koFieldEntity.getBody());
             System.out.println("all rounds completed, yeah");
             psEntity = http(HttpMethod.GET, "api/draw/possible-player-swiss-system?cid=" + tClassId,
                     createHttpEntity(null, loginHeaders), TournamentPlayerDTO[].class);

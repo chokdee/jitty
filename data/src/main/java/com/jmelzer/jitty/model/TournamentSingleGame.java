@@ -209,8 +209,11 @@ public class TournamentSingleGame {
         return s;
     }
 
-    private String printSets() {
+    public String printSets() {
         String s = "";
+        if (sets.isEmpty()) {
+            return s;
+        }
         for (GameSet set : sets) {
             s += set.points1 + ":" + set.points2 + ", ";
         }

@@ -1,8 +1,15 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.config.SecurityUtil;
 import com.jmelzer.jitty.model.dto.GroupResultDTO;
+import com.jmelzer.jitty.model.dto.SwissResultsDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
+import com.jmelzer.jitty.service.SwissSystemManager;
 import com.jmelzer.jitty.service.TournamentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +35,9 @@ public class LiveViewController {
     final static Logger LOG = LoggerFactory.getLogger(LiveViewController.class);
 
     @Inject
+    SwissSystemManager swissSystemManager;
+
+    @Inject
     TournamentService service;
     @Inject
     SecurityUtil securityUtil;
@@ -44,4 +54,10 @@ public class LiveViewController {
         return service.getGroupResults(Long.valueOf(id));
     }
 
+    @Path("/swiss-results")
+    @GET
+    public SwissResultsDTO getSwissResults(@QueryParam(value = "cid") String id) {
+        Long cid = Long.valueOf(id);
+        return swissSystemManager.getResults(cid);
+    }
 }

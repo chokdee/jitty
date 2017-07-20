@@ -104,7 +104,7 @@ public class CopyManager {
         return dto;
     }
 
-    private static TournamentGroupDTO copy(String clzName, TournamentGroup group) {
+    public static TournamentGroupDTO copy(String clzName, TournamentGroup group) {
         TournamentGroupDTO dto = new TournamentGroupDTO();
         BeanUtils.copyProperties(group, dto, "players", "tournamentClass");
         dto.setTournamentClass(new TournamentClassDTO());
@@ -256,4 +256,17 @@ public class CopyManager {
         return dto;
     }
 
+    public static void fillResults(TournamentGroup group, GroupResultDTO groupResultDTO) {
+        int pos = 1;
+        for (PlayerStatistic ps : group.getRanking()) {
+            GroupResultEntryDTO entry = new GroupResultEntryDTO();
+            entry.setPos(pos++);
+            entry.setClub(ps.player.getClub() != null ? ps.player.getClub().getName() : "");
+            entry.setPlayerName(ps.player.getFullName());
+            entry.setGameStat(ps.win + ":" + ps.lose);
+            entry.setSetStat(ps.setsWon + ":" + ps.setsLost);
+            entry.setDetailResult(ps.detailResult);
+            groupResultDTO.getEntries().add(entry);
+        }
+    }
 }

@@ -1,4 +1,9 @@
 
+<!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
 <h3>Laufende Klassen</h3>
 
 <table class="table usertable">
@@ -20,8 +25,12 @@
         <td>{{c.name}}</td>
         <td>{{c.startTime | date:'dd.MM.yyyy hh:mm' }}</td>
         <td>
-            <a class="btn btn-primary" href="#/liveview/groups/{{c.id}}">Gruppen anzeigen</a>
-            <a class="btn btn-primary" href="#/liveview/kofield/{{c.id}}">KO Feld anzeigen</a>
+            <a class="btn btn-primary"
+               ng-show="c.systemType > 1" href="#/liveview/swiss/{{c.id}}">Ergebnisse anzeigen</a>
+            <a class="btn btn-primary"
+               ng-show="c.systemType == 1" href="#/liveview/groups/{{c.id}}">Gruppen anzeigen</a>
+            <a class="btn btn-primary"
+               ng-show="c.systemType == 1" href="#/liveview/kofield/{{c.id}}">KO Feld anzeigen</a>
         </td>
     </tr>
     </tbody>

@@ -1,0 +1,57 @@
+<!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
+<h3>Name: {{tournamentClass.name}}</h3>
+
+
+<table style="margin-bottom: 20px" class="table table-striped">
+    <thead>
+    <tr>
+        <td style="font-weight: bolder; font-size: larger" colspan="5"> {{group.groupName}}</td>
+    </tr>
+    <tr>
+        <th>#</th>
+        <th>Spieler</th>
+        <th>Q-TTR</th>
+        <th>Gewonnen</th>
+        <th>Buchholzzahl</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="player in swissReults.ranking track by $index">
+        <td style="width: 150px">{{$index + 1}}</td>
+        <td style="width: 150px">{{player.fullName}}</td>
+        <td style="width: 150px">{{player.qttr}}</td>
+        <td style="width: 150px">{{player.wonGames}}</td>
+        <td style="width: 150px">{{player.buchholzZahl}}</td>
+    </tr>
+
+    </tbody>
+</table>
+
+<table style="margin-bottom: 20px" class="table table-striped" ng-repeat="group in swissReults.rounds">
+    <thead>
+    <tr>
+        <td style="font-weight: bolder; font-size: larger" colspan="5"> {{group.name}}</td>
+    </tr>
+    <tr>
+        <th>Spieler 1</th>
+        <th>Spieler 2</th>
+        <th>Ergebnis</th>
+        <th>Sätze</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="g in group.results track by $index">
+        <td style="width: 150px">{{g.name1}}</td>
+        <td style="width: 150px">{{g.name2}}</td>
+        <td style="width: 60px">{{g.result}}</td>
+        <td style="width: 250px">{{g.sets}}</td>
+    </tr>
+
+    </tbody>
+</table>

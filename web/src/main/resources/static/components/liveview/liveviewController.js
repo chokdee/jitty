@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 angular.module('jitty.liveview.controllers', []).controller('LiveviewController', function ($scope, $http, TournamentClass, $routeParams) {
 
     $scope.getPossibleClasses = function () {
@@ -93,5 +98,20 @@ angular.module('jitty.liveview.controllers', []).controller('LiveviewController'
         }
     }
 
+}).controller('LiveviewSwissController', function ($scope, $http, TournamentClass, $routeParams) {
+
+    $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
+        console.log('TournamentClass got successful for swiss');
+    });
+
+    $scope.getGroups = function () {
+        $http.get('/api/lifeview/swiss-results?cid=' + $routeParams.id, {}).then(function (response) {
+            $scope.swissReults = response.data;
+        });
+
+    };
+    if ($routeParams.id !== null) {
+        $scope.getGroups();
+    }
 });
 

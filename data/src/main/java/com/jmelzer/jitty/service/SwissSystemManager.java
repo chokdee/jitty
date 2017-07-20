@@ -9,10 +9,7 @@ import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.exceptions.IntegrityViolation;
 import com.jmelzer.jitty.model.*;
-import com.jmelzer.jitty.model.dto.SwissDraw;
-import com.jmelzer.jitty.model.dto.TournamentClassStatus;
-import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
-import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
+import com.jmelzer.jitty.model.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -425,6 +422,13 @@ public class SwissSystemManager {
 
     }
 
+    /**
+     * calculates the ranking of the player. result is stored in given player as sorted list.
+     *
+     * @param stype   andro, VR Cup etc
+     * @param roundNr for which round, only first round is different
+     * @param player  list of player
+     */
     public void calcRankingRound(TournamentSystemType stype, int roundNr, List<TournamentPlayerDTO> player) {
         if (roundNr == 1) {
             calcRankingFirstRound(player);
@@ -455,4 +459,38 @@ public class SwissSystemManager {
         player.sort((o1, o2) -> new Integer(o1.getQttr()).compareTo(o2.getQttr()) * -1);
         return player;
     }
+
+    @Transactional(readOnly = true)
+    public SwissResultsDTO getResults(Long cid) {
+        //todo prevent duplicate code
+        TournamentClass tc = tcRepository.findOne(cid);
+        TournamentSystemType stype = TournamentSystemType.enumOf(tc.getSystemType());
+        SwissSystemPhase swissSystemPhase = (SwissSystemPhase) tc.getActivePhase();
+        List<TournamentPlayerDTO> players = tournamentService.getPlayerforClass(cid);
+
+
+        SwissResultsDTO result = new SwissResultsDTO();
+        calcRankingRound(stype, swissSystemPhase.getRound(), players);
+        result.setRanking(players);
+
+        List<Phase> phases = tc.getSystem().getPhases();
+        for (Phase phase : phases) {
+            swissSystemPhase = (SwissSystemPhase) phase;
+            TournamentGroup group = swissSystemPhase.getGroup();
+            SwissRoundDTO round = new SwissRoundDTO();
+            result.addRound(round);
+            round.name = group.getName();
+            for (TournamentSingleGame game : group.getGames()) {
+                SwissRoundResultDTO rr = new SwissRoundResultDTO();
+                rr.name1 = game.getPlayer1().getFullName();
+                rr.name2 = game.getPlayer2().getFullName();
+                rr.sets = game.printSets();
+                rr.result = game.getResultInShort(game.getPlayer1());
+                round.addResult(rr);
+            }
+        }
+        return result;
+    }
+
+
 }
