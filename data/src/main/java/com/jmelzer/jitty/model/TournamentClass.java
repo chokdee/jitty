@@ -287,8 +287,12 @@ public class TournamentClass {
     private boolean finished() {
         if (getActivePhase() instanceof SwissSystemPhase) {
             SwissSystemPhase sp = (SwissSystemPhase) getActivePhase();
-            if (sp.getRound() >= sp.getMaxRounds()) {
+            if (sp.getRound() > sp.getMaxRounds()) {
                 return true;
+            }
+            //todo create method isLastRound
+            if (sp.getRound() == sp.getMaxRounds()) {
+                return getActivePhase().isFinished();
             }
             return false;
         } else {

@@ -313,6 +313,7 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
 
 }).controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
     $scope.sets = '';
+    $scope.inputfocus = true;
     $scope.gameResult = {sets: [], winByDefault: false, winReason: 0};
     $scope.winReasons = [{
         id: 1,

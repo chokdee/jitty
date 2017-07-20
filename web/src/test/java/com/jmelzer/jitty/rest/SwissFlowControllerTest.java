@@ -56,10 +56,11 @@ public class SwissFlowControllerTest extends SecureResourceTest {
             TournamentClassDTO tournamentClass = createClz(tId);
             long tClassId = tournamentClass.getId();
 
-            final int PLAYERSIZE = 12;
+            final int PLAYERSIZE = 11;
             for (int i = 0; i < PLAYERSIZE; i++) {
                 createPlayer(i, tournamentClass);
             }
+            final int MAX_PARALLEL_GAMES_COUNT = PLAYERSIZE / 2;
 
             //start the class
             ResponseEntity<Void> voidEntity = http(HttpMethod.GET, "api/draw/start-swiss-class?cid=" + tClassId, createHttpEntity(null, loginHeaders), Void.class);
@@ -76,7 +77,7 @@ public class SwissFlowControllerTest extends SecureResourceTest {
 
             ResponseEntity<TournamentPlayerDTO[]> psEntity = http(HttpMethod.GET, "api/draw/possible-player-swiss-system?cid=" + tClassId,
                     createHttpEntity(null, loginHeaders), TournamentPlayerDTO[].class);
-            assertThat(psEntity.getBody().length, is(12));
+            assertThat(psEntity.getBody().length, is(PLAYERSIZE));
             ResponseEntity<SwissDraw> gamesEntity = http(HttpMethod.GET, "api/draw/swiss-draw?cid=" + tClassId,
                     createHttpEntity(null, loginHeaders), SwissDraw.class);
             assertTrue(gamesEntity.getStatusCode().is2xxSuccessful());
@@ -104,8 +105,8 @@ public class SwissFlowControllerTest extends SecureResourceTest {
 
                 possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
                         createHttpEntity(phaseEntity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
-                assertThat(possibleGamesEntity.getBody().length, is(TABLE_COUNT));
-                possGames += TABLE_COUNT;
+                assertThat(possibleGamesEntity.getBody().length, is(MAX_PARALLEL_GAMES_COUNT));
+                possGames += MAX_PARALLEL_GAMES_COUNT;
                 TournamentSingleGameDTO[] possibleGames = possibleGamesEntity.getBody();
                 assertTrue(possibleGamesEntity.getStatusCode().is2xxSuccessful());
 
@@ -117,7 +118,7 @@ public class SwissFlowControllerTest extends SecureResourceTest {
                 runningGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/running-games",
                         createHttpEntity(phaseEntity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
                 assertTrue(runningGamesEntity.getStatusCode().is2xxSuccessful());
-                assertThat(runningGamesEntity.getBody().length, is(TABLE_COUNT));
+                assertThat(runningGamesEntity.getBody().length, is(MAX_PARALLEL_GAMES_COUNT));
 
                 //no more possible games, all are running
                 possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games",
@@ -137,7 +138,7 @@ public class SwissFlowControllerTest extends SecureResourceTest {
             }
 
 
-            assertThat(possGames, is(6 * TABLE_COUNT));
+            assertThat(possGames, is(6 * MAX_PARALLEL_GAMES_COUNT));
 
 //            printBracket(koFieldEntity.getBody());
             System.out.println("all rounds completed, yeah");

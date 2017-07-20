@@ -70,6 +70,8 @@ public class TournamentPlayerDTO {
 
     private boolean freilos;
 
+    private int gamesCount = 0;
+
     public TournamentPlayerDTO() {
     }
 
@@ -316,6 +318,8 @@ public class TournamentPlayerDTO {
                 ", won=" + wonGames +
                 ", buchholzZahl=" + buchholzZahl +
                 ", playedAgainst=" + playedAgainst() +
+                ", #played=" + playedGames.size() +
+                ", freilos=" + freilos +
                 '}';
     }
 
@@ -415,5 +419,13 @@ public class TournamentPlayerDTO {
 
     public boolean hasFreilos() {
         return freilos;
+    }
+
+    public void inkrementGamesCount() {
+        gamesCount++;
+    }
+
+    public int getGamesCount() {
+        return gamesCount;
     }
 }

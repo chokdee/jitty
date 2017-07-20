@@ -111,15 +111,19 @@ public class SwissSystemManager {
                 hashMap.get(playerDTO.getWonGames()).add(playerDTO);
             }
         }
+        SwissDraw swissDraw = new SwissDraw(games);
         if (!bruteForce) {
+//            in jeder Runde ein anderer Spieler
             for (int winningGames = round - 1; winningGames >= 0; winningGames--) {
                 List<TournamentPlayerDTO> sameWinList = hashMap.get(winningGames);
-                fillGames(round, realPlayer, games, hashMap, winningGames, sameWinList);
+                fillGames(round, realPlayer, swissDraw, hashMap, winningGames, sameWinList);
             }
+            return preventStackOverflow(swissDraw);
         } else {
             List<TournamentPlayerDTO> allPlayer = new ArrayList<>(realPlayer);
             Collections.shuffle(allPlayer);
-            while (allPlayer.size() > 0) {
+
+            while (allPlayer.size() > 1) {
                 TournamentSingleGameDTO game = new TournamentSingleGameDTO();
                 TournamentPlayerDTO p1 = allPlayer.get(0);
                 game.setPlayer1AndBackReference(p1);
@@ -132,9 +136,13 @@ public class SwissSystemManager {
                 allPlayer.remove(p2);
                 games.add(game);
             }
+            if (allPlayer.size() == 1) {
+                swissDraw.setFreilos(allPlayer.get(0));
+            }
+            swissDraw.setGames(preventStackOverflow(games));
         }
         //prevent stackoverflow
-        return new SwissDraw(preventStackOverflow(games));
+        return swissDraw;
     }
 
     private SwissDraw preventStackOverflow(SwissDraw swissDraw) {
@@ -158,7 +166,19 @@ public class SwissSystemManager {
         return (x & 1) != 0;
     }
 
-    private void fillGames(int round, List<TournamentPlayerDTO> player, List<TournamentSingleGameDTO> games, Map<Integer, List<TournamentPlayerDTO>> hashMap, int winningGames, List<TournamentPlayerDTO> sameWinList) {
+    /**
+     * filling the games for player with the same amount of won games.
+     * it shuffles the player, so the result will no be the same every time
+     * if not enough player get the next from the less amount of won games
+     *
+     * @param player       list of player
+     * @param swissDraw    to be filled
+     * @param hashMap      Map of the level (amount of won games)
+     * @param winningGames amount of won games
+     * @param sameWinList  list of player with same win (todo do we need this?)
+     */
+    private void fillGames(int round, List<TournamentPlayerDTO> player, SwissDraw swissDraw, Map<Integer, List<TournamentPlayerDTO>> hashMap,
+                           int winningGames, List<TournamentPlayerDTO> sameWinList) {
         while (sameWinList != null && sameWinList.size() > 0) {
             Collections.shuffle(sameWinList);
             TournamentSingleGameDTO game = new TournamentSingleGameDTO();
@@ -171,13 +191,29 @@ public class SwissSystemManager {
             } else {
                 sameWinList.remove(p2);
             }
-            if (p2 == null && !isOdd(player.size())) {
-                throwNoResult(round, player, games);
+
+            if (p2 == null) {
+                if (!isOdd(player.size())) {
+                    throwNoResult(round, player, swissDraw.getGames());
+                } else {
+
+                    //allready freilos?
+                    if (p1.getGamesCount() == round - 1) {
+                        if (p1.getFullName().equals("Frank Pusteblume")) {
+                            System.err.println("");
+                        }
+                        swissDraw.setFreilos(p1);
+                        p1.setFreilos(true);
+                    } else {
+                        throwNoResult(round, player, swissDraw.getGames());
+                    }
+                }
                 return;
             }
+
             game.setPlayer1(p1);
             game.setPlayer2(p2);
-            games.add(game);
+            swissDraw.getGames().add(game);
 
 
         }
@@ -309,14 +345,15 @@ public class SwissSystemManager {
         SwissSystemPhase activePhase = (SwissSystemPhase) clz.getActivePhase();
         if (activePhase.isFinished()) {
             int pc = clz.getPhaseCount();
+            int nextRound = pc + 1;
             //don't create more than necessary
             if (pc < actualRound + 1) {
-                SwissSystemPhase phase = new SwissSystemPhase("Runde " + (actualRound + 1));
+                SwissSystemPhase phase = new SwissSystemPhase("Runde " + (nextRound));
                 clz.addPhase(phase);
-                clz.setActivePhaseNo(actualRound - 1); //zero based
-                phase.setRound(actualRound + 1);
+                clz.setActivePhaseNo(pc); //zero based
+                phase.setRound(nextRound);
 
-                LOG.info("created Round #{}", (actualRound + 1));
+                LOG.info("created Round #{}", (nextRound));
 
                 tcRepository.saveAndFlush(clz);
             }
@@ -336,21 +373,30 @@ public class SwissSystemManager {
             tournamentService.selectPhaseCombination(cid, PhaseCombination.SWS);
             tc = tcRepository.findOne(cid);
         }
+
+        for (Phase phase : tc.getSystem().getPhases()) {
+            SwissSystemPhase sphase = (SwissSystemPhase) phase;
+            for (TournamentSingleGame tournamentSingleGame : sphase.getGroup().getGames()) {
+                for (TournamentPlayerDTO p : ps) {
+                    if (p.getId().equals(tournamentSingleGame.getPlayer1().getId())) {
+                        p.inkrementGamesCount();
+                    }
+                    if (p.getId().equals(tournamentSingleGame.getPlayer2().getId())) {
+                        p.inkrementGamesCount();
+                    }
+                }
+            }
+        }
         SwissSystemPhase phase = ((SwissSystemPhase) tc.getActivePhase());
         TournamentSystemType stype = TournamentSystemType.enumOf(tc.getSystemType());
         int round = phase.getRound();
         calcRankingRound(stype, round, ps);
         for (int i = 1; i <= 100; i++) {
             try {
-                System.out.println("------ #" + i + " run -------------- ");
-                if (i > 80) {
-                    System.out.println("brute force !!");
-                    return createGamesForRound(round, ps, true);
-                } else {
-                    return createGamesForRound(round, ps, false);
-                }
+                LOG.debug("------ #" + i + " run -------------- ");
+                return createGamesForRound(round, ps, i > 80);
             } catch (SwissRuntimeException e) {
-                System.out.println();
+                LOG.debug("catched exception but ignoring");
             }
         }
         //tod exception

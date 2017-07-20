@@ -608,6 +608,8 @@ public class TournamentService {
         return !(tc.getActivePhaseNo() > 1);
     }
 
+    //todo add: any class finished
+
     @Transactional(readOnly = true)
     public Long[] anyPhaseFinished(String userName) {
         Tournament t = getTournamentForUser(userName);

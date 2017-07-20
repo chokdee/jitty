@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.jmelzer.jitty.model.PhaseCombination.SWS;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -35,12 +36,31 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SwissSystemManagerTest {
-
     @InjectMocks
     SwissSystemManager swissSystemManager = new SwissSystemManager();
 
     @Mock
     TournamentClassRepository tcRepository;
+
+    @Test
+    public void createtNextSwissRoundIfNecessary1() throws Exception {
+
+        TournamentClass clz = new TournamentClass();
+        clz.createPhaseCombination(SWS);
+        clz.setActivePhaseNo(0);
+        when(tcRepository.findOne(1L)).thenReturn(clz);
+
+        assertThat(swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1), is(1));
+
+        TournamentSingleGame game = new TournamentSingleGame();
+        game.setWinner(1);
+
+        SwissSystemPhase phase = (SwissSystemPhase) clz.getActivePhase();
+        phase.setGroup(new TournamentGroup());
+        phase.getGroup().addGame(game);
+
+        assertThat(swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1), is(2));
+    }
 
     @Test
     public void calcRankingFirstRound() throws Exception {
@@ -94,6 +114,8 @@ public class SwissSystemManagerTest {
                 System.out.println("playerDTO = " + playerDTO);
                 assertEquals("#" + j + playerDTO.toString(), 1, playerDTO.getPlayedGames().size());
             }
+            assertTrue(player.get(player.size() - 1).hasFreilos());
+
             for (int round = 2; round <= 6; round++) {
 
                 System.out.println("------ round " + round + " starts .-------------- ");
@@ -253,7 +275,7 @@ public class SwissSystemManagerTest {
     @Test
     public void createtNextSwissRoundIfNecessary() throws Exception {
         TournamentClass tc = new TournamentClass();
-        tc.createPhaseCombination(PhaseCombination.SWS);
+        tc.createPhaseCombination(SWS);
         tc.setActivePhaseNo(0);
         SwissSystemPhase activePhase = (SwissSystemPhase) tc.getActivePhase();
         TournamentSingleGame game = new TournamentSingleGame();
@@ -264,11 +286,11 @@ public class SwissSystemManagerTest {
 
         game.setWinner(1);
 
-        assertEquals(1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
+        assertEquals(2, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
         assertThat(tc.getPhaseCount(), is(2));
 
         //called it twice, shall be the same result
-        assertEquals(1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
+        assertEquals(2, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
         assertThat(tc.getPhaseCount(), is(2));
 
         for (int i = 2; i <= 6; i++) {
@@ -277,7 +299,7 @@ public class SwissSystemManagerTest {
             game = new TournamentSingleGame();
             activePhase.getGroup().addGame(game);
             try {
-                assertEquals("games are not finished", i - 1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, i));
+                assertEquals("games are not finished", i, swissSystemManager.createtNextSwissRoundIfNecessary(1L, i));
             } catch (IntegrityViolation integrityViolation) {
                 if (i != 6) {
                     fail();
@@ -287,8 +309,16 @@ public class SwissSystemManagerTest {
 
             game.setWinner(1);
 
-            assertEquals(i, swissSystemManager.createtNextSwissRoundIfNecessary(1L, i));
-            assertThat(tc.getPhaseCount(), is(i + 1));
+            try {
+                //round 6 is special
+                assertEquals(i + 1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, i));
+                assertThat(tc.getPhaseCount(), is(i + 1));
+            } catch (IntegrityViolation integrityViolation) {
+                if (i != 6) {
+                    fail();
+                }
+                assertThat(tc.getPhaseCount(), is(i));
+            }
         }
 
     }
@@ -300,4 +330,6 @@ public class SwissSystemManagerTest {
         assertFalse(swissSystemManager.isOdd(2));
         assertFalse(swissSystemManager.isOdd(4));
     }
+
+
 }

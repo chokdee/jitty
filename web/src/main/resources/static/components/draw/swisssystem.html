@@ -18,15 +18,15 @@
     <br>
     <div class="row">
         <div class="col-md-4">
-            <h5>Spielerrangliste</h5>
+            <h5><b>Spielerrangliste</b></h5>
             <div ui-grid="gridPlayerList"></div>
         </div>
         <div class="col-md-6" style="margin-left: 20px">
-            <h5>Ausgeloste Spiele</h5>
+            <h5><b>Ausgeloste Spiele</b> &nbsp; &nbsp;&nbsp;&nbsp;<b>Freilos:</b> {{freilos.fullName}}</h5>
+            <!--<div>-->
+            <!--<b>Freilos:</b> {{freilos.fullName}}-->
+            <!--</div>-->
             <div ui-grid="gridGameList"></div>
-            <div>
-                Freilos: {{freilos.fullName}}
-            </div>
         </div>
     </div>
 </div>
