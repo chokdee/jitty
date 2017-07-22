@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -22,4 +27,5 @@ public class JittyConfig {
 //    public Filter inViewVilter() {
 //        return new OpenEntityManagerInViewFilter();
 //    }
+
 }

@@ -1,11 +1,6 @@
 /*
- *
- *  Project: OPUS 2.0
- *  Copyright(c) 2013 by Deutsche Post AG
- *  All rights reserved.
- *
- *  $Revision $, last modified $Date $ by $Author $
- * /
+ * Copyright (c) 2017.
+ * J. Melzer
  */
 
 package com.jmelzer.jitty.app;
@@ -51,14 +46,31 @@ public class SchemaExporter {
      */
     public static void main(final String[] args) throws Exception {
         SchemaExporter gen = new SchemaExporter(Dialect.HSQL, "com.jmelzer.jitty.model");
-        gen.setPrefix("");
+        gen.setPrefix("hsql");
         gen.generate();
+        SchemaExporter gen2 = new SchemaExporter(Dialect.MYSQL, "com.jmelzer.jitty.model");
+        gen2.setPrefix("mysql");
+        gen2.generate();
 
     }
 
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+    }
+
+    private String generate() {
+
+
+        SchemaExport export = new SchemaExport((MetadataImplementor) metadata.buildMetadata());
+        export.setDelimiter(";");
+        String workingDir = System.getProperty("user.dir");
+
+        String filename = workingDir + "/src/main/resources/db/migration/" + prefix + "/V1__ddl.sql";
+        export.setOutputFile(filename);
+
+        export.execute(true, false, false, true);
+        return filename;
     }
 
     /**
@@ -126,20 +138,6 @@ public class SchemaExporter {
         }
 
         return classes;
-    }
-
-    private String generate() {
-
-
-        SchemaExport export = new SchemaExport((MetadataImplementor) metadata.buildMetadata());
-        export.setDelimiter(";");
-        String workingDir = System.getProperty("user.dir");
-
-        String filename = workingDir + "/src/main/resources/db/migration/V1__ddl.sql";
-        export.setOutputFile(filename);
-
-        export.execute(true, false, false, true);
-        return filename;
     }
 
     /**

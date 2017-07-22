@@ -1,7 +1,11 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Created by J. Melzer on 28.12.2016.
@@ -10,12 +14,13 @@ import java.util.List;
 @Inheritance( strategy = InheritanceType.JOINED )
 public abstract class Phase {
 
-    @ManyToOne()
-    private TournamentSystem system;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(targetEntity = TournamentSystem.class)
+    @JoinColumn(name = "S_ID")
+    private TournamentSystem system;
 
     public Long getId() {
         return id;

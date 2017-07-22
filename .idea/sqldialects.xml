@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/data/src/main/resources/db/migration/V1__ddl.sql" dialect="HSQLDB" />
+    <file url="file://$PROJECT_DIR$/data/src/main/resources/db/migration/hsql/V1__ddl.sql" dialect="HSQLDB" />
+    <file url="file://$PROJECT_DIR$/data/src/main/resources/db/migration/mysql/V1__ddl.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/data/src/main/resources/db/migration/mysql/create_db.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/data/src/test/resources/import.sql" dialect="HSQLDB" />
     <file url="file://$PROJECT_DIR$/web/src/main/resources/clubs.sql" dialect="HSQLDB" />
-    <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/V2__init_data.sql" dialect="HSQLDB" />
-    <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/V3__swiss.sql" dialect="HSQLDB" />
+    <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/hsql/V2__init_data.sql" dialect="HSQLDB" />
+    <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/hsql/V3__swiss.sql" dialect="HSQLDB" />
+    <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/mysql/V2__init_data.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/mysql/V3__swiss.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/mysql/drop.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/web/src/main/resources/import.sql" dialect="HSQLDB" />
   </component>
 </project>

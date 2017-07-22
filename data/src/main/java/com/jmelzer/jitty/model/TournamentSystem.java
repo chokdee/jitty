@@ -22,7 +22,7 @@ public class TournamentSystem {
     private Long id;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "system", fetch = FetchType.LAZY)
-    @OrderColumn(name = "INDEX")
+    @OrderColumn(name = "INDEXP")
     private List<Phase> phases = new ArrayList<>();
 
     @OneToOne
