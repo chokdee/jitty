@@ -326,7 +326,7 @@ angular.module('jitty.running.controllers', []).controller('RunningController', 
     function calcResult(shortResult) {
         gameset = {};
         var sr = parseInt(shortResult);
-        if (sr > 0) {
+        if (sr >= 0) {
             if (sr < 10) {
                 gameset.points1 = 11;
             }
