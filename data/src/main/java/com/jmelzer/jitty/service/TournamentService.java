@@ -355,6 +355,7 @@ public class TournamentService {
             throw new IllegalArgumentException();
         }
         queueManager.moveGameBackToPossibleGames(game);
+        tableManager.pushFreeTable(game);
         game.setCalled(false);
         game.setStartTime(null);
         tournamentSingleGameRepository.save(game);

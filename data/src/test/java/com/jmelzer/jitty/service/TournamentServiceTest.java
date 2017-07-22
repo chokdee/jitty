@@ -5,15 +5,19 @@
 
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentSingleGameRepository;
 import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.GameSetDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassStatus;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,13 +35,45 @@ import static org.mockito.Mockito.*;
 /**
  * Created by J. Melzer on 11.06.2016.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class TournamentServiceTest {
+
+    @InjectMocks
     TournamentService service = new TournamentService();
 
-    @Before
-    public void setup() {
-        service = new TournamentService();
+    @Mock
+    TournamentClassRepository tcRepository;
+
+    @Mock
+    TournamentSingleGameRepository tournamentSingleGameRepository;
+
+    @Mock
+    QueueManager queueManager;
+
+    @Mock
+    TableManager tableManager;
+
+
+    @Test
+    public void moveGameBackToPossiblegames() throws Exception {
+
+        when(tournamentSingleGameRepository.findOne(1L)).thenReturn(null);
+        try {
+            service.moveGameBackToPossiblegames(1L);
+            fail();
+        } catch (IllegalArgumentException e) {
+            //should be
+        }
+
+        TournamentSingleGame game = new TournamentSingleGame();
+        when(tournamentSingleGameRepository.findOne(1L)).thenReturn(game);
+
+        service.moveGameBackToPossiblegames(1L);
+
+        verify(tableManager).pushFreeTable(game);
+        verify(queueManager).moveGameBackToPossibleGames(game);
     }
+
 
     @Test
     @Ignore("fixme")
