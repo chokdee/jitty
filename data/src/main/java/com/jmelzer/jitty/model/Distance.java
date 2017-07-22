@@ -20,11 +20,12 @@ public enum Distance {
     CENTIMETER("cm", 0.01),
     MILLIMETER("mm", 0.001);
     @JsonProperty(required = false)
-    private String unit;
-    @JsonProperty(required = false)
     private final double meters;
 
-    private Distance(String unit, double meters) {
+    @JsonProperty(required = false)
+    private String unit;
+
+    Distance(String unit, double meters) {
         this.unit = unit;
         this.meters = meters;
     }

@@ -84,10 +84,7 @@ public class PlayerController {
     }
 
     private boolean checkNull(TournamentPlayerDTO playerDTO) {
-        if (playerDTO == null) {
-            return true;
-        }
-        return false;
+        return playerDTO == null;
     }
 
     @POST
