@@ -1,0 +1,28 @@
+<!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
+<div class="row">
+    <flash-message name="flash-status"></flash-message>
+</div>
+<div class="form-style-2">
+    <div class="form-style-2-heading">Turnier abschliessen</div>
+
+    <div class="control-group">
+        <label for="name"><span>Name <span class="required">*</span></span></label>
+        <input disabled type="text" ng-model="tournament.name" name="name" required id="name"
+               class="form-control ng-pristine ng-invalid ng-invalid-required"/>
+    </div>
+
+    <div class="col-md-5">
+        <img style="float: left" src="/images/click-tt-logo-small.jpg">
+        <input style="margin-top: 20px; margin-left: 10px" class="btn-primary btn" type="file" nv-file-select uploader="uploader"/>
+        <div ng-show="hasOnlyOneClass">
+            <input type="checkbox" ng-model="assignWhileImport"> Es gibt nur eine Klasse. Alle direkt zuordnen?
+        </div>
+        <!--<pre>{{assignWhileImport}}</pre>-->
+        <!--<pre>{{players}}</pre>-->
+    </div>
+
+</div>

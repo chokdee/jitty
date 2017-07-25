@@ -1,12 +1,17 @@
 
-package com.jmelzer.jitty.model.xml.playerimport;
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
 
-import java.util.ArrayList;
-import java.util.List;
+package com.jmelzer.jitty.model.xml.clicktt;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

@@ -1,3 +1,8 @@
+<!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
 <br/>
 <!--suppress HtmlFormInputWithoutLabel -->
 <a name="newTournament" ng-click="createNewTournament()" class="btn-primary btn" style="top:20px;">Neues Turnier anlegen</a>
@@ -12,6 +17,7 @@
         </th>
         <th><a href="" ng-click="order('startDate')">Start</a></th>
         <th><a href="" ng-click="order('endDate')">Ende</a></th>
+        <th>Aktionen</th>
     </tr>
     </thead>
     <tr>
@@ -22,8 +28,9 @@
         <td>{{t.startDate}}</td>
         <td>{{t.endDate}}</td>
         <td>
-            <a class="btn btn-primary" href="#/tournaments/{{t.id}}">Bearbeiten</a>
+            <a class="btn btn-primary" href="#/tournaments/{{t.id}}">Bearbeiten...</a>
             <a id="{{'select-'+t.id}}" class="btn btn-primary" ng-click="selectTournament(t.id, t.name)">Auswählen</a>
+            <a ng-show="t.finished" class="btn btn-primary" href="#/tournaments-finish/{{t.id}}">Abschliessen...</a>
         </td>
     </tr>
 </table>

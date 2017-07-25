@@ -111,6 +111,7 @@ public class TournamentService {
         List<TournamentDTO> ret = new ArrayList<>(list.size());
         for (Tournament tournament : list) {
             TournamentDTO dto = copy(tournament);
+            dto.setFinished(tournament.isFinished());
             ret.add(dto);
         }
 

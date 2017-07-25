@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 angular.module('jitty.tournament', ['ngRoute', 'ngResource', 'ngMessages', 'jitty.tournament.controllers', 'jitty.tournament.services', 'ui.bootstrap']).
 config(function ($routeProvider, $httpProvider) {
 
@@ -9,6 +14,10 @@ config(function ($routeProvider, $httpProvider) {
         title: 'Turnier bearbeiten',
         templateUrl: '/components/tournament/tournament-edit.html',
         controller: 'TournamentEditController'
+    }).when('/tournaments-finish/:id', {
+        title: 'Turnier abschliessen',
+        templateUrl: '/components/tournament/tournament-finish.html',
+        controller: 'TournamentFinishController'
     }).when('/tournament-add', {
         title: 'Turnier anlegen',
         templateUrl: '/components/tournament/tournament-new.html',

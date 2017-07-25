@@ -82,6 +82,7 @@ CREATE TABLE TG_PLAYER (
 );
 CREATE TABLE tournament (
   id          BIGINT       NOT NULL AUTO_INCREMENT,
+  click_tt_id VARCHAR(255),
   end_date    DATE         NOT NULL,
   name        VARCHAR(255) NOT NULL,
   running     BIT          NOT NULL,
@@ -92,6 +93,7 @@ CREATE TABLE tournament (
 CREATE TABLE tournament_class (
   id             BIGINT       NOT NULL AUTO_INCREMENT,
   ACTIVE_PHASE   INTEGER      NOT NULL,
+  age_group      VARCHAR(255) NOT NULL,
   end_ttr        INTEGER,
   max_age        DATE,
   min_age        DATE,
@@ -112,19 +114,21 @@ CREATE TABLE tournament_group (
   PRIMARY KEY (id)
 );
 CREATE TABLE tournament_player (
-  id             BIGINT       NOT NULL AUTO_INCREMENT,
-  birthday       DATE,
-  email          VARCHAR(255),
-  firstname      VARCHAR(255) NOT NULL,
-  gender         VARCHAR(1),
-  last_game_at   DATETIME,
-  lastname       VARCHAR(255) NOT NULL,
-  mobilenumber   VARCHAR(255),
-  qttr           INTEGER,
-  suspended      BIT,
-  ttr            INTEGER,
-  association_id BIGINT,
-  club_id        BIGINT,
+  id                   BIGINT       NOT NULL AUTO_INCREMENT,
+  birthday             DATE,
+  click_tt_internal_nr VARCHAR(255),
+  click_tt_licence_nr  VARCHAR(255),
+  email                VARCHAR(255),
+  firstname            VARCHAR(255) NOT NULL,
+  gender               VARCHAR(1),
+  last_game_at         DATETIME,
+  lastname             VARCHAR(255) NOT NULL,
+  mobilenumber         VARCHAR(255),
+  qttr                 INTEGER,
+  suspended            BIT,
+  ttr                  INTEGER,
+  association_id       BIGINT,
+  club_id              BIGINT,
   PRIMARY KEY (id)
 );
 CREATE TABLE TOURNAMENT_SINGLE_GAME (

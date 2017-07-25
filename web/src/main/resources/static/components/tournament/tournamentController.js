@@ -233,5 +233,17 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
             }
         };
     }
-);
+).controller('TournamentFinishController', function ($scope, $routeParams, Tournament, $location, $http, popupService, $window) {
+    $scope.id = $routeParams.id;
+
+    $scope.tournament = {};
+
+
+    $scope.getTournament = function () {
+        $scope.tournament = Tournament.get({id: $routeParams.id}, function () {
+            console.log('Tournament got successful');
+        })
+    };
+    $scope.getTournament();
+});
 

@@ -28,6 +28,8 @@ import java.util.List;
 
     private int tableCount = 8;
 
+    private boolean finished;
+
     public int getType() {
         return type;
     }
@@ -82,5 +84,13 @@ import java.util.List;
 
     public void setTableCount(int tableCount) {
         this.tableCount = tableCount;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }

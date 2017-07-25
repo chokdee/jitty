@@ -11,10 +11,10 @@ import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.GameSetDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
-import com.jmelzer.jitty.model.xml.playerimport.Match;
-import com.jmelzer.jitty.model.xml.playerimport.Person;
-import com.jmelzer.jitty.model.xml.playerimport.Player;
-import com.jmelzer.jitty.model.xml.playerimport.Tournament;
+import com.jmelzer.jitty.model.xml.clicktt.Match;
+import com.jmelzer.jitty.model.xml.clicktt.Person;
+import com.jmelzer.jitty.model.xml.clicktt.Player;
+import com.jmelzer.jitty.model.xml.clicktt.Tournament;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -171,7 +171,7 @@ public class SwissSystemManagerTest {
         XMLImporter xmlImporter = new XMLImporter();
         InputStream inputStream = getClass().getResourceAsStream("/xml-import/androWTTV-Cup.xml");
 
-        com.jmelzer.jitty.model.xml.playerimport.Tournament tournament = xmlImporter.parseClickTTPlayerExport(inputStream);
+        com.jmelzer.jitty.model.xml.clicktt.Tournament tournament = xmlImporter.parseClickTTPlayerExport(inputStream);
         List<TournamentPlayerDTO> player = new ArrayList<>();
 
 

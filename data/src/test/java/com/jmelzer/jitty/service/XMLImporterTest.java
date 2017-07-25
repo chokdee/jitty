@@ -5,7 +5,7 @@
 
 package com.jmelzer.jitty.service;
 
-import com.jmelzer.jitty.model.xml.playerimport.Tournament;
+import com.jmelzer.jitty.model.xml.clicktt.Tournament;
 import org.junit.Test;
 
 import java.io.InputStream;

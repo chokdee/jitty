@@ -9,10 +9,7 @@ package com.jmelzer.jitty.model;
 import com.jmelzer.jitty.model.dto.TournamentClassStatus;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.jmelzer.jitty.model.dto.TournamentClassStatus.SWISS_PHASE_RUNNING;
 
@@ -90,6 +87,9 @@ public class TournamentClass {
     @Column(nullable = false, name = "open_for_women")
     private boolean openForWomen;
 
+    /** altersklasse. Values see enum AgeGroup */
+    @Column(nullable = false, name = "age_group")
+    private String ageGroup;
 
     public TournamentClass(String name) {
         this.name = name;
@@ -120,7 +120,7 @@ public class TournamentClass {
 
     public void addPlayer(TournamentPlayer player) {
         for (TournamentPlayer p : players) {
-            if (p.getId().equals(player.getId())) {
+            if (p.getId() != null && player.getId() != null && Objects.equals(p.getId(), player.getId())) {
                 return;
             }
         }
@@ -384,5 +384,13 @@ public class TournamentClass {
 
     public void addPhase(Phase phase) {
         system.addPhase(phase);
+    }
+
+    public String getAgeGroup() {
+        return ageGroup;
+    }
+
+    public void setAgeGroup(String ageGroup) {
+        this.ageGroup = ageGroup;
     }
 }

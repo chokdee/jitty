@@ -15,10 +15,10 @@ import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentPlayer;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
-import com.jmelzer.jitty.model.xml.playerimport.Competition;
-import com.jmelzer.jitty.model.xml.playerimport.Person;
-import com.jmelzer.jitty.model.xml.playerimport.Player;
-import com.jmelzer.jitty.model.xml.playerimport.Tournament;
+import com.jmelzer.jitty.model.xml.clicktt.Competition;
+import com.jmelzer.jitty.model.xml.clicktt.Person;
+import com.jmelzer.jitty.model.xml.clicktt.Player;
+import com.jmelzer.jitty.model.xml.clicktt.Tournament;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -130,6 +130,7 @@ public class PlayerService {
         int count = 0;
 
         com.jmelzer.jitty.model.Tournament actualTournament = tournamentRepository.findOne(tid);
+        actualTournament.setClickTTId(clickTTTournament.getTournamentId());
         TournamentClass tc = null;
         if (assignWhileImport) {
             tc = actualTournament.getClasses().get(0);
@@ -179,6 +180,8 @@ public class PlayerService {
         tp.setFirstName(person.getFirstname());
         tp.setLastName(person.getLastname());
         tp.setGender(person.getSex().equals("0") ? "w" : "m");
+        tp.setClickTTLicenceNr(person.getLicenceNr());
+        tp.setClickTTInternalNr(person.getInternalNr());
         Club club = clubRepository.findByName(person.getClubName());
         tp.setClub(club);
         //todo verband

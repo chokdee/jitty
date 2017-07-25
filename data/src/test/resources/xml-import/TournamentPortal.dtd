@@ -1,0 +1,168 @@
+<?xml encoding="UTF-8"?>
+        <!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
+        <!--- DTD for the XML-structure used to export players of a tournament and afterwards import the result
+
+          Version History
+          2011-03-29  wh@datenautomaten.nu  1st Edition
+          2017-01-26  so@datenautomaten.nu  Update lt. SPE-215
+        -->
+
+        <!--
+        Datumsformat: yyyy-MM-dd
+        winning-sets: Zahl, lt. Auswahl Gewinnsätze (Standard) Antrag, Schritt 2
+        winning-sets-text: Text, lt. Texteingabe Gewinnsätze (Abweichung) im Antrag, Schritt 2
+        table-count: Zahl, lt. Auswahl Tischanzahl im Antrag
+        multiple-participations-same-day: true/false, lt. Auswahl Doppelstart am selben Tag im Antrag
+        multiple-participations-same-time: true/false, lt. Auswahl Doppelstart zur selben Zeit Antrag
+        team-formation: Text, lt. Auswahl Mannschaftsformation im Antrag
+        -->
+        <!ELEMENT tournament (tournament-location*,competition+)>
+        <!ATTLIST tournament
+                name CDATA #REQUIRED
+                start-date CDATA #REQUIRED
+                end-date CDATA #REQUIRED
+                tournament-id CDATA #REQUIRED
+                winning-sets CDATA #IMPLIED
+                winning-sets-text CDATA #IMPLIED
+                multiple-participations-same-day CDATA #IMPLIED
+                multiple-participations-same-time CDATA #IMPLIED
+                table-count CDATA #IMPLIED
+                team-formation CDATA #IMPLIED
+                >
+
+        <!--
+        Austragungsorte <tournament-location> sind optional, es kann mehrere geben, wenn keine ausgeliefert werden, sind keine vorhanden
+        Alle Attribute Text lt. Eingabe im Antrag
+        -->
+        <!ELEMENT tournament-location EMPTY>
+        <!ATTLIST tournament-location
+                name CDATA #IMPLIED
+                street CDATA #IMPLIED
+                zip-code CDATA #IMPLIED
+                city CDATA #IMPLIED
+                >
+
+        <!-- Bei der Auslieferung der Spielerliste ist <matches> nicht vorhanden.
+        Beim Zurückspielen kann es vorhanden sein.
+        Wenn es nicht vorhanden ist, werden die Daten der <competition> nicht verändert.
+
+        start-date Format : yyyy-MM-dd HH:mm
+        entry-fee : Startgeld der Konkurrenz lt. Eingabe im Antrag
+        age-from: Jüngster Jahrgang der teilnehmen darf (abgebildet als Jahreszahl, z.B. 2010)
+        age-to: Ältester Jahrgang der teilnehmen darf (abgebildet als Jahreszahl, z.B. 1999)
+        sex: Geschlecht, lt. Auswahl Antrag
+        preliminary-round-playmode: Austragungssystem Vorrunde lt. Auswahl/Eingabe im Antrag
+        final-round-playmode: Austragungssystem Endrunde lt. Auswahl/Eingabe im Antrag
+        max-persons: Maximale Teilnehmerzahl lt. Antrag
+        -->
+        <!ELEMENT competition (players, matches?)>
+        <!ATTLIST competition
+                age-group CDATA #REQUIRED
+                type (Einzel|Doppel|Mixed|Mannschaft) #REQUIRED
+                start-date CDATA #REQUIRED
+                ttr-from CDATA #IMPLIED
+                ttr-to CDATA #IMPLIED
+                ttr-remarks CDATA #IMPLIED
+                entry-fee CDATA #IMPLIED
+                age-from CDATA #IMPLIED
+                age-to CDATA #IMPLIED
+                sex CDATA #IMPLIED
+                preliminary-round-playmode CDATA #IMPLIED
+                final-round-playmode CDATA #IMPLIED
+                max-persons CDATA #IMPLIED
+                >
+
+        <!-- Wenn keine <player>-Elemente vorhanden sind, ist noch keine Spielerliste für diese Konkurrenz vorhanden.  -->
+        <!ELEMENT players (player*)>
+
+        <!-- 2e Person ist nur beim Doppelspieler vorhanden
+
+        team-name und team-nr wird dann verwendet zur korrekte Darstellung der Mannschafts-Turniere
+        -->
+        <!ELEMENT player (person,person?)>
+        <!ATTLIST player
+                type (single|double) #REQUIRED
+                id ID #REQUIRED
+                team-name CDATA #IMPLIED
+                team-nr CDATA #IMPLIED
+                placement CDATA #IMPLIED
+                >
+
+        <!-- Verbindung von firstname, lastname, birthyear, licence-nr ist eindeutig.
+            nationality: Text, zweistellg. Ländercode
+            foreigner-eq-state: Text, Ausländergleichstellungsstatus, nur relevant, wenn Nationalität ungleich DE
+            region: Bezirk, des Vereins bei dem die Person Mitglied ist
+            sub-region: Kreis, des Vereins bei dem die Person Mitglied ist
+        -->
+        <!ELEMENT person EMPTY>
+        <!ATTLIST person
+                firstname CDATA #REQUIRED
+                lastname CDATA #REQUIRED
+                birthyear CDATA #REQUIRED
+                internal-nr CDATA #REQUIRED
+                licence-nr CDATA #REQUIRED
+                sex (0|1|2) #REQUIRED
+                club-name CDATA #IMPLIED
+                club-nr CDATA #IMPLIED
+                club-federation-nickname CDATA #IMPLIED
+                ttr CDATA #IMPLIED
+                ttr-match-count CDATA #IMPLIED
+                nationality CDATA #IMPLIED
+                foreigner-eq-state CDATA #IMPLIED
+                region CDATA #IMPLIED
+                sub-region CDATA #IMPLIED
+                >
+
+        <!-- leere Liste -> vorhandene Spiele werden gelöscht -> Bewerb wird zurückgesetzt.
+
+        -->
+        <!ELEMENT matches (match*)>
+
+
+        <!--
+
+        Sortierung nach Competition, match.nr, match.group.
+        Gruppierung nach Competition, match.group
+
+        IDREF: ID des Spielers muss bei dieser competition.players vorhanden sein.
+
+        scheduled Format : yyyy-MM-dd HH:mm
+
+        state: zeigt an ob einer der beiden Spieler aufgegeben hat (retired-a, retired-b) - optional, derzeit nur bei Turnierserien vorgesehen, wird sonst ignoriert, matches-a und matches-b damit konsistent sein!
+
+        -->
+        <!ELEMENT match EMPTY>
+        <!ATTLIST match
+                nr CDATA #IMPLIED
+                group CDATA #IMPLIED
+                scheduled CDATA #IMPLIED
+                player-a IDREF #REQUIRED
+                player-b IDREF #REQUIRED
+                state (retired-a | retired-b) #IMPLIED
+
+                set-a-1 CDATA #REQUIRED
+                set-a-2 CDATA #REQUIRED
+                set-a-3 CDATA #REQUIRED
+                set-a-4 CDATA #REQUIRED
+                set-a-5 CDATA #REQUIRED
+                set-a-6 CDATA #REQUIRED
+                set-a-7 CDATA #REQUIRED
+                sets-a (0|1|2|3|4|5|6|7) #REQUIRED
+                matches-a (0|1)  #REQUIRED
+                games-a CDATA #REQUIRED
+
+                set-b-1 CDATA #REQUIRED
+                set-b-2 CDATA #REQUIRED
+                set-b-3 CDATA #REQUIRED
+                set-b-4 CDATA #REQUIRED
+                set-b-5 CDATA #REQUIRED
+                set-b-6 CDATA #REQUIRED
+                set-b-7 CDATA #REQUIRED
+                sets-b (0|1|2|3|4|5|6|7) #REQUIRED
+                matches-b (0|1) #REQUIRED
+                games-b CDATA #REQUIRED
+                >

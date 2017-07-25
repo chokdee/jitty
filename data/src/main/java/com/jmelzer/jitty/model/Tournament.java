@@ -5,6 +5,8 @@
 
 package com.jmelzer.jitty.model;
 
+import com.jmelzer.jitty.model.dto.TournamentClassStatus;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -43,6 +45,9 @@ public class Tournament {
 
     @Column(nullable = false, name = "running")
     private boolean running = true;
+
+    @Column(nullable = true, name = "click_tt_id")
+    private String clickTTId;
 
     public Long getId() {
         return id;
@@ -100,6 +105,14 @@ public class Tournament {
         classes.remove(tc);
     }
 
+    public String getClickTTId() {
+        return clickTTId;
+    }
+
+    public void setClickTTId(String clickTTId) {
+        this.clickTTId = clickTTId;
+    }
+
     public int getTableCount() {
         return tableCount;
     }
@@ -118,5 +131,14 @@ public class Tournament {
 
     public void removePlayer(TournamentPlayer player) {
         players.remove(player);
+    }
+
+    public boolean isFinished() {
+        for (TournamentClass aClass : classes) {
+            if (aClass.calcStatus() != TournamentClassStatus.FINISHED) {
+                return false;
+            }
+        }
+        return true;
     }
 }

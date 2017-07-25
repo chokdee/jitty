@@ -29,9 +29,8 @@
         <td>{{c.startTime | date:'dd.MM.yyyy hh:mm' }}</td>
         <td>{{translateStatus(c.status)}}</td>
         <td>
-            <!--<a ng-show="!c.confirm" class="btn btn-primary" href="#/draw/{{c.id}}">Auswählen</a>-->
-            <a class="btn btn-primary" confirm="{{c.confirmMsg}}" confirm-if="c.confirm" ng-click="selectClass(c)">Auslosung...</a>
-            <a class="btn btn-primary" href="#/groups/{{c.id}}">Ergebnisse...</a>
+            <a ng-show="c.status != 'FINISHED'" class="btn btn-primary" confirm="{{c.confirmMsg}}" confirm-if="c.confirm" ng-click="selectClass(c)">Auslosung...</a>
+            <a ng-show="c.status != 'FINISHED'" class="btn btn-primary" href="#/groups/{{c.id}}">Ergebnisse...</a>
         </td>
     </tr>
     </tbody>

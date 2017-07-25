@@ -6,9 +6,7 @@
 package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by J. Melzer on 01.06.2016.
@@ -24,6 +22,14 @@ public class TournamentPlayer {
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, mappedBy = "players")
     List<TournamentClass> classes = new ArrayList<>();
+
+    //some click-tt attributes
+    //internal-nr
+    @Column(name = "click_tt_internal_nr")
+    String clickTTInternalNr;
+
+    @Column(name = "click_tt_licence_nr")
+    String clickTTLicenceNr;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -279,5 +285,30 @@ public class TournamentPlayer {
 
     public void setSuspended(Boolean suspended) {
         this.suspended = suspended;
+    }
+
+    public String getClickTTInternalNr() {
+        return clickTTInternalNr;
+    }
+
+    public void setClickTTInternalNr(String clickTTInternalNr) {
+        this.clickTTInternalNr = clickTTInternalNr;
+    }
+
+    public String getClickTTLicenceNr() {
+        return clickTTLicenceNr;
+    }
+
+    public void setClickTTLicenceNr(String clickTTLicenceNr) {
+        this.clickTTLicenceNr = clickTTLicenceNr;
+    }
+
+    public String getBirthdayYearAsString() {
+        if (birthday == null) {
+            return null;
+        }
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(birthday);
+        return "" + calendar.get(Calendar.YEAR);
     }
 }

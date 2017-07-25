@@ -1,5 +1,10 @@
 
-package com.jmelzer.jitty.model.xml.playerimport;
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
+package com.jmelzer.jitty.model.xml.clicktt;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
