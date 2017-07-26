@@ -92,6 +92,7 @@ public class ClickTTExporter {
                     match.setPlayerA(playerMap.get(game.getPlayer1().getId()));
                     match.setPlayerB(playerMap.get(game.getPlayer2().getId()));
 
+                    //anzahl der gewonnen Bälle
                     match.setGamesA("" + game.getId());
                     match.setGamesB("" + game.getId());
                     match.setMatchesA(game.getWinner() == 1 ? "1" : "0");

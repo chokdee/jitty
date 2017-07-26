@@ -158,6 +158,7 @@ public class TournamentService {
         TournamentClass tc = new TournamentClass(name);
         tc.setStartTTR(startTTR);
         tc.setEndTTR(endTTR);
+        tc.setAgeGroup(AgeGroup.DH.getValue());
         tc.setSystemType(systemType.getValue());
         return tc;
     }

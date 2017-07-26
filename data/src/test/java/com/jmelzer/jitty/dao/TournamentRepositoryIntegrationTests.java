@@ -63,11 +63,13 @@ public class TournamentRepositoryIntegrationTests {
 
         TournamentClass tournamentClass = new TournamentClass();
         tournamentClass.setName("A-Klasse bis 3000 TTR");
+        tournamentClass.setAgeGroup("dasdas");
         tournamentClass.setSystemType(TournamentSystemType.GK.getValue());
         tournament.addClass(tournamentClass);
         tournamentClass.createPhaseCombination(PhaseCombination.GK);
         TournamentClass tournamentClass2 = new TournamentClass();
         tournamentClass2.setName("B-Klasse bis 1800 TTR");
+        tournamentClass2.setAgeGroup("asdasdas");
         tournamentClass2.setSystemType(TournamentSystemType.GK.getValue());
         tournamentClass2.createPhaseCombination(PhaseCombination.GK);
         tournament.addClass(tournamentClass2);

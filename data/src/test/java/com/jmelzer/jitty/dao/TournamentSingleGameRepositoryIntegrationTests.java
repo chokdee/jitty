@@ -47,6 +47,7 @@ public class TournamentSingleGameRepositoryIntegrationTests {
 
         TournamentClass tournamentClass = new TournamentClass("test");
         tournamentClass.setSystemType(TournamentSystemType.GK.getValue());
+        tournamentClass.setAgeGroup("sdfasfsda");
         tournamentClassRepository.save(tournamentClass);
         assertNotNull(tournamentClass.getId());
 

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model.dto;
 
 
@@ -8,6 +13,8 @@ import java.util.Date;
  * Turnier-Klasse
  */
 public class TournamentClassDTO {
+    int activePhaseNo = -1;
+
     private Long id;
 
     private Integer systemType;
@@ -34,7 +41,7 @@ public class TournamentClassDTO {
 
     private boolean openForWomen;
 
-    int activePhaseNo = -1;
+    private String ageGroup;
 
     @Override
     public int hashCode() {
@@ -179,5 +186,13 @@ public class TournamentClassDTO {
 
     public void setActivePhaseNo(int activePhaseNo) {
         this.activePhaseNo = activePhaseNo;
+    }
+
+    public String getAgeGroup() {
+        return ageGroup;
+    }
+
+    public void setAgeGroup(String ageGroup) {
+        this.ageGroup = ageGroup;
     }
 }

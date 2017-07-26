@@ -70,6 +70,7 @@ public class TournamentClassRepositoryIntegrationTests {
 
         clz.createPhaseCombination(PhaseCombination.GK);
         clz.setSystemType(TournamentSystemType.GK.getValue());
+        clz.setAgeGroup("fff");
         repository.save(clz);
 
         clz.addGroup(new TournamentGroup("1"));

@@ -5,6 +5,7 @@
 
 package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.model.AgeGroup;
 import com.jmelzer.jitty.model.TournamentSystemType;
 import com.jmelzer.jitty.model.dto.GroupPhaseDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
@@ -101,6 +102,7 @@ public class TestUtil {
         tournamentClass.setName(name);
         tournamentClass.setStartTTR(0);
         tournamentClass.setEndTTR(3000);
+        tournamentClass.setAgeGroup(AgeGroup.DH.getValue());
         tournamentClass.setSystemType(systemType.getValue());
 
         ResponseEntity<Long> longEntitiy = http(HttpMethod.POST, "api/tournament-classes/" + tId,

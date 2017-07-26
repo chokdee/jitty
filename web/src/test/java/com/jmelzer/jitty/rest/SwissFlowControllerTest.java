@@ -5,6 +5,7 @@
 
 package com.jmelzer.jitty.rest;
 
+import com.jmelzer.jitty.model.AgeGroup;
 import com.jmelzer.jitty.model.TournamentSystemType;
 import com.jmelzer.jitty.model.dto.*;
 import com.jmelzer.jitty.utl.RandomUtil;
@@ -179,6 +180,7 @@ public class SwissFlowControllerTest extends SecureResourceTest {
         tournamentClass.setName(TC_NAME);
         tournamentClass.setStartTTR(0);
         tournamentClass.setEndTTR(3000);
+        tournamentClass.setAgeGroup(AgeGroup.DH.getValue());
         tournamentClass.setSystemType(TournamentSystemType.AC.getValue());
 
         ResponseEntity<Long> longEntitiy = http(HttpMethod.POST, "api/tournament-classes/" + tId,
