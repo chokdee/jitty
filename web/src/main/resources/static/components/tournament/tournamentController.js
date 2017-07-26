@@ -245,5 +245,10 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
         })
     };
     $scope.getTournament();
+
+    $scope.getXml = function () {
+        var downloadPath = '/api/tournaments/export/' + $scope.id;
+        window.open(downloadPath, '_blank', '');
+    }
 });
 

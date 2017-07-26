@@ -89,6 +89,11 @@ public class SwissSystemPhase extends Phase {
         return true;
     }
 
+    @Override
+    public List<TournamentSingleGame> getAllSingleGames() {
+        return group.getGames();
+    }
+
     public boolean hasRunningGames() {
         List<TournamentSingleGame> games = group.getGames();
         for (TournamentSingleGame game : games) {

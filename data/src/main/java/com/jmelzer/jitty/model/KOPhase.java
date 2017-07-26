@@ -1,6 +1,13 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by J. Melzer on 28.12.2016.
@@ -57,5 +64,19 @@ public class KOPhase extends Phase {
             round = round.getNextRound();
         }
         return true;
+    }
+
+    @Override
+    public List<TournamentSingleGame> getAllSingleGames() {
+
+        List<TournamentSingleGame> list = new ArrayList<>();
+
+        int nr = koField.getNoOfRounds();
+        Round round = koField.getRound();
+        for (int i = 0; i < nr; i++) {
+            list.addAll(round.getGames());
+            round = round.getNextRound();
+        }
+        return list;
     }
 }

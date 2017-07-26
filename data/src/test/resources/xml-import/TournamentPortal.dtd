@@ -132,7 +132,8 @@
 
         scheduled Format : yyyy-MM-dd HH:mm
 
-        state: zeigt an ob einer der beiden Spieler aufgegeben hat (retired-a, retired-b) - optional, derzeit nur bei Turnierserien vorgesehen, wird sonst ignoriert, matches-a und matches-b damit konsistent sein!
+        state: zeigt an ob einer der beiden Spieler aufgegeben hat (retired-a, retired-b) - optional,
+        derzeit nur bei Turnierserien vorgesehen, wird sonst ignoriert, matches-a und matches-b damit konsistent sein!
 
         -->
         <!ELEMENT match EMPTY>

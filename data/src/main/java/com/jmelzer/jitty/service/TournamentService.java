@@ -25,6 +25,8 @@ import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import static com.jmelzer.jitty.service.CopyManager.*;
@@ -43,6 +45,9 @@ public class TournamentService {
     @Autowired
     @Qualifier("transactionManager")
     protected PlatformTransactionManager txManager;
+
+    @Resource
+    ClickTTExporter clickTTExporter;
 
     @Resource
     TournamentRepository repository;
@@ -738,5 +743,12 @@ public class TournamentService {
     public Boolean hasOnlyOneClass(Long id) {
         List<TournamentClass> cs = repository.findOne(id).getClasses();
         return cs != null && cs.size() == 1;
+    }
+
+    @Transactional(readOnly = true)
+    public File exportToClickTT(Long aLong) throws IOException {
+        File file = File.createTempFile("click-tt", ".xml");
+        clickTTExporter.export(repository.findOne(aLong), file);
+        return file;
     }
 }

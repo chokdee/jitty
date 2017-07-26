@@ -6,6 +6,7 @@
 package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by J. Melzer on 28.12.2016.
@@ -43,4 +44,6 @@ public abstract class Phase {
     public abstract void resetGames();
 
     public abstract boolean isFinished();
+
+    public abstract List<TournamentSingleGame> getAllSingleGames();
 }

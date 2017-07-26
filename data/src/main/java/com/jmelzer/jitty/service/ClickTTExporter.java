@@ -5,14 +5,9 @@
 
 package com.jmelzer.jitty.service;
 
-import com.jmelzer.jitty.model.Gender;
+import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.Tournament;
-import com.jmelzer.jitty.model.TournamentClass;
-import com.jmelzer.jitty.model.TournamentPlayer;
-import com.jmelzer.jitty.model.xml.clicktt.Competition;
-import com.jmelzer.jitty.model.xml.clicktt.Person;
-import com.jmelzer.jitty.model.xml.clicktt.Player;
-import com.jmelzer.jitty.model.xml.clicktt.Players;
+import com.jmelzer.jitty.model.xml.clicktt.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -23,6 +18,9 @@ import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by J. Melzer on 24.07.2017.
@@ -49,7 +47,7 @@ public class ClickTTExporter {
         }
     }
 
-    private com.jmelzer.jitty.model.xml.clicktt.Tournament map(Tournament tournament) {
+    public com.jmelzer.jitty.model.xml.clicktt.Tournament map(Tournament tournament) {
         com.jmelzer.jitty.model.xml.clicktt.Tournament jaxb = new com.jmelzer.jitty.model.xml.clicktt.Tournament();
         jaxb.setStartDate(dfDate.format(tournament.getStartDate()));
         jaxb.setEndDate(dfDate.format(tournament.getEndDate()));
@@ -64,8 +62,11 @@ public class ClickTTExporter {
 
             competition.setPlayers(new Players());
 
+            Map<Long, Player> playerMap = new HashMap<>();
+
             for (TournamentPlayer tp : tc.getPlayers()) {
                 Player player = new Player();
+                playerMap.put(tp.getId(), player);
                 Person person = new Person();
                 player.getPerson().add(person);
                 competition.getPlayers().getPlayer().add(player);
@@ -83,7 +84,55 @@ public class ClickTTExporter {
                     person.setClubName(tp.getClub().getName());
                 }
             }
+            Matches matches = new Matches();
+            competition.setMatches(matches);
+            for (Phase phase : tc.getAllPhases()) {
+                for (TournamentSingleGame game : phase.getAllSingleGames()) {
+                    Match match = new Match();
+                    match.setPlayerA(playerMap.get(game.getPlayer1().getId()));
+                    match.setPlayerB(playerMap.get(game.getPlayer2().getId()));
+
+                    match.setGamesA("" + game.getId());
+                    match.setGamesB("" + game.getId());
+                    match.setMatchesA(game.getWinner() == 1 ? "1" : "0");
+                    match.setMatchesB(game.getWinner() == 2 ? "1" : "0");
+                    match.setSetsA("" + game.getWonSetFor1());
+                    match.setSetsB("" + game.getWonSetFor2());
+
+                    List<GameSet> sets = game.getSets();
+                    match.setSetA1("" + sets.get(0).getPoints1());
+                    match.setSetB1("" + sets.get(0).getPoints2());
+                    match.setSetA2("" + sets.get(1).getPoints1());
+                    match.setSetB2("" + sets.get(1).getPoints2());
+                    match.setSetA3("" + sets.get(2).getPoints1());
+                    match.setSetB3("" + sets.get(2).getPoints2());
+                    match.setSetA4(getSetResult(3, sets, true));
+                    match.setSetB4(getSetResult(3, sets, false));
+                    match.setSetA5(getSetResult(4, sets, true));
+                    match.setSetB5(getSetResult(4, sets, false));
+                    match.setSetA6(getSetResult(5, sets, true));
+                    match.setSetB6(getSetResult(5, sets, false));
+                    match.setSetA7(getSetResult(6, sets, true));
+                    match.setSetB7(getSetResult(6, sets, false));
+                    matches.getMatch().add(match);
+                }
+
+
+            }
         }
         return jaxb;
+    }
+
+    private String getSetResult(int n, List<GameSet> sets, boolean first) {
+        if (sets.size() > n) {
+            if (first) {
+                return "" + sets.get(n).getPoints1();
+            } else {
+                return "" + sets.get(n).getPoints2();
+            }
+
+        } else {
+            return "0";
+        }
     }
 }

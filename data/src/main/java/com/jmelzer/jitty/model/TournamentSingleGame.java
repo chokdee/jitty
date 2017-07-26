@@ -220,6 +220,25 @@ public class TournamentSingleGame {
         return s.trim().substring(0, s.length() - 2);
     }
 
+    public int getWonSetFor1() {
+        int setsWon = 0;
+        for (GameSet gameSet : sets) {
+            if (gameSet.getPoints1() > gameSet.getPoints2()) {
+                setsWon++;
+            }
+        }
+        return setsWon;
+    }
+
+    public int getWonSetFor2() {
+        int setsWon = 0;
+        for (GameSet gameSet : sets) {
+            if (gameSet.getPoints1() < gameSet.getPoints2()) {
+                setsWon++;
+            }
+        }
+        return setsWon;
+    }
     public String getResultInShort(TournamentPlayer own) {
         String s = "";
         if (winner == -1) {

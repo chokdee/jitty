@@ -21,6 +21,8 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -84,6 +86,23 @@ public class TournamentController {
         userService.selectTournamentForUser(user, id);
         service.selectTournament(Long.valueOf(id));
         return Response.ok().build();
+    }
+
+    @Path("export/{id}")
+    @GET
+//    @Produces(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response exportToClickTT(@PathParam(value = "id") String id) {
+        File file = null;
+        try {
+            file = service.exportToClickTT(Long.valueOf(id));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Response.serverError().build();
+        }
+        return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"") //optional
+                .build();
     }
 
     @POST

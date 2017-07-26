@@ -324,12 +324,13 @@ public class TournamentClass {
         this.activePhaseNo = activePhase;
     }
 
-    public KOField getKoField() {
-        return system.findKOField();
-    }
+    @Transient
+    public List<Phase> getAllPhases() {
+        if (system == null) {
+            return null;
+        }
 
-    public void setKoField(KOField koField) {
-        system.setKOField(koField);
+        return getSystem().getPhases();
     }
 
     public TournamentSystem getSystem() {
@@ -339,6 +340,14 @@ public class TournamentClass {
     private void setSystem(TournamentSystem system) {
         this.system = system;
         system.setTournamentClass(this);
+    }
+
+    public KOField getKoField() {
+        return system.findKOField();
+    }
+
+    public void setKoField(KOField koField) {
+        system.setKOField(koField);
     }
 
     //todo change it

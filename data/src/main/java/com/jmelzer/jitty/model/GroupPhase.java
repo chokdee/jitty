@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
@@ -99,5 +104,14 @@ public class GroupPhase extends Phase {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<TournamentSingleGame> getAllSingleGames() {
+        List<TournamentSingleGame> list = new ArrayList<>();
+        for (TournamentGroup group : groups) {
+            list.addAll(group.getGames());
+        }
+        return list;
     }
 }

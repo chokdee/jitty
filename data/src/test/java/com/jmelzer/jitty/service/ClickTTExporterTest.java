@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
@@ -41,6 +42,14 @@ public class ClickTTExporterTest {
 
         clz.addPlayer(createPlayer(1L, "Anette", "Beitel", "156012528", "NU1891464", 1979, Gender.W, 848, "TTG St. Augustin"));
         clz.addPlayer(createPlayer(2L, "Gerd", "Bosse", "148026208", "NU210632", 1954, Gender.M, 1219, "TTV BW Neudorf"));
+        clz.addPlayer(createPlayer(3L, "Georg", "Sauer", "156012499", "NU1480185", 1955, Gender.M, 1117, "TTG St. Augustin"));
+        clz.addPlayer(createPlayer(4L, "Manfred", "Siry", "154017167", "NU1480185", 1959, Gender.M, 1534, "TTV Viktoria Bonn"));
+
+        List<TournamentPlayer> players = clz.getPlayers();
+        clz.createPhaseCombination(PhaseCombination.SWS);
+        clz.setActivePhaseNo(0);
+        ((SwissSystemPhase) clz.getActivePhase()).getGroup().addGame(createGame(100L, players.get(0), players.get(1)));
+        ((SwissSystemPhase) clz.getActivePhase()).getGroup().addGame(createGame(101L, players.get(2), players.get(3)));
 
         File xmlFile = new File("target/clicktt-export.xml");
         exporter.export(tournament, xmlFile);
@@ -82,6 +91,18 @@ public class ClickTTExporterTest {
         player.setQttr(ttr);
         player.setClub(new Club(clubName));
         return player;
+    }
+
+    private TournamentSingleGame createGame(Long id, TournamentPlayer p1, TournamentPlayer p2) {
+        TournamentSingleGame game = new TournamentSingleGame();
+        game.setId(id);
+        game.setPlayer1(p1);
+        game.setPlayer2(p2);
+        game.setWinner(2);
+        game.addSet(new GameSet(2, 11));
+        game.addSet(new GameSet(5, 11));
+        game.addSet(new GameSet(9, 11));
+        return game;
     }
 
     Date getDateFromYear(int year) {
