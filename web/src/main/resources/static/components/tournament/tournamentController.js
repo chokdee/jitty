@@ -30,7 +30,7 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
 
     };
 
-}).controller('TournamentEditController', function ($scope, $routeParams, Tournament, $location, $http, popupService, $window) {
+}).controller('TournamentEditController', function ($scope, $routeParams, Tournament, $location, $http, popupService, $window, Flash) {
         $scope.id = $routeParams.id;
 
         $scope.formats = ['dd.MM.yyyy'];
@@ -81,6 +81,7 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
             }).then(function successCallback(response) {
                 //refresh data
                 $scope.getTournament();
+                Flash.create('success', 'Die Turnierklassse mit der Id ' + cid + ' wurde gelöscht.', 4000, {container: 'flash-status'});
 
             }, function errorCallback(response) {
                 if (response.status == 400) {
@@ -164,41 +165,22 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
     };
 
 
-}).controller('TournamentClassCreateController', function ($scope, $routeParams, popupService, TournamentClass, Tournament, $location, $http) {
-    $scope.tournamentClass = {startTTR: 0};
-
-    $scope.saveTournamentClass = function () {
-        if ($scope.tournamentClassForm.$valid) {
-
-            $http({
-                method: 'POST',
-                url: '/api/tournament-classes/' + $routeParams.id,
-                data: $scope.tournamentClass
-            }).then(function successCallback(response) {
-                //refresh data
-                //$scope.getTournament();
-                $location.path('/tournaments/' + $routeParams.id);
-
-            }, function errorCallback(response) {
-                $scope.errorMessage = response.data.error;
-            });
-
-
-        }
-    };
 }).controller('TournamentClassEditController', function ($scope, $routeParams, TournamentClass, $location, $http, popupService, $window) {
-        $scope.tournamentClass = {};
+    $scope.tournamentClass = {startTTR: 0, openForMen: true, openForWomen: true};
 
         $scope.getTournamentSystemType = function () {
             $http.get('/api/tournaments/system-types', {}).then(function (response) {
                 $scope.systems = response.data;
-                $scope.getTournamentClass();
+                if ($location.path().search('tournament-classes-add') < 0)
+                    $scope.getTournamentClass();
             });
         };
         $scope.getTournamentSystemType();
 
         $scope.canEdit = true;
         $scope.system = {};
+    $scope.ageGroups = ['', 'Damen/Herren', 'Nachwuchs', 'Senioren'];
+
 
         $scope.getTournamentClass = function () {
             $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
@@ -219,7 +201,15 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
                     return obj;
                 }
             }
-        }
+        };
+
+    $scope.save = function () {
+        if ($location.path().search('tournament-classes-add') < 0)
+            $scope.saveTournamentClass();
+        else
+            $scope.saveNewTournamentClass();
+    };
+
         $scope.saveTournamentClass = function () {
             if ($scope.tournamentClassForm.$valid) {
                 if ($scope.system.selected != null)
@@ -232,6 +222,28 @@ angular.module('jitty.tournament.controllers', []).controller('TournamentListCon
                 });
             }
         };
+
+    $scope.saveNewTournamentClass = function () {
+        if ($scope.tournamentClassForm.$valid) {
+            if ($scope.system.selected != null)
+                $scope.tournamentClass.systemType = $scope.system.selected.value;
+
+            $http({
+                method: 'POST',
+                url: '/api/tournament-classes/' + $routeParams.id,
+                data: $scope.tournamentClass
+            }).then(function successCallback(response) {
+                //refresh data
+                //$scope.getTournament();
+                $location.path('/tournaments/' + $routeParams.id);
+
+            }, function errorCallback(response) {
+                $scope.errorMessage = response.data.error;
+            });
+
+
+        }
+    };
     }
 ).controller('TournamentFinishController', function ($scope, $routeParams, Tournament, $location, $http, popupService, $window) {
     $scope.id = $routeParams.id;

@@ -24,8 +24,8 @@ config(function ($routeProvider, $httpProvider) {
         controller: 'TournamentCreateController'
     }).when('/tournament/:id/tournament-classes-add', {
         title: 'Turnierklasse anlegen',
-        templateUrl: '/components/tournament/tournament-class-new.html',
-        controller: 'TournamentClassCreateController'
+        templateUrl: '/components/tournament/tournament-class-edit.html',
+        controller: 'TournamentClassEditController'
     }).when('/tournament/tournament-classes/:id', {
         title: 'Turnierklasse bearbeiten',
         templateUrl: '/components/tournament/tournament-class-edit.html',

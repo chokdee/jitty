@@ -72,6 +72,7 @@
             <th>Name</th>
             <th>Start-TTR</th>
             <th>End-TTR</th>
+            <th>Aktionen</th>
         </tr>
         </thead>
         <pre ng-if="errorMessage">Fehler: <em>{{errorMessage}}</em></pre>
@@ -82,6 +83,7 @@
             <td>
                 <a ng-show="!c.running" name="{{'edit'+c.id}}" class="btn btn-primary" href="#/tournament/tournament-classes/{{c.id}}" >Bearbeiten</a>
                 <a ng-show="!c.running" name="{{'delete'+c.id}}" class="btn btn-danger" ng-click="deleteClass(c.id)">Löschen</a>
+                <div ng-show="c.running">Die Klasse läuft bereits und kann nicht mehr bearbeitet werden</div>
             </td>
         </tr>
     </table>

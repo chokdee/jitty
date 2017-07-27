@@ -256,8 +256,8 @@ public class TournamentService {
         if (tc == null) {
             throw new EmptyResultDataAccessException(1);
         }
-        if (tc.getGroups().size() > 0) {
-            throw new IntegrityViolation("Es wurden bereits Gruppen angelegt, die Klasse kann nicht mehr gelöscht werden");
+        if (tc.getRunning()) {
+            throw new IntegrityViolation("Die Klasse wurde bereits gestartet, sie kann nicht mehr gelöscht werden");
         }
         Tournament t = tc.getTournament();
         t.removeClass(tc);

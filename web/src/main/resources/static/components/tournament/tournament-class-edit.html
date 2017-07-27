@@ -1,9 +1,14 @@
+<!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
 <div class="form-style-2">
     <div class="form-style-2-heading">Turnierklasse bearbeiten</div>
     <div ng-show="!canEdit" class="alert alert-danger">
         <span>Die Turnierklasse läuft bereits und kann nicht mehr bearbeitet werden.</span>
     </div>
-    <form name="tournamentClassForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required"  novalidate="" ng-submit="saveTournamentClass()">
+    <form name="tournamentClassForm" class="container ng-scope ng-pristine ng-invalid ng-invalid-required" novalidate="" ng-submit="save()">
         <div class="row">
             <div class="col-md-5">
                 <div class="control-group">
@@ -16,6 +21,15 @@
                             <div ng-message="required" class="message slide-left">Bitte einen Namen eingeben</div>
                         </div>
                     </div>
+                </div>
+                <div class="control-group">
+                    <label for="agegroup">Altersgruppe</label>
+                    <ui-select id="agegroup" ng-model="tournamentClass.ageGroup">
+                        <ui-select-match placeholder="Altersgruppe auswählen">{{$select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="a in ageGroups">
+                            <span ng-bind="a"></span>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
                 <div class="control-group">
                     <label for="systeminput">Turniersysteme</label>
