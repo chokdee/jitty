@@ -82,6 +82,10 @@ public class ClickTTExporter {
                 person.setTtr("" + tp.getQttr());
                 if (tp.getClub() != null) {
                     person.setClubName(tp.getClub().getName());
+                    person.setClubNr(tp.getClub().getClickTTNr());
+                }
+                if (tp.getAssociation() != null) {
+                    person.setClubFederationNickname(tp.getAssociation().getShortName());
                 }
             }
             Matches matches = new Matches();
@@ -93,8 +97,8 @@ public class ClickTTExporter {
                     match.setPlayerB(playerMap.get(game.getPlayer2().getId()));
 
                     //anzahl der gewonnen Bälle
-                    match.setGamesA("" + game.getId());
-                    match.setGamesB("" + game.getId());
+                    match.setGamesA("" + game.getWonBallsFor1());
+                    match.setGamesB("" + game.getWonBallsFor2());
                     match.setMatchesA(game.getWinner() == 1 ? "1" : "0");
                     match.setMatchesB(game.getWinner() == 2 ? "1" : "0");
                     match.setSetsA("" + game.getWonSetFor1());

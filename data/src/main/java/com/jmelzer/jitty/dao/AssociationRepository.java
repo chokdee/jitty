@@ -1,11 +1,7 @@
-/* 
-* Copyright (C) allesklar.com AG
-* All rights reserved.
-*
-* Author: juergi
-* Date: 27.05.12 
-*
-*/
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
 
 
 package com.jmelzer.jitty.dao;
@@ -17,4 +13,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AssociationRepository extends JpaRepository<Association, Long> {
+    Association findByShortNameIgnoreCase(String name);
 }

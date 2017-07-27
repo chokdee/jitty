@@ -230,6 +230,22 @@ public class TournamentSingleGame {
         return setsWon;
     }
 
+    public int getWonBallsFor1() {
+        int ballsWon = 0;
+        for (GameSet gameSet : sets) {
+            ballsWon += gameSet.getPoints1();
+        }
+        return ballsWon;
+    }
+
+    public int getWonBallsFor2() {
+        int ballsWon = 0;
+        for (GameSet gameSet : sets) {
+            ballsWon += gameSet.getPoints2();
+        }
+        return ballsWon;
+    }
+
     public int getWonSetFor2() {
         int setsWon = 0;
         for (GameSet gameSet : sets) {
@@ -239,6 +255,7 @@ public class TournamentSingleGame {
         }
         return setsWon;
     }
+
     public String getResultInShort(TournamentPlayer own) {
         String s = "";
         if (winner == -1) {

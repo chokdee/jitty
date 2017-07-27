@@ -5,11 +5,9 @@
 
 package com.jmelzer.jitty.service;
 
-import com.jmelzer.jitty.dao.ClubRepository;
-import com.jmelzer.jitty.dao.TournamentClassRepository;
-import com.jmelzer.jitty.dao.TournamentPlayerRepository;
-import com.jmelzer.jitty.dao.TournamentRepository;
+import com.jmelzer.jitty.dao.*;
 import com.jmelzer.jitty.exceptions.IntegrityViolation;
+import com.jmelzer.jitty.model.Association;
 import com.jmelzer.jitty.model.Club;
 import com.jmelzer.jitty.model.TournamentClass;
 import com.jmelzer.jitty.model.TournamentPlayer;
@@ -48,6 +46,9 @@ public class PlayerService {
 
     @Resource
     ClubRepository clubRepository;
+
+    @Resource
+    AssociationRepository associationRepository;
 
     @Resource
     TournamentClassRepository classRepository;
@@ -183,6 +184,18 @@ public class PlayerService {
         tp.setClickTTLicenceNr(person.getLicenceNr());
         tp.setClickTTInternalNr(person.getInternalNr());
         Club club = clubRepository.findByName(person.getClubName());
+        if (club == null) {
+            club = new Club(person.getClubName());
+            club.setClickTTNr(person.getClubNr());
+        }
+        if (club.getClickTTNr() == null) {
+            club.setClickTTNr(person.getClubNr());
+        }
+        if (club.getAssociation() == null) {
+            Association association = associationRepository.findByShortNameIgnoreCase(person.getClubFederationNickname());
+            club.setAssociation(association);
+        }
+        club = clubRepository.saveAndFlush(club);
         tp.setClub(club);
         //todo verband
         merge(tp, clickTTPlayer);

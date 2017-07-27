@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model;
 
 
@@ -17,6 +22,9 @@ public class Club {
 
     @Column(nullable = false, name = "name")
     private String name;
+
+    @Column(name = "click_tt_nr")
+    private String clickTTNr;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private Association association;
@@ -50,5 +58,13 @@ public class Club {
 
     public void setAssociation(Association association) {
         this.association = association;
+    }
+
+    public String getClickTTNr() {
+        return clickTTNr;
+    }
+
+    public void setClickTTNr(String clickTTNr) {
+        this.clickTTNr = clickTTNr;
     }
 }

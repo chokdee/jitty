@@ -6,6 +6,7 @@ CREATE TABLE association (
 );
 CREATE TABLE club (
   id             BIGINT       NOT NULL AUTO_INCREMENT,
+  click_tt_nr    VARCHAR(255),
   name           VARCHAR(255) NOT NULL,
   association_id BIGINT,
   PRIMARY KEY (id)
