@@ -247,7 +247,9 @@ public class TournamentService {
     @Transactional
     public TournamentClassDTO findOneClass(Long aLong) {
         TournamentClass tc = tcRepository.findOne(aLong);
-        return copy(tc, true);
+        TournamentClassDTO dto = copy(tc, true);
+        dto.setStatus(tc.calcStatus());
+        return dto;
     }
 
     @Transactional
