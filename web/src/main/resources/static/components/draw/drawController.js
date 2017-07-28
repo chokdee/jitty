@@ -19,6 +19,8 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 return "Phase 1 läuft";
             case "PHASE2_AND_RESULTS":
                 return "Phase 2 läuft";
+            case "SWISS_PHASE_RUNNING":
+                return "begonnen";
             case "FINISHED":
                 return "Beendet";
             default:
@@ -45,9 +47,11 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                         break;
                     case 'PHASE1_AND_RESULTS':
                     case 'PHASE2_AND_RESULTS':
+                    case 'SWISS_PHASE_RUNNING':
                         pc[i].confirmMsg = 'Es gibt bereits Ergebnisse. Alle Ergebnisse werden gelöscht! Wirklich sicher?';
                         pc[i].confirm = true;
                         break;
+
                     default:
                         pc[i].confirm = false;
                 }
@@ -287,6 +291,16 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
         };
 
+    $scope.deleteRound = function () {
+        $http({
+            method: 'GET',
+            url: '/api/draw/delete-round?cid=' + $routeParams.id,
+        }).then(function successCallback(response) {
+        }, function errorCallback(response) {
+            $scope.errorMessage = response.data.error;
+        });
+
+    };
         $scope.startSwissRound = function () {
             $http({
                 method: 'POST',

@@ -9,24 +9,30 @@
     </div>
 
     <hr/>
-    <h3>{{'Runde ' + roundNr}}</h3>
-    <div class="row">
-        <!--todo get the user feedback-->
-        <a id="automaticDraw" class="btn btn-primary" ng-click="swissDraw()">Auslosung</a>
-        <a id="start" class="btn btn-primary" ng-click="startSwissRound()">Starten...</a>
+    <div ng-show="tournamentClass.status == 'SWISS_PHASE_RUNNING'">
+        <h4>Zur Zeit ist keine Auslosung möglich. Möchtest du die aktuelle Runde löschen und alle Ergebnisse verlieren?</h4>
+        <a id="deleteRound" class="btn btn-danger" ng-click="swissDraw()">Löschen</a>
     </div>
-    <br>
-    <div class="row">
-        <div class="col-md-4">
-            <h5><b>Spielerrangliste</b></h5>
-            <div ui-grid="gridPlayerList"></div>
+    <div ng-show="tournamentClass.status != 'SWISS_PHASE_RUNNING'">
+        <h3>{{'Runde ' + roundNr}}</h3>
+        <div class="row">
+            <!--todo get the user feedback-->
+            <a id="automaticDraw" class="btn btn-primary" ng-click="swissDraw()">Auslosung</a>
+            <a id="start" class="btn btn-primary" ng-click="startSwissRound()">Starten...</a>
         </div>
-        <div class="col-md-6" style="margin-left: 20px">
-            <h5><b>Ausgeloste Spiele</b> &nbsp; &nbsp;&nbsp;&nbsp;<b>Freilos:</b> {{freilos.fullName}}</h5>
-            <!--<div>-->
-            <!--<b>Freilos:</b> {{freilos.fullName}}-->
-            <!--</div>-->
-            <div ui-grid="gridGameList"></div>
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <h5><b>Spielerrangliste</b></h5>
+                <div ui-grid="gridPlayerList"></div>
+            </div>
+            <div class="col-md-6" style="margin-left: 20px">
+                <h5><b>Ausgeloste Spiele</b> &nbsp; &nbsp;&nbsp;&nbsp;<b>Freilos:</b> {{freilos.fullName}}</h5>
+                <!--<div>-->
+                <!--<b>Freilos:</b> {{freilos.fullName}}-->
+                <!--</div>-->
+                <div ui-grid="gridGameList"></div>
+            </div>
         </div>
     </div>
 </div>

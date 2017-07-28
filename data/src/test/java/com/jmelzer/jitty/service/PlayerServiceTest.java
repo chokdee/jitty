@@ -5,6 +5,7 @@
 
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.dao.AssociationRepository;
 import com.jmelzer.jitty.dao.ClubRepository;
 import com.jmelzer.jitty.dao.TournamentPlayerRepository;
 import com.jmelzer.jitty.dao.TournamentRepository;
@@ -47,6 +48,9 @@ public class PlayerServiceTest {
     @Mock
     TournamentRepository tournamentRepository;
 
+    @Mock
+    AssociationRepository associationRepository;
+
     @Before
     public void setup() {
     }
@@ -66,6 +70,8 @@ public class PlayerServiceTest {
         tp2.setClub(new Club("Falscger Verein"));
         when(playerRepository.findByLastNameAndFirstName("Dauth", "Mario")).thenReturn(Collections.singletonList(tp2));
         when(playerRepository.saveAndFlush(anyObject())).thenReturn(tp2);
+
+        when(associationRepository.findByShortNameIgnoreCase(anyObject())).thenReturn(null);
 
         playerService.importPlayerFromClickTT(inputStream, 1L, false);
 
