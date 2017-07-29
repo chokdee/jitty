@@ -7,7 +7,10 @@ package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.exceptions.IntegrityViolation;
-import com.jmelzer.jitty.model.*;
+import com.jmelzer.jitty.model.SwissSystemPhase;
+import com.jmelzer.jitty.model.TournamentClass;
+import com.jmelzer.jitty.model.TournamentSingleGame;
+import com.jmelzer.jitty.model.TournamentSystemType;
 import com.jmelzer.jitty.model.dto.GameSetDTO;
 import com.jmelzer.jitty.model.dto.TournamentPlayerDTO;
 import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
@@ -41,26 +44,6 @@ public class SwissSystemManagerTest {
 
     @Mock
     TournamentClassRepository tcRepository;
-
-    @Test
-    public void createtNextSwissRoundIfNecessary1() throws Exception {
-
-        TournamentClass clz = new TournamentClass();
-        clz.createPhaseCombination(SWS);
-        clz.setActivePhaseNo(0);
-        when(tcRepository.findOne(1L)).thenReturn(clz);
-
-        assertThat(swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1), is(1));
-
-        TournamentSingleGame game = new TournamentSingleGame();
-        game.setWinner(1);
-
-        SwissSystemPhase phase = (SwissSystemPhase) clz.getActivePhase();
-        phase.setGroup(new TournamentGroup());
-        phase.getGroup().addGame(game);
-
-        assertThat(swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1), is(2));
-    }
 
     @Test
     public void calcRankingFirstRound() throws Exception {
@@ -286,8 +269,9 @@ public class SwissSystemManagerTest {
 
         game.setWinner(1);
 
-        assertEquals(2, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
+        assertEquals(1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
         assertThat(tc.getPhaseCount(), is(2));
+        assertTrue(swissSystemManager.activatePhase(1L, 2));
 
         //called it twice, shall be the same result
         assertEquals(2, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
@@ -311,8 +295,9 @@ public class SwissSystemManagerTest {
 
             try {
                 //round 6 is special
-                assertEquals(i + 1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, i));
+                assertEquals(i, swissSystemManager.createtNextSwissRoundIfNecessary(1L, i));
                 assertThat(tc.getPhaseCount(), is(i + 1));
+                assertTrue(swissSystemManager.activatePhase(1L, i + 1));
             } catch (IntegrityViolation integrityViolation) {
                 if (i != 6) {
                     fail();

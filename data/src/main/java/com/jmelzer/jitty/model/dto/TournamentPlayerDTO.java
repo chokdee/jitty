@@ -205,6 +205,9 @@ public class TournamentPlayerDTO {
 
     public void addGame(TournamentSingleGameDTO game) {
         playedGames.add(game);
+        if (playedGames.size() > 1) {
+            System.out.println();
+        }
     }
 
     public void calcWinningGames() {
@@ -239,7 +242,7 @@ public class TournamentPlayerDTO {
                 buchholzZahl += getWonGames(player, playedGame.getPlayer1().getId());
             }
         }
-        System.out.println("buchholzZahl = " + buchholzZahl);
+//        System.out.println("buchholzZahl = " + buchholzZahl);
     }
 
     /**
@@ -274,7 +277,7 @@ public class TournamentPlayerDTO {
                 feinBuchholzZahl += getBuchholz(player, playedGame.getPlayer1().getId());
             }
         }
-        System.out.println("feinBuchholzZahl = " + feinBuchholzZahl);
+//        System.out.println("feinBuchholzZahl = " + feinBuchholzZahl);
     }
 
     private int getBuchholz(List<TournamentPlayerDTO> player, Long id) {

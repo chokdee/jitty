@@ -229,6 +229,10 @@ public class TournamentPlayer {
         }
     }
 
+    public void removeGame(TournamentSingleGame game) {
+        games.remove(game);
+    }
+
     public List<TournamentSingleGame> getGames() {
         return games;
     }

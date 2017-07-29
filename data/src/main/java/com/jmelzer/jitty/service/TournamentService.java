@@ -637,6 +637,13 @@ public class TournamentService {
         tournamentSingleGameRepository.save(game);
     }
 
+    @Transactional
+    public void delete(TournamentSingleGame game) {
+        game.getPlayer1().removeGame(game);
+        game.getPlayer2().removeGame(game);
+        tournamentSingleGameRepository.delete(game);
+    }
+
     @Transactional(readOnly = true)
     public KOFieldDTO getKOForClz(Long tcId) {
         TournamentClass tc = tcRepository.findOne(tcId);

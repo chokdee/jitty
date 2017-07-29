@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model;
 
 import javax.persistence.*;
@@ -150,4 +155,5 @@ public class TournamentGroup {
         games.forEach(g -> g.setGroup(null));
         games.clear();
     }
+
 }

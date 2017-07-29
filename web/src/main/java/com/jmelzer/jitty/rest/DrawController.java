@@ -70,12 +70,12 @@ public class DrawController {
         return swissSystemManager.getRanking(Long.valueOf(id));
     }
 
-    @Path("/swiss-draw")
+    @Path("/calc-swiss-draw")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
-    public SwissDraw getSwissDraw(@QueryParam(value = "cid") String id) {
+    public SwissDraw calcSwissDraw(@QueryParam(value = "cid") String id, @QueryParam(value = "round") String sRound) {
         Long cid = Long.valueOf(id);
-        return swissSystemManager.calcDraw(cid);
+        return swissSystemManager.calcDraw(cid, Integer.valueOf(sRound));
     }
 
 
@@ -92,6 +92,7 @@ public class DrawController {
         return Response.ok().build();
     }
 
+
     @Path("/create-next-swiss-round-if-necessary")
     @GET
     public Response createtNextSwissRoundIfNecessary(@QueryParam(value = "cid") String id, @QueryParam(value = "round") String sRound) {
@@ -104,14 +105,29 @@ public class DrawController {
     }
 
     @Path("/start-swiss-round")
-    @POST
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public Response startSwissRound(
+            @QueryParam(value = "cid") String id,
+            @QueryParam(value = "round") String sRound) {
+        try {
+            swissSystemManager.start(Long.valueOf(id), Integer.valueOf(sRound));
+        } catch (IntegrityViolation integrityViolation) {
+            LOG.warn("not possible to start the round {} for class {} error message is '{}'", sRound, id, integrityViolation.getMessage());
+            return ControllerUtil.buildErrorResponse(integrityViolation.getMessage());
+        }
+        return Response.ok().build();
+    }
+
+    @Path("/save-swiss-round")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response saveSwissRound(
             @QueryParam(value = "cid") String id,
             @QueryParam(value = "round") String sRound,
             List<TournamentSingleGameDTO> games) {
         try {
-            swissSystemManager.startRound(Long.valueOf(id), Integer.valueOf(sRound), games);
+            swissSystemManager.save(Long.valueOf(id), Integer.valueOf(sRound), games);
         } catch (IntegrityViolation integrityViolation) {
             LOG.warn("not possible to start the round {} for class {} error message is '{}'", sRound, id, integrityViolation.getMessage());
             return ControllerUtil.buildErrorResponse(integrityViolation.getMessage());

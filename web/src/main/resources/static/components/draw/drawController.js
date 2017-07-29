@@ -85,7 +85,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     $scope.selectPhaseCombination = function () {
         if ($scope.modus != null && $routeParams.id != null)
             $http.get('/api/draw/select-phase-combination?cid=' + $routeParams.id + '&type=' + $scope.modus.id, {}).then(function () {
-                console.log('Phase successfully selected')
+                console.log('Phase successfully selected');
                 $scope.getTournamentClass();
             });
 
@@ -136,7 +136,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         if ($scope.tournamentClass == null) {
             $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
                     console.log('Got TournamentClass successful');
-                    $scope.modus = {id: $scope.tournamentClass.systemType};
+                // $scope.modus = {id: $scope.tournamentClass.systemType};
                     $scope.loadPart();
                     $scope.getActualPhase();
 
@@ -182,7 +182,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     });
 
     $scope.selectPhaseCombination = function () {
-        if ($scope.modus != undefined && $routeParams.id != null)
+        if ($scope.modus.idf != undefined && $routeParams.id != null)
             $http.get('/api/draw/select-phase-combination?cid=' + $routeParams.id + '&type=' + $scope.modus.id, {}).then(function (response) {
                 console.log('Phase successfully selected')
                 $scope.getTournamentClass();
@@ -276,10 +276,10 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
             }
         };
 
-        $scope.swissDraw = function () {
+    $scope.calcSwissDraw = function () {
             $http({
                 method: 'GET',
-                url: '/api/draw/swiss-draw?cid=' + $routeParams.id,
+                url: '/api/draw/calc-swiss-draw?cid=' + $routeParams.id + '&round=' + $scope.roundNr,
             }).then(function successCallback(response) {
                 $scope.gridGameList.data = response.data.games;
                 $scope.freilos = response.data.freilos;
@@ -294,18 +294,33 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     $scope.deleteRound = function () {
         $http({
             method: 'GET',
-            url: '/api/draw/delete-round?cid=' + $routeParams.id,
+            url: '/api/draw/delete-round?cid=' + $routeParams.id + '&round=' + $scope.roundNr,
         }).then(function successCallback(response) {
         }, function errorCallback(response) {
             $scope.errorMessage = response.data.error;
         });
 
     };
-        $scope.startSwissRound = function () {
-            $http({
-                method: 'POST',
-                url: '/api/draw/start-swiss-round?cid=' + $routeParams.id + '&round=' + $scope.roundNr,
-                data: $scope.gridGameList.data
+
+    $scope.save = function () {
+        $http({
+            method: 'POST',
+            url: '/api/draw/save-swiss-round?cid=' + $routeParams.id + '&round=' + $scope.roundNr,
+            data: $scope.gridGameList.data
+
+        }).then(function successCallback(response) {
+            var message = 'Die Auslosung wurde erfolgreich gespeichert';
+            var id = Flash.create('success', message, 4000, {container: 'flash-status'});
+
+        }, function errorCallback(response) {
+            $scope.errorMessage = response.data.error;
+        });
+
+    };
+    $scope.startSwissRound = function () {
+        $http({
+            method: 'GET',
+            url: '/api/draw/start-swiss-round?cid=' + $routeParams.id + '&round=' + $scope.roundNr
 
             }).then(function successCallback(response) {
                 $window.location.href = '/#/tournamentdirector/overview';

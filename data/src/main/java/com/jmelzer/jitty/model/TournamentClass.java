@@ -261,7 +261,11 @@ public class TournamentClass {
             return TournamentClassStatus.NOTSTARTED;
         } else {
             if (getActivePhase() instanceof SwissSystemPhase) {
-                return SWISS_PHASE_RUNNING;
+                if (getActivePhase().areGamesPlayed()) {
+                    return SWISS_PHASE_RUNNING;
+                } else {
+                    return TournamentClassStatus.NOTSTARTED;
+                }
             }
             boolean hasResults = getActivePhase().areGamesPlayed();
             if (getActivePhaseNo() == 0) {
