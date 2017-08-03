@@ -104,6 +104,7 @@ CREATE TABLE tournament_class (
   RUNNING        BIT          NOT NULL,
   start_ttr      INTEGER,
   START_TIME     DATETIME,
+  status         VARCHAR(255) NOT NULL,
   SYSTEM_TYPE    INTEGER      NOT NULL,
   T_ID           BIGINT,
   PRIMARY KEY (id)

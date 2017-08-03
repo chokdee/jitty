@@ -107,4 +107,8 @@ public class SwissSystemPhase extends Phase {
     public boolean isLastPhase() {
         return maxRounds == round;
     }
+
+    public boolean hasGames() {
+        return group.getGames() != null && group.getGames().size() > 0;
+    }
 }

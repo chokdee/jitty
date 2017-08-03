@@ -11,8 +11,6 @@ import com.jmelzer.jitty.model.dto.TournamentClassStatus;
 import javax.persistence.*;
 import java.util.*;
 
-import static com.jmelzer.jitty.model.dto.TournamentClassStatus.SWISS_PHASE_RUNNING;
-
 /**
  * Created by J. Melzer on 01.06.2016.
  * Turnier-Klasse
@@ -90,6 +88,10 @@ public class TournamentClass {
     /** altersklasse. Values see enum AgeGroup */
     @Column(nullable = false, name = "age_group")
     private String ageGroup;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "status")
+    private TournamentClassStatus status = TournamentClassStatus.NOTSTARTED;
 
     public TournamentClass(String name) {
         this.name = name;
@@ -252,43 +254,8 @@ public class TournamentClass {
         return players.size();
     }
 
-    public TournamentClassStatus calcStatus() {
-        if (finished()) {
-            return TournamentClassStatus.FINISHED;
-        }
 
-        if (!getRunning()) {
-            return TournamentClassStatus.NOTSTARTED;
-        } else {
-            if (getActivePhase() instanceof SwissSystemPhase) {
-                if (getActivePhase().areGamesPlayed()) {
-                    return SWISS_PHASE_RUNNING;
-                } else {
-                    return TournamentClassStatus.NOTSTARTED;
-                }
-            }
-            boolean hasResults = getActivePhase().areGamesPlayed();
-            if (getActivePhaseNo() == 0) {
-                if (hasResults) {
-                    if (getActivePhase().isFinished()) {
-                        return TournamentClassStatus.PHASE1_FINISHED;
-                    }
-                    return TournamentClassStatus.PHASE1_AND_RESULTS;
-                } else {
-                    return TournamentClassStatus.PHASE1_STARTED_NOT_CALLED;
-                }
-            } else if (getActivePhaseNo() == 1) {
-                if (hasResults) {
-                    return TournamentClassStatus.PHASE2_AND_RESULTS;
-                } else {
-                    return TournamentClassStatus.PHASE2_STARTED_NOT_CALLED;
-                }
-            }
-        }
-        throw new RuntimeException("could not calculate status");
-    }
-
-    private boolean finished() {
+    public boolean finished() {
         if (getActivePhase() instanceof SwissSystemPhase) {
             SwissSystemPhase sp = (SwissSystemPhase) getActivePhase();
             if (sp.getRound() > sp.getMaxRounds()) {
@@ -304,13 +271,6 @@ public class TournamentClass {
         }
     }
 
-    public int getPhaseCount() {
-        if (system == null) {
-            return -100;
-        }
-        return system.getPhaseCount();
-    }
-
     @Transient
     public Phase getActivePhase() {
         if (system == null) {
@@ -322,6 +282,22 @@ public class TournamentClass {
 
     public int getActivePhaseNo() {
         return activePhaseNo;
+    }
+
+    public int getPhaseCount() {
+        if (system == null) {
+            return -100;
+        }
+        return system.getPhaseCount();
+    }
+
+    public TournamentSystem getSystem() {
+        return system;
+    }
+
+    private void setSystem(TournamentSystem system) {
+        this.system = system;
+        system.setTournamentClass(this);
     }
 
     public void setActivePhaseNo(int activePhase) {
@@ -337,17 +313,11 @@ public class TournamentClass {
         return getSystem().getPhases();
     }
 
-    public TournamentSystem getSystem() {
-        return system;
-    }
-
-    private void setSystem(TournamentSystem system) {
-        this.system = system;
-        system.setTournamentClass(this);
-    }
-
     public KOField getKoField() {
-        return system.findKOField();
+        if (system != null) {
+            return system.findKOField();
+        }
+        return null;
     }
 
     public void setKoField(KOField koField) {
@@ -406,4 +376,13 @@ public class TournamentClass {
     public void setAgeGroup(String ageGroup) {
         this.ageGroup = ageGroup;
     }
+
+    public TournamentClassStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TournamentClassStatus status) {
+        this.status = status;
+    }
+
 }

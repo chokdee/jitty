@@ -20,11 +20,13 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
             case "PHASE2_AND_RESULTS":
                 return "Phase 2 läuft";
             case "SWISS_PHASE_RUNNING":
-                return "begonnen";
+                return "Begonnen";
+            case "SWISS_PHASE_DRAW_NOT_STARTED":
+                return "Auslosung durchgeführt";
             case "FINISHED":
                 return "Beendet";
             default:
-                return "unbekannt";
+                return "Unbekannt: " + s;
         }
     };
 

@@ -30,7 +30,7 @@
         <td>{{translateStatus(c.status)}}</td>
         <td>
             <a ng-show="c.status != 'FINISHED'" class="btn btn-primary" confirm="{{c.confirmMsg}}" confirm-if="c.confirm" ng-click="selectClass(c)">Auslosung...</a>
-            <a ng-show="c.status != 'FINISHED'" class="btn btn-primary" href="#/groups/{{c.id}}">Ergebnisse...</a>
+            <a ng-show="c.status != 'FINISHED'" class="btn btn-primary" href="#/liveview/swiss/{{c.id}}" target="_blank">Ergebnisse...</a>
         </td>
     </tr>
     </tbody>

@@ -61,6 +61,9 @@ public class SwissSystemManager {
     @Resource
     TournamentPlayerRepository playerRepository;
 
+    @Resource
+    private WorkflowManager workflowManager;
+
     public SwissDraw createGamesForTheFirstRound(List<TournamentPlayerDTO> player) {
         int size = player.size() / 2;
         List<TournamentPlayerDTO> copyList = new ArrayList<>(player);
@@ -316,7 +319,7 @@ public class SwissSystemManager {
     public int createtNextSwissRoundIfNecessary(Long cid, int actualRound) throws IntegrityViolation {
         TournamentClass clz = tcRepository.findOne(cid);
 
-        if (clz.calcStatus() == TournamentClassStatus.FINISHED) {
+        if (clz.getStatus() == TournamentClassStatus.FINISHED) {
             throw new IntegrityViolation("Die Turnierklasse ist abgeschlossen");
         }
 
@@ -348,6 +351,7 @@ public class SwissSystemManager {
         }
         TournamentClass clz = tcRepository.findOne(classId);
 
+        clz.setStatus(workflowManager.calcStatus(clz));
 
         SwissSystemPhase swissSystemPhase = (SwissSystemPhase) clz.getAllPhases().get(round - 1);
 

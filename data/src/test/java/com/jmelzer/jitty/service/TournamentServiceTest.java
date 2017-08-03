@@ -6,6 +6,7 @@
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TournamentClassRepository;
+import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.dao.TournamentSingleGameRepository;
 import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.*;
@@ -45,10 +46,16 @@ public class TournamentServiceTest {
     TournamentClassRepository tcRepository;
 
     @Mock
+    TournamentRepository repository;
+
+    @Mock
     TournamentSingleGameRepository tournamentSingleGameRepository;
 
     @Mock
     QueueManager queueManager;
+
+    @Mock
+    WorkflowManager workflowManager;
 
     @Mock
     TableManager tableManager;
@@ -186,6 +193,7 @@ public class TournamentServiceTest {
 
     @Test
     public void getAllClassesWithStatus() {
+        WorkflowManager workflowManager = new WorkflowManager();
         UserRepository userRepository = mock(UserRepository.class);
         service.userRepository = userRepository;
         User user = new User();
@@ -209,11 +217,13 @@ public class TournamentServiceTest {
 
         tournamentClass.setRunning(true);
         tournamentClass.setActivePhaseNo(0);
+        tournamentClass.setStatus(workflowManager.calcStatus(tournamentClass));
         assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
         assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.PHASE1_STARTED_NOT_CALLED));
 
         //all games were played
         game.setPlayed(true);
+        tournamentClass.setStatus(workflowManager.calcStatus(tournamentClass));
         assertThat(service.getAllClassesWithStatus("bla").size(), is(1));
         assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.PHASE1_AND_RESULTS));
 
@@ -230,15 +240,45 @@ public class TournamentServiceTest {
         r1.setNextRound(r2);
         r2.addAllGames(Collections.singletonList(rg2));
         ((KOPhase) tournamentClass.getActivePhase()).setKoField(koField);
+        tournamentClass.setStatus(workflowManager.calcStatus(tournamentClass));
         assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.PHASE2_STARTED_NOT_CALLED));
 
         rg1.setPlayed(true);
         rg1.setWinner(1);
+        tournamentClass.setStatus(workflowManager.calcStatus(tournamentClass));
         assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.PHASE2_AND_RESULTS));
 
         rg2.setPlayed(true);
         rg2.setWinner(1);
+        tournamentClass.setStatus(workflowManager.calcStatus(tournamentClass));
         assertThat(service.getAllClassesWithStatus("bla").get(0).getStatus(), is(TournamentClassStatus.FINISHED));
     }
 
+    @Test
+    public void saveAndFinishGame() {
+        TournamentSingleGameDTO g1 = new TournamentSingleGameDTO();
+        g1.setId(1L);
+        g1.addSet(new GameSetDTO(11, 9));
+        g1.setTcName("testi");
+        TournamentSingleGame game = new TournamentSingleGame();
+        game.setPlayer1(new TournamentPlayer());
+        game.setPlayer2(new TournamentPlayer());
+        game.setTid(9L);
+
+        when(tournamentSingleGameRepository.findOne(1L)).thenReturn(game);
+
+        TournamentClass tc = new TournamentClass();
+        Tournament tournament = new Tournament();
+        tournament.addClass(tc);
+        tc.setName("testi");
+        tc.setRunning(true);
+        assertThat(tc.getStatus(), is(TournamentClassStatus.NOTSTARTED));
+
+        when(repository.findOne(9L)).thenReturn(tournament);
+        when(workflowManager.calcStatus(tc)).thenReturn(TournamentClassStatus.NOT_INITIALIZED);
+
+        service.saveAndFinishGame(g1);
+
+        assertThat(tc.getStatus(), is(TournamentClassStatus.NOT_INITIALIZED));
+    }
 }

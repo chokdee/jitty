@@ -135,7 +135,7 @@ public class Tournament {
 
     public boolean isFinished() {
         for (TournamentClass aClass : classes) {
-            if (aClass.calcStatus() != TournamentClassStatus.FINISHED) {
+            if (aClass.getStatus() != TournamentClassStatus.FINISHED) {
                 return false;
             }
         }

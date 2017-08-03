@@ -73,6 +73,8 @@ public class TournamentService {
     @Resource
     QueueManager queueManager;
 
+    @Resource
+    WorkflowManager workflowManager;
 
     public void addPossibleKoGamesToQueue(TournamentClass tournamentClass) {
         if (tournamentClass.getKoField() != null) {
@@ -248,7 +250,7 @@ public class TournamentService {
     public TournamentClassDTO findOneClass(Long aLong) {
         TournamentClass tc = tcRepository.findOne(aLong);
         TournamentClassDTO dto = copy(tc, true);
-        dto.setStatus(tc.calcStatus());
+        dto.setStatus(tc.getStatus());
         return dto;
     }
 
@@ -274,6 +276,7 @@ public class TournamentService {
         TournamentClass tournamentClass = new TournamentClass();
         BeanUtils.copyProperties(dto, tournamentClass, "system");
         t.addClass(tournamentClass);
+        tournamentClass.setStatus(TournamentClassStatus.NOTSTARTED);
         tcRepository.saveAndFlush(tournamentClass);
         repository.saveAndFlush(t);
         return tournamentClass;
@@ -315,7 +318,7 @@ public class TournamentService {
         List<TournamentClass> classes = t.getClasses();
         for (TournamentClass aClass : classes) {
             TournamentClassDTO dto = copy(aClass, false);
-            dto.setStatus(aClass.calcStatus());
+//            dto.setStatus(aClass.calcStatus());
             ret.add(dto);
         }
         ret.sort(Comparator.comparing(TournamentClassDTO::getName));
@@ -415,13 +418,14 @@ public class TournamentService {
     private void finishGame(TournamentSingleGame game) {
         LOG.info("finished game #" + game.getId());
         queueManager.removeBuyGame(game);
+        TournamentClass tc = getTCForGame(game);
         if (game.getGroup() != null) {
             addPossibleGroupGamesToQueue(Collections.singletonList(game.getGroup()));
         } else {
             moveWinnerToNextRound(game);
-            TournamentClass tc = getTCForGame(game);
             addPossibleKoGamesToQueue(tc);
         }
+        tc.setStatus(workflowManager.calcStatus(tc));
         tableManager.pushFreeTable(game);
     }
 
@@ -432,7 +436,7 @@ public class TournamentService {
                 return tournamentClass;
             }
         }
-        throw new IllegalArgumentException("no tc found for " + game);
+        throw new IllegalArgumentException("no tc found for " + game.getTcName());
     }
 
     @Transactional
@@ -650,6 +654,7 @@ public class TournamentService {
         return copyForBracket(tc.getKoField());
     }
 
+    @Transactional
     public void saveTableCount(String actualUsername, int tablecount) throws IntegrityViolation {
         Tournament t = getTournamentForUser(actualUsername);
         if (tablecount < t.getTableCount()) {
