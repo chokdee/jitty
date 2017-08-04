@@ -7,6 +7,7 @@ package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.model.TournamentSystemType;
 import com.jmelzer.jitty.model.dto.*;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,6 +37,7 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
 
 
     @Test
+    @Ignore
     public void flow() throws Exception {
         try {
             doLogin();
