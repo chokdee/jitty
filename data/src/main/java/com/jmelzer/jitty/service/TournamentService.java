@@ -426,6 +426,7 @@ public class TournamentService {
             addPossibleKoGamesToQueue(tc);
         }
         tc.setStatus(workflowManager.calcStatus(tc));
+        tcRepository.saveAndFlush(tc);
         tableManager.pushFreeTable(game);
     }
 
@@ -750,7 +751,7 @@ public class TournamentService {
         }
         TournamentClass tc = tcRepository.findOne(tcId);
         tc.createPhaseCombination(phaseCombination);
-        tc.setActivePhaseNo(0);
+        tc.setActivePhaseNo(-1);
         tcRepository.saveAndFlush(tc);
     }
 

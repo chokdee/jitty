@@ -305,6 +305,15 @@ public class TournamentClass {
     }
 
     @Transient
+    public Phase getLastPhase() {
+        if (system == null) {
+            return null;
+        }
+
+        return getSystem().getLastPhase();
+    }
+
+    @Transient
     public List<Phase> getAllPhases() {
         if (system == null) {
             return null;

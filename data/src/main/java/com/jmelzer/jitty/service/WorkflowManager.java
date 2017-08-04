@@ -17,6 +17,7 @@ import static com.jmelzer.jitty.model.dto.TournamentClassStatus.*;
  */
 @Component
 public class WorkflowManager {
+
     public TournamentClassStatus calcStatus(TournamentClass tc) {
 
 
@@ -42,10 +43,17 @@ public class WorkflowManager {
     }
 
     private TournamentClassStatus calcStatusForSwiss(TournamentClass tc) {
-        if (tc.getActivePhase().areGamesPlayed()) {
+        SwissSystemPhase phase = (SwissSystemPhase) tc.getActivePhase();
+        if (tc.getPhaseCount() > tc.getActivePhaseNo() + 1) {
+            phase = (SwissSystemPhase) tc.getAllPhases().get(tc.getPhaseCount() - 1); //latest
+        }
+
+        if (phase.isFinished()) {
+            return SWISS_PHASE_FINISHED;
+        } else if (phase.areGamesPlayed()) {
             return SWISS_PHASE_RUNNING;
-        } else if (((SwissSystemPhase) tc.getActivePhase()).hasGames()) {
-            return SWISS_PHASE_DRAW_NOT_STARTED;
+        } else if (phase.hasGames()) {
+            return SWISS_PHASE_DRAW_BUT_NOT_STARTED;
         } else {
             return TournamentClassStatus.NOTSTARTED;
         }

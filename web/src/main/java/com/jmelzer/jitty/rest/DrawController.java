@@ -78,6 +78,14 @@ public class DrawController {
         return swissSystemManager.calcDraw(cid, Integer.valueOf(sRound));
     }
 
+    @Path("/get-swiss-draw")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public SwissDraw getSwissDraw(@QueryParam(value = "cid") String id, @QueryParam(value = "round") String sRound) {
+        Long cid = Long.valueOf(id);
+        return swissSystemManager.getDraw(cid, Integer.valueOf(sRound));
+    }
+
 
     @Path("/start-swiss-class")
     @GET

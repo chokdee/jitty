@@ -5,13 +5,14 @@
 
 package com.jmelzer.jitty.model.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by J. Melzer on 17.07.2017.
  */
 public class SwissDraw {
-    List<TournamentSingleGameDTO> games;
+    List<TournamentSingleGameDTO> games = new ArrayList<>();
 
     TournamentPlayerDTO freilos;
 
@@ -36,5 +37,9 @@ public class SwissDraw {
 
     public void setFreilos(TournamentPlayerDTO freilos) {
         this.freilos = freilos;
+    }
+
+    public void addGame(TournamentSingleGameDTO dto) {
+        games.add(dto);
     }
 }

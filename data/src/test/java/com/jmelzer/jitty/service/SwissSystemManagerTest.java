@@ -45,6 +45,9 @@ public class SwissSystemManagerTest {
     @Mock
     TournamentClassRepository tcRepository;
 
+    @Mock
+    WorkflowManager workflowManager;
+
     @Test
     public void calcRankingFirstRound() throws Exception {
         List<TournamentPlayerDTO> player = createPlayer(12);
@@ -268,6 +271,7 @@ public class SwissSystemManagerTest {
         assertEquals("games are not finished", 1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
 
         game.setWinner(1);
+
 
         assertEquals(1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
         assertThat(tc.getPhaseCount(), is(2));

@@ -89,4 +89,8 @@ public class TournamentSystem {
     public int getPhaseCount() {
         return phases.size();
     }
+
+    public Phase getLastPhase() {
+        return phases.get(phases.size() - 1);
+    }
 }

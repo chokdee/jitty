@@ -21,8 +21,10 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 return "Phase 2 läuft";
             case "SWISS_PHASE_RUNNING":
                 return "Begonnen";
-            case "SWISS_PHASE_DRAW_NOT_STARTED":
+            case "SWISS_PHASE_DRAW_BUT_NOT_STARTED":
                 return "Auslosung durchgeführt";
+            case "SWISS_PHASE_FINISHED":
+                return "Phase beendet. Bereit zur Auslosung";
             case "FINISHED":
                 return "Beendet";
             default:
@@ -293,6 +295,21 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
         };
 
+    $scope.getSwissDraw = function () {
+        $http({
+            method: 'GET',
+            url: '/api/draw/get-swiss-draw?cid=' + $routeParams.id + '&round=' + $scope.roundNr,
+        }).then(function successCallback(response) {
+            $scope.gridGameList.data = response.data.games;
+            $scope.freilos = response.data.freilos;
+            gridApi2.core.handleWindowResize();
+
+        }, function errorCallback(response) {
+            $scope.errorMessage = response.data.error;
+        });
+
+    };
+
     $scope.deleteRound = function () {
         $http({
             method: 'GET',
@@ -374,7 +391,9 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         };
 
         if ($routeParams.id !== null) {
+            $scope.roundNr = 1;
             $scope.getTournamentClassFroSwiss();
+            $scope.getSwissDraw();
 
         }
 
@@ -539,10 +558,10 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     $scope.getNumber2 = function (num) {
         return new Array(num);
     };
-
-    $scope.getGroupWinner();
-    $scope.calcKOSizeInInt();
-    $scope.getKoField(false);
+//todo fixmw
+    // $scope.getGroupWinner();
+    // $scope.calcKOSizeInInt();
+    // $scope.getKoField(false);
 });
 
 

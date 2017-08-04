@@ -40,7 +40,7 @@ public class SwissFlowControllerTest extends SecureResourceTest {
             doLogin();
 
             ResponseEntity<TournamentSingleGameDTO[]> possibleGamesEntity = null;
-            ResponseEntity<SwissDraw> gamesEntity = null;
+            ResponseEntity<SwissDraw> swissDrawResponseEntity = null;
             ResponseEntity<SwissSystemPhaseDTO> phaseEntity = null;
             ResponseEntity<TournamentPlayerDTO[]> psEntity = null;
             int possibleGamesBeforeStartTest = 0;
@@ -69,57 +69,54 @@ public class SwissFlowControllerTest extends SecureResourceTest {
             ResponseEntity<Void> voidEntity = http(HttpMethod.GET, "api/draw/start-swiss-class?cid=" + tClassId, createHttpEntity(null, loginHeaders), Void.class);
             assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
 
-//            http(HttpMethod.GET, "api/draw/select-phase-combination?cid=" + tClassId + "&type=5",
-//                    createHttpEntity(null, loginHeaders), Void.class);
-//            assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+            //query the round
+            ResponseEntity<Integer> intE = http(HttpMethod.GET, "api/draw/swiss-round?cid=" + tClassId,
+                    createHttpEntity(null, loginHeaders), Integer.class);
+            assertThat(intE.getBody(), is(1));
 
-//            ResponseEntity<SwissSystemPhaseDTO> phaseEntity = http(HttpMethod.GET, "api/draw/actual-phase?cid=" + tClassId,
-//                    createHttpEntity(null, loginHeaders), SwissSystemPhaseDTO.class);
-//            assertTrue(phaseEntity.getStatusCode().is2xxSuccessful());
-//            assertThat(phaseEntity.getBody(), is(notNullValue()));
-//
-//            ResponseEntity<TournamentPlayerDTO[]> psEntity = http(HttpMethod.GET, "api/draw/possible-player-swiss-system?cid=" + tClassId,
-//                    createHttpEntity(null, loginHeaders), TournamentPlayerDTO[].class);
-//            assertThat(psEntity.getBody().length, is(PLAYERSIZE));
-//            ResponseEntity<SwissDraw> gamesEntity = http(HttpMethod.GET, "api/draw/calc-swiss-draw?cid=" + tClassId,
-//                    createHttpEntity(null, loginHeaders), SwissDraw.class);
-//            assertTrue(gamesEntity.getStatusCode().is2xxSuccessful());
-//            assertThat(gamesEntity.getBody().getGames().size(), is(PLAYERSIZE / 2));
-//
-//            possibleGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/possible-games", createHttpEntity(phaseEntity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
-//            assertThat(possibleGamesEntity.getBody().length, is(0));
             int possGames = 0;
             //auslosung  speichern und starten
             for (int round = 1; round <= 6; round++) {
                 System.out.println("####################    start round " + (round) + " ####################");
 
 
-                ResponseEntity<Integer> intE = http(HttpMethod.GET, "api/draw/create-next-swiss-round-if-necessary?cid=" + tClassId + "&round=" + round,
+                intE = http(HttpMethod.GET, "api/draw/create-next-swiss-round-if-necessary?cid=" + tClassId + "&round=" + round,
                         createHttpEntity(null, loginHeaders), Integer.class);
                 assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
                 assertEquals("round isn't active", round == 1 ? 1 : round - 1, (int) intE.getBody());
 
 
                 //auslosung
-                gamesEntity = http(HttpMethod.GET, "api/draw/calc-swiss-draw?cid=" + tClassId + "&round=" + round,
+                swissDrawResponseEntity = http(HttpMethod.GET, "api/draw/calc-swiss-draw?cid=" + tClassId + "&round=" + round,
                         createHttpEntity(null, loginHeaders), SwissDraw.class);
-                assertTrue(gamesEntity.getStatusCode().is2xxSuccessful());
-                assertThat(gamesEntity.getBody().getGames().size(), is(PLAYERSIZE / 2));
+                assertTrue(swissDrawResponseEntity.getStatusCode().is2xxSuccessful());
+                assertThat(swissDrawResponseEntity.getBody().getGames().size(), is(PLAYERSIZE / 2));
+                if (round > 1) {
+                    validateStatus(tClassId, TournamentClassStatus.SWISS_PHASE_FINISHED); //transient not saved
+                } else {
+                    validateStatus(tClassId, TournamentClassStatus.NOTSTARTED); //transient not saved
+                }
 
                 voidEntity = http(HttpMethod.POST, "api/draw/save-swiss-round?cid=" + tClassId + "&round=" + round,
-                        createHttpEntity(gamesEntity.getBody().getGames(), loginHeaders), Void.class);
+                        createHttpEntity(swissDrawResponseEntity.getBody().getGames(), loginHeaders), Void.class);
                 assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+                validateStatus(tClassId, TournamentClassStatus.SWISS_PHASE_DRAW_BUT_NOT_STARTED);
 
 //                save it twice shall no have any effect
                 voidEntity = http(HttpMethod.POST, "api/draw/save-swiss-round?cid=" + tClassId + "&round=" + round,
-                        createHttpEntity(gamesEntity.getBody().getGames(), loginHeaders), Void.class);
+                        createHttpEntity(swissDrawResponseEntity.getBody().getGames(), loginHeaders), Void.class);
                 assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
 
+                swissDrawResponseEntity = http(HttpMethod.GET, "api/draw/get-swiss-draw?cid=" + tClassId + "&round=" + round,
+                        createHttpEntity(null, loginHeaders), SwissDraw.class);
+                assertTrue(swissDrawResponseEntity.getStatusCode().is2xxSuccessful());
+                assertThat(swissDrawResponseEntity.getBody().getGames().size(), is(PLAYERSIZE / 2));
 
                 //start the round
                 voidEntity = http(HttpMethod.GET, "api/draw/start-swiss-round?cid=" + tClassId + "&round=" + round,
                         createHttpEntity(null, loginHeaders), Void.class);
                 assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
+                validateStatus(tClassId, TournamentClassStatus.SWISS_PHASE_DRAW_BUT_NOT_STARTED);
 
                 phaseEntity = http(HttpMethod.GET, "api/draw/actual-phase?cid=" + tClassId,
                         createHttpEntity(null, loginHeaders), SwissSystemPhaseDTO.class);
@@ -129,7 +126,6 @@ public class SwissFlowControllerTest extends SecureResourceTest {
                 //query the round
                 intE = http(HttpMethod.GET, "api/draw/swiss-round?cid=" + tClassId,
                         createHttpEntity(null, loginHeaders), Integer.class);
-
                 assertThat(intE.getBody(), is(round));
 
                 assertThat(jdbcTemplate.queryForObject("select count(*) from tournament_group where id = " + phaseEntity.getBody().getGroup().getId(), Integer.class), is(1));
@@ -160,14 +156,20 @@ public class SwissFlowControllerTest extends SecureResourceTest {
                 //enter results for all games
                 TournamentSingleGameDTO[] runningGames = runningGamesEntity.getBody();
                 addAndSaveResult(loginHeaders, tClassId, runningGames);
+                if (round < 6) {
+                    validateStatus(tClassId, TournamentClassStatus.SWISS_PHASE_FINISHED);
+                } else {
+                    validateStatus(tClassId, TournamentClassStatus.FINISHED);
+                }
 
                 //finished games must now the count of the entered results
                 ResponseEntity<TournamentSingleGameDTO[]> finishedGamesEntity = http(HttpMethod.GET, "api/tournamentdirector/finished-games",
                         createHttpEntity(phaseEntity.getBody(), loginHeaders), TournamentSingleGameDTO[].class);
                 assertThat(finishedGamesEntity.getBody().length, is(possGames));
 
-            }
 
+            }
+            validateStatus(tClassId, TournamentClassStatus.FINISHED);
 
             assertThat(possGames, is(6 * MAX_PARALLEL_GAMES_COUNT));
 
@@ -237,6 +239,13 @@ public class SwissFlowControllerTest extends SecureResourceTest {
         ResponseEntity<Void> longEntitiy = http(HttpMethod.POST, "api/players",
                 createHttpEntity(player, loginHeaders), Void.class);
         assertTrue(longEntitiy.getStatusCode().is2xxSuccessful());
+    }
+
+    private void validateStatus(long tClassId, TournamentClassStatus status) {
+        ResponseEntity<TournamentClassDTO> tcEntity = http(HttpMethod.GET, "api/tournament-classes/" + tClassId,
+                createHttpEntity(null, loginHeaders), TournamentClassDTO.class);
+        assertTrue(tcEntity.getStatusCode().is2xxSuccessful());
+        assertThat(tcEntity.getBody().getStatus(), is(status));
     }
 
     private int addAndSaveResult(HttpHeaders loginHeaders, Long cid, TournamentSingleGameDTO[] runningGames) {
