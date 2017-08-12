@@ -34,21 +34,30 @@ public class FullSwissSeleniumTest {
         driver().navigate().back();
         selectTournament(id);
 
-        //todo add player per xml
-        for (int i = 0; i < 8; i++) {
-            createRandomPlayerAndAssignToClass();
-        }
+        driver().navigate().to("http://localhost:8080/#/players");
+
+        WebElement we = driver().findElement(By.id("uploader"));
+        System.out.println("we = " + we);
+        we.sendKeys("C:\\ws\\jitty\\doc\\Turnierteilnehmer.xml");
+
+//        for (int i = 0; i < 8; i++) {
+//            createRandomPlayerAndAssignToClass();
+//        }
 
         for (int i = 1; i <= 6; i++) {
             createDraw(i);
-            enterResults();
+            enterResult(12);
         }
 
         driver().navigate().to("http://localhost:8080/#/draw-select-class");
         waitForText(2, "Beendet");
 
         //todo abschliessen
-
+        driver().navigate().to("http://localhost:8080/#/tournaments");
+        waitForText(1, "Alle Turniere");
+        driver.findElement(By.id("close-" + id)).click();
+        waitForText(1, "abschliessen");
+        driver().findElement(By.id("export")).click();
     }
 
     private long createTournament() throws Exception {
@@ -112,25 +121,6 @@ public class FullSwissSeleniumTest {
         waitForText(1, "Du bearbeitest das Turnier ");
     }
 
-    private void createRandomPlayerAndAssignToClass() throws InterruptedException {
-        navigate("#/players", "Spieler anzeigen");
-
-        navigate("#/player-add", "Spieler anlegen");
-        driver().findElement(By.name("qttr")).sendKeys("" + nextInt(1600, 1799));
-        driver().findElement(By.name("firstName")).sendKeys(randomString(6));
-        driver().findElement(By.name("lastName")).sendKeys(randomString(6));
-        driver().findElement(By.name("input_mobile_number")).sendKeys("0171-3" + nextInt(10000, 99999));
-        driver().findElement(By.id("birthday")).sendKeys("01.01.1970");
-        driver().findElement(By.name("gender2")).click();
-        driver().findElement(By.id("input_email_address")).sendKeys(randomString(5) + "@" + randomString(6) + ".de");
-        waitForText(2, "Cup-Klasse");
-        Select select = new Select(driver().findElement(By.id("bootstrap-duallistbox-nonselected-list_")));
-        select.selectByVisibleText("Cup-Klasse - 0 -> 3000");
-        driver().findElement(By.name("firstName")).submit();
-
-        waitForTitle(2, "Spieler anzeigen");
-    }
-
     private void createDraw(int round) throws InterruptedException {
         if (round == 1) {
             navigate("#/draw-select-class", "Auslosung: Klasse auswählen");
@@ -152,19 +142,19 @@ public class FullSwissSeleniumTest {
         waitForText(2, "Mögliche Begegnungen");
     }
 
-    private void enterResults() throws InterruptedException {
+    private void enterResult(int playerCount) throws InterruptedException {
         navigate("#/tournamentdirector/overview", "Turnierleitung");
         List<WebElement> enterResultLinks = driver().findElements(By.xpath("//a[.='Ergebnis...']"));
         List<WebElement> possibleGamesLinks = driver().findElements(By.xpath("//a[.='Starten']"));
-        assertEquals(4, possibleGamesLinks.size());
+        assertEquals(playerCount / 2, possibleGamesLinks.size());
         assertEquals(0, enterResultLinks.size());
 
         driver().findElement(By.id("assignFreeTables")).click();
         waitForText(1, "Ergebnis...");
         enterResultLinks = driver().findElements(By.xpath("//a[.='Ergebnis...']"));
-        assertEquals(4, enterResultLinks.size());
+        assertEquals(playerCount / 2, enterResultLinks.size());
 
-        enterResults(4);
+        enterResults(playerCount / 2);
 
         waitForText(2, "Hier klicken");
     }
@@ -178,5 +168,24 @@ public class FullSwissSeleniumTest {
             driver().findElement(By.id("btnOk")).click();
             Thread.sleep(500);
         }
+    }
+
+    private void createRandomPlayerAndAssignToClass() throws InterruptedException {
+        navigate("#/players", "Spieler anzeigen");
+
+        navigate("#/player-add", "Spieler anlegen");
+        driver().findElement(By.name("qttr")).sendKeys("" + nextInt(1600, 1799));
+        driver().findElement(By.name("firstName")).sendKeys(randomString(6));
+        driver().findElement(By.name("lastName")).sendKeys(randomString(6));
+        driver().findElement(By.name("input_mobile_number")).sendKeys("0171-3" + nextInt(10000, 99999));
+        driver().findElement(By.id("birthday")).sendKeys("01.01.1970");
+        driver().findElement(By.name("gender2")).click();
+        driver().findElement(By.id("input_email_address")).sendKeys(randomString(5) + "@" + randomString(6) + ".de");
+        waitForText(2, "Cup-Klasse");
+        Select select = new Select(driver().findElement(By.id("bootstrap-duallistbox-nonselected-list_")));
+        select.selectByVisibleText("Cup-Klasse - 0 -> 3000");
+        driver().findElement(By.name("firstName")).submit();
+
+        waitForTitle(2, "Spieler anzeigen");
     }
 }

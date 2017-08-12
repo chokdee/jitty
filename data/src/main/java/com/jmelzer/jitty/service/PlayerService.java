@@ -91,11 +91,9 @@ public class PlayerService {
         if (repository.countGames(aLong) > 0) {
             throw new IntegrityViolation("Es wurden bereits Spiele gespielt, der Spieler kann nicht mehr gel\u00F6scht werden");
         }
-        if (player.getTournaments() != null) {
-            for (com.jmelzer.jitty.model.Tournament tournament : player.getTournaments()) {
-                tournament.removePlayer(player);
-                tournamentRepository.save(tournament);
-            }
+        if (player.getTournament() != null) {
+            player.getTournament().removePlayer(player);
+            tournamentRepository.save(player.getTournament());
         }
         if (player.getClasses() != null) {
             for (TournamentClass tournamentClass : player.getClasses()) {
@@ -121,7 +119,7 @@ public class PlayerService {
             playerDB.removeAllClasses();
             playerDB.addClass(classRepository.findOne(classDTO.getId()));
         }
-        playerDB.addTournament(actualTournament);
+        playerDB.setTournament(actualTournament);
         repository.save(playerDB);
     }
 
@@ -142,8 +140,8 @@ public class PlayerService {
         for (Competition competition : clickTTTournament.getCompetition()) {
             for (Player clickTTPlayer : competition.getPlayers().getPlayer()) {
 
-                List<TournamentPlayer> dbPlayers = repository.findByLastNameAndFirstName(clickTTPlayer.getPerson().get(0).getLastname(),
-                        clickTTPlayer.getPerson().get(0).getFirstname());
+                List<TournamentPlayer> dbPlayers = repository.findByLastNameAndFirstNameAndTournament(clickTTPlayer.getPerson().get(0).getLastname(),
+                        clickTTPlayer.getPerson().get(0).getFirstname(), actualTournament);
 
                 if (dbPlayers.size() == 0 || dbPlayers.size() > 1) {
                     TournamentPlayer dbP = createDbPlayer(clickTTPlayer);
@@ -165,7 +163,7 @@ public class PlayerService {
         }
         for (TournamentPlayer player : modifiedPlayer) {
             player = repository.saveAndFlush(player);
-            player.addTournament(actualTournament);
+            player.setTournament(actualTournament);
             if (tc != null) {
                 tc.addPlayer(player);
                 classRepository.saveAndFlush(tc);

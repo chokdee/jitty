@@ -35,7 +35,7 @@
         <td>
             <a class="btn btn-primary" href="#/tournaments/{{t.id}}">Bearbeiten...</a>
             <a id="{{'select-'+t.id}}" class="btn btn-primary" ng-click="selectTournament(t.id, t.name)">Auswählen</a>
-            <a ng-show="t.finished" class="btn btn-primary" href="#/tournaments-finish/{{t.id}}">Abschliessen...</a>
+            <a id="{{'close-'+t.id}}" ng-show="t.finished" class="btn btn-primary" href="#/tournaments-finish/{{t.id}}">Abschliessen...</a>
         </td>
     </tr>
 </table>

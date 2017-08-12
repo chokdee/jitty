@@ -44,8 +44,8 @@ public class TournamentPlayer {
     @ManyToOne(optional = true, cascade = CascadeType.DETACH)
     private Club club;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, mappedBy = "players")
-    private List<Tournament> tournaments = new ArrayList<>();
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private Tournament tournament;
 
     @ManyToOne(optional = true, cascade = CascadeType.DETACH)
     private Association association;
@@ -237,14 +237,18 @@ public class TournamentPlayer {
         return games;
     }
 
-
-    public List<Tournament> getTournaments() {
-        return tournaments;
+    public Tournament getTournament() {
+        return tournament;
     }
 
-    public void addTournament(Tournament tournament) {
-        this.tournaments.add(tournament);
-        tournament.addPlayer(this);
+    public void setTournament(Tournament tournament) {
+        if (this.tournament != null && tournament != null && !this.tournament.getId().equals(tournament.getId())) {
+            throw new RuntimeException("Player cannot assign to another tournament");
+        }
+        this.tournament = tournament;
+        if (tournament != null) {
+            this.tournament.addPlayer(this);
+        }
     }
 
     public List<TournamentClass> getClasses() {
@@ -277,10 +281,6 @@ public class TournamentPlayer {
 
     public void setLastGameAt(Date lastGameAt) {
         this.lastGameAt = lastGameAt;
-    }
-
-    public void removeAllTournaments() {
-        tournaments.clear();
     }
 
     public Boolean getSuspended() {

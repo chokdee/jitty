@@ -64,9 +64,9 @@ CREATE TABLE swiss_system_phase (
   PRIMARY KEY (id)
 );
 CREATE TABLE T_PLAYER (
-  tournaments_id BIGINT NOT NULL,
-  players_id     BIGINT NOT NULL,
-  PRIMARY KEY (tournaments_id, players_id)
+  Tournament_id BIGINT NOT NULL,
+  players_id    BIGINT NOT NULL,
+  PRIMARY KEY (Tournament_id, players_id)
 );
 CREATE TABLE t_system (
   id    BIGINT NOT NULL AUTO_INCREMENT,
@@ -131,6 +131,7 @@ CREATE TABLE tournament_player (
   ttr                  INTEGER,
   association_id       BIGINT,
   club_id              BIGINT,
+  tournament_id        BIGINT,
   PRIMARY KEY (id)
 );
 CREATE TABLE TOURNAMENT_SINGLE_GAME (
@@ -180,6 +181,8 @@ ALTER TABLE association
   ADD CONSTRAINT UK_ogdrfbju5finu018l8mvhdvug UNIQUE (longname);
 ALTER TABLE association
   ADD CONSTRAINT UK_oqsncgu633nvys2yo9ehj7j14 UNIQUE (shortname);
+ALTER TABLE T_PLAYER
+  ADD CONSTRAINT UK_a8o22qx76ytwm779shvhkhd9r UNIQUE (players_id);
 ALTER TABLE TOURNAMENT_SINGLE_GAME_SET
   ADD CONSTRAINT UK_et5i78b8ngopb9nvxxw7dsurr UNIQUE (SETS_ID);
 ALTER TABLE club
@@ -207,7 +210,7 @@ ALTER TABLE swiss_system_phase
 ALTER TABLE T_PLAYER
   ADD CONSTRAINT FKox4dt24cvyx5jdn4rs9lyeyk5 FOREIGN KEY (players_id) REFERENCES tournament_player (id);
 ALTER TABLE T_PLAYER
-  ADD CONSTRAINT FKmlaymevvua011spq8t5ke1tem FOREIGN KEY (tournaments_id) REFERENCES tournament (id);
+  ADD CONSTRAINT FK9sdl5mre08eax08oau8wfudro FOREIGN KEY (Tournament_id) REFERENCES tournament (id);
 ALTER TABLE t_system
   ADD CONSTRAINT FKer0y033wsm6ysyosohkxlykss FOREIGN KEY (TC_ID) REFERENCES tournament_class (id);
 ALTER TABLE TC_PLAYER
@@ -226,6 +229,8 @@ ALTER TABLE tournament_player
   ADD CONSTRAINT FKckudad7hjiry453vbbtsj3ql9 FOREIGN KEY (association_id) REFERENCES association (id);
 ALTER TABLE tournament_player
   ADD CONSTRAINT FKiogds7xpq7tbscr9rlcgto05j FOREIGN KEY (club_id) REFERENCES club (id);
+ALTER TABLE tournament_player
+  ADD CONSTRAINT FKrrm3jbmm1fxx5t9t5f8t46ebc FOREIGN KEY (tournament_id) REFERENCES tournament (id);
 ALTER TABLE TOURNAMENT_SINGLE_GAME
   ADD CONSTRAINT FKnyl2ic1enqd5gq03biksl16pq FOREIGN KEY (GAME_QUEUE_ID) REFERENCES GAME_QUEUE (id);
 ALTER TABLE TOURNAMENT_SINGLE_GAME

@@ -326,13 +326,16 @@ public class TournamentService {
     }
 
     public List<TournamentPlayerDTO> getPlayerforClass(Long id) {
-        List<TournamentPlayer> players = playerRepository.findByClasses(Collections.singletonList(tcRepository.findOne(id)));
+        TournamentClass tc = tcRepository.findOne(id);
+        List<TournamentPlayer> players = playerRepository.findByClasses(Collections.singletonList(tc));
         List<TournamentPlayerDTO> ret = new ArrayList<>();
         for (TournamentPlayer player : players) {
             TournamentPlayerDTO dto = new TournamentPlayerDTO();
             BeanUtils.copyProperties(player, dto, "classes");
             for (TournamentSingleGame game : player.getGames()) {
-                dto.addGame(copy(game, false));
+                if (game.getTcName().equals(tc.getName())) {
+                    dto.addGame(copy(game, false));
+                }
             }
             ret.add(dto);
         }

@@ -202,10 +202,10 @@ INSERT INTO TOURNAMENT_PLAYER (ID, FIRSTNAME, LASTNAME, GENDER, CLUB_ID, ASSOCIA
 INSERT INTO TOURNAMENT_PLAYER (ID, FIRSTNAME, LASTNAME, GENDER, CLUB_ID, ASSOCIATION_ID, QTTR, TTR) VALUES (22, 'Timo', 'Baum', 'm', 12, 3, 1704, 1704);
 INSERT INTO TOURNAMENT_PLAYER (ID, FIRSTNAME, LASTNAME, GENDER, CLUB_ID, ASSOCIATION_ID, QTTR, TTR) VALUES (23, 'Nico', 'Poco', 'm', 13, 3, 1705, 1705);
 INSERT INTO TOURNAMENT_PLAYER (ID, FIRSTNAME, LASTNAME, GENDER, CLUB_ID, ASSOCIATION_ID, QTTR, TTR) VALUES (24, 'Stefan', 'Ente', 'm', 14, 3, 1706, 1706);
-INSERT INTO T_PLAYER (PLAYERS_ID, TOURNAMENTS_ID) SELECT
+INSERT INTO T_PLAYER (PLAYERS_ID, TOURNAMENT_ID) SELECT
                                                     id,
                                                     2
-                                                  FROM TOURNAMENT_PLAYER
+                                                 FROM TOURNAMENT_PLAYER
                                                   WHERE id > 11;
 INSERT INTO TC_PLAYER (PLAYERS_ID, CLASSES_ID) SELECT
                                                  id,

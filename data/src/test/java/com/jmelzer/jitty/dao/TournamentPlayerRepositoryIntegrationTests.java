@@ -22,6 +22,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 
 /**
  * Integration tests for {@link UserRepository}.
@@ -57,7 +58,7 @@ public class TournamentPlayerRepositoryIntegrationTests {
 
         assertNull(repository.findByLastName("xxx"));
         assertEquals("Boll", repository.findByLastName("Boll").getLastName());
-        assertEquals("Boll", repository.findByLastNameAndFirstName("Boll", "Timo").get(0).getLastName());
+        assertEquals("Boll", repository.findByLastNameAndFirstNameAndTournament("Boll", "Timo", any()).get(0).getLastName());
     }
 
     @Test
@@ -72,7 +73,7 @@ public class TournamentPlayerRepositoryIntegrationTests {
         player.setMobileNumber("0800-26662662");
         player.setQttr(2000);
         player.setTtr(2100);
-        player.addTournament(tournamentRepository.findOne(2L));
+        player.setTournament(tournamentRepository.findOne(2L));
         player.setAssociation(associationRepository.findOne(1L));
         player.setClub(clubRepository.findOne(1L));
         repository.saveAndFlush(player);

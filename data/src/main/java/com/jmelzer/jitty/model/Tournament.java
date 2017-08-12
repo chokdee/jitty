@@ -17,7 +17,7 @@ import java.util.*;
 @Entity
 @Table(name = "tournament")
 public class Tournament {
-    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(name = "T_PLAYER")
     Set<TournamentPlayer> players = new LinkedHashSet<>();
 

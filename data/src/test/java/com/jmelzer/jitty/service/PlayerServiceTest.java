@@ -58,17 +58,19 @@ public class PlayerServiceTest {
     @Test
     public void importPlayerFromClickTT() throws Exception {
         playerService.xmlImporter = new XMLImporter();
-        when(tournamentRepository.findOne(1L)).thenReturn(new Tournament());
+        Tournament t = new Tournament();
+        t.setId(1L);
+        when(tournamentRepository.findOne(1L)).thenReturn(t);
         InputStream inputStream = getClass().getResourceAsStream("/xml-import/Turnierteilnehmer.xml");
 
-        when(playerRepository.findByLastNameAndFirstName("Annett", "Beitel")).thenReturn(new ArrayList<>());
+        when(playerRepository.findByLastNameAndFirstNameAndTournament("Annett", "Beitel", t)).thenReturn(new ArrayList<>());
         TournamentPlayer tp = new TournamentPlayer(2L, "Gerd", "Bosse");
         tp.setClub(new Club("TTV BW Neudorf"));
-        when(playerRepository.findByLastNameAndFirstName("Bosse", "Gerd")).thenReturn(Collections.singletonList(tp));
+        when(playerRepository.findByLastNameAndFirstNameAndTournament("Bosse", "Gerd", t)).thenReturn(Collections.singletonList(tp));
 
         TournamentPlayer tp2 = new TournamentPlayer(3L, "Mario", "Dauth");
         tp2.setClub(new Club("Falscger Verein"));
-        when(playerRepository.findByLastNameAndFirstName("Dauth", "Mario")).thenReturn(Collections.singletonList(tp2));
+        when(playerRepository.findByLastNameAndFirstNameAndTournament("Dauth", "Mario", t)).thenReturn(Collections.singletonList(tp2));
         when(playerRepository.saveAndFlush(anyObject())).thenReturn(tp2);
 
         when(associationRepository.findByShortNameIgnoreCase(anyObject())).thenReturn(null);
