@@ -86,7 +86,7 @@ public class PlayerControllerTest extends SecureResourceTest {
             TournamentDTO tournament = http(HttpMethod.GET, "api/tournaments/" + tId, createHttpEntity(null, loginHeaders), TournamentDTO.class).getBody();
             //create a class
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            int count = jdbcTemplate.queryForObject("select count(*) from T_PLAYER where TOURNAMENTS_ID = " + tId, Integer.class);
+            int count = jdbcTemplate.queryForObject("select count(*) from T_PLAYER where TOURNAMENT_ID = " + tId, Integer.class);
             assertThat(count, is(0));
             count = jdbcTemplate.queryForObject("select count(*) from TC_PLAYER where CLASSES_ID = " + tournament.getClasses().get(0).getId(), Integer.class);
             assertThat(count, is(0));
@@ -102,7 +102,7 @@ public class PlayerControllerTest extends SecureResourceTest {
             assertTrue(entity.getStatusCode().is2xxSuccessful());
             assertThat(entity.getBody(), is("Es wurden 12 Spieler importiert"));
 
-            count = jdbcTemplate.queryForObject("select count(*) from T_PLAYER where TOURNAMENTS_ID = " + tId, Integer.class);
+            count = jdbcTemplate.queryForObject("select count(*) from T_PLAYER where TOURNAMENT_ID = " + tId, Integer.class);
             assertThat(count, is(12));
             count = jdbcTemplate.queryForObject("select count(*) from TC_PLAYER where CLASSES_ID = " + tournament.getClasses().get(0).getId(), Integer.class);
             assertThat(count, is(12));
@@ -114,7 +114,7 @@ public class PlayerControllerTest extends SecureResourceTest {
             assertTrue(entity.getStatusCode().is2xxSuccessful());
             assertThat(entity.getBody(), is("Es wurden 12 Spieler importiert"));
 
-            count = jdbcTemplate.queryForObject("select count(*) from T_PLAYER where TOURNAMENTS_ID = " + tId, Integer.class);
+            count = jdbcTemplate.queryForObject("select count(*) from T_PLAYER where TOURNAMENT_ID = " + tId, Integer.class);
             assertThat(count, is(12));
 
 

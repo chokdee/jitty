@@ -1,10 +1,19 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.TournamentSystem;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 
@@ -14,7 +23,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Created by J. Melzer on 11.06.2016.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class DrawGroupManagerTest {
+
+    @InjectMocks
     DrawGroupManager drawGroupManager = new DrawGroupManager();
 
     @Before
@@ -22,10 +34,11 @@ public class DrawGroupManagerTest {
         drawGroupManager.seedingManager = new SeedingManager();
     }
 
+    @Mock
+    TournamentService tournamentService;
+
     @Test
     public void testcalcGroupGames() {
-        TournamentService ts = Mockito.mock(TournamentService.class);
-        drawGroupManager.tournamentService = ts;
         TournamentClass tc = new TournamentClass("ccc");
         tc.createPhaseCombination(PhaseCombination.GK);
         TournamentGroup group = new TournamentGroup("A");

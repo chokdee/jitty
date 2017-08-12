@@ -56,9 +56,12 @@ public class TournamentPlayerRepositoryIntegrationTests {
     @Test
     public void findByName() {
 
+
         assertNull(repository.findByLastName("xxx"));
         assertEquals("Boll", repository.findByLastName("Boll").getLastName());
-        assertEquals("Boll", repository.findByLastNameAndFirstNameAndTournament("Boll", "Timo", any()).get(0).getLastName());
+        TournamentPlayer p = repository.findByLastName("Boll");
+        assertEquals("Boll", repository.findByLastNameAndFirstNameAndTournament("Boll", "Timo",
+                tournamentRepository.findOne(2L)).get(0).getLastName());
     }
 
     @Test
