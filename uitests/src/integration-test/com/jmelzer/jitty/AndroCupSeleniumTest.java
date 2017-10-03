@@ -68,7 +68,7 @@ public class AndroCupSeleniumTest {
             }
         });
 
-        String tName = "Selenium Test - " + randomString(5);
+        final String tName = "Selenium Test - " + randomString(5);
         driver().findElement(By.name("name")).sendKeys(tName);
 
         WebElement select = driver().findElement(By.id("tournamenttype"));

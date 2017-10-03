@@ -45,6 +45,8 @@ public class FullSwissSeleniumTest {
 //        }
 
         for (int i = 1; i <= 6; i++) {
+
+            System.out.println("-------------- round #" + i + " --------------");
             createDraw(i);
             enterResult(12);
         }
@@ -75,7 +77,7 @@ public class FullSwissSeleniumTest {
             }
         });
 
-        String tName = "Selenium Swiss Test - " + randomString(5);
+        final String tName = "Selenium Swiss Test - " + randomString(5);
         driver().findElement(By.name("name")).sendKeys(tName);
 
         WebElement select = driver().findElement(By.id("tournamenttype"));

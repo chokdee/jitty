@@ -7,7 +7,6 @@ package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.model.TournamentSystemType;
 import com.jmelzer.jitty.model.dto.*;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -37,7 +36,6 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
 
 
     @Test
-    @Ignore
     public void flow() throws Exception {
         try {
             doLogin();
@@ -69,8 +67,14 @@ public class TournamentFlowControllerTest extends SecureResourceTest {
                     createHttpEntity(null, loginHeaders), Void.class);
             assertTrue(voidEntity.getStatusCode().is2xxSuccessful());
 
+            ResponseEntity<Boolean> booleanEntity = http(HttpMethod.GET, "api/draw/activate-phase?cid=" + tClassId + "&type=1",
+                    createHttpEntity(null, loginHeaders), Boolean.class);
+            assertTrue(booleanEntity.getStatusCode().is2xxSuccessful());
+            assertTrue(booleanEntity.getBody());
+
             ResponseEntity<GroupPhaseDTO> gpEntity = http(HttpMethod.GET, "api/draw/actual-phase?cid=" + tClassId,
                     createHttpEntity(null, loginHeaders), GroupPhaseDTO.class);
+            assertNotNull(gpEntity.getBody());
 
             gpEntity = http(HttpMethod.POST, "api/draw/calc-optimal-group-size",
                     createHttpEntity(gpEntity.getBody(), loginHeaders), GroupPhaseDTO.class);

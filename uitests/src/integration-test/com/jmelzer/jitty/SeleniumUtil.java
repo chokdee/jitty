@@ -6,6 +6,7 @@
 package com.jmelzer.jitty;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -13,6 +14,9 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -74,9 +78,18 @@ public class SeleniumUtil {
                     break;
 
                 case CHROME:
+
                     String pathToChromeDriver = "c:\\batch\\chromedriver.exe";
                     System.setProperty("webdriver.chrome.driver", pathToChromeDriver);
+
                     driver = new ChromeDriver();
+                    break;
+                case PHANTOM:
+                    DesiredCapabilities capabilities = new DesiredCapabilities(BrowserType.PHANTOMJS, "", Platform.ANY);
+                    String pathToPhantomDriver = "C:\\tools\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe";
+//                    System.setProperty("phantomjs.binary.path", pathToPhantomDriver);
+                    capabilities.setCapability("phantomjs.binary.path", pathToPhantomDriver);
+                    driver = new PhantomJSDriver(capabilities);
                     break;
                 case HTMLUNIT:
                     driver = new HtmlUnitDriver();
@@ -86,7 +99,7 @@ public class SeleniumUtil {
         return driver;
     }
 
-    public static void waitForTitle(int timeout, String text) {
+    public static void waitForTitle(int timeout, final String text) {
         (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
 //                System.out.println(d.getTitle());
@@ -96,7 +109,7 @@ public class SeleniumUtil {
         });
     }
 
-    public static void waitForText(int timeout, String text) {
+    public static void waitForText(int timeout, final String text) {
         (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 System.out.println("check " + text);
@@ -105,6 +118,6 @@ public class SeleniumUtil {
         });
     }
     enum DriverType {
-        CHROME, FF, IE, HTMLUNIT
+        CHROME, FF, IE, HTMLUNIT, PHANTOM
     }
 }

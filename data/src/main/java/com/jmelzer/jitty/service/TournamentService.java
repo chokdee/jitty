@@ -770,4 +770,17 @@ public class TournamentService {
         clickTTExporter.export(repository.findOne(aLong), file);
         return file;
     }
+
+    @Transactional(readOnly = false)
+    public boolean activatePhase(Long cid) {
+        TournamentClass clz = tcRepository.findOne(cid);
+        boolean changeNeeded = clz.getActivePhaseNo() == 0;
+        if (!changeNeeded) {
+            clz.setActivePhaseNo(0);
+        }
+        clz.setStatus(workflowManager.calcStatus(clz));
+        LOG.info("activated Round #{}", 0);
+        tcRepository.saveAndFlush(clz);
+        return true;
+    }
 }

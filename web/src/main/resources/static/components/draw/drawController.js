@@ -83,11 +83,11 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
     };
 
-    $scope.$watch('modus', function () {
-        $scope.selectPhaseCombination();
-    });
+    // $scope.$watch('modus', function () {
+    //     $scope.selectPhaseCombination();
+    // });
     $scope.selectPhaseCombination = function () {
-        if ($scope.modus != null && $routeParams.id != null)
+        if ($scope.modus !== null && $routeParams.id !== null)
             $http.get('/api/draw/select-phase-combination?cid=' + $routeParams.id + '&type=' + $scope.modus.id, {}).then(function () {
                 console.log('Phase successfully selected');
                 $scope.getTournamentClass();
@@ -96,12 +96,13 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
     };
 
 
-    if ($routeParams.id == null)
+    if ($routeParams.id === undefined)
         $scope.getPossibleClasses();
 
 
 }).controller('DrawEditController', function ($scope, $http, $routeParams, $window, TournamentClass) {
 
+    $scope.tournamentClass = null;
     $scope.modi = [{
         id: undefined,
         label: ''
@@ -126,7 +127,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                 $scope.templateurl = 'components/draw/bracket.html';
             }
         }
-        console.log('modus = ' + $scope.modus);
+        console.log('modus = ' + $scope.modus.id);
         console.log('loadpart = ' + $scope.templateurl);
     };
 
@@ -136,11 +137,16 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
 
     });
 
-    $scope.getTournamentClass = function () {
-        if ($scope.tournamentClass == null) {
+    $scope.selectSystem = function () {
+        console.log('modus = ' + $scope.modus.id);
+        $scope.selectPhaseCombination();
+    };
+    $scope.getTournamentClass = function (force) {
+        if ((force !== undefined && force === true) || $scope.tournamentClass === null) {
             $scope.tournamentClass = TournamentClass.get({id: $routeParams.id}, function () {
                     console.log('Got TournamentClass successful');
-                // $scope.modus = {id: $scope.tournamentClass.systemType};
+                if ($scope.tournamentClass.systemType !== null)
+                    $scope.modus = {id: $scope.tournamentClass.systemType};
                     $scope.loadPart();
                     $scope.getActualPhase();
 
@@ -151,7 +157,7 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
                     if ($scope.tournamentClass.running) {
                         $scope.templateurl = 'components/draw/bracket.html';
                     }
-                    if ($scope.tournamentClass.system !== undefined && $scope.tournamentClass.system.phases !== null) {
+                if ($scope.tournamentClass.system !== null && $scope.tournamentClass.system.phases !== null) {
                         for (i = 0; i < $scope.tournamentClass.system.phases.length; i++) {
                             if ($scope.tournamentClass.activePhaseNo === i) {
                                 $scope.selectedPhase = $scope.tournamentClass.system.phases[i];
@@ -175,21 +181,21 @@ angular.module('jitty.draw.controllers', []).controller('DrawController', functi
         });
     };
 
-    if ($routeParams.id != null) {
+    if ($routeParams.id !== null) {
         $scope.getTournamentClass();
 
     }
 
 
-    $scope.$watch('modus', function () {
-        $scope.selectPhaseCombination();
-    });
+    // $scope.$watch('modus', function () {
+    //     $scope.selectPhaseCombination();
+    // });
 
     $scope.selectPhaseCombination = function () {
-        if ($scope.modus.idf != undefined && $routeParams.id != null)
+        if ($scope.modus.id != undefined && $routeParams.id != null)
             $http.get('/api/draw/select-phase-combination?cid=' + $routeParams.id + '&type=' + $scope.modus.id, {}).then(function (response) {
-                console.log('Phase successfully selected')
-                $scope.getTournamentClass();
+                console.log('Phase successfully selected');
+                $scope.getTournamentClass(true);
             });
 
     };

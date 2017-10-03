@@ -199,6 +199,7 @@ public class DrawController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response selectPhaseCombination(@QueryParam(value = "cid") String id, @QueryParam(value = "type") String type) {
         tournamentService.selectPhaseCombination(Long.valueOf(id), PhaseCombination.enumOf(Integer.valueOf(type)));
+        tournamentService.activatePhase(Long.valueOf(id));
         return Response.ok().build();
     }
 
@@ -207,6 +208,13 @@ public class DrawController {
     @Consumes(MediaType.APPLICATION_JSON)
     public PhaseDTO actualPhase(@QueryParam(value = "cid") String id) {
         return tournamentService.actualPhase(Long.valueOf(id));
+    }
+
+    @Path("/activate-phase")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean activatePhase(@QueryParam(value = "cid") String id) {
+        return tournamentService.activatePhase(Long.valueOf(id));
     }
 
     @Path("/calc-optimal-group-size")
