@@ -1,4 +1,9 @@
 <!doctype html>
+<!--
+  ~ Copyright (c) 2017.
+  ~ J. Melzer
+  -->
+
 <html>
 <head>
     <meta charset="utf-8">
@@ -31,7 +36,8 @@
         <li ng-show="nav.authenticated()"><a href="/#/draw-select-class">Auslosung</a></li>
         <li ng-show="nav.authenticated()"><a href="/#/tournamentdirector/overview">Begegnungen</a></li>
         <li ng-show="nav.authenticated()"><a href="/#/liveview/overview">Liveview</a></li>
-        <li ng-show="nav.authenticated()" style="float: right"><a name="logout" href="" ng-click="nav.logout()">logout</a></li>
+        <li ng-show="nav.authenticated()" style="float: right"><a name="logout" href="" ng-click="nav.logout()">Abmelden</a></li>
+        <li ng-show="nav.authenticated()" style="float: right"><a name="tablesettings" href="/#/settings/table">Einstellungen</a></li>
     </ul>
 </div>
 
@@ -83,6 +89,8 @@
 <script src="components/liveview/liveviewModule.js"></script>
 <script src="components/liveview/liveviewService.js"></script>
 <script src="components/liveview/liveviewController.js"></script>
+<script src="components/settings/settingsModule.js"></script>
+<script src="components/settings/settingsController.js"></script>
 <script src="components/util/utilModule.js"></script>
 <script src="components/util/print.js"></script>
 

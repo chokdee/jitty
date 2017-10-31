@@ -1,7 +1,13 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 angular.module('jitty', ['ngRoute', 'ngResource', 'ngMessages', 'jitty.auth', 'ui.bootstrap', 'frapontillo.bootstrap-duallistbox', 'dndLists', 'ngFlash',
     'angular-confirm', 'angularFileUpload',
     'jitty.services', 'jitty.directives', 'jitty.login', 'jitty.user',
-    'jitty.tournament', 'jitty.player', 'jitty.draw', 'jitty.running', 'jitty.liveview', 'jitty.util']).config(function ($routeProvider, $httpProvider, $locationProvider) {
+    'jitty.tournament', 'jitty.player', 'jitty.draw', 'jitty.running', 'jitty.liveview', 'jitty.util',
+    'jitty.settings']).config(function ($routeProvider, $httpProvider, $locationProvider) {
 
     // $locationProvider.html5Mode({
     //     enabled: false,

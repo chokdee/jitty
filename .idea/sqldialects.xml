@@ -8,6 +8,7 @@
     <file url="file://$PROJECT_DIR$/web/src/main/resources/clubs.sql" dialect="HSQLDB" />
     <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/hsql/V2__init_data.sql" dialect="HSQLDB" />
     <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/hsql/V3__swiss.sql" dialect="HSQLDB" />
+    <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/hsql/V4__ko_b_running.sql" dialect="HSQLDB" />
     <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/mysql/V2__init_data.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/mysql/V3__swiss.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/web/src/main/resources/db/migration/mysql/drop.sql" dialect="MySQL" />

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.config;
 
 import com.jmelzer.jitty.logging.EndpointLoggingListener;
@@ -25,6 +30,7 @@ public class JerseyConfig extends ResourceConfig {
                 register(TournamentClassController.class).
                 register(PlayerController.class).
                 register(ClubController.class).
+                register(SettingsController.class).
                 register(AssociationController.class).
                 register(TournamentDirectorController.class).
                 register(LiveViewController.class).

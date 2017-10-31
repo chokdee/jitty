@@ -123,7 +123,7 @@ public class TournamentDirectorController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TableDTO> tables() {
-        return tableManager.getAllTables();
+        return tableManager.getAllTables(securityUtil.getActualTournament());
     }
 
     @Path("/save-table-count")

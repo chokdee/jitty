@@ -73,6 +73,19 @@ CREATE TABLE t_system (
   TC_ID BIGINT,
   PRIMARY KEY (id)
 );
+CREATE TABLE table_pos (
+  id          BIGINT NOT NULL AUTO_INCREMENT,
+  column      SMALLINT,
+  row         SMALLINT,
+  SETTINGS_ID BIGINT,
+  PRIMARY KEY (id)
+);
+CREATE TABLE table_settings (
+  id          BIGINT NOT NULL AUTO_INCREMENT,
+  table_count INTEGER,
+  T_ID        BIGINT,
+  PRIMARY KEY (id)
+);
 CREATE TABLE TC_PLAYER (
   classes_id BIGINT NOT NULL,
   players_id BIGINT NOT NULL
@@ -213,6 +226,10 @@ ALTER TABLE T_PLAYER
   ADD CONSTRAINT FK9sdl5mre08eax08oau8wfudro FOREIGN KEY (Tournament_id) REFERENCES tournament (id);
 ALTER TABLE t_system
   ADD CONSTRAINT FKer0y033wsm6ysyosohkxlykss FOREIGN KEY (TC_ID) REFERENCES tournament_class (id);
+ALTER TABLE table_pos
+  ADD CONSTRAINT FKqv40g8sy1drhdvgm1o6qr6h3h FOREIGN KEY (SETTINGS_ID) REFERENCES table_settings (id);
+ALTER TABLE table_settings
+  ADD CONSTRAINT FKghas75wtmj0dkjkm1hovh2r1j FOREIGN KEY (T_ID) REFERENCES tournament (id);
 ALTER TABLE TC_PLAYER
   ADD CONSTRAINT FK996yua0ff90b7wx8m9mm0bqc7 FOREIGN KEY (players_id) REFERENCES tournament_player (id);
 ALTER TABLE TC_PLAYER

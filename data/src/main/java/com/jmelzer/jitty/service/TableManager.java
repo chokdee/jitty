@@ -1,7 +1,15 @@
+/*
+ * Copyright (c) 2017.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.dao.TableSettingsRepository;
+import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentSingleGame;
 import com.jmelzer.jitty.model.dto.TableDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +24,11 @@ import static com.jmelzer.jitty.service.CopyManager.copy;
 @Component
 public class TableManager {
     TreeSet<Integer> freeTables = new TreeSet<>();
+
     Map<Integer, TournamentSingleGame> busyTables = new HashMap<>();
-    int tableCount = 0;
+
+    @Autowired
+    TableSettingsRepository settingsRepository;
 
     public Set<Integer> getFreeTables() {
         return Collections.unmodifiableSet(freeTables);
@@ -48,38 +59,9 @@ public class TableManager {
         return freeTables.size() > 0;
     }
 
-    public int getTableCount() {
-        return tableCount;
-    }
-
-    public void setTableCount(int tableCount) {
-        int max = maxTableNo();
-        max++;
-        int diff = tableCount - this.tableCount;
-        for (int i = 0; i < diff; i++) {
-            freeTables.add(max++);
-        }
-        this.tableCount = tableCount;
-
-    }
-
-    private int maxTableNo() {
-        if (freeTables.size() == 0) {
-            return 0;
-        }
-        return freeTables.last();
-    }
-
-    public int getBusyTableCount() {
-        return busyTables.size();
-    }
-
-    public int getFreeTableCount() {
-        return freeTables.size();
-    }
-
     @Transactional(readOnly = true)
-    public List<TableDTO> getAllTables() {
+    public List<TableDTO> getAllTables(Tournament tournament) {
+        int tableCount = getTableCount(tournament);
         List<TableDTO> list = new ArrayList<>(tableCount);
 
         for (int i = 1; i < tableCount + 1; i++) {
@@ -93,15 +75,45 @@ public class TableManager {
         return list;
     }
 
+    int getTableCount(Tournament tournament) {
+        return settingsRepository.findByTournament(tournament).getTableCount();
+    }
+
+    public int getBusyTableCount() {
+        return busyTables.size();
+    }
+
+    public int getFreeTableCount() {
+        return freeTables.size();
+    }
+
+    public void clear(int tableCount) {
+//        this.tableCount = 0;
+        freeTables.clear();
+        setTableCount(tableCount); //refresh
+        busyTables.clear();
+    }
+
     public void pushFreeTable(TournamentSingleGame game) {
         busyTables.remove(game.getTableNo());
         freeTables.add(game.getTableNo());
     }
 
-    public void clear(int tableCount) {
-        this.tableCount=0;
-        freeTables.clear();
-        setTableCount(tableCount); //refresh
-        busyTables.clear();
+    public void setTableCount(int tableCount) {
+        int max = maxTableNo();
+        max++;
+        int diff = tableCount;
+        for (int i = 0; i < diff; i++) {
+            freeTables.add(max++);
+        }
+//        this.tableCount = tableCount;
+
+    }
+
+    private int maxTableNo() {
+        if (freeTables.size() == 0) {
+            return 0;
+        }
+        return freeTables.last();
     }
 }
