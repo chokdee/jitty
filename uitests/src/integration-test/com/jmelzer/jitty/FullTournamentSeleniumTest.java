@@ -124,10 +124,15 @@ public class FullTournamentSeleniumTest {
     }
 
     private void createDrawForBKlasse() throws InterruptedException {
+        //overview list of classes
         navigate("#/draw-select-class", "Auslosung: Klasse auswählen");
         waitForText(2, "B-Klasse");
         driver().findElement(By.linkText("B-Klasse")).click();
         waitForText(2, "Auslosung der Klasse");
+
+        driver().findElement(By.id("btnSelectSystem")).click();
+
+
         Select select = new Select(driver().findElement(By.id("modus1")));
         select.selectByIndex(1);
 
