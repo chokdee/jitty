@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -11,6 +11,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -20,7 +21,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static com.jmelzer.jitty.SeleniumUtil.DriverType.CHROME;
+import static com.jmelzer.jitty.SeleniumUtil.DriverType.FF;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
@@ -29,7 +30,8 @@ import static org.hamcrest.Matchers.containsString;
  */
 public class SeleniumUtil {
     static WebDriver driver;
-    static DriverType driverType = CHROME;
+
+    static DriverType driverType = FF;
 
     public static void quit() {
         driver.quit();
@@ -71,10 +73,13 @@ public class SeleniumUtil {
                 case FF:
                     System.setProperty("webdriver.gecko.driver", "c:\\batch\\geckodriver.exe");
                     ProfilesIni profile = new ProfilesIni();
+                    FirefoxOptions options = new FirefoxOptions();
+                    options.setBinary("C:\\tools\\FirefoxQ\\firefox.exe");
                     FirefoxProfile myprofile = profile.getProfile("selenium");
                     myprofile.setPreference("browser.startup.homepage", "about:blank");
                     myprofile.setPreference("xpinstall.signatures.required", false);
-                    driver = new FirefoxDriver(myprofile);
+                    options.setProfile(myprofile);
+                    driver = new FirefoxDriver(options);
                     break;
 
                 case CHROME:

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -35,6 +35,7 @@ public class FullSwissSeleniumTest {
         selectTournament(id);
 
         driver().navigate().to("http://localhost:8080/#/players");
+        waitForText(2, "Alle Spieler");
 
         WebElement we = driver().findElement(By.id("uploader"));
         System.out.println("we = " + we);

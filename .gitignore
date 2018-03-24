@@ -47,3 +47,5 @@ target
 *.iml
 !/web/src/main/resources/db/migration/hsql/V2__init_data.sql
 !/web/src/main/resources/static/components/tournament/tournament-finish.html
+
+mysettings.xml

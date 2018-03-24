@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -580,4 +580,53 @@ ul#result li {
 
 .suspended-row {
     background-color: #ff0000 !important;
+}
+
+/*settings table*/
+.tablelist ul[dnd-list] {
+    min-height: 42px;
+    margin: 0px;
+    padding-left: 0px;
+}
+
+.tablelist li {
+    display: block;
+}
+
+/***************************** Element type specific styles *****************************/
+
+.tablelist .itemlist {
+    min-height: 120px !important;
+}
+
+.tablelist .itemlist > li {
+    background-color: #337ab7;
+    border: none;
+    border-radius: .25em;
+    color: #fff;
+    float: left;
+    font-weight: 700;
+    height: 50px;
+    margin: 5px;
+    padding: 3px;
+    text-align: center;
+    width: 80px;
+}
+
+.tablelist .container-element {
+    margin: 10px;
+}
+
+.tableitem {
+    background-color: #337ab7;
+    border: none;
+    border-radius: .25em;
+    color: #fff;
+    float: left;
+    font-weight: 700;
+    height: 50px;
+    margin: 5px;
+    padding: 3px;
+    text-align: center;
+    width: 80px;
 }
