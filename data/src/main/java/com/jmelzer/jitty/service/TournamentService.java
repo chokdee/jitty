@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -126,8 +126,8 @@ public class TournamentService {
     }
 
     @Transactional
-    public TournamentDTO findOne(Long id) {
-        Tournament tournament = repository.findOne(id);
+    public TournamentDTO getOne(Long id) {
+        Tournament tournament = repository.getOne(id);
         return copy(tournament);
     }
 
@@ -171,7 +171,7 @@ public class TournamentService {
             return;
         }
         queueManager.clearAll();
-        Tournament tournament = repository.findOne(id);
+        Tournament tournament = repository.getOne(id);
         LOG.info("switch to tournament {}", tournament);
         tid = id;
         tableManager.clear(tournament.getTableCount());
@@ -241,14 +241,14 @@ public class TournamentService {
 
     @Transactional
     public Tournament update(TournamentDTO dto) {
-        Tournament t = repository.findOne(dto.getId());
+        Tournament t = repository.getOne(dto.getId());
         copy(dto, t);
         return repository.saveAndFlush(t);
     }
 
     @Transactional
-    public TournamentClassDTO findOneClass(Long aLong) {
-        TournamentClass tc = tcRepository.findOne(aLong);
+    public TournamentClassDTO getOneClass(Long aLong) {
+        TournamentClass tc = tcRepository.getOne(aLong);
         TournamentClassDTO dto = copy(tc, true);
         dto.setStatus(tc.getStatus());
         return dto;
@@ -256,7 +256,7 @@ public class TournamentService {
 
     @Transactional
     public void deleteClass(Long aLong) throws IntegrityViolation {
-        TournamentClass tc = tcRepository.findOne(aLong);
+        TournamentClass tc = tcRepository.getOne(aLong);
         if (tc == null) {
             throw new EmptyResultDataAccessException(1);
         }
@@ -266,13 +266,13 @@ public class TournamentService {
         Tournament t = tc.getTournament();
         t.removeClass(tc);
 
-        tcRepository.delete(aLong);
+        tcRepository.deleteById(aLong);
         repository.saveAndFlush(t);
     }
 
     @Transactional
     public TournamentClass addTC(Long aLong, TournamentClassDTO dto) {
-        Tournament t = repository.findOne(aLong);
+        Tournament t = repository.getOne(aLong);
         TournamentClass tournamentClass = new TournamentClass();
         BeanUtils.copyProperties(dto, tournamentClass, "system");
         t.addClass(tournamentClass);
@@ -326,7 +326,7 @@ public class TournamentService {
     }
 
     public List<TournamentPlayerDTO> getPlayerforClass(Long id) {
-        TournamentClass tc = tcRepository.findOne(id);
+        TournamentClass tc = tcRepository.getOne(id);
         List<TournamentPlayer> players = playerRepository.findByClasses(Collections.singletonList(tc));
         List<TournamentPlayerDTO> ret = new ArrayList<>();
         for (TournamentPlayer player : players) {
@@ -344,7 +344,7 @@ public class TournamentService {
 
     @Transactional
     public void createDummyPlayer(Long id) {
-        TournamentClass tc = tcRepository.findOne(id);
+        TournamentClass tc = tcRepository.getOne(id);
         for (int i = 0; i < 20; i++) {
             TournamentPlayer player = new TournamentPlayer();
 //            player.setId((long) i);
@@ -365,7 +365,7 @@ public class TournamentService {
 
     @Transactional
     public void moveGameBackToPossiblegames(Long id) {
-        TournamentSingleGame game = tournamentSingleGameRepository.findOne(id);
+        TournamentSingleGame game = tournamentSingleGameRepository.getOne(id);
         if (game == null) {
             throw new IllegalArgumentException();
         }
@@ -380,7 +380,7 @@ public class TournamentService {
 
     TournamentSingleGame saveGame(TournamentSingleGameDTO dto) {
         calcWinner(dto);
-        TournamentSingleGame game = tournamentSingleGameRepository.findOne(dto.getId());
+        TournamentSingleGame game = tournamentSingleGameRepository.getOne(dto.getId());
         copy(dto, game);
         game.setEndTime(new Date());
         game.setPlayed(true);
@@ -434,7 +434,7 @@ public class TournamentService {
     }
 
     private TournamentClass getTCForGame(TournamentSingleGame game) {
-        List<TournamentClass> tournamentClasses = repository.findOne(game.getTid()).getClasses();
+        List<TournamentClass> tournamentClasses = repository.getOne(game.getTid()).getClasses();
         for (TournamentClass tournamentClass : tournamentClasses) {
             if (tournamentClass.getName().equals(game.getTcName())) {
                 return tournamentClass;
@@ -502,7 +502,7 @@ public class TournamentService {
 
     @Transactional
     public List<GroupResultDTO> getGroupResults(Long classId) {
-        TournamentClass tournamentClass = tcRepository.findOne(classId);
+        TournamentClass tournamentClass = tcRepository.getOne(classId);
 
         markGroupWinner(tournamentClass.getGroups());
 
@@ -586,13 +586,13 @@ public class TournamentService {
                 Assert.isTrue(found);
             }
             n++;
-            Assert.isTrue(ps.detailResult.size() > 1);
+            Assert.isTrue(ps.detailResult.size() > 1, "Must be greater 1");
         }
         group.setRanking(list);
     }
 
     public TournamentSingleGameDTO getGame(Long id) {
-        return copy(tournamentSingleGameRepository.findOne(id), false);
+        return copy(tournamentSingleGameRepository.getOne(id), false);
     }
 
     @Transactional
@@ -604,7 +604,7 @@ public class TournamentService {
 
     @Transactional(readOnly = true)
     public boolean areAllGroupsFinished(Long id) {
-        TournamentClass clz = tcRepository.findOne(id);
+        TournamentClass clz = tcRepository.getOne(id);
         return isPhase1FinishedAndPhase2NotStarted(clz);
     }
 
@@ -654,7 +654,7 @@ public class TournamentService {
 
     @Transactional(readOnly = true)
     public KOFieldDTO getKOForClz(Long tcId) {
-        TournamentClass tc = tcRepository.findOne(tcId);
+        TournamentClass tc = tcRepository.getOne(tcId);
         return copyForBracket(tc.getKoField());
     }
 
@@ -680,7 +680,7 @@ public class TournamentService {
 
     @Transactional
     public TournamentSingleGameDTO startGame(Long id) throws IntegrityViolation {
-        return startGame(tournamentSingleGameRepository.findOne(id));
+        return startGame(tournamentSingleGameRepository.getOne(id));
     }
 
     @Transactional
@@ -710,14 +710,14 @@ public class TournamentService {
 
     @Transactional
     public GroupPhaseDTO updatePhase(Long cid, GroupPhaseDTO dto) {
-        TournamentClass tc = tcRepository.findOne(cid);
+        TournamentClass tc = tcRepository.getOne(cid);
         if (tc.getActualPhase().areGamesPlayed()) {
             tc.getActualPhase().resetGames();
             tcRepository.saveAndFlush(tc);
         }
         queueManager.removeAllFromClass(tc.getName());
 
-        GroupPhase groupPhase = (GroupPhase) phaseRepository.findOne(dto.getId());
+        GroupPhase groupPhase = (GroupPhase) phaseRepository.getOne(dto.getId());
         groupPhase.getGroups().clear();//fetch lazy
 //        tc.clearGroups();
         groupPhase = phaseRepository.saveAndFlush(groupPhase);
@@ -728,7 +728,7 @@ public class TournamentService {
 
     @Transactional
     public TournamentClassDTO updateClass(TournamentClassDTO dto) {
-        TournamentClass tc = tcRepository.findOne(dto.getId());
+        TournamentClass tc = tcRepository.getOne(dto.getId());
 //        tc.getGroups().clear();//fetch lazy
 //        tc.clearGroups();
 //        tc = tcRepository.saveAndFlush(tc);
@@ -739,7 +739,7 @@ public class TournamentService {
 
     @Transactional(readOnly = true)
     public PhaseDTO actualPhase(Long cid) {
-        TournamentClass tc = tcRepository.findOne(cid);
+        TournamentClass tc = tcRepository.getOne(cid);
         Phase phase = tc.getActualPhase();
         if (phase != null) {
             return copy(phase, false);
@@ -752,7 +752,7 @@ public class TournamentService {
         if (phaseCombination == null) {
             return;
         }
-        TournamentClass tc = tcRepository.findOne(tcId);
+        TournamentClass tc = tcRepository.getOne(tcId);
         tc.createPhaseCombination(phaseCombination);
         tc.setActivePhaseNo(-1);
         tcRepository.saveAndFlush(tc);
@@ -760,20 +760,20 @@ public class TournamentService {
 
     @Transactional(readOnly = true)
     public Boolean hasOnlyOneClass(Long id) {
-        List<TournamentClass> cs = repository.findOne(id).getClasses();
+        List<TournamentClass> cs = repository.getOne(id).getClasses();
         return cs != null && cs.size() == 1;
     }
 
     @Transactional(readOnly = true)
     public File exportToClickTT(Long aLong) throws IOException {
         File file = File.createTempFile("click-tt", ".xml");
-        clickTTExporter.export(repository.findOne(aLong), file);
+        clickTTExporter.export(repository.getOne(aLong), file);
         return file;
     }
 
     @Transactional(readOnly = false)
     public boolean activatePhase(Long cid) {
-        TournamentClass clz = tcRepository.findOne(cid);
+        TournamentClass clz = tcRepository.getOne(cid);
         boolean changeNeeded = clz.getActivePhaseNo() == 0;
         if (!changeNeeded) {
             clz.setActivePhaseNo(0);

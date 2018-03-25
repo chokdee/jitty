@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -58,7 +58,7 @@ public class PlayerService {
 
     @Transactional(readOnly = true)
     public List<TournamentPlayerDTO> findAll(Long actualTournament) {
-        Collection<TournamentPlayer> players = tournamentRepository.findOne(actualTournament).getPlayers();
+        Collection<TournamentPlayer> players = tournamentRepository.getOne(actualTournament).getPlayers();
         List<TournamentPlayerDTO> dtos = new ArrayList<>();
         for (TournamentPlayer player : players) {
             TournamentPlayerDTO dto = new TournamentPlayerDTO();
@@ -69,9 +69,9 @@ public class PlayerService {
     }
 
     @Transactional
-    public TournamentPlayerDTO findOne(Long aLong) {
+    public TournamentPlayerDTO getOne(Long aLong) {
 
-        TournamentPlayer tournamentPlayer = repository.findOne(aLong);
+        TournamentPlayer tournamentPlayer = repository.getOne(aLong);
         TournamentPlayerDTO dto = new TournamentPlayerDTO();
         BeanUtils.copyProperties(tournamentPlayer, dto, "classes");
         for (TournamentClass tournamentClass : tournamentPlayer.getClasses()) {
@@ -84,7 +84,7 @@ public class PlayerService {
 
     @Transactional
     public void delete(Long aLong) throws IntegrityViolation {
-        TournamentPlayer player = repository.findOne(aLong);
+        TournamentPlayer player = repository.getOne(aLong);
         if (player == null) {
             throw new IntegrityViolation("Der Spieler existiert nicht.");
         }
@@ -108,16 +108,16 @@ public class PlayerService {
     @Transactional
     public void save(TournamentPlayerDTO player, Long tid) {
         TournamentPlayer playerDB = null;
-        com.jmelzer.jitty.model.Tournament actualTournament = tournamentRepository.findOne(tid);
+        com.jmelzer.jitty.model.Tournament actualTournament = tournamentRepository.getOne(tid);
         if (player.getId() == null) {
             playerDB = new TournamentPlayer();
         } else {
-            playerDB = repository.findOne(player.getId());
+            playerDB = repository.getOne(player.getId());
         }
         BeanUtils.copyProperties(player, playerDB, "classes");
         for (TournamentClassDTO classDTO : player.getClasses()) {
             playerDB.removeAllClasses();
-            playerDB.addClass(classRepository.findOne(classDTO.getId()));
+            playerDB.addClass(classRepository.getOne(classDTO.getId()));
         }
         playerDB.setTournament(actualTournament);
         repository.save(playerDB);
@@ -128,7 +128,7 @@ public class PlayerService {
         Tournament clickTTTournament = xmlImporter.parseClickTTPlayerExport(istream);
         int count = 0;
 
-        com.jmelzer.jitty.model.Tournament actualTournament = tournamentRepository.findOne(tid);
+        com.jmelzer.jitty.model.Tournament actualTournament = tournamentRepository.getOne(tid);
         actualTournament.setClickTTId(clickTTTournament.getTournamentId());
         TournamentClass tc = null;
         if (assignWhileImport) {
@@ -140,8 +140,9 @@ public class PlayerService {
         for (Competition competition : clickTTTournament.getCompetition()) {
             for (Player clickTTPlayer : competition.getPlayers().getPlayer()) {
 
-                List<TournamentPlayer> dbPlayers = repository.findByLastNameAndFirstNameAndTournament(clickTTPlayer.getPerson().get(0).getLastname(),
-                        clickTTPlayer.getPerson().get(0).getFirstname(), actualTournament);
+                Person person = clickTTPlayer.getPerson().get(0);
+                List<TournamentPlayer> dbPlayers = repository.findByLastNameAndFirstNameAndTournament(person.getLastname(),
+                        person.getFirstname(), actualTournament);
 
                 if (dbPlayers.size() == 0 || dbPlayers.size() > 1) {
                     TournamentPlayer dbP = createDbPlayer(clickTTPlayer);

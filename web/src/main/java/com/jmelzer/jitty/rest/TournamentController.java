@@ -1,15 +1,13 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.config.SecurityUtil;
-import com.jmelzer.jitty.dao.UserRepository;
 import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentSystemType;
-import com.jmelzer.jitty.model.User;
 import com.jmelzer.jitty.model.dto.TournamentDTO;
 import com.jmelzer.jitty.service.TournamentService;
 import com.jmelzer.jitty.service.UserService;
@@ -37,8 +35,7 @@ public class TournamentController {
 
     final static Logger LOG = LoggerFactory.getLogger(TournamentController.class);
 
-    @Inject
-    UserRepository userRepository;
+
 
     @Inject
     TournamentService service;
@@ -74,7 +71,7 @@ public class TournamentController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public TournamentDTO tournament(@PathParam(value = "id") String id) {
-        return service.findOne(Long.valueOf(id));
+        return service.getOne(Long.valueOf(id));
 
     }
 
@@ -82,8 +79,8 @@ public class TournamentController {
     @GET
     public Response select(@PathParam(value = "id") String id) {
         //todo get the right one from spring security
-        User user = userRepository.findOne(1L);
-        userService.selectTournamentForUser(user, id);
+
+        userService.selectTournamentForUser(1L, id);
         service.selectTournament(Long.valueOf(id));
         return Response.ok().build();
     }

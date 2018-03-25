@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -190,7 +190,7 @@ public class CopyManager {
         TournamentGroup group = new TournamentGroup();
         BeanUtils.copyProperties(dto, group, "players");
         for (TournamentPlayerDTO tournamentPlayerDTO : dto.getPlayers()) {
-            TournamentPlayer player = playerRepository.findOne(tournamentPlayerDTO.getId());
+            TournamentPlayer player = playerRepository.getOne(tournamentPlayerDTO.getId());
             group.addPlayer(player);
         }
         return group;

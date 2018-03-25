@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -42,7 +42,8 @@ public class DrawGroupManager {
     //todo make it javascript
     @Transactional
     public GroupPhaseDTO calcOptimalGroupSize(GroupPhaseDTO phaseDTO) {
-        GroupPhase phase = (GroupPhase) phaseRepository.findOne(phaseDTO.getId());
+        Phase phase = phaseRepository.getOne(phaseDTO.getId());
+//        GroupPhase phase = (GroupPhase) phase1;
         int ppg = phaseDTO.getPlayerPerGroup() == null ? 4 : phaseDTO.getPlayerPerGroup();
         int optGroupSize = calcOptimalGroupSize(phase.getSystem().getTournamentClass().getPlayerCount(), ppg);
         phaseDTO.setGroupCount(optGroupSize);
@@ -101,7 +102,7 @@ public class DrawGroupManager {
 
     @Transactional
     public void startClass(Long id) {
-        TournamentClass clz = tcRepository.findOne(id);
+        TournamentClass clz = tcRepository.getOne(id);
         GroupPhase groupPhase = (GroupPhase) clz.getActualPhase();
         calcGroupGames(clz.getName(), clz.getTournament().getId(), groupPhase.getGroups());
         clz.setStartTime(new Date());
@@ -188,7 +189,7 @@ public class DrawGroupManager {
 
     @Transactional(readOnly = true)
     public List<TournamentPlayerDTO> getPossiblePlayerForGroups(Long cid) {
-        TournamentClass tc = tcRepository.findOne(cid);
+        TournamentClass tc = tcRepository.getOne(cid);
         List<TournamentPlayerDTO> allPlayer = tournamentService.getPlayerforClass(cid);
 
         List<TournamentGroup> groups = tc.getGroups();

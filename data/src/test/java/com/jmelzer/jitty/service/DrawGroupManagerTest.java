@@ -1,19 +1,20 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
 package com.jmelzer.jitty.service;
 
-import com.jmelzer.jitty.model.*;
-import com.jmelzer.jitty.model.TournamentSystem;
+import com.jmelzer.jitty.model.PhaseCombination;
+import com.jmelzer.jitty.model.TournamentClass;
+import com.jmelzer.jitty.model.TournamentGroup;
+import com.jmelzer.jitty.model.TournamentPlayer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 

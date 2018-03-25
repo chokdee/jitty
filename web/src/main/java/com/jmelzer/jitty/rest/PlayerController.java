@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -57,7 +57,7 @@ public class PlayerController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public TournamentPlayerDTO getById(@PathParam(value = "id") String id) {
-        return service.findOne(Long.valueOf(id));
+        return service.getOne(Long.valueOf(id));
 
     }
 
@@ -79,7 +79,7 @@ public class PlayerController {
         if (checkNull(playerDTO)) {
             return new ArrayList<>();
         }
-//        TournamentPlayerDTO player = service.findOne(Long.valueOf(playerId));
+//        TournamentPlayerDTO player = service.getOne(Long.valueOf(playerId));
         return tournamentService.getAllClasses(playerDTO, securityUtil.getActualUsername());
     }
 

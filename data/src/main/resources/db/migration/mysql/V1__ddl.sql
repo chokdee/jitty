@@ -3,97 +3,114 @@ CREATE TABLE association (
   longname  VARCHAR(255) NOT NULL,
   shortname VARCHAR(255) NOT NULL,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE club (
   id             BIGINT       NOT NULL AUTO_INCREMENT,
   click_tt_nr    VARCHAR(255),
   name           VARCHAR(255) NOT NULL,
   association_id BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE GAME_QUEUE (
   id BIGINT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE GAME_SET (
   id      BIGINT NOT NULL AUTO_INCREMENT,
   points1 INTEGER,
   points2 INTEGER,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE GAME_TO_PLAYER (
   GAME_ID   BIGINT NOT NULL,
   PLAYER_ID BIGINT NOT NULL
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE group_phase (
   group_count       INTEGER,
   player_per_group  INTEGER,
   quali_group_count INTEGER NOT NULL,
   id                BIGINT  NOT NULL,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE ko_field (
   id           BIGINT NOT NULL AUTO_INCREMENT,
   NO_OF_ROUNDS INTEGER,
   round_id     BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE ko_phase (
   id         BIGINT NOT NULL,
   KOFIELD_ID BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE Phase (
   id     BIGINT NOT NULL AUTO_INCREMENT,
   S_ID   BIGINT,
   INDEXP INTEGER,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE round (
   id            BIGINT NOT NULL AUTO_INCREMENT,
   GAME_SIZE     INTEGER,
   ROUND_TYPE    INTEGER,
   PREV_ROUND_ID BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE swiss_system_phase (
   MAX_ROUNDS INTEGER NOT NULL,
   ROUND      INTEGER NOT NULL,
   id         BIGINT  NOT NULL,
   group_id   BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE T_PLAYER (
   Tournament_id BIGINT NOT NULL,
   players_id    BIGINT NOT NULL,
   PRIMARY KEY (Tournament_id, players_id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE t_system (
   id    BIGINT NOT NULL AUTO_INCREMENT,
   TC_ID BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE table_pos (
   id          BIGINT NOT NULL AUTO_INCREMENT,
   column      SMALLINT,
   row         SMALLINT,
   SETTINGS_ID BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE table_settings (
   id          BIGINT NOT NULL AUTO_INCREMENT,
   table_count INTEGER,
   T_ID        BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE TC_PLAYER (
   classes_id BIGINT NOT NULL,
   players_id BIGINT NOT NULL
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE TG_PLAYER (
   TOURNAMENT_GROUP_ID BIGINT NOT NULL,
   PLAYER_ID           BIGINT NOT NULL
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE tournament (
   id          BIGINT       NOT NULL AUTO_INCREMENT,
   click_tt_id VARCHAR(255),
@@ -103,7 +120,8 @@ CREATE TABLE tournament (
   start_date  DATE         NOT NULL,
   table_count INTEGER      NOT NULL,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE tournament_class (
   id             BIGINT       NOT NULL AUTO_INCREMENT,
   ACTIVE_PHASE   INTEGER      NOT NULL,
@@ -121,13 +139,15 @@ CREATE TABLE tournament_class (
   SYSTEM_TYPE    INTEGER      NOT NULL,
   T_ID           BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE tournament_group (
   id    BIGINT      NOT NULL AUTO_INCREMENT,
   name  VARCHAR(10) NOT NULL,
   GP_ID BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE tournament_player (
   id                   BIGINT       NOT NULL AUTO_INCREMENT,
   birthday             DATE,
@@ -146,7 +166,8 @@ CREATE TABLE tournament_player (
   club_id              BIGINT,
   tournament_id        BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE TOURNAMENT_SINGLE_GAME (
   id                    BIGINT       NOT NULL AUTO_INCREMENT,
   called                BIT          NOT NULL,
@@ -167,11 +188,13 @@ CREATE TABLE TOURNAMENT_SINGLE_GAME (
   player2_id            BIGINT,
   ROUND_ID              BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE TOURNAMENT_SINGLE_GAME_SET (
   TOURNAMENT_SINGLE_GAME_ID BIGINT NOT NULL,
   SETS_ID                   BIGINT NOT NULL
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE user (
   id            BIGINT       NOT NULL AUTO_INCREMENT,
   avatar        TINYBLOB,
@@ -184,12 +207,14 @@ CREATE TABLE user (
   type          INTEGER,
   TOURNAMENT_ID BIGINT,
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 CREATE TABLE user_role (
   id   BIGINT NOT NULL AUTO_INCREMENT,
   name VARCHAR(255),
   PRIMARY KEY (id)
-);
+)
+  ENGINE = MyISAM;
 ALTER TABLE association
   ADD CONSTRAINT UK_ogdrfbju5finu018l8mvhdvug UNIQUE (longname);
 ALTER TABLE association

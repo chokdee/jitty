@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -18,10 +18,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
@@ -60,10 +59,9 @@ public class PlayerServiceTest {
         playerService.xmlImporter = new XMLImporter();
         Tournament t = new Tournament();
         t.setId(1L);
-        when(tournamentRepository.findOne(1L)).thenReturn(t);
+        when(tournamentRepository.getOne(1L)).thenReturn(t);
         InputStream inputStream = getClass().getResourceAsStream("/xml-import/Turnierteilnehmer.xml");
 
-        when(playerRepository.findByLastNameAndFirstNameAndTournament("Annett", "Beitel", t)).thenReturn(new ArrayList<>());
         TournamentPlayer tp = new TournamentPlayer(2L, "Gerd", "Bosse");
         tp.setClub(new Club("TTV BW Neudorf"));
         when(playerRepository.findByLastNameAndFirstNameAndTournament("Bosse", "Gerd", t)).thenReturn(Collections.singletonList(tp));

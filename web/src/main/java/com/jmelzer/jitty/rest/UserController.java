@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2018.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.model.User;
@@ -37,7 +42,7 @@ public class UserController {
     @Path("{id}")
     @GET
     public UserDTO users(@PathParam(value = "id") String id) {
-        return service.findOne(Long.valueOf(id));
+        return service.getOne(Long.valueOf(id));
 
     }
 

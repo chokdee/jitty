@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -274,7 +274,7 @@ public class SwissSystemManager {
     @Transactional
     public void startClass(Long id) throws IntegrityViolation {
 
-        TournamentClass clz = tcRepository.findOne(id);
+        TournamentClass clz = tcRepository.getOne(id);
         if (clz.getActivePhase() == null) {
             tournamentService.selectPhaseCombination(id, PhaseCombination.SWS);
         }
@@ -292,7 +292,7 @@ public class SwissSystemManager {
 
     @Transactional(readOnly = true)
     public int getRoundNr(Long id) {
-        TournamentClass clz = tcRepository.findOne(id);
+        TournamentClass clz = tcRepository.getOne(id);
         SwissSystemPhase swissSystemPhase = (SwissSystemPhase) clz.getActivePhase();
         if (swissSystemPhase == null) {
             return 1;
@@ -322,7 +322,7 @@ public class SwissSystemManager {
      */
     @Transactional
     public int createtNextSwissRoundIfNecessary(Long cid, int actualRound) throws IntegrityViolation {
-        TournamentClass clz = tcRepository.findOne(cid);
+        TournamentClass clz = tcRepository.getOne(cid);
 
         if (clz.getStatus() == TournamentClassStatus.FINISHED) {
             throw new IntegrityViolation("Die Turnierklasse ist abgeschlossen");
@@ -359,7 +359,7 @@ public class SwissSystemManager {
         if (games.isEmpty()) {
             throw new IntegrityViolation("Anzahl der Spiele sind 0");
         }
-        TournamentClass clz = tcRepository.findOne(classId);
+        TournamentClass clz = tcRepository.getOne(classId);
 
 
         SwissSystemPhase swissSystemPhase = (SwissSystemPhase) clz.getAllPhases().get(round - 1);
@@ -371,7 +371,7 @@ public class SwissSystemManager {
         clz = tcRepository.saveAndFlush(clz);
         swissSystemPhase = (SwissSystemPhase) clz.getAllPhases().get(round - 1);
 
-        Assert.isTrue(swissSystemPhase.getGroup().getGames().size() == 0);
+        Assert.isTrue(swissSystemPhase.getGroup().getGames().size() == 0, "no games");
 
 
         LOG.info("saving Round #{}", round);
@@ -379,8 +379,8 @@ public class SwissSystemManager {
         List<TournamentSingleGame> pGames = copy(games, clz.getName(), clz.getTournament().getId());
         for (int i = 0; i < games.size(); i++) {
             TournamentSingleGame pGame = pGames.get(i);
-            pGame.setPlayer1(playerRepository.findOne(games.get(i).getPlayer1().getId()));
-            pGame.setPlayer2(playerRepository.findOne(games.get(i).getPlayer2().getId()));
+            pGame.setPlayer1(playerRepository.getOne(games.get(i).getPlayer1().getId()));
+            pGame.setPlayer2(playerRepository.getOne(games.get(i).getPlayer2().getId()));
             tournamentService.save(pGame);
             swissSystemPhase.getGroup().addGame(pGame);
         }
@@ -396,7 +396,7 @@ public class SwissSystemManager {
 
     @Transactional
     public boolean activatePhase(long cid, int round) {
-        TournamentClass clz = tcRepository.findOne(cid);
+        TournamentClass clz = tcRepository.getOne(cid);
         boolean changeNeeded = clz.getActivePhaseNo() == round - 1;
         if (!changeNeeded) {
             clz.setActivePhaseNo(round - 1);
@@ -408,7 +408,7 @@ public class SwissSystemManager {
     }
 
     private void addGamesToQueue(long id) {
-        TournamentClass clz = tcRepository.findOne(id);
+        TournamentClass clz = tcRepository.getOne(id);
         SwissSystemPhase swissSystemPhase = (SwissSystemPhase) clz.getActivePhase();
         List<TournamentSingleGame> pGames = swissSystemPhase.getGroup().getGames();
         LOG.info("add games {} to queue for Round #{}", pGames.size(), swissSystemPhase.getRound());
@@ -419,7 +419,7 @@ public class SwissSystemManager {
     @Transactional
     public SwissDraw getDraw(Long cid, int round) {
         SwissDraw swissDraw = new SwissDraw();
-        TournamentClass tc = tcRepository.findOne(cid);
+        TournamentClass tc = tcRepository.getOne(cid);
 
         SwissSystemPhase swissSystemPhase = (SwissSystemPhase) tc.getActivePhase();
         if (tc.getStatus() != TournamentClassStatus.SWISS_PHASE_DRAW_BUT_NOT_STARTED) {
@@ -445,10 +445,10 @@ public class SwissSystemManager {
     @Transactional
     public SwissDraw calcDraw(Long cid, int round) {
         List<TournamentPlayerDTO> ps = tournamentService.getPlayerforClass(cid);
-        TournamentClass tc = tcRepository.findOne(cid);
+        TournamentClass tc = tcRepository.getOne(cid);
         if (tc.getActivePhase() == null) {
             tournamentService.selectPhaseCombination(cid, PhaseCombination.SWS);
-            tc = tcRepository.findOne(cid);
+            tc = tcRepository.getOne(cid);
         }
 
         for (Phase phase : tc.getSystem().getPhases()) {
@@ -481,7 +481,7 @@ public class SwissSystemManager {
     @Transactional
     public List<TournamentPlayerDTO> getRanking(Long cid) {
         List<TournamentPlayerDTO> ps = tournamentService.getPlayerforClass(cid);
-        TournamentClass tc = tcRepository.findOne(cid);
+        TournamentClass tc = tcRepository.getOne(cid);
         int round = 1;
         if (tc.getActivePhase() != null) {
             round = ((SwissSystemPhase) tc.getActivePhase()).getRound();
@@ -541,7 +541,7 @@ public class SwissSystemManager {
     @Transactional(readOnly = true)
     public SwissResultsDTO getResults(Long cid) {
         //todo prevent duplicate code
-        TournamentClass tc = tcRepository.findOne(cid);
+        TournamentClass tc = tcRepository.getOne(cid);
         TournamentSystemType stype = TournamentSystemType.enumOf(tc.getSystemType());
         SwissSystemPhase swissSystemPhase = (SwissSystemPhase) tc.getActivePhase();
         List<TournamentPlayerDTO> players = tournamentService.getPlayerforClass(cid);

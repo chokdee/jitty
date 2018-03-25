@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -38,7 +38,7 @@ public class QueueManager {
     }
 
     GameQueue getQueueO() {
-        return gameQueueRepository.findOne(1L);
+        return gameQueueRepository.getOne(1L);
     }
 
     public List<TournamentSingleGame> getBusyGamesOriginal() {

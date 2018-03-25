@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 package com.jmelzer.jitty.dao;
@@ -36,7 +36,7 @@ public class TableSettingsRepositoryIntegrationTests {
 
     @Test
     public void findByTournament() {
-        TableSettings settings = repository.findByTournament(tournamentRepository.findOne(2L));
+        TableSettings settings = repository.findByTournament(tournamentRepository.getOne(2L));
         assertNotNull(settings);
 
         assertThat(settings.getTableCount(), is(8));

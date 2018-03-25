@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -171,7 +171,7 @@ public class DrawController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response start(@QueryParam(value = "cid") String sid) {
         Long id = Long.valueOf(sid);
-        TournamentClassDTO tc = tournamentService.findOneClass(id);
+        TournamentClassDTO tc = tournamentService.getOneClass(id);
         TournamentSystemType stype = TournamentSystemType.enumOf(tc.getSystemType());
         try {
             assert stype != null;

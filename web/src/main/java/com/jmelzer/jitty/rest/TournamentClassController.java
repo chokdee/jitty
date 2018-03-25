@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2018.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.config.SecurityUtil;
@@ -42,7 +47,7 @@ public class TournamentClassController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public TournamentClassDTO tournamentClass(@PathParam(value = "id") String id) {
-        TournamentClassDTO clz = service.findOneClass(Long.valueOf(id));
+        TournamentClassDTO clz = service.getOneClass(Long.valueOf(id));
         LOG.debug("found clz {}", clz);
         return clz;
 

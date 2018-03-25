@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -267,7 +267,7 @@ public class SwissSystemManagerTest {
         TournamentSingleGame game = new TournamentSingleGame();
         activePhase.getGroup().addGame(game);
 
-        when(tcRepository.findOne(1L)).thenReturn(tc);
+        when(tcRepository.getOne(1L)).thenReturn(tc);
         assertEquals("games are not finished", 1, swissSystemManager.createtNextSwissRoundIfNecessary(1L, 1));
 
         game.setWinner(1);

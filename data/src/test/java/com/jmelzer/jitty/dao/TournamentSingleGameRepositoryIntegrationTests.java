@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 package com.jmelzer.jitty.dao;
@@ -58,19 +58,19 @@ public class TournamentSingleGameRepositoryIntegrationTests {
         tournamentClass.addGroup(group);
 
         tournamentClassRepository.save(tournamentClass);
-        tournamentClass = tournamentClassRepository.findOne(tournamentClass.getId());
+        tournamentClass = tournamentClassRepository.getOne(tournamentClass.getId());
         assertNotNull(tournamentClass.getGroups().get(0).getId());
         group = tournamentClass.getGroups().get(0);
         assertNotNull(group.getId());
 
-        group.addPlayer(playerRepository.findOne(1L));
-        group.addPlayer(playerRepository.findOne(2L));
+        group.addPlayer(playerRepository.getOne(1L));
+        group.addPlayer(playerRepository.getOne(2L));
 
         tournamentClassRepository.save(tournamentClass);
 
         TournamentSingleGame game = new TournamentSingleGame("aaa", 1L);
-        game.setPlayer1(playerRepository.findOne(1L));
-        game.setPlayer2(playerRepository.findOne(2L));
+        game.setPlayer1(playerRepository.getOne(1L));
+        game.setPlayer2(playerRepository.getOne(2L));
         repository.save(game);
         assertNotNull(game.getId());
 
@@ -82,10 +82,10 @@ public class TournamentSingleGameRepositoryIntegrationTests {
         game.setNextGame(nextGame);
         repository.save(nextGame);
         repository.save(game);
-        game = repository.findOne(game.getId());
-        game.getNextGame().setPlayer1(playerRepository.findOne(1L));
+        game = repository.getOne(game.getId());
+        game.getNextGame().setPlayer1(playerRepository.getOne(1L));
         repository.save(game.getNextGame());
-        game = repository.findOne(game.getId());
+        game = repository.getOne(game.getId());
         assertNotNull(game.getNextGame().getPlayer1());
 
 
@@ -94,7 +94,7 @@ public class TournamentSingleGameRepositoryIntegrationTests {
     @Test
     @Transactional
     public void nochmal() {
-        TournamentClass clz = tournamentClassRepository.findOne(1L);
+        TournamentClass clz = tournamentClassRepository.getOne(1L);
         clz.createPhaseCombination(PhaseCombination.GK);
         clz.setActivePhaseNo(0);
         clz.setSystemType(TournamentSystemType.GK.getValue());
@@ -105,8 +105,8 @@ public class TournamentSingleGameRepositoryIntegrationTests {
 
 //        calcGroupGames(clz.getGroups());
         TournamentSingleGame game = new TournamentSingleGame("222", 1L);
-        game.setPlayer1(playerRepository.findOne(1L));
-        game.setPlayer2(playerRepository.findOne(2L));
+        game.setPlayer1(playerRepository.getOne(1L));
+        game.setPlayer2(playerRepository.getOne(2L));
 
         game = repository.saveAndFlush(game);
 
@@ -120,8 +120,8 @@ public class TournamentSingleGameRepositoryIntegrationTests {
 
 //        calcGroupGames(clz.getGroups());
         TournamentSingleGame game = new TournamentSingleGame("11", 1L);
-        game.setPlayer1(playerRepository.findOne(1L));
-        game.setPlayer2(playerRepository.findOne(2L));
+        game.setPlayer1(playerRepository.getOne(1L));
+        game.setPlayer2(playerRepository.getOne(2L));
         game.setEndTime(new Date());
         game.setPlayed(true);
         repository.save(game);
@@ -129,8 +129,8 @@ public class TournamentSingleGameRepositoryIntegrationTests {
         assertThat(repository.findByPlayedAndTidOrderByEndTimeDesc(true, 1L).size(), is(1));
 
         TournamentSingleGame game2 = new TournamentSingleGame("222", 1L);
-        game2.setPlayer1(playerRepository.findOne(1L));
-        game2.setPlayer2(playerRepository.findOne(2L));
+        game2.setPlayer1(playerRepository.getOne(1L));
+        game2.setPlayer2(playerRepository.getOne(2L));
         repository.save(game2);
 
         assertThat(repository.findByPlayedAndTidOrderByEndTimeDesc(true, 1L).size(), is(1));

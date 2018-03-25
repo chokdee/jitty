@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2017.
+  ~ Copyright (c) 2018.
   ~ J. Melzer
   -->
 
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-multipart</artifactId>
-            <version>2.23.2</version>
+            <version>2.26</version>
         </dependency>
 
         <dependency>
@@ -79,6 +79,11 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-properties-migrator</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
@@ -184,40 +189,40 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.github.jsimone</groupId>
-                                    <artifactId>webapp-runner</artifactId>
-                                    <version>8.0.30.2</version>
-                                    <destFileName>webapp-runner.jar</destFileName>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.heroku.sdk</groupId>
-                <artifactId>heroku-maven-plugin</artifactId>
-                <version>1.1.1</version>
-                <configuration>
-                    <appName>jitty</appName>
-                    <processTypes>
-                        <web>java $JAVA_OPTS -jar target/dependency/webapp-runner.jar --port $PORT target/*.war</web>
-                    </processTypes>
-                </configuration>
-            </plugin>
+            <!--   <plugin>
+                   <groupId>org.apache.maven.plugins</groupId>
+                   <artifactId>maven-dependency-plugin</artifactId>
+                   <version>2.3</version>
+                   <executions>
+                       <execution>
+                           <phase>package</phase>
+                           <goals>
+                               <goal>copy</goal>
+                           </goals>
+                           <configuration>
+                               <artifactItems>
+                                   <artifactItem>
+                                       <groupId>com.github.jsimone</groupId>
+                                       <artifactId>webapp-runner</artifactId>
+                                       <version>8.0.30.2</version>
+                                       <destFileName>webapp-runner.jar</destFileName>
+                                   </artifactItem>
+                               </artifactItems>
+                           </configuration>
+                       </execution>
+                   </executions>
+               </plugin>
+               <plugin>
+                   <groupId>com.heroku.sdk</groupId>
+                   <artifactId>heroku-maven-plugin</artifactId>
+                   <version>1.1.1</version>
+                   <configuration>
+                       <appName>jitty</appName>
+                       <processTypes>
+                           <web>java $JAVA_OPTS -jar target/dependency/webapp-runner.jar &#45;&#45;port $PORT target/*.war</web>
+                       </processTypes>
+                   </configuration>
+               </plugin>-->
 
 
         </plugins>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 package com.jmelzer.jitty.dao;
@@ -38,7 +38,7 @@ public class TournamentClassRepositoryIntegrationTests {
 
     @Test
     public void findByTournament() {
-        Tournament tournament = tournamentRepository.findOne(2L);
+        Tournament tournament = tournamentRepository.getOne(2L);
         assertNotNull(tournament);
         assertThat(repository.findByTournament(tournament).size(), greaterThan(2));
     }
@@ -46,7 +46,7 @@ public class TournamentClassRepositoryIntegrationTests {
 
     @Test
     public void findByTournamentAndEndTTR() {
-        Tournament tournament = tournamentRepository.findOne(2L);
+        Tournament tournament = tournamentRepository.getOne(2L);
         assertNotNull(tournament);
         assertThat(repository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(tournament, 1600, 1600).size(), is(1));
         assertThat(repository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(tournament, 1599, 1599).size(), is(2));
@@ -56,7 +56,7 @@ public class TournamentClassRepositoryIntegrationTests {
 
     @Test
     public void findByTournamentAndRunning() {
-        Tournament tournament = tournamentRepository.findOne(2L);
+        Tournament tournament = tournamentRepository.getOne(2L);
         assertNotNull(tournament);
         assertThat(repository.findByTournamentAndRunning(tournament, false).size(), is(3));
         assertThat(repository.findByTournamentAndRunning(tournament, true).size(), is(0));
@@ -76,7 +76,7 @@ public class TournamentClassRepositoryIntegrationTests {
         clz.addGroup(new TournamentGroup("1"));
         clz.addGroup(new TournamentGroup("2"));
 
-        clz = repository.findOne(clz.getId());
+        clz = repository.getOne(clz.getId());
         assertThat(clz.getSystem().getPhases().size(), is(2));
     }
 }

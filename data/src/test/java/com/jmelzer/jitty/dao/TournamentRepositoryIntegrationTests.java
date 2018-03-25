@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 package com.jmelzer.jitty.dao;
@@ -82,7 +82,7 @@ public class TournamentRepositoryIntegrationTests {
         assertNotNull(tournamentClass.getId());
         assertNotNull(tournamentClass2.getId());
 
-        Tournament tDB = repository.findOne(tournament.getId());
+        Tournament tDB = repository.getOne(tournament.getId());
 
         List<TournamentPlayer> players = playerRepository.findAll();
         for (TournamentPlayer player : players) {
@@ -91,7 +91,7 @@ public class TournamentRepositoryIntegrationTests {
         }
         repository.save(tDB);
 
-        tDB = repository.findOne(tournament.getId());
+        tDB = repository.getOne(tournament.getId());
 
         assertEquals(players.size(), tDB.getClasses().get(0).getPlayers().size());
         assertEquals(players.size(), tDB.getClasses().get(1).getPlayers().size());

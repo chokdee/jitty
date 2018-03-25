@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2018.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TournamentClassRepository;
@@ -34,7 +39,7 @@ public class DrawKoFieldManager {
 
     @Transactional(readOnly = true)
     public int calcKOSizeInInt(long cId) {
-        TournamentClass tc = tcRepository.findOne(cId);
+        TournamentClass tc = tcRepository.getOne(cId);
         return calcKOSize(tc).getValue();
 
     }
@@ -116,7 +121,7 @@ public class DrawKoFieldManager {
      */
     @Transactional
     public KOFieldDTO drawKO(Long tcId, boolean assignPlayer) {
-        TournamentClass tc = tcRepository.findOne(tcId);
+        TournamentClass tc = tcRepository.getOne(tcId);
         if (tc.getActivePhaseNo() == 2) {
             return copy(tc.getKoField());
         }
@@ -171,7 +176,7 @@ public class DrawKoFieldManager {
 
     @Transactional
     public void startKOField(Long tcId) {
-        TournamentClass tc = tcRepository.findOne(tcId);
+        TournamentClass tc = tcRepository.getOne(tcId);
         if (tc.getActivePhaseNo() == 1) {
             return;
         }
@@ -183,7 +188,7 @@ public class DrawKoFieldManager {
 
     @Transactional(readOnly = true)
     public List<TournamentPlayerDTO> getPossiblePlayerForKOField(Long cid) {
-        TournamentClass tc = tcRepository.findOne(cid);
+        TournamentClass tc = tcRepository.getOne(cid);
         List<TournamentGroup> groups = tc.getGroups();
         List<TournamentPlayerDTO> winner = new ArrayList<>();
         for (TournamentGroup group : groups) {
@@ -210,7 +215,7 @@ public class DrawKoFieldManager {
 
     @Transactional
     public void resetKO(Long tcId) {
-        TournamentClass tc = tcRepository.findOne(tcId);
+        TournamentClass tc = tcRepository.getOne(tcId);
         RoundType roundType = calcKOSize(tc);
         KOField field = createKOField(roundType);
         tc.setKoField(field);

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2018.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TournamentRepository;
@@ -37,8 +42,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO findOne(Long aLong) {
-        User user = repository.findOne(aLong);
+    public UserDTO getOne(Long aLong) {
+        User user = repository.getOne(aLong);
         UserDTO dto = new UserDTO();
         BeanUtils.copyProperties(user, dto);
         return dto;
@@ -46,7 +51,7 @@ public class UserService {
 
     @Transactional
     public void delete(Long aLong) {
-        repository.delete(aLong);
+        repository.deleteById(aLong);
     }
 
     @Transactional
@@ -56,7 +61,7 @@ public class UserService {
         if (userDTO.getId() == null) {
             user = new User();
         } else {
-            user = repository.findOne(userDTO.getId());
+            user = repository.getOne(userDTO.getId());
         }
         BeanUtils.copyProperties(userDTO, user);
         return repository.save(user);
@@ -80,14 +85,15 @@ public class UserService {
 
     @Transactional
     public void changePassword(Long id, String password) {
-        User user = repository.findOne(id);
+        User user = repository.getOne(id);
         user.setPassword(password);
         repository.saveAndFlush(user);
     }
 
     @Transactional
-    public void selectTournamentForUser(User user, String id) {
-        Tournament t = tournamentRepository.findOne(Long.valueOf(id));
+    public void selectTournamentForUser(Long userId, String id) {
+        User user = repository.getOne(userId);
+        Tournament t = tournamentRepository.getOne(Long.valueOf(id));
         user.setLastUsedTournament(t);
         repository.saveAndFlush(user);
 

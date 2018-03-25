@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,7 +64,7 @@ public class TournamentServiceTest {
     @Test
     public void moveGameBackToPossiblegames() throws Exception {
 
-        when(tournamentSingleGameRepository.findOne(1L)).thenReturn(null);
+        when(tournamentSingleGameRepository.getOne(1L)).thenReturn(null);
         try {
             service.moveGameBackToPossiblegames(1L);
             fail();
@@ -73,7 +73,7 @@ public class TournamentServiceTest {
         }
 
         TournamentSingleGame game = new TournamentSingleGame();
-        when(tournamentSingleGameRepository.findOne(1L)).thenReturn(game);
+        when(tournamentSingleGameRepository.getOne(1L)).thenReturn(game);
 
         service.moveGameBackToPossiblegames(1L);
 
@@ -265,7 +265,7 @@ public class TournamentServiceTest {
         game.setPlayer2(new TournamentPlayer());
         game.setTid(9L);
 
-        when(tournamentSingleGameRepository.findOne(1L)).thenReturn(game);
+        when(tournamentSingleGameRepository.getOne(1L)).thenReturn(game);
 
         TournamentClass tc = new TournamentClass();
         Tournament tournament = new Tournament();
@@ -274,7 +274,7 @@ public class TournamentServiceTest {
         tc.setRunning(true);
         assertThat(tc.getStatus(), is(TournamentClassStatus.NOTSTARTED));
 
-        when(repository.findOne(9L)).thenReturn(tournament);
+        when(repository.getOne(9L)).thenReturn(tournament);
         when(workflowManager.calcStatus(tc)).thenReturn(TournamentClassStatus.NOT_INITIALIZED);
 
         service.saveAndFinishGame(g1);

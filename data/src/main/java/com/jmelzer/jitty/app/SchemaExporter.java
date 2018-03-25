@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -7,13 +7,15 @@ package com.jmelzer.jitty.app;
 
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.boot.spi.MetadataImplementor;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+
+import static org.hibernate.tool.schema.TargetType.SCRIPT;
 
 /**
  * class for exporting the jpa schema to different ddl files
@@ -62,14 +64,16 @@ public class SchemaExporter {
     private String generate() {
 
 
-        SchemaExport export = new SchemaExport((MetadataImplementor) metadata.buildMetadata());
+//        SchemaExport export = new SchemaExport((MetadataImplementor) metadata.buildMetadata());
+        SchemaExport export = new SchemaExport();
         export.setDelimiter(";");
         String workingDir = System.getProperty("user.dir");
 
         String filename = workingDir + "/src/main/resources/db/migration/" + prefix + "/V1__ddl.sql";
         export.setOutputFile(filename);
+        new File(filename).delete();
 
-        export.execute(true, false, false, true);
+        export.execute(EnumSet.of(SCRIPT), SchemaExport.Action.CREATE, metadata.buildMetadata());
         return filename;
     }
 

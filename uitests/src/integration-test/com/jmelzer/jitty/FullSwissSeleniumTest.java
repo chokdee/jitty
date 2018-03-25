@@ -38,7 +38,6 @@ public class FullSwissSeleniumTest {
         waitForText(2, "Alle Spieler");
 
         WebElement we = driver().findElement(By.id("uploader"));
-        System.out.println("we = " + we);
         we.sendKeys("C:\\ws\\jitty\\doc\\Turnierteilnehmer.xml");
 
 //        for (int i = 0; i < 8; i++) {

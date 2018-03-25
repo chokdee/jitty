@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 package com.jmelzer.jitty.dao;
@@ -22,7 +22,6 @@ import java.util.List;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
 
 /**
  * Integration tests for {@link UserRepository}.
@@ -61,7 +60,7 @@ public class TournamentPlayerRepositoryIntegrationTests {
         assertEquals("Boll", repository.findByLastName("Boll").getLastName());
         TournamentPlayer p = repository.findByLastName("Boll");
         assertEquals("Boll", repository.findByLastNameAndFirstNameAndTournament("Boll", "Timo",
-                tournamentRepository.findOne(2L)).get(0).getLastName());
+                tournamentRepository.getOne(2L)).get(0).getLastName());
     }
 
     @Test
@@ -76,9 +75,9 @@ public class TournamentPlayerRepositoryIntegrationTests {
         player.setMobileNumber("0800-26662662");
         player.setQttr(2000);
         player.setTtr(2100);
-        player.setTournament(tournamentRepository.findOne(2L));
-        player.setAssociation(associationRepository.findOne(1L));
-        player.setClub(clubRepository.findOne(1L));
+        player.setTournament(tournamentRepository.getOne(2L));
+        player.setAssociation(associationRepository.getOne(1L));
+        player.setClub(clubRepository.getOne(1L));
         repository.saveAndFlush(player);
 
         assertNotNull(player.getId());
@@ -92,14 +91,14 @@ public class TournamentPlayerRepositoryIntegrationTests {
         player.addClass(clz);
         repository.saveAndFlush(player);
 
-        assertThat(repository.findOne(player.getId()).getClasses().size(), is(1));
+        assertThat(repository.getOne(player.getId()).getClasses().size(), is(1));
         assertThat(tournamentClassRepository.findAll().size(), is(3));
         assertThat(tournamentClassRepository.findByTournamentAndEndTTRGreaterThanAndStartTTRLessThan(t, 1000, 1000).size(), is(2));
     }
 
     @Test
     public void findByClasses() {
-        TournamentClass tc = tournamentClassRepository.findOne(1L);
+        TournamentClass tc = tournamentClassRepository.getOne(1L);
         assertThat(repository.findByClasses(Arrays.asList(tc)).size(), is(1));
     }
 }
