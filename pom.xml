@@ -98,7 +98,7 @@
                         <goals>
                             <goal>check</goal>
                         </goals>
-                        <!--<configuration>
+                        <configuration>
                             <rules>
                                 <rule>
                                     <element>CLASS</element>
@@ -106,12 +106,12 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.90</minimum>
+                                            <minimum>0.40</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.80</minimum>
+                                            <minimum>0.40</minimum>
                                         </limit>
                                     </limits>
                                     <excludes>
@@ -119,7 +119,7 @@
                                     </excludes>
                                 </rule>
                             </rules>
-                        </configuration>-->
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
