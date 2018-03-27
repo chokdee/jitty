@@ -221,9 +221,9 @@ public class SwissSystemManager {
     }
 
     private void throwNoResult(int round, List<TournamentPlayerDTO> player, List<TournamentSingleGameDTO> games) {
-        System.out.println("games before exception");
+        LOG.debug("games before exception");
         for (TournamentSingleGameDTO g : games) {
-            System.out.println(g);
+            LOG.debug(g.toString());
         }
         cleanGames(player, round);
         throw new SwissRuntimeException("retry");
@@ -240,7 +240,7 @@ public class SwissSystemManager {
     private TournamentPlayerDTO getPlayerFromNextLevel(Map<Integer, List<TournamentPlayerDTO>> hashMap, int key, TournamentPlayerDTO p) {
         List<TournamentPlayerDTO> nextLevel = hashMap.get(key);
         if (nextLevel == null) {
-            System.out.println("no opponent found for player " + p);
+            LOG.debug("no opponent found for player {}", p);
             return null;
         }
         Collections.shuffle(nextLevel);

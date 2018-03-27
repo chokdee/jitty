@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -41,8 +41,7 @@ public class PlayerControllerTest extends SecureResourceTest {
             assertThat(entity.getBody().length, is(0));
 
         } catch (HttpClientErrorException e) {
-            System.out.println(e.getResponseBodyAsString());
-            fail();
+            fail(e.getResponseBodyAsString());
         }
     }
 
@@ -56,8 +55,7 @@ public class PlayerControllerTest extends SecureResourceTest {
             assertThat(entity.getBody().getId(), is(2L));
 
         } catch (HttpClientErrorException e) {
-            System.out.println(e.getResponseBodyAsString());
-            fail();
+            fail(e.getResponseBodyAsString());
         }
     }
 
@@ -72,8 +70,7 @@ public class PlayerControllerTest extends SecureResourceTest {
             assertThat(entity.getBody().length, is(greaterThan(0)));
 
         } catch (HttpClientErrorException e) {
-            System.out.println(e.getResponseBodyAsString());
-            fail();
+            fail(e.getResponseBodyAsString());
         }
     }
 

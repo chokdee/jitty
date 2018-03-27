@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -36,8 +36,7 @@ public class UserControllerTest extends SecureResourceTest {
 
             assertTrue(entity.getStatusCode().is2xxSuccessful());
         } catch (HttpClientErrorException e) {
-            System.out.println(e.getResponseBodyAsString());
-            fail();
+            fail(e.getResponseBodyAsString());
         }
     }
 

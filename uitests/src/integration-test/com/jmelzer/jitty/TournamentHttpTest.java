@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2018.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty;
 
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
@@ -63,7 +68,7 @@ public class TournamentHttpTest {
         HtmlInput submitInput = form.getInputByName("submit");
         HtmlPage listPage = submitInput.click();
         assertTrue("Listpage = " + listPage.asText() , listPage.asText().contains("Alle Turniere"));
-        System.out.println("listPage = " + listPage.asText());
+//        System.out.println("listPage = " + listPage.asText());
         assertTrue("Must contains HtmlUnit Open 2016" , listPage.asText().contains("HtmlUnit Open 2016"));
 
     }
@@ -107,7 +112,7 @@ public class TournamentHttpTest {
         assertTrue(tcPage.asText().contains("Turnierklasse bearbeiten"));
         assertTrue(tcPage.asText().contains(tcName));
         form = tcPage.getFormByName("tournamentClassForm");
-        System.out.println("tcPage.asText() = " + tcPage.asText());
+//        System.out.println("tcPage.asText() = " + tcPage.asText());
         //change the name
         tcName = tcName + "E";
         form.getInputByName("name").setValueAttribute(tcName);

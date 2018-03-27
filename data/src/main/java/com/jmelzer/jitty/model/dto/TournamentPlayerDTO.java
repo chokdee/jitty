@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -205,9 +205,6 @@ public class TournamentPlayerDTO {
 
     public void addGame(TournamentSingleGameDTO game) {
         playedGames.add(game);
-        if (playedGames.size() > 1) {
-            System.out.println();
-        }
     }
 
     public void calcWinningGames() {

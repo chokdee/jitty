@@ -45,8 +45,7 @@ public class FullSwissSeleniumTest {
 //        }
 
         for (int i = 1; i <= 6; i++) {
-
-            System.out.println("-------------- round #" + i + " --------------");
+//            System.out.println("-------------- round #" + i + " --------------");
             createDraw(i);
             enterResult(12);
         }

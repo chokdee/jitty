@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2018.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.logging;
 
 import org.glassfish.jersey.server.monitoring.ApplicationEvent;
@@ -32,7 +37,7 @@ public class MyApplicationEventListener
     @Override
     public RequestEventListener onRequest(RequestEvent requestEvent) {
         requestCnt++;
-        System.out.println("Request " + requestCnt + " started.");
+//        System.out.println("Request " + requestCnt + " started.");
         // return the listener instance that will handle this request.
         return new MyRequestEventListener(requestCnt);
     }

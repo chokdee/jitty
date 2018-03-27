@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -43,12 +43,12 @@ public class AndroCupSeleniumTest {
         driver().findElement(By.linkText("Cup-Klasse")).click();
 
         for (int i = 1; i < 7; i++) {
-            System.out.println("########## createRound " + (i));
+//            System.out.println("########## createRound " + (i));
             createRound(i);
             enterResultsForGroup();
 
             driver().findElement(By.linkText("Hier klicken")).click();
-            System.out.println("########## Runde " + (i + 1));
+//            System.out.println("########## Runde " + (i + 1));
             waitForText(2, "Runde " + (i + 1));
         }
     }

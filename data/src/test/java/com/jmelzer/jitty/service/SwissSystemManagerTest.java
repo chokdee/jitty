@@ -84,10 +84,10 @@ public class SwissSystemManagerTest {
     public void calcRankingSixRounds() throws Exception {
         for (int i = 0; i < 1; i++) {
 
-            System.out.println("HHHHHHHHHHHHHH   " + i + " HHHHHHHHHHHHHH");
+//            System.out.println("HHHHHHHHHHHHHH   " + i + " HHHHHHHHHHHHHH");
             List<TournamentPlayerDTO> player = createPlayer(11);
             swissSystemManager.calcRankingFirstRound(player);
-            System.out.println("------ round 1 starts .-------------- ");
+//            System.out.println("------ round 1 starts .-------------- ");
             List<TournamentSingleGameDTO> games = swissSystemManager.createGamesForTheFirstRound(player).getGames();
 
             for (TournamentSingleGameDTO game : games) {
@@ -97,19 +97,19 @@ public class SwissSystemManagerTest {
             //the last one do not have a played game
             for (int j = 0; j < player.size() - 1; j++) {
                 TournamentPlayerDTO playerDTO = player.get(j);
-                System.out.println("playerDTO = " + playerDTO);
+//                System.out.println("playerDTO = " + playerDTO);
                 assertEquals("#" + j + playerDTO.toString(), 1, playerDTO.getPlayedGames().size());
             }
             assertTrue(player.get(player.size() - 1).hasFreilos());
 
             for (int round = 2; round <= 6; round++) {
 
-                System.out.println("------ round " + round + " starts .-------------- ");
+//                System.out.println("------ round " + round + " starts .-------------- ");
                 swissSystemManager.calcRankingRound(TournamentSystemType.AC, round, player);
 
-                for (TournamentPlayerDTO playerDTO : player) {
-                    System.out.println("playerDTO = " + playerDTO);
-                }
+//                for (TournamentPlayerDTO playerDTO : player) {
+//                    System.out.println("playerDTO = " + playerDTO);
+//                }
 
                 games = createGames(player, round);
                 for (TournamentSingleGameDTO game : games) {
@@ -118,11 +118,11 @@ public class SwissSystemManagerTest {
                 }
             }
 
-            System.out.println(" ### RESULT ###");
+//            System.out.println(" ### RESULT ###");
             swissSystemManager.calcRankingRound(TournamentSystemType.AC, 7, player);
-            for (TournamentPlayerDTO playerDTO : player) {
-                System.out.println("playerDTO = " + playerDTO);
-            }
+//            for (TournamentPlayerDTO playerDTO : player) {
+//                System.out.println("playerDTO = " + playerDTO);
+//            }
         }
     }
 
@@ -131,16 +131,16 @@ public class SwissSystemManagerTest {
         games = null;
         for (int i = 1; i <= 100; i++) {
             try {
-                System.out.println("------ #" + i + " run -------------- ");
+//                System.out.println("------ #" + i + " run -------------- ");
                 if (i > 80) {
-                    System.out.println("brute force !!");
+//                    System.out.println("brute force !!");
                     games = swissSystemManager.createGamesForRound(round, player, true).getGames();
                 } else {
                     games = swissSystemManager.createGamesForRound(round, player, false).getGames();
                 }
                 break;
             } catch (SwissRuntimeException e) {
-                System.out.println();
+//                System.out.println();
             }
         }
         return games;
@@ -168,10 +168,10 @@ public class SwissSystemManagerTest {
 
         swissSystemManager.calcRankingFirstRound(player);
 
-        for (TournamentPlayerDTO tournamentPlayerDTO : player) {
-            System.out.println("tournamentPlayerDTO = " + tournamentPlayerDTO);
-
-        }
+//        for (TournamentPlayerDTO tournamentPlayerDTO : player) {
+//            System.out.println("tournamentPlayerDTO = " + tournamentPlayerDTO);
+//
+//        }
         assertEquals("Marcus Meuser", player.get(0).getFullName());
         assertEquals("J\u00FCrgen Jakob", player.get(1).getFullName());
         //todo ...
@@ -188,19 +188,19 @@ public class SwissSystemManagerTest {
         matchNr = runRoundFromFile(tournament, player, round, matchNr);
         round++;
         matchNr = runRoundFromFile(tournament, player, round, matchNr);
-        System.out.println("------ round " + round + " starts .-------------- ");
+//        System.out.println("------ round " + round + " starts .-------------- ");
         List<TournamentSingleGameDTO> games = createGames(player, round);
 //        List<TournamentSingleGameDTO> games = swissSystemManager.createGamesForRound(round, player, false);
-        for (TournamentSingleGameDTO game : games) {
-            System.out.println(game.getPlayer1().getFullName() + " --> " + game.getPlayer2().getFullName());
-        }
+//        for (TournamentSingleGameDTO game : games) {
+//            System.out.println(game.getPlayer1().getFullName() + " --> " + game.getPlayer2().getFullName());
+//        }
     }
 
     private int runRoundFromFile(Tournament tournament, List<TournamentPlayerDTO> player, int round, int matchNr) {
         int matchNr1 = matchNr;
         List<TournamentSingleGameDTO> games;
-        System.out.println("------ round " + round + " starts .-------------- ");
-        System.out.println("------------------------------------------------------------------------------------------------------");
+//        System.out.println("------ round " + round + " starts .-------------- ");
+//        System.out.println("------------------------------------------------------------------------------------------------------");
         games = fillGamesFrom(round, tournament, player);
 
         for (TournamentSingleGameDTO game : games) {
@@ -209,7 +209,7 @@ public class SwissSystemManagerTest {
             game.setSets(convertToSets(match));
             new TournamentService().calcWinner(game);
             assertTrue(match.getGroup().contains("Runde  " + round));
-            System.out.println("game = " + game);
+//            System.out.println("game = " + game);
         }
         swissSystemManager.calcRankingRound(TournamentSystemType.AC, round, player);
         return matchNr1;

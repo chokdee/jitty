@@ -60,7 +60,6 @@ public class SeleniumUtil {
     }
 
     public static String navigate(String urlpart, String waitForTitle) {
-        System.out.println("calling " + "http://localhost:8080/" + urlpart);
         driver().navigate().to("http://localhost:8080/" + urlpart);
         waitForTitle(10, waitForTitle);
         return driver().getPageSource();
@@ -117,7 +116,7 @@ public class SeleniumUtil {
     public static void waitForText(int timeout, final String text) {
         (new WebDriverWait(driver, timeout)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
-                System.out.println("check " + text);
+//                System.out.println("check " + text);
                 return d.getPageSource().contains(text);
             }
         });

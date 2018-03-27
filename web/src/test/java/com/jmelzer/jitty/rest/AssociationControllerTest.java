@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -33,8 +33,7 @@ public class AssociationControllerTest extends SecureResourceTest {
             assertThat(entity.getBody()[0].getId(), is(1L));
 
         } catch (HttpClientErrorException e) {
-            System.out.println(e.getResponseBodyAsString());
-            fail();
+            fail(e.getResponseBodyAsString());
         }
     }
 

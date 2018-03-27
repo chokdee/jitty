@@ -157,9 +157,9 @@ public class TournamentServiceTest {
         group = prepareGroupWith3PlayerAndGames();
         service.calcRankingForGroup(group);
         assertThat(group.getRanking().size(), is(3));
-        for (PlayerStatistic playerStatistic : group.getRanking()) {
-            System.out.println("playerStatistic = " + playerStatistic);
-        }
+//        for (PlayerStatistic playerStatistic : group.getRanking()) {
+//            System.out.println("playerStatistic = " + playerStatistic);
+//        }
     }
 
     private TournamentGroup prepareGroupWith3PlayerAndGames() {

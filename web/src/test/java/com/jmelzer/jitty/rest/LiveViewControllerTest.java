@@ -37,8 +37,7 @@ public class LiveViewControllerTest extends SecureResourceTest {
             assertTrue(entity.getStatusCode().is2xxSuccessful());
             assertThat(entity.getBody().length, is(greaterThan(0)));
         } catch (HttpClientErrorException e) {
-            System.out.println(e.getResponseBodyAsString());
-            fail();
+            fail(e.getResponseBodyAsString());
         }
     }
 
@@ -54,8 +53,7 @@ public class LiveViewControllerTest extends SecureResourceTest {
             assertTrue(entity.getStatusCode().is2xxSuccessful());
             assertThat(entity.getBody().length, is(4));
         } catch (HttpClientErrorException e) {
-            System.out.println(e.getResponseBodyAsString());
-            fail();
+            fail(e.getResponseBodyAsString());
         }
     }
 }
