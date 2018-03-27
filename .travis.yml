@@ -3,6 +3,6 @@ jdk:
   - oraclejdk8
 
 after_success:
-  - mvn clean test jacoco:report coveralls:report
+  - mvn clean test org.jacoco:jacoco-maven-plugin:0.8.0:report coveralls:report
 
 

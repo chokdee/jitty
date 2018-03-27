@@ -26,8 +26,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <main.basedir>${project.basedir}</main.basedir>
         <!--<tomcat.version>8.0.30</tomcat.version>-->
-        <jacoco.reportPath>${project.basedir}/../target/jacoco.exec</jacoco.reportPath>
+        <jacoco.reportPath>${main.basedir}/target/jacoco.exec</jacoco.reportPath>
     </properties>
     <modules>
         <module>data</module>
@@ -40,12 +41,6 @@
             <artifactId>tomcat-juli</artifactId>
             <version>${tomcat.version}</version>
         </dependency>-->
-        <dependency>
-            <groupId>org.codehaus.sonar-plugins.java</groupId>
-            <artifactId>sonar-jacoco-listeners</artifactId>
-            <version>3.2</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -60,10 +55,10 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.7.201606060606</version>
+                <version>0.8.0</version>
                 <configuration>
                     <!--<destFile>${jacoco.reportPath}</destFile>-->
-                    <append>true</append>
+                    <!--<append>true</append>-->
                     <excludes>
                         <exclude>**/model/**/*.*</exclude>
                         <exclude>**/SchemaExporter*.*</exclude>
@@ -71,6 +66,7 @@
                         <exclude>**/exceptions/*.*</exclude>
                     </excludes>
                     <dataFileIncludes>
+                        <dataFile>${jacoco.reportPath}</dataFile>
                         <dataFileInclude>data/target/jacoco.exec</dataFileInclude>
                         <dataFileInclude>web/target/jacoco.exec</dataFileInclude>
                     </dataFileIncludes>
@@ -78,9 +74,16 @@
 
                 <executions>
                     <execution>
-                        <id>default-prepare-agent</id>
+                        <id>pre-test</id>
                         <goals>
                             <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>post-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                     <execution>
@@ -90,7 +93,34 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
-
+                    <execution>
+                        <id>check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <!--<configuration>
+                            <rules>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.90</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                    </limits>
+                                    <excludes>
+                                        <exclude></exclude>
+                                    </excludes>
+                                </rule>
+                            </rules>
+                        </configuration>-->
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
