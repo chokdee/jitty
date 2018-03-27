@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
+<!--
+  ~ Copyright (c) 2018.
+  ~ J. Melzer
+  -->
+
 <configuration debug="false">
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -11,7 +16,7 @@
     <!--<logger name="org.springframework.web" level="DEBUG" />-->
     <!--<logger name="org.springframework.security" level="DEBUG" />-->
     <!--<logger name="org.glassfish.jersey" level="DEBUG" />-->
-    <logger name="com.jmelzer.jitty" level="DEBUG"/>
+    <logger name="com.jmelzer.jitty" level="OFF"/>
     <!--<logger name="org.hibernate" level="DEBUG" />-->
     <root level="WARN">
         <appender-ref ref="stdout"/>

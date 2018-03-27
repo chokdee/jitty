@@ -2,7 +2,7 @@
 
 
 <!--
-  ~ Copyright (c) 2017.
+  ~ Copyright (c) 2018.
   ~ J. Melzer
   -->
 
@@ -16,7 +16,7 @@
     <!--<logger name="org.springframework.web" level="DEBUG" />-->
     <!--<logger name="org.glassfish.jersey" level="DEBUG" />-->
     <!--<logger name="org.hibernate" level="DEBUG" />-->
-    <logger name="com.jmelzer.jitty" level="DEBUG"/>
+    <logger name="com.jmelzer.jitty" level="OFF"/>
     <!--switch this on only when you need and PLEASE don't commit it-->
     <root level="WARN">
         <appender-ref ref="stdout"/>
