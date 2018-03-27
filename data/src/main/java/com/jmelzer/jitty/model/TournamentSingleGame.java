@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -305,9 +305,9 @@ public class TournamentSingleGame {
 
     @Override
     public int hashCode() {
-        int result = player1 != null ? player1.hashCode() : 0;
-        result = 31 * result + (player2 != null ? player2.hashCode() : 0);
-        result = 31 * result + (id != null ? id.hashCode() : 0);
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getPlayer1() != null ? getPlayer1().hashCode() : 0);
+        result = 31 * result + (getPlayer2() != null ? getPlayer2().hashCode() : 0);
         return result;
     }
 
@@ -316,20 +316,19 @@ public class TournamentSingleGame {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof TournamentSingleGame)) {
             return false;
         }
 
-        TournamentSingleGame game = (TournamentSingleGame) o;
+        TournamentSingleGame that = (TournamentSingleGame) o;
 
-        if (player1 != null ? !player1.equals(game.player1) : game.player1 != null) {
+        if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) {
             return false;
         }
-        if (player2 != null ? !player2.equals(game.player2) : game.player2 != null) {
+        if (getPlayer1() != null ? !getPlayer1().equals(that.getPlayer1()) : that.getPlayer1() != null) {
             return false;
         }
-        return id != null ? id.equals(game.id) : game.id == null;
-
+        return getPlayer2() != null ? getPlayer2().equals(that.getPlayer2()) : that.getPlayer2() == null;
     }
 
     @Override

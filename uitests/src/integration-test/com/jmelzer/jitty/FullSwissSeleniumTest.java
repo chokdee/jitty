@@ -54,9 +54,8 @@ public class FullSwissSeleniumTest {
         driver().navigate().to("http://localhost:8080/#/draw-select-class");
         waitForText(2, "Beendet");
 
-        //todo abschliessen
         driver().navigate().to("http://localhost:8080/#/tournaments");
-        waitForText(1, "Alle Turniere");
+        waitForText(2, "Alle Turniere");
         driver.findElement(By.id("close-" + id)).click();
         waitForText(1, "abschliessen");
         driver().findElement(By.id("export")).click();

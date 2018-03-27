@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -24,11 +24,11 @@ public class SecurityIntegrationTest extends SecureResourceTest {
     public void thatSecuredIsNotAccessible() {
         ResponseEntity<String> response = anonymous.getForEntity("http://localhost:9999/resource", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
-        assertThat(response.getBody(), containsString("Full authentication is required to access this resource"));
+        assertThat(response.getBody(), containsString("401"));
 
         response = anonymous.getForEntity("http://localhost:9999/api/users/7", String.class);
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
-        assertThat(response.getBody(), containsString("Full authentication is required to access this resource"));
+        assertThat(response.getBody(), containsString("401"));
     }
 
 
@@ -75,7 +75,7 @@ public class SecurityIntegrationTest extends SecureResourceTest {
                 String.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
-        assertThat(response.getBody(), containsString("Full authentication is required to access this resource"));
+        assertThat(response.getBody(), containsString("401"));
     }
 
     @Test

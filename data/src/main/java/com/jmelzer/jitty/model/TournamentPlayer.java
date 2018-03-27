@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -182,9 +182,9 @@ public class TournamentPlayer {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getFirstName() != null ? getFirstName().hashCode() : 0);
+        result = 31 * result + (getLastName() != null ? getLastName().hashCode() : 0);
         return result;
     }
 
@@ -193,20 +193,19 @@ public class TournamentPlayer {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof TournamentPlayer)) {
             return false;
         }
 
-        TournamentPlayer player = (TournamentPlayer) o;
+        TournamentPlayer that = (TournamentPlayer) o;
 
-        if (id != null ? !id.equals(player.id) : player.id != null) {
+        if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) {
             return false;
         }
-        if (firstName != null ? !firstName.equals(player.firstName) : player.firstName != null) {
+        if (getFirstName() != null ? !getFirstName().equals(that.getFirstName()) : that.getFirstName() != null) {
             return false;
         }
-        return lastName != null ? lastName.equals(player.lastName) : player.lastName == null;
-
+        return getLastName() != null ? getLastName().equals(that.getLastName()) : that.getLastName() == null;
     }
 
     @Override
