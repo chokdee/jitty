@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
 package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.TableSettingsRepository;
+import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentSingleGame;
 import com.jmelzer.jitty.model.dto.TableDTO;
@@ -29,6 +30,9 @@ public class TableManager {
 
     @Autowired
     TableSettingsRepository settingsRepository;
+
+    @Autowired
+    TournamentRepository tournamentRepository;
 
     public Set<Integer> getFreeTables() {
         return Collections.unmodifiableSet(freeTables);
@@ -60,7 +64,8 @@ public class TableManager {
     }
 
     @Transactional(readOnly = true)
-    public List<TableDTO> getAllTables(Tournament tournament) {
+    public List<TableDTO> getAllTables(Long id) {
+        Tournament tournament = tournamentRepository.getOne(id);
         int tableCount = getTableCount(tournament);
         List<TableDTO> list = new ArrayList<>(tableCount);
 
@@ -76,7 +81,7 @@ public class TableManager {
     }
 
     int getTableCount(Tournament tournament) {
-        return settingsRepository.findByTournament(tournament).getTableCount();
+        return tournament.getTableSettings().getTableCount();
     }
 
     public int getBusyTableCount() {

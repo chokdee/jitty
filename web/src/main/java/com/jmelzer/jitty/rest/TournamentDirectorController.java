@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -123,7 +123,7 @@ public class TournamentDirectorController {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public List<TableDTO> tables() {
-        return tableManager.getAllTables(securityUtil.getActualTournament());
+        return tableManager.getAllTables(securityUtil.getActualTournament().getId());
     }
 
     @Path("/save-table-count")

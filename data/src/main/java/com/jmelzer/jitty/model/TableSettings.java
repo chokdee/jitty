@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -18,12 +18,12 @@ public class TableSettings {
     @Column(name = "table_count")
     Integer tableCount;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "settings")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "settings")
     List<TablePos> tablePositions = new ArrayList<>();
 
-    @ManyToOne(targetEntity = Tournament.class)
-    @JoinColumn(name = "T_ID")
-    Tournament tournament;
+//    @OneToOne(targetEntity = Tournament.class, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "T_ID")
+//    Tournament tournament;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,13 +37,13 @@ public class TableSettings {
         this.tableCount = tableCount;
     }
 
-    public Tournament getTournament() {
-        return tournament;
-    }
-
-    public void setTournament(Tournament tournament) {
-        this.tournament = tournament;
-    }
+//    public Tournament getTournament() {
+//        return tournament;
+//    }
+//
+//    public void setTournament(Tournament tournament) {
+//        this.tournament = tournament;
+//    }
 
     public List<TablePos> getTablePositions() {
         return tablePositions;

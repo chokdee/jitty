@@ -97,7 +97,6 @@ CREATE TABLE table_pos (
 CREATE TABLE table_settings (
   id          BIGINT NOT NULL AUTO_INCREMENT,
   table_count INTEGER,
-  T_ID        BIGINT,
   PRIMARY KEY (id)
 )
   ENGINE = MyISAM;
@@ -118,7 +117,7 @@ CREATE TABLE tournament (
   name        VARCHAR(255) NOT NULL,
   running     BIT          NOT NULL,
   start_date  DATE         NOT NULL,
-  table_count INTEGER      NOT NULL,
+  TS_ID       BIGINT,
   PRIMARY KEY (id)
 )
   ENGINE = MyISAM;
@@ -253,8 +252,6 @@ ALTER TABLE t_system
   ADD CONSTRAINT FKer0y033wsm6ysyosohkxlykss FOREIGN KEY (TC_ID) REFERENCES tournament_class (id);
 ALTER TABLE table_pos
   ADD CONSTRAINT FKqv40g8sy1drhdvgm1o6qr6h3h FOREIGN KEY (SETTINGS_ID) REFERENCES table_settings (id);
-ALTER TABLE table_settings
-  ADD CONSTRAINT FKghas75wtmj0dkjkm1hovh2r1j FOREIGN KEY (T_ID) REFERENCES tournament (id);
 ALTER TABLE TC_PLAYER
   ADD CONSTRAINT FK996yua0ff90b7wx8m9mm0bqc7 FOREIGN KEY (players_id) REFERENCES tournament_player (id);
 ALTER TABLE TC_PLAYER
@@ -263,6 +260,8 @@ ALTER TABLE TG_PLAYER
   ADD CONSTRAINT FKlvtcmf9uuan17vu73lysr3afk FOREIGN KEY (PLAYER_ID) REFERENCES tournament_player (id);
 ALTER TABLE TG_PLAYER
   ADD CONSTRAINT FK9euge99x86qrjlgl1cfn976ga FOREIGN KEY (TOURNAMENT_GROUP_ID) REFERENCES tournament_group (id);
+ALTER TABLE tournament
+  ADD CONSTRAINT FKogb8x8o0cjnm56fr5c0dlbih9 FOREIGN KEY (TS_ID) REFERENCES table_settings (id);
 ALTER TABLE tournament_class
   ADD CONSTRAINT FK78e4gyb2n3nahl2de4ex9c9qp FOREIGN KEY (T_ID) REFERENCES tournament (id);
 ALTER TABLE tournament_group

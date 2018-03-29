@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -31,6 +31,10 @@ public class Tournament {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(targetEntity = TableSettings.class)
+    @JoinColumn(name = "TS_ID")
+    TableSettings tableSettings;
+
     @Column(nullable = false, name = "name")
     private String name;
     @Temporal(TemporalType.DATE)
@@ -39,9 +43,6 @@ public class Tournament {
     @Temporal(TemporalType.DATE)
     @Column(nullable = false, name = "end_date")
     private Date endDate;
-
-    @Column(nullable = false, name = "table_count")
-    private int tableCount = 8;
 
     @Column(nullable = false, name = "running")
     private boolean running = true;
@@ -105,20 +106,20 @@ public class Tournament {
         classes.remove(tc);
     }
 
+    public TableSettings getTableSettings() {
+        return tableSettings;
+    }
+
+    public void setTableSettings(TableSettings tableSettings) {
+        this.tableSettings = tableSettings;
+    }
+
     public String getClickTTId() {
         return clickTTId;
     }
 
     public void setClickTTId(String clickTTId) {
         this.clickTTId = clickTTId;
-    }
-
-    public int getTableCount() {
-        return tableCount;
-    }
-
-    public void setTableCount(int tableCount) {
-        this.tableCount = tableCount;
     }
 
     public void addPlayer(TournamentPlayer player) {

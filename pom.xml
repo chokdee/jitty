@@ -62,6 +62,7 @@
                     <excludes>
                         <exclude>**/model/**/*.*</exclude>
                         <exclude>**/SchemaExporter*.*</exclude>
+                        <exclude>**/CustomHSQLDialect*.*</exclude>
                         <exclude>**/ServletInitializer*.*</exclude>
                         <exclude>**/exceptions/*.*</exclude>
                     </excludes>

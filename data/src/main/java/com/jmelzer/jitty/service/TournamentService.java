@@ -150,7 +150,7 @@ public class TournamentService {
             default:
                 break;
         }
-        tableManager.setTableCount(tournament.getTableCount());
+        tableManager.setTableCount(tournament.getTableSettings().getTableCount());
         Tournament t = repository.saveAndFlush(tournament);
         selectTournament(t.getId());
         return t;
@@ -174,7 +174,7 @@ public class TournamentService {
         Tournament tournament = repository.getOne(id);
         LOG.info("switch to tournament {}", tournament);
         tid = id;
-        tableManager.clear(tournament.getTableCount());
+        tableManager.clear(tournament.getTableSettings().getTableCount());
         List<TournamentClass> tcs = tcRepository.findByTournamentAndRunning(tournament, true);
         for (TournamentClass tc : tcs) {
             //todo what about ko field here?
@@ -476,7 +476,7 @@ public class TournamentService {
 //                    if (!tournament.getId().equals(tid)) {
 //                        continue;
 //                    }
-                    tableManager.setTableCount(tournament.getTableCount());
+                    tableManager.setTableCount(tournament.getTableSettings().getTableCount());
 //                    List<TournamentClass> tcs = tcRepository.findByTournamentAndRunning(tournament, true);
 //                    for (TournamentClass tc : tcs) {
 //                        addPossibleKoGamesToQueue(tc);
@@ -661,10 +661,12 @@ public class TournamentService {
     @Transactional
     public void saveTableCount(String actualUsername, int tablecount) throws IntegrityViolation {
         Tournament t = getTournamentForUser(actualUsername);
-        if (tablecount < t.getTableCount()) {
+        //todo check really active tables
+        if (tablecount < t.getTableSettings().getTableCount()) {
             throw new IntegrityViolation("Die Tischanzahl kann nicht reduziert werden, da bereits an den Tischen gespielt wird.");
         }
-        t.setTableCount(tablecount);
+        t.getTableSettings().setTableCount(tablecount);
+        repository.saveAndFlush(t);
 
     }
 

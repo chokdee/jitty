@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -25,7 +25,7 @@ public class SettingsManager {
 
     @Transactional(readOnly = true)
     public TableSettingsDTO getTableSettings(Tournament tournament) {
-        TableSettings settings = tableSettingsRepository.findByTournament(tournament);
+        TableSettings settings = tournament.getTableSettings();
         TableSettingsDTO dto = new TableSettingsDTO();
         dto.setTableCount(settings.getTableCount());
         for (TablePos tablePos : settings.getTablePositions()) {

@@ -9,6 +9,7 @@ import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.dao.TournamentSingleGameRepository;
 import com.jmelzer.jitty.dao.UserRepository;
+import com.jmelzer.jitty.exceptions.IntegrityViolation;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.GameSetDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassStatus;
@@ -26,8 +27,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
@@ -41,6 +41,11 @@ public class TournamentServiceTest {
 
     @InjectMocks
     TournamentService service = new TournamentService();
+
+    @Mock
+    UserRepository userRepository;
+
+    ;
 
     @Mock
     TournamentClassRepository tcRepository;
@@ -280,5 +285,206 @@ public class TournamentServiceTest {
         service.saveAndFinishGame(g1);
 
         assertThat(tc.getStatus(), is(TournamentClassStatus.NOT_INITIALIZED));
+    }
+
+    @Test
+    public void addPossibleKoGamesToQueue() {
+    }
+
+    @Test
+    public void findAll() {
+    }
+
+    @Test
+    public void getOne() {
+    }
+
+    @Test
+    public void create() {
+    }
+
+    @Test
+    public void selectTournament() {
+    }
+
+    @Test
+    public void addPossibleGroupGamesToQueue() {
+    }
+
+    @Test
+    public void playerInQueue() {
+    }
+
+    @Test
+    public void update() {
+    }
+
+    @Test
+    public void getOneClass() {
+    }
+
+    @Test
+    public void deleteClass() {
+    }
+
+    @Test
+    public void addTC() {
+    }
+
+    @Test
+    public void getAllClasses() {
+    }
+
+    @Test
+    public void getPlayerforClass() {
+    }
+
+    @Test
+    public void createDummyPlayer() {
+    }
+
+    @Test
+    public void randomIntFromInterval() {
+    }
+
+    @Test
+    public void saveGame() {
+    }
+
+    @Test
+    public void getFinishedGames() {
+    }
+
+    @Test
+    public void loadGamesIntoQueue() {
+    }
+
+    @Test
+    public void getStartedClasses() {
+    }
+
+    @Test
+    public void getGroupResults() {
+    }
+
+    @Test
+    public void markGroupWinner() {
+    }
+
+    @Test
+    public void getGame() {
+    }
+
+    @Test
+    public void areAllGroupsFinished() {
+    }
+
+    @Test
+    public void isPhase1FinishedAndPhase2NotStarted() {
+        TournamentClass tc = new TournamentClass();
+        tc.createPhaseCombination(PhaseCombination.GK);
+        assertFalse(service.isPhase1FinishedAndPhase2NotStarted(tc));
+
+        TournamentGroup g = new TournamentGroup();
+        TournamentSingleGame game = new TournamentSingleGame();
+        game.setWinner(1);
+        g.addGame(game);
+        ((GroupPhase) tc.getSystem().getPhase(0)).getGroups().add(g);
+        assertTrue(service.isPhase1FinishedAndPhase2NotStarted(tc));
+    }
+
+    @Test
+    public void anyPhaseFinished() {
+    }
+
+    @Test
+    public void save() {
+    }
+
+    @Test
+    public void delete() {
+    }
+
+    @Test
+    public void getKOForClz() {
+    }
+
+    @Test
+    public void saveTableCount() throws IntegrityViolation {
+
+        Tournament t = new Tournament();
+        t.setTableSettings(new TableSettings());
+        t.getTableSettings().setTableCount(1);
+        User user = new User();
+        user.setLastUsedTournament(t);
+        when(userRepository.findByLoginName("me")).thenReturn(user);
+
+        service.saveTableCount("me", 11);
+        assertEquals(11, (int) t.getTableSettings().getTableCount());
+
+        verify(repository).saveAndFlush(t);
+    }
+
+    @Test
+    public void startPossibleGames() {
+    }
+
+    @Test
+    public void startGame() {
+    }
+
+    @Test
+    public void startGame1() {
+    }
+
+    @Test
+    public void phase1DrawGroup() {
+    }
+
+    @Test
+    public void updatePhase() {
+    }
+
+    @Test
+    public void updateClass() {
+    }
+
+    @Test
+    public void actualPhase() {
+    }
+
+    @Test
+    public void selectPhaseCombination() {
+        service.selectPhaseCombination(1L, null);
+
+        TournamentClass clz = new TournamentClass();
+        when(tcRepository.getOne(1L)).thenReturn(clz);
+
+        service.selectPhaseCombination(1L, PhaseCombination.GK);
+
+        assertThat(clz.getActivePhaseNo(), is(-1));
+        assertNull(clz.getActivePhase());
+
+    }
+
+    @Test
+    public void hasOnlyOneClass() {
+    }
+
+    @Test
+    public void exportToClickTT() {
+    }
+
+    @Test
+    public void activatePhase() {
+        TournamentClass clz = new TournamentClass();
+        clz.createPhaseCombination(PhaseCombination.GK);
+        when(tcRepository.getOne(1L)).thenReturn(clz);
+
+        assertTrue(service.activatePhase(1L));
+
+        verify(workflowManager, times(1)).calcStatus(clz);
+        verify(tcRepository, times(1)).saveAndFlush(clz);
+
     }
 }

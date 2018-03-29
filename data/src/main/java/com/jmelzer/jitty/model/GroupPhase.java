@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -95,6 +95,9 @@ public class GroupPhase extends Phase {
 
     @Override
     public boolean isFinished() {
+        if (groups.isEmpty()) {
+            return false;
+        }
         for (TournamentGroup group : groups) {
             List<TournamentSingleGame> games = group.getGames();
             for (TournamentSingleGame game : games) {

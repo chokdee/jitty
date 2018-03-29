@@ -36,7 +36,7 @@ public class TableSettingsRepositoryIntegrationTests {
 
     @Test
     public void findByTournament() {
-        TableSettings settings = repository.findByTournament(tournamentRepository.getOne(2L));
+        TableSettings settings = tournamentRepository.getOne(1L).getTableSettings();
         assertNotNull(settings);
 
         assertThat(settings.getTableCount(), is(8));
