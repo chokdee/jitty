@@ -5,7 +5,6 @@
 
 package com.jmelzer.jitty.service;
 
-import com.jmelzer.jitty.dao.TableSettingsRepository;
 import com.jmelzer.jitty.dao.TournamentRepository;
 import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.TournamentSingleGame;
@@ -27,9 +26,6 @@ public class TableManager {
     TreeSet<Integer> freeTables = new TreeSet<>();
 
     Map<Integer, TournamentSingleGame> busyTables = new HashMap<>();
-
-    @Autowired
-    TableSettingsRepository settingsRepository;
 
     @Autowired
     TournamentRepository tournamentRepository;

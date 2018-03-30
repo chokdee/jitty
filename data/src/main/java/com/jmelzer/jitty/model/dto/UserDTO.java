@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2018.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.model.dto;
 
 /**
@@ -17,6 +22,13 @@ public class UserDTO {
     private long lastUsedTournamentId;
 
     private String password;
+
+    public UserDTO() {
+    }
+
+    public UserDTO(Long id) {
+        this.id = id;
+    }
 
     public String getPassword() {
         return password;

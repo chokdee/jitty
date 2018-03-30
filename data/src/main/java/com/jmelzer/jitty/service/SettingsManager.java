@@ -5,12 +5,10 @@
 
 package com.jmelzer.jitty.service;
 
-import com.jmelzer.jitty.dao.TableSettingsRepository;
 import com.jmelzer.jitty.model.TablePos;
 import com.jmelzer.jitty.model.TableSettings;
 import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.model.dto.TableSettingsDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Component
 public class SettingsManager {
-
-    @Autowired
-    TableSettingsRepository tableSettingsRepository;
 
     @Transactional(readOnly = true)
     public TableSettingsDTO getTableSettings(Tournament tournament) {

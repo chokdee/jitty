@@ -56,7 +56,7 @@ public class UserService {
 
     @Transactional
     public User save(UserDTO userDTO) {
-        User  user= null;
+        User user = null;
 
         if (userDTO.getId() == null) {
             user = new User();
@@ -72,6 +72,7 @@ public class UserService {
         User user = repository.findByLoginName(userName);
         return user.getLastUsedTournament();
     }
+
     @Transactional
     public UserDTO findByLoginName(String userName) {
         UserDTO userDTO = new UserDTO();
@@ -91,9 +92,9 @@ public class UserService {
     }
 
     @Transactional
-    public void selectTournamentForUser(Long userId, String id) {
+    public void selectTournamentForUser(Long userId, String tId) {
         User user = repository.getOne(userId);
-        Tournament t = tournamentRepository.getOne(Long.valueOf(id));
+        Tournament t = tournamentRepository.getOne(Long.valueOf(tId));
         user.setLastUsedTournament(t);
         repository.saveAndFlush(user);
 
