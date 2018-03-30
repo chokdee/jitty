@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -355,6 +355,9 @@ public class TournamentClass {
                 break;
             case SWS:
                 system.addPhase(new SwissSystemPhase("Runde 1"));
+                break;
+            case KO:
+                system.addPhase(new KOPhase());
                 break;
             default:
                 throw new UnsupportedOperationException("not yet implemented");

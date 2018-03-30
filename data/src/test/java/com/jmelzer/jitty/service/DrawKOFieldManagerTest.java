@@ -1,8 +1,18 @@
+/*
+ * Copyright (c) 2018.
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.service;
 
+import com.jmelzer.jitty.dao.TournamentClassRepository;
 import com.jmelzer.jitty.model.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,12 +21,22 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by J. Melzer on 11.06.2016.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class DrawKOFieldManagerTest {
+    @InjectMocks
     DrawKoFieldManager drawKoFieldManager = new DrawKoFieldManager();
+
+    @Mock
+    TournamentService tournamentService;
+
+    @Mock
+    TournamentClassRepository tcRepository;
+
 
     @Before
     public void setup() {
@@ -162,5 +182,17 @@ public class DrawKOFieldManagerTest {
             }
         }
         assertThat(drawKoFieldManager.calcKOSize(tc), is(RoundType.QUARTER));
+    }
+
+    @Test
+    public void drawKO() {
+        TournamentClass tc = new TournamentClass("testclass");
+        tc.createPhaseCombination(PhaseCombination.KO);
+        when(tcRepository.getOne(1L)).thenReturn(tc);
+        when(tcRepository.saveAndFlush(tc)).thenReturn(tc);
+        drawKoFieldManager.drawKO(1L, false);
+
+        tc.setTournament(new Tournament(4L));
+        drawKoFieldManager.drawKO(1L, true);
     }
 }

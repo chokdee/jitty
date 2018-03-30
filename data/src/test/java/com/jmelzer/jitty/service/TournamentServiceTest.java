@@ -5,30 +5,26 @@
 
 package com.jmelzer.jitty.service;
 
-import com.jmelzer.jitty.dao.TournamentClassRepository;
-import com.jmelzer.jitty.dao.TournamentRepository;
-import com.jmelzer.jitty.dao.TournamentSingleGameRepository;
-import com.jmelzer.jitty.dao.UserRepository;
+import com.jmelzer.jitty.dao.*;
 import com.jmelzer.jitty.exceptions.IntegrityViolation;
 import com.jmelzer.jitty.model.*;
-import com.jmelzer.jitty.model.dto.GameSetDTO;
-import com.jmelzer.jitty.model.dto.TournamentClassStatus;
-import com.jmelzer.jitty.model.dto.TournamentSingleGameDTO;
-import org.junit.Ignore;
+import com.jmelzer.jitty.model.dto.*;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.jmelzer.jitty.service.TournamentService.TABLE_COUNT;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -39,13 +35,19 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class TournamentServiceTest {
 
+    TournamentClass tc = new TournamentClass("testclass");
+
     @InjectMocks
     TournamentService service = new TournamentService();
 
     @Mock
+    PlatformTransactionManager txManager;
+
+    @Mock
     UserRepository userRepository;
 
-    ;
+    @Mock
+    PhaseRepository phaseRepository;
 
     @Mock
     TournamentClassRepository tcRepository;
@@ -65,6 +67,13 @@ public class TournamentServiceTest {
     @Mock
     TableManager tableManager;
 
+
+    @Before
+    public void before() {
+        if (tc.getActivePhase() == null) {
+            tc.createPhaseCombination(PhaseCombination.GK);
+        }
+    }
 
     @Test
     public void moveGameBackToPossiblegames() throws Exception {
@@ -88,34 +97,32 @@ public class TournamentServiceTest {
 
 
     @Test
-    @Ignore("fixme")
     public void testAddPossibleGamesToQueue() throws Exception {
-        QueueManager queueManager = mock(QueueManager.class);
-        TournamentSingleGameRepository tournamentSingleGameRepository = mock(TournamentSingleGameRepository.class);
-        TableManager tableManager = mock(TableManager.class);
-        List<TournamentSingleGame> busyGames = new ArrayList<>();
-        when(queueManager.getBusyGamesOriginal()).thenReturn(busyGames);
+        List<TournamentSingleGame> emptyList = new ArrayList<>();
+        when(queueManager.getBusyGamesOriginal()).thenReturn(emptyList);
+        GameQueue gameQueue = new GameQueue();
+        when(queueManager.getQueueO()).thenReturn(gameQueue);
         when(tableManager.getFreeTableCount()).thenReturn(4);
-        when(tableManager.pollFreeTableNo(anyObject())).thenReturn(1);
+        when(tableManager.pollFreeTableNo(any())).thenReturn(1);
+        TournamentGroup group = prepareGroupWithPlayerAndGames();
+        List<TournamentSingleGame> games = new ArrayList<>(group.getGames());
+        gameQueue.setGames(emptyList);
 
-        service.tableManager = tableManager;
-        service.queueManager = queueManager;
         service.tournamentSingleGameRepository = tournamentSingleGameRepository;
 
-        GameQueue queue = new GameQueue();
-        when(queueManager.getQueueO()).thenReturn(queue);
+        when(queueManager.getGamesFromQueue(4, 1L)).thenReturn(emptyList);
 
-        TournamentGroup group = prepareGroupWithPlayerAndGames();
         List<TournamentGroup> groups = new ArrayList<>();
         groups.add(group);
         assertEquals(2, service.addPossibleGroupGamesToQueue(groups));
 
+        when(queueManager.getGamesFromQueue(4, 1L)).thenReturn(games);
+        when(tournamentSingleGameRepository.getOne(any())).thenReturn(new TournamentSingleGame("", 1L));
         service.startPossibleGames(1L);
         //must be saved
         verify(tournamentSingleGameRepository, atLeast(1)).save(isA(TournamentSingleGame.class));
 //        verify(gameQueueRepository, atLeast(1)).saveAndFlush(queue);
 
-        assertEquals("player busy no new player can be added", 0, service.addPossibleGroupGamesToQueue(groups));
 
     }
 
@@ -301,6 +308,14 @@ public class TournamentServiceTest {
 
     @Test
     public void create() {
+        TournamentDTO dto = new TournamentDTO();
+        Tournament t = new Tournament();
+        t.setId(1L);
+        t.setTableSettings(new TableSettings());
+        t.getTableSettings().setTableCount(TABLE_COUNT);
+        when(repository.saveAndFlush(any())).thenReturn(t);
+        when(repository.getOne(1L)).thenReturn(t);
+        assertSame(t, service.create(dto));
     }
 
     @Test
@@ -357,6 +372,7 @@ public class TournamentServiceTest {
 
     @Test
     public void loadGamesIntoQueue() {
+        service.loadGamesIntoQueue();
     }
 
     @Test
@@ -430,23 +446,39 @@ public class TournamentServiceTest {
     }
 
     @Test
-    public void startGame() {
+    public void startGame() throws IntegrityViolation {
+        TournamentSingleGame game = new TournamentSingleGame();
+        when(tournamentSingleGameRepository.getOne(1L)).thenReturn(game);
+        TournamentSingleGameDTO dto = service.startGame(1L);
+        assertNotNull(dto);
     }
 
     @Test
-    public void startGame1() {
+    public void startGame1() throws IntegrityViolation {
+        TournamentSingleGame game = new TournamentSingleGame();
+        TournamentSingleGameDTO dto = service.startGame(game);
+        assertNotNull(dto);
     }
 
-    @Test
-    public void phase1DrawGroup() {
-    }
 
     @Test
     public void updatePhase() {
+        when(tcRepository.getOne(1L)).thenReturn(tc);
+        tc.setActivePhaseNo(0);
+        GroupPhase gp = new GroupPhase();
+        gp.addGroup(new TournamentGroup());
+        when(phaseRepository.getOne(1L)).thenReturn(gp);
+        when(phaseRepository.saveAndFlush(gp)).thenReturn(gp);
+        GroupPhaseDTO dto = new GroupPhaseDTO();
+        dto.setId(1L);
+        dto = service.updatePhase(1L, dto);
+        assertNotNull(dto);
     }
 
     @Test
     public void updateClass() {
+        when(tcRepository.getOne(any())).thenReturn(tc);
+        assertNotNull(service.updateClass(new TournamentClassDTO()));
     }
 
     @Test

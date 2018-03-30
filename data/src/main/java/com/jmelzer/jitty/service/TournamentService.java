@@ -37,7 +37,10 @@ import static com.jmelzer.jitty.service.CopyManager.*;
  */
 @Component
 public class TournamentService {
+
     static final Logger LOG = LoggerFactory.getLogger(TournamentService.class);
+
+    public static final int TABLE_COUNT = 8;
 
     static Long tid;
 
@@ -150,7 +153,9 @@ public class TournamentService {
             default:
                 break;
         }
-        tableManager.setTableCount(tournament.getTableSettings().getTableCount());
+        tournament.setTableSettings(new TableSettings());
+        tournament.getTableSettings().setTableCount(TABLE_COUNT);
+        tableManager.setTableCount(TABLE_COUNT);
         Tournament t = repository.saveAndFlush(tournament);
         selectTournament(t.getId());
         return t;
@@ -706,11 +711,6 @@ public class TournamentService {
 
 
     @Transactional
-    public GroupPhaseDTO phase1DrawGroup(Long cid, GroupPhaseDTO dto) {
-        return updatePhase(cid, dto);
-    }
-
-    @Transactional
     public GroupPhaseDTO updatePhase(Long cid, GroupPhaseDTO dto) {
         TournamentClass tc = tcRepository.getOne(cid);
         if (tc.getActualPhase().areGamesPlayed()) {
@@ -731,11 +731,7 @@ public class TournamentService {
     @Transactional
     public TournamentClassDTO updateClass(TournamentClassDTO dto) {
         TournamentClass tc = tcRepository.getOne(dto.getId());
-//        tc.getGroups().clear();//fetch lazy
-//        tc.clearGroups();
-//        tc = tcRepository.saveAndFlush(tc);
         copy(dto, tc, playerRepository);
-//        tc = tcRepository.saveAndFlush(tc);
         return copy(tc, true);
     }
 

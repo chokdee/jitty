@@ -50,6 +50,13 @@ public class Tournament {
     @Column(nullable = true, name = "click_tt_id")
     private String clickTTId;
 
+    public Tournament() {
+    }
+
+    public Tournament(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
