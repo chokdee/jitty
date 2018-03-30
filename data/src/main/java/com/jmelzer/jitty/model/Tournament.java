@@ -31,7 +31,7 @@ public class Tournament {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(targetEntity = TableSettings.class)
+    @OneToOne(targetEntity = TableSettings.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "TS_ID")
     TableSettings tableSettings;
 

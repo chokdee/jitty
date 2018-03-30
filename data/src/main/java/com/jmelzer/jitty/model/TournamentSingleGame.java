@@ -108,6 +108,10 @@ public class TournamentSingleGame {
         this.tid = tId;
     }
 
+    public TournamentSingleGame(long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

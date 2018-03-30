@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2018.
  * J. Melzer
  */
 
@@ -52,7 +52,7 @@ public class XMLImporter {
         }
     }
 
-    class MyValidationEventHandler implements ValidationEventHandler {
+    private class MyValidationEventHandler implements ValidationEventHandler {
 
         public boolean handleEvent(ValidationEvent event) {
             String msg = ("\nEVENT");
