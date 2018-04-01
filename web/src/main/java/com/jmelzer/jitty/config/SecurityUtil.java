@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
 package com.jmelzer.jitty.config;
 
-import com.jmelzer.jitty.model.Tournament;
 import com.jmelzer.jitty.service.UserService;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,33 +25,20 @@ public class SecurityUtil {
     @Resource
     UserService userService;
 
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
     @Transactional(readOnly = true)
     public Long getActualTournamentId() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        if (context.getAuthentication() != null &&
-                context.getAuthentication().isAuthenticated() &&
-                //when Anonymous Authentication is enabled
-                !(context.getAuthentication() instanceof AnonymousAuthenticationToken)) {
-
-            String user = (String) context.getAuthentication().getPrincipal();
-            return userService.findTournamentByLoginUser(user).getId();
+        String name = getActualUsername();
+        if (name != null) {
+            return userService.findTournamentByLoginUser(name).getId();
         }
         return null;
     }
 
     @Transactional(readOnly = true)
-    public Tournament getActualTournament() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        if (context.getAuthentication() != null &&
-                context.getAuthentication().isAuthenticated() &&
-                //when Anonymous Authentication is enabled
-                !(context.getAuthentication() instanceof AnonymousAuthenticationToken)) {
-
-            String user = (String) context.getAuthentication().getPrincipal();
-            return userService.findTournamentByLoginUser(user);
-        }
-        return null;
-    }
     public String getActualUsername() {
         SecurityContext context = SecurityContextHolder.getContext();
         if (context.getAuthentication() != null &&
@@ -59,7 +46,8 @@ public class SecurityUtil {
                 //when Anonymous Authentication is enabled
                 !(context.getAuthentication() instanceof AnonymousAuthenticationToken)) {
 
-            return (String) context.getAuthentication().getPrincipal();
+            User user = (User) context.getAuthentication().getPrincipal();
+            return user.getUsername();
 
         }
         return null;

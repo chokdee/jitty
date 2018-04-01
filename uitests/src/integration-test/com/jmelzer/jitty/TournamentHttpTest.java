@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
@@ -10,6 +10,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.jmelzer.jitty.Util.*;
@@ -19,6 +20,7 @@ import static org.junit.Assert.*;
  * Created by J. Melzer on 20.08.2016.
  * integration test for tournament views
  */
+@Ignore
 public class TournamentHttpTest {
 
     @Test

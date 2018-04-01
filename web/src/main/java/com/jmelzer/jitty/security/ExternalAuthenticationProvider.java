@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-2018
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty.security;
 
 import com.jmelzer.jitty.dao.UserRepository;
@@ -10,7 +15,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -43,7 +47,9 @@ public class ExternalAuthenticationProvider implements AuthenticationProvider {
         }
         logger.info("user {} logged in", username);
         // we have to store password
-        return new UsernamePasswordAuthenticationToken(username, password, Collections.emptyList());
+        org.springframework.security.core.userdetails.User principal = new org.springframework.security.core.userdetails.User(username, password, true,
+                true, true, true, Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken(principal, password, Collections.emptyList());
     }
 
     @Override

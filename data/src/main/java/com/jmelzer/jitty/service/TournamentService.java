@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
@@ -7,6 +7,7 @@ package com.jmelzer.jitty.service;
 
 import com.jmelzer.jitty.dao.*;
 import com.jmelzer.jitty.exceptions.IntegrityViolation;
+import com.jmelzer.jitty.exceptions.NotFoundException;
 import com.jmelzer.jitty.model.*;
 import com.jmelzer.jitty.model.dto.*;
 import org.slf4j.Logger;
@@ -14,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -253,26 +253,27 @@ public class TournamentService {
 
     @Transactional
     public TournamentClassDTO getOneClass(Long aLong) {
-        TournamentClass tc = tcRepository.getOne(aLong);
-        TournamentClassDTO dto = copy(tc, true);
-        dto.setStatus(tc.getStatus());
-        return dto;
+        Optional<TournamentClass> tournamentClassOptional = tcRepository.findById(aLong);
+        if (tournamentClassOptional.isPresent()) {
+            TournamentClassDTO dto = copy(tournamentClassOptional.get(), true);
+            dto.setStatus(tournamentClassOptional.get().getStatus());
+            return dto;
+        } else {
+            throw new NotFoundException("id " + aLong + " not found for type TournamentClass");
+        }
     }
 
     @Transactional
     public void deleteClass(Long aLong) throws IntegrityViolation {
         TournamentClass tc = tcRepository.getOne(aLong);
-        if (tc == null) {
-            throw new EmptyResultDataAccessException(1);
-        }
         if (tc.getRunning()) {
             throw new IntegrityViolation("Die Klasse wurde bereits gestartet, sie kann nicht mehr gelöscht werden");
         }
         Tournament t = tc.getTournament();
         t.removeClass(tc);
+        repository.saveAndFlush(t);
 
         tcRepository.deleteById(aLong);
-        repository.saveAndFlush(t);
     }
 
     @Transactional

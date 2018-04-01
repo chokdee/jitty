@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
@@ -169,6 +169,11 @@ public class SwissFlowControllerTest extends SecureResourceTest {
 
 
             }
+            ResponseEntity<SwissResultsDTO> swissResultsDTOResponseEntity = http(HttpMethod.GET, "api/lifeview/swiss-results?cid=" + tClassId,
+                    createHttpEntity(null, loginHeaders), SwissResultsDTO.class);
+            assertTrue(swissResultsDTOResponseEntity.getStatusCode().is2xxSuccessful());
+            assertThat(swissResultsDTOResponseEntity.getBody().getRounds().size(), is(6));
+
             validateStatus(tClassId, TournamentClassStatus.FINISHED);
 
             assertThat(possGames, is(6 * MAX_PARALLEL_GAMES_COUNT));

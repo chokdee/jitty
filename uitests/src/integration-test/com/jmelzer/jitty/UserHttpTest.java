@@ -1,14 +1,18 @@
+/*
+ * Copyright (c) 2016-2018
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty;
 
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import static com.jmelzer.jitty.Util.doLogin;
-import static com.jmelzer.jitty.Util.randomString;
-import static com.jmelzer.jitty.Util.webClient;
+import static com.jmelzer.jitty.Util.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -16,6 +20,7 @@ import static org.junit.Assert.assertTrue;
  * Created by J. Melzer on 20.08.2016.
  * integration test for user views
  */
+@Ignore
 public class UserHttpTest {
 
     @Test

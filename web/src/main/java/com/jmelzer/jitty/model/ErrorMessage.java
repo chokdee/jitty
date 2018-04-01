@@ -1,4 +1,9 @@
-package com.jmelzer.jitty.rest;
+/*
+ * Copyright (c) 2016-2018
+ * J. Melzer
+ */
+
+package com.jmelzer.jitty.model;
 
 /**
  * Created by J. Melzer on 10.07.2016.

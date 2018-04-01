@@ -1,13 +1,13 @@
 /*
- *  Project: TRIGGERDIALOG 2.0.0
- *  Copyright(c) 2011-2016 by Deutsche Post AG
- *  All rights reserved.
+ * Copyright (c) 2016-2018
+ * J. Melzer
  */
 package com.jmelzer.jitty.config;
 
+import com.jmelzer.jitty.exceptions.NotFoundException;
+import com.jmelzer.jitty.model.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -16,19 +16,26 @@ import javax.ws.rs.ext.Provider;
 /**
  */
 @Provider
-@Component
-public class DefaultExceptionHandler implements ExceptionMapper<Exception> {
+public class DefaultExceptionHandler implements ExceptionMapper<Throwable> {
 
     static final Logger logger = LoggerFactory.getLogger(DefaultExceptionHandler.class);
 
     @Override
-    public Response toResponse(Exception e) {
+    public Response toResponse(Throwable e) {
 
         logger.error("", e);
 
         Response.ResponseBuilder builder = Response.serverError();
-        return builder.build();
+        ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
+        return builder.status(gettHttpStatus(e)).entity(errorMessage).build();
 
     }
 
+    private int gettHttpStatus(Throwable ex) {
+        if (ex instanceof NotFoundException) {
+            return 404;
+        } else {
+            return 500;
+        }
+    }
 }

@@ -1,7 +1,16 @@
+/*
+ * Copyright (c) 2016-2018
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty;
 
-import com.gargoylesoftware.htmlunit.html.*;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlForm;
+import com.gargoylesoftware.htmlunit.html.HtmlInput;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.jmelzer.jitty.Util.*;
@@ -12,6 +21,7 @@ import static org.junit.Assert.assertTrue;
  * Created by J. Melzer on 20.08.2016.
  * integration test for tournament views
  */
+@Ignore
 public class PlayerHttpTest {
 
     @Test

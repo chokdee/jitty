@@ -1,12 +1,14 @@
 /*
- * Copyright (c) 2018.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
 package com.jmelzer.jitty.rest;
 
 import com.jmelzer.jitty.model.AgeGroup;
+import com.jmelzer.jitty.model.ErrorMessage;
 import com.jmelzer.jitty.model.TournamentSystemType;
+import com.jmelzer.jitty.model.dto.GroupPhaseDTO;
 import com.jmelzer.jitty.model.dto.TournamentClassDTO;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -44,6 +46,7 @@ public class TourmentClassControllerTest extends SecureResourceTest {
         }
     }
 
+
     @Test
     @Ignore("wrong test. mustcreate a tournament class first")
     public void testDeleteWithErrors() throws Exception {
@@ -55,6 +58,45 @@ public class TourmentClassControllerTest extends SecureResourceTest {
                 createHttpEntity(null, loginHeaders), ErrorMessage.class);
 
     }
+
+    @Test
+    public void testDelete() throws Exception {
+
+        Long tid = createTournament("delete", 8, 2);
+        TournamentClassDTO classDTO = createClz(tid);
+        http(HttpMethod.DELETE, "api/tournament-classes/" + classDTO.getId(),
+                createHttpEntity(null, loginHeaders), ErrorMessage.class);
+
+        thrown.expect(HttpClientErrorException.class);
+        thrown.expectMessage("404");
+        ResponseEntity<ErrorMessage> errorMessage = http(HttpMethod.GET, "api/tournament-classes/" + classDTO.getId(),
+                createHttpEntity(null, loginHeaders), ErrorMessage.class);
+        assertEquals(404, errorMessage.getStatusCode().value());
+    }
+
+    private TournamentClassDTO createClz(Long tId) {
+        TournamentClassDTO tournamentClass = new TournamentClassDTO();
+        tournamentClass.setName("test");
+        tournamentClass.setStartTTR(0);
+        tournamentClass.setEndTTR(3000);
+        tournamentClass.setAgeGroup(AgeGroup.DH.getValue());
+        tournamentClass.setSystemType(TournamentSystemType.AC.getValue());
+
+        ResponseEntity<Long> longEntitiy = http(HttpMethod.POST, "api/tournament-classes/" + tId,
+                createHttpEntity(tournamentClass, loginHeaders), Long.class);
+        assertTrue(longEntitiy.getStatusCode().is2xxSuccessful());
+        Long tClassId = longEntitiy.getBody();
+        assertNotNull(tClassId);
+
+        ResponseEntity<GroupPhaseDTO> phaseDTO = http(HttpMethod.GET, "api/draw/actual-phase?cid=" + tClassId,
+                createHttpEntity(null, loginHeaders), GroupPhaseDTO.class);
+
+        assertNull("still not drawed", phaseDTO.getBody());
+        //return fresh copy
+        return http(HttpMethod.GET, "api/tournament-classes/" + tClassId,
+                createHttpEntity(null, loginHeaders), TournamentClassDTO.class).getBody();
+    }
+
 
     @Test
     public void getNotRunning() throws Exception {

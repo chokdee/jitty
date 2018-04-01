@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-2018
+ * J. Melzer
+ */
+
 package com.jmelzer.jitty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,8 +45,8 @@ public class Application {
                 //when Anonymous Authentication is enabled
                 !(context.getAuthentication() instanceof AnonymousAuthenticationToken)) {
 
-            String user = (String) context.getAuthentication().getPrincipal();
-            UserDTO userFromDB = userService.findByLoginName(user);
+            org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) context.getAuthentication().getPrincipal();
+            UserDTO userFromDB = userService.findByLoginName(user.getUsername());
             model.put("tname", userFromDB.getLastUsedTournamentName());
 
         }

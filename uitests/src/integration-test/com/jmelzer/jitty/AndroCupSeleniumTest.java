@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2018.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
 package com.jmelzer.jitty;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -24,6 +25,7 @@ import static org.apache.commons.lang3.RandomUtils.nextInt;
 /**
  * Created by J. Melzer on 01.05.2017.
  */
+@Ignore
 public class AndroCupSeleniumTest {
 
     @Test

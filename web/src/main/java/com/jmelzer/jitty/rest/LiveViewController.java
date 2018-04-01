@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * Created by J. Melzer on 16.03.2016.
- * REST API for User
+ * REST API for Liveview
  */
 @Component
 @Path("/lifeview")

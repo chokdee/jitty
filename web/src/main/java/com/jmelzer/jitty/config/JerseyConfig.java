@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
@@ -38,6 +38,7 @@ public class JerseyConfig extends ResourceConfig {
                 register(AdminController.class).
                 register(ErrorController.class).
                 register(MultiPartFeature.class).
+                register(DefaultExceptionHandler.class).
                 register(TournamentController.class);
 //        property(ServerProperties.TRACING, "ALL");
         property(ServerProperties.MONITORING_STATISTICS_ENABLED , true);

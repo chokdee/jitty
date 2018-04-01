@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
@@ -32,7 +32,7 @@ public class SettingsController {
     @Path("/table-settings")
     @GET
     public TableSettingsDTO getTableSettings() {
-        return settingsManager.getTableSettings(securityUtil.getActualTournament().getId());
+        return settingsManager.getTableSettings(securityUtil.getActualTournamentId());
     }
 
 }

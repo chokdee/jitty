@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
@@ -224,13 +224,13 @@ public class TournamentClass {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof TournamentClass)) {
             return false;
         }
 
         TournamentClass that = (TournamentClass) o;
 
-        return id.equals(that.id);
+        return id.equals(that.getId());
 
     }
 
