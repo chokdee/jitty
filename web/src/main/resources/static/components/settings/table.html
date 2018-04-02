@@ -1,85 +1,56 @@
 <!--
-  ~ Copyright (c) 2018.
+  ~ Copyright (c) 2016-2018
   ~ J. Melzer
   -->
+<label for="tableCols">Anzahl Spalten</label>
+<input type="number" ng-model="tableCols" name="tableCols" required id="tableCols"/>
+<label for="tableRows">Anzahl Zeilen</label>
+<input type="number" ng-model="tableRows" name="tableRows" required id="tableRows"/>
 
-<div class="row">
-    <div class="col-md-10">
-        <div ng-repeat="item in tables[0]" class="col-md-6 tableitem">
-            <div class="">{{item.name}}</div>
-        </div>
-    </div>
-</div>
-<div class="row" style="min-height: 20px">
-</div>
-<div class="tablelist row">
-
-    <div class="col-md-1">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h3 class="panel-title">Verf. Tische</h3>
-            </div>
-            <ul dnd-list="models.lists.A" class="itemlist">
-                <li ng-repeat="item in models.lists.A"
-                    dnd-draggable="item"
-                    dnd-horizontal-list="true"
-                    dnd-moved="models.lists.A.splice($index, 1)"
-                    dnd-effect-allowed="move"
-                    dnd-selected="models.selected = item"
-                    ng-class="{'selected': models.selected === item}">
-                    {{item.label}}
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="col-md-9">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h3 class="panel-title">Geplante Tische</h3>
-            </div>
-            <ul dnd-list="models.lists.B" class="itemlist"
-                dnd-drop="dropCallback(index, item, external, type)">
-                <li ng-repeat="item in models.lists.B"
-                    dnd-draggable="item"
-                    dnd-horizontal-list="true"
-                    dnd-moved="models.lists.B.splice($index, 1)"
-                    dnd-effect-allowed="move"
-                    dnd-selected="models.selected = item"
-                    ng-class="{'selected': models.selected === item}">
-                    {{item.label}}
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-
-<!--</div>-->
-
-<!--<div class="col-md-8">
-    <div class="row">
-        <div ng-repeat="(listName, list) in models.lists" class="col-md-6">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{listName == 'A' ? "Verfügbare Tische" : "Geplante Tische"}}</h3>
-                </div>
-                <div class="panel-body" ng-include="'components/settings/tables-container.html'"></div>
-            </div>
-        </div>
-    </div>
-
-
-</div>
--->
-<div class="col-md-4">
-    <div class="panel panel-default">
+<div class="col-md-2" style="border: black; border-style: solid; margin-right: 5px">
+    <label for="tableNr">Anzahl Tische</label>
+    <input type="number" ng-model="tableNr" name="tableNr" required id="tableNr"/>
+    <div class="panel panel-info">
         <div class="panel-heading">
-            <h3 class="panel-title">Generated Model</h3>
+            <h3 class="panel-title">Verf. Tische</h3>
         </div>
-        <div class="panel-body">
-            <pre class="code">{{modelAsJson}}</pre>
+        <div dragula='"table-bag"' dragula-model='many'>
+            <div class="tableitem" ng-repeat="i in getNumber(tableNr) track by $index">Tisch {{$index}}</div>
         </div>
+
     </div>
 </div>
-
+<div class='wrapper'>
+    <div dragula='"table-bag"' dragula-model='many2'>
+        <div class='dropcomponent' ng-repeat='text in many2' ng-bind='text'></div>
+    </div>
 </div>
+<!--<div class="col-md-9">-->
+<!--&lt;!&ndash;<div ng-repeat="i in getNumber(tableCols) track by $index">&ndash;&gt;-->
+<!--<div class="row">-->
+<!--&lt;!&ndash;<div ng-repeat="table in tables[0]" class="col-md-6 dropcomponent" dragula-model="many2">&ndash;&gt;-->
+<!--&lt;!&ndash;<div dragula='"table-bag"' class="dropcomponent" >Hierhin ziehen    </div>&ndash;&gt;-->
+<!--<div class='container' dragula='"table-bag"' dragula-model='many2'>-->
+<!--<div ng-repeat='text in many2' ng-bind='text'></div>-->
+<!--</div>-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--</div>-->
+<!--</div>-->
+<div class="row"/>
+<div class='wrapper'>
+
+    <div class='container'>
+        <pre>{{tables | json}}</pre>
+    </div>
+    <div class='container'>
+        <pre>{{many2 | json}}</pre>
+    </div>
+</div>
+<!--<div class="col-md-9">-->
+<!--<div dragula='"table-bag"' class="col-md-6 dropcomponent">-->
+<!--Hierhin ziehen-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--</div>-->
+<!--</div>-->
+<!--

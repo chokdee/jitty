@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
@@ -629,4 +629,18 @@ ul#result li {
     padding: 3px;
     text-align: center;
     width: 80px;
+}
+
+.dropcomponent {
+    background-color: white;
+    border: black;
+    border-style: solid;
+    color: lightgray;
+    float: left;
+    font-weight: 700;
+    height: 100px;
+    margin: 5px;
+    padding: 3px;
+    text-align: center;
+    width: 100px;
 }

@@ -2,7 +2,6 @@
  * Copyright (c) 2016-2018
  * J. Melzer
  */
-
 package com.jmelzer.jitty.exceptions;
 
 /**

@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2017.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
-angular.module('jitty.settings', ['jitty.settings.controllers']).config(function ($routeProvider, $httpProvider, $provide) {
+angular.module('jitty.settings', ['jitty.settings.controllers', angularDragula(angular)]).config(function ($routeProvider, $httpProvider, $provide) {
 
     $routeProvider.when('/settings/table', {
         title: 'Tische konfigurieren',
