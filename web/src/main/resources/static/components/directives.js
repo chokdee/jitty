@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2016-2018
+ * J. Melzer
+ */
+
 'use strict';
 
 /* Directives */
@@ -37,4 +42,40 @@ angular.module('jitty.directives', [])
                 });
             }
         }
-    });
+    })
+    .directive('jitDragMe', function () {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                element.prop('draggable', true);
+                element.on('dragstart', function (event) {
+                    event.dataTransfer = event.originalEvent.dataTransfer;
+                    console.log('dragstart:' + event.target.innerHTML);
+                    console.log('event:' + event);
+                    event.dataTransfer.setData('text', event.target.id)
+                });
+            }
+        };
+    })
+    .directive('jitDropOnMe', function () {
+        var DDO = {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                element.on('dragover', function (event) {
+                    event.preventDefault();
+                });
+                element.on('drop', function (event) {
+                    event.preventDefault();
+                    event.dataTransfer = event.originalEvent.dataTransfer;
+                    var data = event.dataTransfer.getData("text");
+
+                    if (event.target.innerHTML != null && !event.target.innerHTML.startsWith("Tisch"))
+                        event.target.innerHTML = null;
+
+                    event.target.appendChild(document.getElementById(data));
+                });
+            }
+        };
+        return DDO;
+    })
+;

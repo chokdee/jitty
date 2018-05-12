@@ -2,10 +2,9 @@
   ~ Copyright (c) 2016-2018
   ~ J. Melzer
   -->
-<label for="tableCols">Anzahl Spalten</label>
-<input type="number" ng-model="tableCols" name="tableCols" required id="tableCols"/>
-<label for="tableRows">Anzahl Zeilen</label>
-<input type="number" ng-model="tableRows" name="tableRows" required id="tableRows"/>
+<script>
+
+</script>
 
 <div class="col-md-2" style="border: black; border-style: solid; margin-right: 5px">
     <label for="tableNr">Anzahl Tische</label>
@@ -14,43 +13,44 @@
         <div class="panel-heading">
             <h3 class="panel-title">Verf. Tische</h3>
         </div>
-        <div dragula='"table-bag"' dragula-model='many'>
-            <div class="tableitem" ng-repeat="i in getNumber(tableNr) track by $index">Tisch {{$index}}</div>
+        <div style="min-width: 90%; min-height: 150px; border: black">
+            <!--<div class="tableitem" draggable="true" ondragstart="drag(event)" -->
+            <div class="tableitem" jit-drag-me
+                 id="table{{table.nr+1}}" ng-repeat="table in sourceTable">Tisch #{{table.nr+1}}
+            </div>
         </div>
 
     </div>
 </div>
-<div class='wrapper'>
-    <div dragula='"table-bag"' dragula-model='many2'>
-        <div class='dropcomponent' ng-repeat='text in many2' ng-bind='text'></div>
+
+<div class="col-md-8" style="border: black; border-style: solid; margin-right: 5px">
+    <label for="tableCols">Anzahl Spalten</label>
+    <input type="number" ng-model="tableCols" name="tableCols" required id="tableCols"/>
+    <label for="tableRows">Anzahl Zeilen</label>
+    <input type="number" ng-model="tableRows" name="tableRows" required id="tableRows"/>
+    <div>
+
+        <div class="trow" ng-repeat="items in tableGrid">
+            <div ng-repeat="item in items">
+                <div class="dropcomponent" jit-drop-on-me>Hier reinziehen</div>
+            </div>
+            <hr style="clear:both;"/>
+        </div>
+
+        <br/>
+        <br/>
+        <!--</div>-->
     </div>
+    <br>
+    <br>
+    <br>
+    <br>
 </div>
-<!--<div class="col-md-9">-->
-<!--&lt;!&ndash;<div ng-repeat="i in getNumber(tableCols) track by $index">&ndash;&gt;-->
-<!--<div class="row">-->
-<!--&lt;!&ndash;<div ng-repeat="table in tables[0]" class="col-md-6 dropcomponent" dragula-model="many2">&ndash;&gt;-->
-<!--&lt;!&ndash;<div dragula='"table-bag"' class="dropcomponent" >Hierhin ziehen    </div>&ndash;&gt;-->
-<!--<div class='container' dragula='"table-bag"' dragula-model='many2'>-->
-<!--<div ng-repeat='text in many2' ng-bind='text'></div>-->
-<!--</div>-->
-<!--&lt;!&ndash;</div>&ndash;&gt;-->
-<!--&lt;!&ndash;</div>&ndash;&gt;-->
-<!--</div>-->
-<!--</div>-->
 <div class="row"/>
 <div class='wrapper'>
 
-    <div class='container'>
-        <pre>{{tables | json}}</pre>
-    </div>
+    <pre>{{tableGrid | json}}</pre>
     <div class='container'>
         <pre>{{many2 | json}}</pre>
     </div>
 </div>
-<!--<div class="col-md-9">-->
-<!--<div dragula='"table-bag"' class="col-md-6 dropcomponent">-->
-<!--Hierhin ziehen-->
-<!--&lt;!&ndash;</div>&ndash;&gt;-->
-<!--</div>-->
-<!--</div>-->
-<!--
