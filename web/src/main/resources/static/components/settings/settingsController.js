@@ -20,15 +20,13 @@ function drop22(ev) {
     ev.target.appendChild(document.getElementById(data));
 }
 
-angular.module('jitty.settings.controllers', []).controller('TableSettingsController', function ($scope, dragulaService,
-                                                                                                 Flash, FileUploader, $http) {
+angular.module('jitty.settings.controllers', []).controller('TableSettingsController', function ($scope, Flash, $http) {
 
-    $scope.many = ['1', '2', '3', '4'];
     $scope.targetTable = [];
     $scope.tableCols = 4;
     $scope.number = 5;
     $scope.tableNr = 20;
-    $scope.tableRows = 6;
+    $scope.tableRows = 5;
     $scope.tableGrid = [];
     $scope.sourceTable = [];
 
@@ -37,22 +35,14 @@ angular.module('jitty.settings.controllers', []).controller('TableSettingsContro
         return new Array(num);
     };
 
-    for (i = 0; i < $scope.tableNr; i++) {
-        $scope.sourceTable.push({nr: i})
-    }
-
-    //
-    $scope.calc2 = function () {
-        sum = 0;
-        $scope.tableGrid = [];
-        for (i = 0; i < $scope.tableCols; i++) {
-            $scope.tableGrid[i] = [];
-            for (j = 0; j < $scope.tableRows; j++) {
-                sum++;
-                $scope.tableGrid[i].push({name: ('Tisch #' + sum), column: j, row: i})
-            }
+    $scope.calcSourceTable = function () {
+        $scope.sourceTable = [];
+        for (i = 0; i < $scope.tableNr; i++) {
+            $scope.sourceTable.push({nr: i})
         }
     };
+    $scope.calcSourceTable();
+
     $scope.calc = function () {
         sum = 0;
         $scope.tableGrid = [];
@@ -65,15 +55,26 @@ angular.module('jitty.settings.controllers', []).controller('TableSettingsContro
         }
     };
 
+    $scope.loadTables = function () {
+        $http.get('/api/settings/table-settings', {}).then(function (response) {
+            $scope.tableGrid = response.data.tablePositions;
+            $scope.tableNr = response.data.tableCount;
+        });
 
+    };
 
-    $scope.calc();
+    // $scope.calc();
+    $scope.loadTables();
 
     $scope.$watch('tableCols', function (model) {
         $scope.calc();
     }, true);
     $scope.$watch('tableRows', function (model) {
         $scope.calc();
+    }, true);
+
+    $scope.$watch('tableNr', function (model) {
+        $scope.calcSourceTable();
     }, true);
 
 

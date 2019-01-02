@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018.
+ * Copyright (c) 2016-2018
  * J. Melzer
  */
 
@@ -37,13 +37,9 @@ public class TableSettings {
         this.tableCount = tableCount;
     }
 
-//    public Tournament getTournament() {
-//        return tournament;
-//    }
-//
-//    public void setTournament(Tournament tournament) {
-//        this.tournament = tournament;
-//    }
+    public void addPos(short col, short row) {
+        tablePositions.add(new TablePos(col, row));
+    }
 
     public List<TablePos> getTablePositions() {
         return tablePositions;
